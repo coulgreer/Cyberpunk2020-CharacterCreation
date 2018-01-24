@@ -1,32 +1,48 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Character {
+	private static final int DEFAULT_STAT_LEVEL = 2;
+	
 	private String handle;
 	private Role role;
-	private int characterPoints;
+	private int characterPoints ;
 
-	private int intelligence;
-	private int modifiedReflexes;
-	private int unmodifiedReflexes;
-	private int technicalAbility;
-	private int cool;
-	private int attractiveness;
-	private int luck;
-	private int movementAllowance;
-	private int body;
-	private int currentEmpathy;
-	private int totalEmpathy;
-	private int run;
-	private int leap;
-	private int lift;
+	private int intelligence ;
+	private int modifiedReflexes ;
+	private int unmodifiedReflexes ;
+	private int technicalAbility ;
+	private int cool ;
+	private int attractiveness ;
+	private int luck ;
+	private int movementAllowance ;
+	private int body ;
+	private int currentEmpathy ;
+	private int totalEmpathy ;
+	private double run ;
+	private double leap ;
+	private double carry;
+	private double lift ;
 
-	private int saveNumber = 0;
-	private int bodyTypeModifier = 0;
+	private int headArmor ;
+	private int torsoArmor ;
+	private int rightArmArmor ;
+	private int leftArmArmor ;
+	private int rightLegArmor ;
+	private int leftLegArmor ;
 
-	private ArrayList<Skill> skills = new ArrayList<>();
+	private int saveModifier ;
+	private int bodyTypeModifier ;
+
+	private double injuryPoints ;
+
+	private Map<String, Skill> skills = new HashMap<String, Skill>();
+	private Map<String, Role> roles = new HashMap<String, Role>();
+
 	private Skill authority = new Skill.SkillBuilder() //
 			.withSkill("Authority") //
 			.withDescription("The ability to intimidate or control others "
@@ -1460,145 +1476,414 @@ public class Character {
 			.build();
 
 	public Character() {
-		skills.add(authority);
-		skills.add(charismaticLeadership);
-		skills.add(combatSense);
-		skills.add(credibility);
-		skills.add(family);
-		skills.add(interf);
-		skills.add(juryRig);
-		skills.add(medicalTech);
-		skills.add(resources);
-		skills.add(streetdeal);
+		handle = "Unknown";
+		role = cop;
+		characterPoints = 0;
 
-		skills.add(personalGrooming);
-		skills.add(wardrobeAndStyle);
+		intelligence = DEFAULT_STAT_LEVEL;
+		modifiedReflexes = DEFAULT_STAT_LEVEL;
+		unmodifiedReflexes = DEFAULT_STAT_LEVEL;
+		technicalAbility = DEFAULT_STAT_LEVEL;
+		cool = DEFAULT_STAT_LEVEL;
+		attractiveness = DEFAULT_STAT_LEVEL;
+		luck = DEFAULT_STAT_LEVEL;
+		movementAllowance = DEFAULT_STAT_LEVEL;
+		body = DEFAULT_STAT_LEVEL;
+		currentEmpathy = DEFAULT_STAT_LEVEL;
+		totalEmpathy = DEFAULT_STAT_LEVEL;
+		run = movementAllowance * 3.0;
+		leap = (movementAllowance * 3.0) / 4.0;
+		carry = body * 10;
+		lift = body * 40;
 
-		skills.add(endurance);
-		skills.add(strengthFeat);
-		skills.add(swimming);
+		headArmor = 0;
+		torsoArmor = 0;
+		rightArmArmor = 0;
+		leftArmArmor = 0;
+		rightLegArmor = 0;
+		leftLegArmor = 0;
 
-		skills.add(interrogation);
-		skills.add(intimidate);
-		skills.add(oratory);
-		skills.add(resistTortureAndDrugs);
-		skills.add(streetwise);
+		saveModifier = 0;
+		bodyTypeModifier = 0;
 
-		skills.add(humanPerception);
-		skills.add(interview);
-		skills.add(leadership);
-		skills.add(seduction);
-		skills.add(social);
-		skills.add(persuasionAndFastTalk);
-		skills.add(perform);
-		skills.add(accounting);
-		skills.add(anthropology);
-		skills.add(awarenessAndNotice);
-		skills.add(biology);
-		skills.add(botany);
-		skills.add(chemistry);
-		skills.add(composition);
-		skills.add(diagnoseIllness);
-		skills.add(educationAndGeneralKnowledge);
-		skills.add(expert);
-		skills.add(gamble);
-		skills.add(geology);
-		skills.add(hideAndEvade);
-		skills.add(history);
-		skills.add(language1);
-		skills.add(language2);
-		skills.add(language3);
-		skills.add(librarySearch);
-		skills.add(mathematics);
-		skills.add(physics);
-		skills.add(programming);
-		skills.add(shadowAndTrack);
-		skills.add(stockMarket);
-		skills.add(systemKnowledge);
-		skills.add(teaching);
-		skills.add(wildernessSurvival);
-		skills.add(zoology);
+		injuryPoints = 6.5;
+		
+		skills.put(authority.getSkill(), authority);
+		skills.put(charismaticLeadership.getSkill(), charismaticLeadership);
+		skills.put(combatSense.getSkill(), combatSense);
+		skills.put(credibility.getSkill(), credibility);
+		skills.put(family.getSkill(), family);
+		skills.put(interf.getSkill(), interf);
+		skills.put(juryRig.getSkill(), juryRig);
+		skills.put(medicalTech.getSkill(), medicalTech);
+		skills.put(resources.getSkill(), resources);
+		skills.put(streetdeal.getSkill(), streetdeal);
 
-		skills.add(archery);
-		skills.add(athletics);
-		skills.add(brawling);
-		skills.add(dance);
-		skills.add(dodgeAndEscape);
-		skills.add(driving);
-		skills.add(fencing);
-		skills.add(handgun);
-		skills.add(heavyWeapons);
-		skills.add(martialArt1);
-		skills.add(martialArt2);
-		skills.add(martialArt3);
-		skills.add(melee);
-		skills.add(motorcycle);
-		skills.add(operateHeavyMachinery);
-		skills.add(pilotGyro);
-		skills.add(pilotFixedWing);
-		skills.add(pilotDirigible);
-		skills.add(pilotVectorThrustVehicle);
-		skills.add(rifle);
-		skills.add(stealth);
-		skills.add(submachinegun);
+		skills.put(personalGrooming.getSkill(), personalGrooming);
+		skills.put(wardrobeAndStyle.getSkill(), wardrobeAndStyle);
 
-		skills.add(aeroTech);
-		skills.add(avTech);
-		skills.add(basicTech);
-		skills.add(cryotankOperation);
-		skills.add(cyberdeckDesign);
-		skills.add(cyberTech);
-		skills.add(demolition);
-		skills.add(disguise);
-		skills.add(electronics);
-		skills.add(electronicSecurity);
-		skills.add(firstAid);
-		skills.add(forgery);
-		skills.add(gyroTech);
-		skills.add(paintOrDraw);
-		skills.add(photoAndFilm);
-		skills.add(pharmacuticals);
-		skills.add(pickLock);
-		skills.add(pickPocket);
-		skills.add(playInstrument);
-		skills.add(weaponsmith);
+		skills.put(endurance.getSkill(), endurance);
+		skills.put(strengthFeat.getSkill(), strengthFeat);
+		skills.put(swimming.getSkill(), swimming);
+
+		skills.put(interrogation.getSkill(), interrogation);
+		skills.put(intimidate.getSkill(), intimidate);
+		skills.put(oratory.getSkill(), oratory);
+		skills.put(resistTortureAndDrugs.getSkill(), resistTortureAndDrugs);
+		skills.put(streetwise.getSkill(), streetwise);
+
+		skills.put(humanPerception.getSkill(), humanPerception);
+		skills.put(interview.getSkill(), interview);
+		skills.put(leadership.getSkill(), leadership);
+		skills.put(seduction.getSkill(), seduction);
+		skills.put(social.getSkill(), social);
+		skills.put(persuasionAndFastTalk.getSkill(), persuasionAndFastTalk);
+		skills.put(perform.getSkill(), perform);
+		skills.put(accounting.getSkill(), accounting);
+		skills.put(anthropology.getSkill(), anthropology);
+		skills.put(awarenessAndNotice.getSkill(), awarenessAndNotice);
+		skills.put(biology.getSkill(), biology);
+		skills.put(botany.getSkill(), botany);
+		skills.put(chemistry.getSkill(), chemistry);
+		skills.put(composition.getSkill(), chemistry);
+		skills.put(diagnoseIllness.getSkill(), diagnoseIllness);
+		skills.put(educationAndGeneralKnowledge.getSkill(), educationAndGeneralKnowledge);
+		skills.put(expert.getSkill(), expert);
+		skills.put(gamble.getSkill(), gamble);
+		skills.put(geology.getSkill(), geology);
+		skills.put(hideAndEvade.getSkill(), hideAndEvade);
+		skills.put(history.getSkill(), history);
+		skills.put(language1.getSkill(), language1);
+		skills.put(language2.getSkill(), language2);
+		skills.put(language3.getSkill(), language3);
+		skills.put(librarySearch.getSkill(), librarySearch);
+		skills.put(mathematics.getSkill(), mathematics);
+		skills.put(physics.getSkill(), physics);
+		skills.put(programming.getSkill(), programming);
+		skills.put(shadowAndTrack.getSkill(), shadowAndTrack);
+		skills.put(stockMarket.getSkill(), stockMarket);
+		skills.put(systemKnowledge.getSkill(), systemKnowledge);
+		skills.put(teaching.getSkill(), teaching);
+		skills.put(wildernessSurvival.getSkill(), wildernessSurvival);
+		skills.put(zoology.getSkill(), zoology);
+
+		skills.put(archery.getSkill(), archery);
+		skills.put(athletics.getSkill(), athletics);
+		skills.put(brawling.getSkill(), brawling);
+		skills.put(dance.getSkill(), dance);
+		skills.put(dodgeAndEscape.getSkill(), dodgeAndEscape);
+		skills.put(driving.getSkill(), driving);
+		skills.put(fencing.getSkill(), fencing);
+		skills.put(handgun.getSkill(), handgun);
+		skills.put(heavyWeapons.getSkill(), heavyWeapons);
+		skills.put(martialArt1.getSkill(), martialArt1);
+		skills.put(martialArt2.getSkill(), martialArt2);
+		skills.put(martialArt3.getSkill(), martialArt3);
+		skills.put(melee.getSkill(), melee);
+		skills.put(motorcycle.getSkill(), motorcycle);
+		skills.put(operateHeavyMachinery.getSkill(), operateHeavyMachinery);
+		skills.put(pilotGyro.getSkill(), pilotGyro);
+		skills.put(pilotFixedWing.getSkill(), pilotFixedWing);
+		skills.put(pilotDirigible.getSkill(), pilotDirigible);
+		skills.put(pilotVectorThrustVehicle.getSkill(), pilotVectorThrustVehicle);
+		skills.put(rifle.getSkill(), rifle);
+		skills.put(stealth.getSkill(), stealth);
+		skills.put(submachinegun.getSkill(), submachinegun);
+
+		skills.put(aeroTech.getSkill(), aeroTech);
+		skills.put(avTech.getSkill(), avTech);
+		skills.put(basicTech.getSkill(), basicTech);
+		skills.put(cryotankOperation.getSkill(), cryotankOperation);
+		skills.put(cyberdeckDesign.getSkill(), cyberdeckDesign);
+		skills.put(cyberTech.getSkill(), cyberTech);
+		skills.put(demolition.getSkill(), demolition);
+		skills.put(disguise.getSkill(), disguise);
+		skills.put(electronics.getSkill(), electronics);
+		skills.put(electronicSecurity.getSkill(), electronicSecurity);
+		skills.put(firstAid.getSkill(), firstAid);
+		skills.put(forgery.getSkill(), forgery);
+		skills.put(gyroTech.getSkill(), gyroTech);
+		skills.put(paintOrDraw.getSkill(), paintOrDraw);
+		skills.put(photoAndFilm.getSkill(), photoAndFilm);
+		skills.put(pharmacuticals.getSkill(), pharmacuticals);
+		skills.put(pickLock.getSkill(), pickLock);
+		skills.put(pickPocket.getSkill(), pickPocket);
+		skills.put(playInstrument.getSkill(), playInstrument);
+		skills.put(weaponsmith.getSkill(), weaponsmith);
+
+		roles.put(cop.getRoleName(), cop);
+		roles.put(corporate.getRoleName(), corporate);
+		roles.put(fixer.getRoleName(), fixer);
+		roles.put(media.getRoleName(), media);
+		roles.put(netrunner.getRoleName(), netrunner);
+		roles.put(nomad.getRoleName(), nomad);
+		roles.put(rockerboy.getRoleName(), rockerboy);
+		roles.put(solo.getRoleName(), solo);
+		roles.put(techie.getRoleName(), techie);
 	}
 
-	public ArrayList<Skill> getSkillList() {
+	private void calculateRun() {
+		run = movementAllowance * 3.0;
+	}
+
+	private void calculateLeap() {
+		leap = (movementAllowance * 3.0) / 4.0;
+	}
+
+	private void calculateLift() {
+		lift = body * 10.0;
+	}
+
+	public String getHandle() {
+		return handle;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public int getCharacterPoints() {
+		return characterPoints;
+	}
+
+	public int getIntelligenceLevel() {
+		return intelligence;
+	}
+
+	public int getUnmodifiedReflexesLevel() {
+		return unmodifiedReflexes;
+	}
+
+	public int getModifiedReflexesLevel() {
+		return modifiedReflexes;
+	}
+
+	public int getTechnicalAbilityLevel() {
+		return technicalAbility;
+	}
+
+	public int getCoolLevel() {
+		return cool;
+	}
+
+	public int getAttractivenessLevel() {
+		return attractiveness;
+	}
+
+	public int getLuckLevel() {
+		return luck;
+	}
+
+	public int getMovementAllowance() {
+		return movementAllowance;
+	}
+
+	public int getBodyLevel() {
+		return body;
+	}
+
+	public int getCurrentEmpathyLevel() {
+		return currentEmpathy;
+	}
+
+	public int getTotalEmpathyLevel() {
+		return totalEmpathy;
+	}
+
+	public double getRunLevel() {
+		return run;
+	}
+
+	public double getLeapLevel() {
+		return leap;
+	}
+
+	public double getLiftLevel() {
+		return lift;
+	}
+
+	public int getHeadArmorStoppingPower() {
+		return headArmor;
+	}
+
+	public int getTorsoArmorStoppingPower() {
+		return torsoArmor;
+	}
+
+	public int getRightArmArmorStoppingPower() {
+		return rightArmArmor;
+	}
+
+	public int getLeftArmArmorStoppingPower() {
+		return leftArmArmor;
+	}
+
+	public int getRightLegArmorStoppingPower() {
+		return rightLegArmor;
+	}
+
+	public int getLeftLegArmorStoppingPower() {
+		return leftLegArmor;
+	}
+
+	public int getSaveModifier() {
+		return saveModifier;
+	}
+
+	public int getBodyTypeModifier() {
+		return bodyTypeModifier;
+	}
+
+	public double getInjuryPoints() {
+		return injuryPoints;
+	}
+
+	public Map<String, Skill> getSkillList() {
 		return skills;
 	}
 
+	public void setHandle(String newHandle) {
+		handle = newHandle;
+	}
+
+	public void setRole(String newRole) {
+		for (String key : roles.keySet()) {
+			if (key.equals(newRole)) {
+				role = roles.get(newRole);
+			}
+		}
+	}
+
+	public void setCharacterPoints(String newCharacterPointValue) {
+		characterPoints = Integer.parseInt(newCharacterPointValue);
+	}
+
+	public void setIntelligenceLevel(String newIntelligence) {
+		intelligence = Integer.parseInt(newIntelligence);
+	}
+
+	public void setUnmodifiedReflexesLevel(String newUnmodifiedReflexes) {
+		unmodifiedReflexes = Integer.parseInt(newUnmodifiedReflexes);
+	}
+
+	public void setModifiedReflexesLevel(String newModifiedReflexes) {
+		modifiedReflexes = Integer.parseInt(newModifiedReflexes);
+	}
+
+	public void setTechnicalAbilityLevel(String newTechnicalAbilityLevel) {
+		technicalAbility = Integer.parseInt(newTechnicalAbilityLevel);
+	}
+
+	public void setCoolLevel(String newCoolLevel) {
+		cool = Integer.parseInt(newCoolLevel);
+	}
+
+	public void setAttractivenessLevel(String newAttractivenessLevel) {
+		attractiveness = Integer.parseInt(newAttractivenessLevel);
+	}
+
+	public void setLuckLevel(String newLuckLevel) {
+		luck = Integer.parseInt(newLuckLevel);
+	}
+
+	public void setMovementAllowance(String newMovementAllowance) {
+		try {
+		movementAllowance = Integer.parseInt(newMovementAllowance);
+		} catch(NumberFormatException e) {
+			movementAllowance = 2;
+		}
+
+		calculateRun();
+		calculateLeap();
+	}
+
+	public void setBodyLevel(String newBodyLevel) {
+		body = Integer.parseInt(newBodyLevel);
+
+		calculateLift();
+	}
+
+	public void setCurrentEmpathyLevel(String newCurrentEmpathyLevel) {
+		currentEmpathy = Integer.parseInt(newCurrentEmpathyLevel);
+	}
+
+	public void setTotalEmpathyLevel(String newTotalEmpathyLevel) {
+		totalEmpathy = Integer.parseInt(newTotalEmpathyLevel);
+	}
+
+	public void setRunLevel(String newRunLevel) {
+		run = Double.parseDouble(newRunLevel);
+	}
+
+	public void setLeapLevel(String newLeapLevel) {
+		leap = Double.parseDouble(newLeapLevel);
+	}
+
+	public void setLiftLevel(String newLiftLevel) {
+		lift = Double.parseDouble(newLiftLevel);
+	}
+
+	public void setHeadArmorStoppingPower(String newHeadArmor) {
+		headArmor = Integer.parseInt(newHeadArmor);
+	}
+
+	public void setTorsoArmorStoppingPower(String newTorsoArmor) {
+		torsoArmor = Integer.parseInt(newTorsoArmor);
+	}
+
+	public void setRightArmArmorStoppingPower(String newRightArmArmor) {
+		rightArmArmor = Integer.parseInt(newRightArmArmor);
+	}
+
+	public void setLeftArmArmorStoppingPower(String newLeftArmArmor) {
+		leftArmArmor = Integer.parseInt(newLeftArmArmor);
+	}
+
+	public void setRightLegArmorStoppingPower(String newRightLegArmor) {
+		rightLegArmor = Integer.parseInt(newRightLegArmor);
+	}
+
+	public void setLeftLegArmorStoppingPower(String newLeftLegArmor) {
+		leftLegArmor = Integer.parseInt(newLeftLegArmor);
+	}
+
+	public void setSaveModifier(String newSaveModifier) {
+		saveModifier = Integer.parseInt(newSaveModifier);
+	}
+
+	public void setBodyTypeModifier(String newBodyTypeModifier) {
+		bodyTypeModifier = Integer.parseInt(newBodyTypeModifier);
+	}
+
+	public void setInjuryPoints(String newInjuryPointValue) {
+		injuryPoints = Double.parseDouble(newInjuryPointValue);
+	}
+
 	public static class Role {
-		private Skill careerSkill1;
-		private Skill careerSkill2;
-		private Skill careerSkill3;
-		private Skill careerSkill4;
-		private Skill careerSkill5;
-		private Skill careerSkill6;
-		private Skill careerSkill7;
-		private Skill careerSkill8;
-		private Skill careerSkill9;
-		private Skill careerSkill10;
-		private List<Skill[]> skills = new ArrayList<Skill[]>();
-		private String name;
-		private String blurb;
-		private String description;
+		private List<Skill[]> careerSkills = new ArrayList<Skill[]>();
+		private String name = "N/A";
+		private String blurb = "";
+		private String description = "";
 
 		private Role(RoleBuilder roleBuilder) {
-			this.skills = roleBuilder.skills;
+			this.careerSkills = roleBuilder.careerSkills;
 			this.name = roleBuilder.name;
 			this.blurb = roleBuilder.blurb;
 			this.description = roleBuilder.description;
 		}
 
+		public String getRoleName() {
+			return name;
+		}
+
 		public static class RoleBuilder {
-			private List<Skill[]> skills = new ArrayList<Skill[]>();
+			private List<Skill[]> careerSkills = new ArrayList<Skill[]>();
 			private String name;
 			private String blurb;
 			private String description;
 
 			public RoleBuilder addCareerSkill(Skill... skills) {
-				this.skills.add(skills);
+				this.careerSkills.add(skills);
 				return this;
 
 			}
