@@ -11,7 +11,9 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -42,6 +44,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 
 public class CharacterCreationView extends JFrame {
@@ -51,7 +54,7 @@ public class CharacterCreationView extends JFrame {
 	private static final int TABBED_PANEL_HEIGHT = FRAME_HEIGHT / 3;
 	private static final int CHARACTER_PANEL_WIDTH = FRAME_WIDTH;
 	private static final int CHARACTER_PANEL_HEIGHT = 2 * (FRAME_WIDTH / 3);
-	private static final int NUMBER_OF_TEXTFIELD_COLUMNS = 3;
+	private static final int NUMBER_OF_TEXTFIELD_COLUMNS = 5;
 	private static final int MEDIUM_DIV_WIDTH = 2 * (CHARACTER_PANEL_WIDTH / 3);
 	private static final int MEDIUM_DIV_HEIGHT = (CHARACTER_PANEL_HEIGHT / 4);
 	private static final int SMALL_DIV_WIDTH = 2 * (CHARACTER_PANEL_WIDTH / 3);
@@ -67,7 +70,9 @@ public class CharacterCreationView extends JFrame {
 	private static final int PORTRAIT_WIDTH = 300;
 	private static final int PORTRAIT_HEIGHT = 300;
 
-	public static final int GAUGE_CELLS = 4;
+	private static final Font TITLE_FONT = new Font("Tahoma", Font.BOLD, 14);
+
+	public static final int MAXIMUM_CELLS_PER_GAUGE = 4;
 
 	private JPanel contentPane;
 	private JTextField handleTextField;
@@ -104,6 +109,10 @@ public class CharacterCreationView extends JFrame {
 	private JButton increaseCharacterPointsButton;
 	private JButton saveButton;
 	private JButton loadButton;
+	private JButton increaseInjuryButton;
+	private JButton minorlyIncreaseInjuryButton;
+	private JButton minorlyDecreaseInjuryButton;
+	private JButton decreaseInjuryButton;
 	private JComboBox<String> roleComboBox;
 	private JTextField modifiedReflexesTextField;
 	private JSpinner totalEmpathySpinner;
@@ -138,6 +147,7 @@ public class CharacterCreationView extends JFrame {
 		contentPane.add(toolbarPanel, BorderLayout.NORTH);
 
 		saveButton = new JButton("Save Character");
+		saveButton.setRolloverEnabled(false);
 		toolbarPanel.add(saveButton);
 
 		loadButton = new JButton("Load Character");
@@ -169,7 +179,7 @@ public class CharacterCreationView extends JFrame {
 		handlePanel.setLayout(gbl_handlePanel);
 
 		JLabel lblHandle = new JLabel("HANDLE");
-		lblHandle.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblHandle.setFont(TITLE_FONT);
 		lblHandle.setOpaque(true);
 		lblHandle.setBackground(Color.BLACK);
 		lblHandle.setForeground(Color.WHITE);
@@ -183,6 +193,7 @@ public class CharacterCreationView extends JFrame {
 		handlePanel.add(lblHandle, gbc_lblHandle);
 
 		handleTextField = new JTextField();
+		handleTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		GridBagConstraints gbc_handleTextField = new GridBagConstraints();
 		gbc_handleTextField.weightx = 0.75;
 		gbc_handleTextField.fill = GridBagConstraints.BOTH;
@@ -209,7 +220,7 @@ public class CharacterCreationView extends JFrame {
 		rolePanel.setLayout(gbl_rolePanel);
 
 		JLabel lblRole = new JLabel("ROLE");
-		lblRole.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblRole.setFont(TITLE_FONT);
 		lblRole.setOpaque(true);
 		lblRole.setBackground(Color.BLACK);
 		lblRole.setForeground(Color.WHITE);
@@ -249,7 +260,7 @@ public class CharacterCreationView extends JFrame {
 		characterPointsPanel.setLayout(gbl_characterPointsPanel);
 
 		JLabel lblCharacterPoints = new JLabel("CHARACTER POINTS");
-		lblCharacterPoints.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblCharacterPoints.setFont(TITLE_FONT);
 		lblCharacterPoints.setOpaque(true);
 		lblCharacterPoints.setBackground(Color.BLACK);
 		lblCharacterPoints.setForeground(Color.WHITE);
@@ -263,6 +274,8 @@ public class CharacterCreationView extends JFrame {
 		characterPointsPanel.add(lblCharacterPoints, gbc_lblCharacterPoints);
 
 		characterPointsTextField = new JTextField();
+		characterPointsTextField.setHorizontalAlignment(SwingConstants.CENTER);
+		characterPointsTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		GridBagConstraints gbc_characterPointsTextField = new GridBagConstraints();
 		gbc_characterPointsTextField.weightx = 0.1111;
 		gbc_characterPointsTextField.weighty = 1.0;
@@ -312,7 +325,7 @@ public class CharacterCreationView extends JFrame {
 		statPanel.setLayout(gbl_statPanel);
 
 		JLabel lblStats = new JLabel("STATS");
-		lblStats.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblStats.setFont(TITLE_FONT);
 		lblStats.setOpaque(true);
 		lblStats.setBackground(Color.BLACK);
 		lblStats.setForeground(Color.WHITE);
@@ -337,9 +350,11 @@ public class CharacterCreationView extends JFrame {
 		technicalAbilityStatPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblTech = new JLabel("TECH");
+		lblTech.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		technicalAbilityStatPanel.add(lblTech, BorderLayout.CENTER);
 
 		technicalAbilitySpinner = new JSpinner();
+		technicalAbilitySpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		technicalAbilitySpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		technicalAbilityStatPanel.add(technicalAbilitySpinner, BorderLayout.EAST);
 
@@ -355,9 +370,11 @@ public class CharacterCreationView extends JFrame {
 		intelligenceStatPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblIntelligence = new JLabel("INT");
+		lblIntelligence.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		intelligenceStatPanel.add(lblIntelligence, BorderLayout.CENTER);
 
 		intelligenceSpinner = new JSpinner();
+		intelligenceSpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		intelligenceSpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		intelligenceStatPanel.add(intelligenceSpinner, BorderLayout.EAST);
 
@@ -373,6 +390,7 @@ public class CharacterCreationView extends JFrame {
 		reflexesStatPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblReflexes = new JLabel("REF");
+		lblReflexes.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		reflexesStatPanel.add(lblReflexes, BorderLayout.CENTER);
 
 		JPanel reflexesPointPanel = new JPanel();
@@ -380,15 +398,17 @@ public class CharacterCreationView extends JFrame {
 		reflexesPointPanel.setLayout(new BoxLayout(reflexesPointPanel, BoxLayout.X_AXIS));
 
 		modifiedReflexesTextField = new JTextField();
+		modifiedReflexesTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		reflexesPointPanel.add(modifiedReflexesTextField);
 		modifiedReflexesTextField.setColumns(3);
 
 		JLabel lblReflexesDivider = new JLabel("/");
-		lblReflexesDivider.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblReflexesDivider.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblReflexesDivider.setBorder(new EmptyBorder(0, 3, 0, 3));
 		reflexesPointPanel.add(lblReflexesDivider);
 
 		unmodifiedReflexesSpinner = new JSpinner();
+		unmodifiedReflexesSpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		unmodifiedReflexesSpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		reflexesPointPanel.add(unmodifiedReflexesSpinner);
 
@@ -404,9 +424,11 @@ public class CharacterCreationView extends JFrame {
 		coolStatPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblCool = new JLabel("COOL");
+		lblCool.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		coolStatPanel.add(lblCool, BorderLayout.CENTER);
 
 		coolSpinner = new JSpinner();
+		coolSpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		coolSpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		coolStatPanel.add(coolSpinner, BorderLayout.EAST);
 
@@ -422,9 +444,11 @@ public class CharacterCreationView extends JFrame {
 		attractivenessStatPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblAttractiveness = new JLabel("ATTR");
+		lblAttractiveness.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		attractivenessStatPanel.add(lblAttractiveness, BorderLayout.CENTER);
 
 		attractivenessSpinner = new JSpinner();
+		attractivenessSpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		attractivenessSpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		attractivenessStatPanel.add(attractivenessSpinner, BorderLayout.EAST);
 
@@ -440,9 +464,11 @@ public class CharacterCreationView extends JFrame {
 		luckPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblLuck = new JLabel("LUCK");
+		lblLuck.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		luckPanel.add(lblLuck, BorderLayout.CENTER);
 
 		luckSpinner = new JSpinner();
+		luckSpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		luckSpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		luckPanel.add(luckSpinner, BorderLayout.EAST);
 
@@ -457,9 +483,11 @@ public class CharacterCreationView extends JFrame {
 		bodyStatPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblBody = new JLabel("BODY");
+		lblBody.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		bodyStatPanel.add(lblBody, BorderLayout.CENTER);
 
 		bodySpinner = new JSpinner();
+		bodySpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		bodySpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		bodyStatPanel.add(bodySpinner, BorderLayout.EAST);
 
@@ -474,9 +502,11 @@ public class CharacterCreationView extends JFrame {
 		movementAllowancePanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblMovementAllowance = new JLabel("MA");
+		lblMovementAllowance.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		movementAllowancePanel.add(lblMovementAllowance);
 
 		movementAllowanceSpinner = new JSpinner();
+		movementAllowanceSpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		movementAllowanceSpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		movementAllowancePanel.add(movementAllowanceSpinner, BorderLayout.EAST);
 
@@ -498,15 +528,17 @@ public class CharacterCreationView extends JFrame {
 		empathyPointPanel.setLayout(new BoxLayout(empathyPointPanel, BoxLayout.X_AXIS));
 
 		currentEmpathyTextField = new JTextField();
+		currentEmpathyTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		empathyPointPanel.add(currentEmpathyTextField);
 		currentEmpathyTextField.setColumns(NUMBER_OF_TEXTFIELD_COLUMNS);
 
 		JLabel lblEmpathyDivider = new JLabel("/");
-		lblEmpathyDivider.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblEmpathyDivider.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblEmpathyDivider.setBorder(new EmptyBorder(0, 3, 0, 3));
 		empathyPointPanel.add(lblEmpathyDivider);
 
 		totalEmpathySpinner = new JSpinner();
+		totalEmpathySpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		totalEmpathySpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		empathyPointPanel.add(totalEmpathySpinner);
 
@@ -521,9 +553,12 @@ public class CharacterCreationView extends JFrame {
 		runPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblRun = new JLabel("Run");
+		lblRun.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		runPanel.add(lblRun, BorderLayout.CENTER);
 
 		runTextField = new JTextField();
+		runTextField.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		runTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		runTextField.setEditable(false);
 		runPanel.add(runTextField, BorderLayout.EAST);
 		runTextField.setColumns(NUMBER_OF_TEXTFIELD_COLUMNS);
@@ -539,9 +574,12 @@ public class CharacterCreationView extends JFrame {
 		leapPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblLeap = new JLabel("Leap");
+		lblLeap.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		leapPanel.add(lblLeap, BorderLayout.CENTER);
 
 		leapTextField = new JTextField();
+		leapTextField.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		leapTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		leapTextField.setEditable(false);
 		leapPanel.add(leapTextField, BorderLayout.EAST);
 		leapTextField.setColumns(NUMBER_OF_TEXTFIELD_COLUMNS);
@@ -557,9 +595,12 @@ public class CharacterCreationView extends JFrame {
 		liftPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblLift = new JLabel("Lift");
+		lblLift.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		liftPanel.add(lblLift);
 
 		liftTextField = new JTextField();
+		liftTextField.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		liftTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		liftTextField.setEditable(false);
 		liftPanel.add(liftTextField, BorderLayout.EAST);
 		liftTextField.setColumns(NUMBER_OF_TEXTFIELD_COLUMNS);
@@ -583,7 +624,8 @@ public class CharacterCreationView extends JFrame {
 		armorPanel.setLayout(gbl_armorPanel);
 
 		JLabel lblLocation = new JLabel("Location");
-		lblLocation.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblLocation.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLocation.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblLocation.setOpaque(true);
 		lblLocation.setBackground(Color.BLACK);
 		lblLocation.setForeground(Color.WHITE);
@@ -596,6 +638,7 @@ public class CharacterCreationView extends JFrame {
 		armorPanel.add(lblLocation, gbc_lblLocation);
 
 		JLabel lblHead = new JLabel("<html><div style='text-align: center;'>Head<br>1</div></html>");
+		lblHead.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblHead.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHead.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		GridBagConstraints gbc_lblHead = new GridBagConstraints();
@@ -607,6 +650,7 @@ public class CharacterCreationView extends JFrame {
 		armorPanel.add(lblHead, gbc_lblHead);
 
 		JLabel lblTorso = new JLabel("<html><div style='text-align: center;'>Torso<br>2-4</div></html>");
+		lblTorso.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblTorso.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTorso.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		GridBagConstraints gbc_lblTorso = new GridBagConstraints();
@@ -618,6 +662,7 @@ public class CharacterCreationView extends JFrame {
 		armorPanel.add(lblTorso, gbc_lblTorso);
 
 		JLabel lblRightArm = new JLabel("<html><div style='text-align: center;'>R.Arm<br>5</div></html>");
+		lblRightArm.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblRightArm.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRightArm.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		GridBagConstraints gbc_lblRightArm = new GridBagConstraints();
@@ -629,6 +674,7 @@ public class CharacterCreationView extends JFrame {
 		armorPanel.add(lblRightArm, gbc_lblRightArm);
 
 		JLabel lblLeftArm = new JLabel("<html><div style='text-align: center;'>L.Arm<br>6</div></html>");
+		lblLeftArm.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblLeftArm.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLeftArm.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		GridBagConstraints gbc_lblLeftArm = new GridBagConstraints();
@@ -640,6 +686,7 @@ public class CharacterCreationView extends JFrame {
 		armorPanel.add(lblLeftArm, gbc_lblLeftArm);
 
 		JLabel lblRightLeg = new JLabel("<html><div style='text-align: center;'>R.Leg<br>7-8</div></html>");
+		lblRightLeg.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblRightLeg.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRightLeg.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		GridBagConstraints gbc_lblRightLeg = new GridBagConstraints();
@@ -651,6 +698,7 @@ public class CharacterCreationView extends JFrame {
 		armorPanel.add(lblRightLeg, gbc_lblRightLeg);
 
 		JLabel lblLeftLeg = new JLabel("<html><div style='text-align: center;'>L.Leg<br>9-0</div></html>");
+		lblLeftLeg.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblLeftLeg.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLeftLeg.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		GridBagConstraints gbc_lblLeftLeg = new GridBagConstraints();
@@ -662,7 +710,8 @@ public class CharacterCreationView extends JFrame {
 		armorPanel.add(lblLeftLeg, gbc_lblLeftLeg);
 
 		JLabel lblArmorSp = new JLabel("Armor SP");
-		lblArmorSp.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblArmorSp.setHorizontalAlignment(SwingConstants.CENTER);
+		lblArmorSp.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblArmorSp.setOpaque(true);
 		lblArmorSp.setBackground(Color.BLACK);
 		lblArmorSp.setForeground(Color.WHITE);
@@ -675,6 +724,7 @@ public class CharacterCreationView extends JFrame {
 		armorPanel.add(lblArmorSp, gbc_lblArmorSp);
 
 		headArmorTextField = new JTextField();
+		headArmorTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		headArmorTextField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		GridBagConstraints gbc_headSPTextField = new GridBagConstraints();
 		gbc_headSPTextField.weighty = 0.3333;
@@ -686,6 +736,7 @@ public class CharacterCreationView extends JFrame {
 		headArmorTextField.setColumns(10);
 
 		torsoArmorTextField = new JTextField();
+		torsoArmorTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		torsoArmorTextField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		GridBagConstraints gbc_torsoSPTextField = new GridBagConstraints();
 		gbc_torsoSPTextField.weighty = 0.3333;
@@ -697,6 +748,7 @@ public class CharacterCreationView extends JFrame {
 		torsoArmorTextField.setColumns(10);
 
 		rightArmArmorTextField = new JTextField();
+		rightArmArmorTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		rightArmArmorTextField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		GridBagConstraints gbc_rightArmSPTextField = new GridBagConstraints();
 		gbc_rightArmSPTextField.weighty = 0.3333;
@@ -708,6 +760,7 @@ public class CharacterCreationView extends JFrame {
 		rightArmArmorTextField.setColumns(10);
 
 		leftArmArmorTextField = new JTextField();
+		leftArmArmorTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		leftArmArmorTextField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		GridBagConstraints gbc_leftArmSPTextField = new GridBagConstraints();
 		gbc_leftArmSPTextField.weighty = 0.3333;
@@ -719,6 +772,7 @@ public class CharacterCreationView extends JFrame {
 		leftArmArmorTextField.setColumns(10);
 
 		rightLegArmorTextField = new JTextField();
+		rightLegArmorTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		rightLegArmorTextField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		GridBagConstraints gbc_rightLegSPTextField = new GridBagConstraints();
 		gbc_rightLegSPTextField.weighty = 0.3333;
@@ -730,6 +784,7 @@ public class CharacterCreationView extends JFrame {
 		rightLegArmorTextField.setColumns(10);
 
 		leftLegArmorTextField = new JTextField();
+		leftLegArmorTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		leftLegArmorTextField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		GridBagConstraints gbc_leftLegSPTextField = new GridBagConstraints();
 		gbc_leftLegSPTextField.weighty = 0.3333;
@@ -771,13 +826,15 @@ public class CharacterCreationView extends JFrame {
 
 		JLabel lblSave = new JLabel("SAVE");
 		lblSave.setBorder(new LineBorder(new Color(0, 0, 0)));
-		lblSave.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblSave.setFont(TITLE_FONT);
 		lblSave.setHorizontalAlignment(SwingConstants.CENTER);
 		savePanel.add(lblSave, BorderLayout.NORTH);
 
 		saveTextField = new JTextField();
+		saveTextField.setEditable(false);
+		saveTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		saveTextField.setBorder(new LineBorder(Color.BLACK));
-		saveTextField.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		saveTextField.setFont(new Font("Tahoma", Font.PLAIN, 22));
 		savePanel.add(saveTextField);
 		saveTextField.setColumns(3);
 
@@ -796,13 +853,15 @@ public class CharacterCreationView extends JFrame {
 
 		JLabel lblBodyTypeModifier = new JLabel("BTM");
 		lblBodyTypeModifier.setBorder(new LineBorder(new Color(0, 0, 0)));
-		lblBodyTypeModifier.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblBodyTypeModifier.setFont(TITLE_FONT);
 		lblBodyTypeModifier.setHorizontalAlignment(SwingConstants.CENTER);
 		bodyTypeModifierPanel.add(lblBodyTypeModifier, BorderLayout.NORTH);
 
 		bodyTypeModifierTextField = new JTextField();
+		bodyTypeModifierTextField.setEditable(false);
+		bodyTypeModifierTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		bodyTypeModifierTextField.setBorder(new LineBorder(Color.BLACK));
-		bodyTypeModifierTextField.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		bodyTypeModifierTextField.setFont(new Font("Tahoma", Font.PLAIN, 22));
 		bodyTypeModifierPanel.add(bodyTypeModifierTextField);
 		bodyTypeModifierTextField.setColumns(3);
 
@@ -815,15 +874,19 @@ public class CharacterCreationView extends JFrame {
 		gbc_stunPanel.gridx = 2;
 		gbc_stunPanel.gridy = 0;
 		woundsPanel.add(stunPanel, gbc_stunPanel);
-		stunPanel.setLayout(new GridLayout(2, 5, 0, 0));
+		stunPanel.setLayout(new BorderLayout(0, 0));
+
+		JPanel stunGaugePanel = new JPanel();
+		stunPanel.add(stunGaugePanel);
+		stunGaugePanel.setLayout(new GridLayout(2, 5, 0, 0));
 
 		JPanel lightPanel = new JPanel();
-		stunPanel.add(lightPanel);
+		stunGaugePanel.add(lightPanel);
 		lightPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblLightStun = new JLabel("LIGHT");
 		lblLightStun.setFont(new Font("Tahoma", Font.BOLD, 8));
-		lblLightStun.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLightStun.setHorizontalAlignment(SwingConstants.LEFT);
 		lightPanel.add(lblLightStun, BorderLayout.NORTH);
 
 		StunGaugePanel lightStunProgressPanel = new StunGaugePanel();
@@ -840,12 +903,12 @@ public class CharacterCreationView extends JFrame {
 		lightPanel.add(lblLightStunModifier, BorderLayout.SOUTH);
 
 		JPanel seriousPanel = new JPanel();
-		stunPanel.add(seriousPanel);
+		stunGaugePanel.add(seriousPanel);
 		seriousPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblSerious = new JLabel("SERIOUS");
 		lblSerious.setFont(new Font("Tahoma", Font.BOLD, 8));
-		lblSerious.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSerious.setHorizontalAlignment(SwingConstants.LEFT);
 		seriousPanel.add(lblSerious, BorderLayout.NORTH);
 
 		StunGaugePanel seriousStunProgressPanel = new StunGaugePanel();
@@ -862,12 +925,12 @@ public class CharacterCreationView extends JFrame {
 		seriousPanel.add(lblSeriousStunModifier, BorderLayout.SOUTH);
 
 		JPanel criticalPanel = new JPanel();
-		stunPanel.add(criticalPanel);
+		stunGaugePanel.add(criticalPanel);
 		criticalPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblCritical = new JLabel("CRITICAL");
 		lblCritical.setFont(new Font("Tahoma", Font.BOLD, 8));
-		lblCritical.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCritical.setHorizontalAlignment(SwingConstants.LEFT);
 		criticalPanel.add(lblCritical, BorderLayout.NORTH);
 
 		StunGaugePanel criticalStunProgressPanel = new StunGaugePanel();
@@ -884,12 +947,12 @@ public class CharacterCreationView extends JFrame {
 		criticalPanel.add(lblCriticalStunModifier, BorderLayout.SOUTH);
 
 		JPanel mortal0Panel = new JPanel();
-		stunPanel.add(mortal0Panel);
+		stunGaugePanel.add(mortal0Panel);
 		mortal0Panel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblMortal0 = new JLabel("MORTAL0");
 		lblMortal0.setFont(new Font("Tahoma", Font.BOLD, 8));
-		lblMortal0.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMortal0.setHorizontalAlignment(SwingConstants.LEFT);
 		mortal0Panel.add(lblMortal0, BorderLayout.NORTH);
 
 		StunGaugePanel mortal0StunProgressPanel = new StunGaugePanel();
@@ -906,12 +969,12 @@ public class CharacterCreationView extends JFrame {
 		mortal0Panel.add(lblMortal0StunModifier, BorderLayout.SOUTH);
 
 		JPanel mortal1Panel = new JPanel();
-		stunPanel.add(mortal1Panel);
+		stunGaugePanel.add(mortal1Panel);
 		mortal1Panel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblMortal1 = new JLabel("MORTAL1");
 		lblMortal1.setFont(new Font("Tahoma", Font.BOLD, 8));
-		lblMortal1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMortal1.setHorizontalAlignment(SwingConstants.LEFT);
 		mortal1Panel.add(lblMortal1, BorderLayout.NORTH);
 
 		StunGaugePanel mortal1StunProgressPanel = new StunGaugePanel();
@@ -928,12 +991,12 @@ public class CharacterCreationView extends JFrame {
 		mortal1Panel.add(lblMortal1StunModifier, BorderLayout.SOUTH);
 
 		JPanel mortal2Panel = new JPanel();
-		stunPanel.add(mortal2Panel);
+		stunGaugePanel.add(mortal2Panel);
 		mortal2Panel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblMortal2 = new JLabel("MORTAL2");
 		lblMortal2.setFont(new Font("Tahoma", Font.BOLD, 8));
-		lblMortal2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMortal2.setHorizontalAlignment(SwingConstants.LEFT);
 		mortal2Panel.add(lblMortal2, BorderLayout.NORTH);
 
 		StunGaugePanel mortal2StunProgressPanel = new StunGaugePanel();
@@ -950,11 +1013,11 @@ public class CharacterCreationView extends JFrame {
 		mortal2Panel.add(lblMortal2StunModifier, BorderLayout.SOUTH);
 
 		JPanel mortal3Panel = new JPanel();
-		stunPanel.add(mortal3Panel);
+		stunGaugePanel.add(mortal3Panel);
 		mortal3Panel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblMortal3 = new JLabel("MORTAL3");
-		lblMortal3.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMortal3.setHorizontalAlignment(SwingConstants.LEFT);
 		lblMortal3.setFont(new Font("Tahoma", Font.BOLD, 8));
 		mortal3Panel.add(lblMortal3, BorderLayout.NORTH);
 
@@ -972,11 +1035,11 @@ public class CharacterCreationView extends JFrame {
 		mortal3Panel.add(lblMortal3StunModifier, BorderLayout.SOUTH);
 
 		JPanel mortal4Panel = new JPanel();
-		stunPanel.add(mortal4Panel);
+		stunGaugePanel.add(mortal4Panel);
 		mortal4Panel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblMortal4 = new JLabel("MORTAL4");
-		lblMortal4.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMortal4.setHorizontalAlignment(SwingConstants.LEFT);
 		lblMortal4.setFont(new Font("Tahoma", Font.BOLD, 8));
 		mortal4Panel.add(lblMortal4, BorderLayout.NORTH);
 
@@ -994,11 +1057,11 @@ public class CharacterCreationView extends JFrame {
 		mortal4Panel.add(lblMortal4StunModifier, BorderLayout.SOUTH);
 
 		JPanel mortal5Panel = new JPanel();
-		stunPanel.add(mortal5Panel);
+		stunGaugePanel.add(mortal5Panel);
 		mortal5Panel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblMortal5 = new JLabel("MORTAL5");
-		lblMortal5.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMortal5.setHorizontalAlignment(SwingConstants.LEFT);
 		lblMortal5.setFont(new Font("Tahoma", Font.BOLD, 8));
 		mortal5Panel.add(lblMortal5, BorderLayout.NORTH);
 
@@ -1016,11 +1079,11 @@ public class CharacterCreationView extends JFrame {
 		mortal5Panel.add(lblMortal5StunModifier, BorderLayout.SOUTH);
 
 		JPanel mortal6Panel = new JPanel();
-		stunPanel.add(mortal6Panel);
+		stunGaugePanel.add(mortal6Panel);
 		mortal6Panel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblMortal6 = new JLabel("MORTAL6");
-		lblMortal6.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMortal6.setHorizontalAlignment(SwingConstants.LEFT);
 		lblMortal6.setFont(new Font("Tahoma", Font.BOLD, 8));
 		mortal6Panel.add(lblMortal6, BorderLayout.NORTH);
 
@@ -1036,6 +1099,68 @@ public class CharacterCreationView extends JFrame {
 		lblMortal6StunModifier.setBackground(Color.BLACK);
 		lblMortal6StunModifier.setForeground(Color.WHITE);
 		mortal6Panel.add(lblMortal6StunModifier, BorderLayout.SOUTH);
+
+		JPanel stunControlPanel = new JPanel();
+		stunPanel.add(stunControlPanel, BorderLayout.EAST);
+		GridBagLayout gbl_stunControlPanel = new GridBagLayout();
+		gbl_stunControlPanel.columnWidths = new int[] { 17, 0 };
+		gbl_stunControlPanel.rowHeights = new int[] { 17, 17, 17, 17, 0 };
+		gbl_stunControlPanel.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_stunControlPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		stunControlPanel.setLayout(gbl_stunControlPanel);
+
+		increaseInjuryButton = new JButton(
+				new ImageIcon(new ImageIcon(CharacterCreationView.class.getResource("/img/increase-arrow-64x64.png"))
+						.getImage().getScaledInstance(8, 8, Image.SCALE_SMOOTH)));
+		increaseInjuryButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		increaseInjuryButton.setPreferredSize(new Dimension(8, 8));
+		GridBagConstraints gbc_increaseInjuryButton = new GridBagConstraints();
+		gbc_increaseInjuryButton.fill = GridBagConstraints.BOTH;
+		gbc_increaseInjuryButton.weighty = 0.3333;
+		gbc_increaseInjuryButton.weightx = 1.0;
+		gbc_increaseInjuryButton.gridx = 0;
+		gbc_increaseInjuryButton.gridy = 0;
+		stunControlPanel.add(increaseInjuryButton, gbc_increaseInjuryButton);
+
+		minorlyIncreaseInjuryButton = new JButton(new ImageIcon(
+				new ImageIcon(CharacterCreationView.class.getResource("/img/increase-arrow-minor-64x64.png")).getImage()
+						.getScaledInstance(8, 8, Image.SCALE_SMOOTH)));
+		minorlyIncreaseInjuryButton.setPreferredSize(new Dimension(8, 8));
+		GridBagConstraints gbc_slightIncreaseInjuryButton = new GridBagConstraints();
+		gbc_slightIncreaseInjuryButton.fill = GridBagConstraints.BOTH;
+		gbc_slightIncreaseInjuryButton.weighty = 0.1667;
+		gbc_slightIncreaseInjuryButton.weightx = 1.0;
+		gbc_slightIncreaseInjuryButton.gridx = 0;
+		gbc_slightIncreaseInjuryButton.gridy = 1;
+		stunControlPanel.add(minorlyIncreaseInjuryButton, gbc_slightIncreaseInjuryButton);
+
+		minorlyDecreaseInjuryButton = new JButton(new ImageIcon(
+				new ImageIcon(CharacterCreationView.class.getResource("/img/decrease-arrow-minor-64x64.png")).getImage()
+						.getScaledInstance(8, 8, Image.SCALE_SMOOTH)));
+		minorlyDecreaseInjuryButton.setPreferredSize(new Dimension(8, 8));
+		GridBagConstraints gbc_slightDecreaseInjuryButton = new GridBagConstraints();
+		gbc_slightDecreaseInjuryButton.fill = GridBagConstraints.BOTH;
+		gbc_slightDecreaseInjuryButton.weighty = 0.1667;
+		gbc_slightDecreaseInjuryButton.weightx = 1.0;
+		gbc_slightDecreaseInjuryButton.gridx = 0;
+		gbc_slightDecreaseInjuryButton.gridy = 2;
+		stunControlPanel.add(minorlyDecreaseInjuryButton, gbc_slightDecreaseInjuryButton);
+
+		decreaseInjuryButton = new JButton(
+				new ImageIcon(new ImageIcon(CharacterCreationView.class.getResource("/img/decrease-arrow-64x64.png"))
+						.getImage().getScaledInstance(8, 8, Image.SCALE_SMOOTH)));
+		decreaseInjuryButton.setPreferredSize(new Dimension(8, 8));
+
+		GridBagConstraints gbc_decreaseInjuryButton = new GridBagConstraints();
+		gbc_decreaseInjuryButton.fill = GridBagConstraints.BOTH;
+		gbc_decreaseInjuryButton.weighty = 0.3333;
+		gbc_decreaseInjuryButton.weightx = 1.0;
+		gbc_decreaseInjuryButton.gridx = 0;
+		gbc_decreaseInjuryButton.gridy = 3;
+		stunControlPanel.add(decreaseInjuryButton, gbc_decreaseInjuryButton);
 
 		JPanel portraitPanel = new JPanel();
 		GridBagConstraints gbc_portraitPanel = new GridBagConstraints();
@@ -1257,7 +1382,7 @@ public class CharacterCreationView extends JFrame {
 		fileChooser.addChoosableFileFilter(new CharFilter());
 	}
 
-	public String getHandle() {
+	public String getCharacterName() {
 		return handleTextField.getText();
 	}
 
@@ -1410,11 +1535,11 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public void setIntelligenceLevel(String intelligenceLevel) {
-		intelligenceSpinner.setValue(intelligenceLevel);
+		intelligenceSpinner.setValue(Integer.parseInt(intelligenceLevel));
 	}
 
 	public void setUnmodifiedReflexesLevel(String unmodifiedReflexesLevel) {
-		unmodifiedReflexesSpinner.setValue(unmodifiedReflexesLevel);
+		unmodifiedReflexesSpinner.setValue(Integer.parseInt(unmodifiedReflexesLevel));
 	}
 
 	public void setModifiedReflexesLevel(String modifiedReflexesLevel) {
@@ -1422,27 +1547,27 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public void setTechnicalAbilityLevel(String technicalAbilityLevel) {
-		technicalAbilitySpinner.setValue(technicalAbilityLevel);
+		technicalAbilitySpinner.setValue(Integer.parseInt(technicalAbilityLevel));
 	}
 
 	public void setCoolLevel(String coolLevel) {
-		coolSpinner.setValue(coolLevel);
+		coolSpinner.setValue(Integer.parseInt(coolLevel));
 	}
 
 	public void setAttractivenessLevel(String attractivenessLevel) {
-		attractivenessSpinner.setValue(attractivenessLevel);
+		attractivenessSpinner.setValue(Integer.parseInt(attractivenessLevel));
 	}
 
 	public void setLuckLevel(String luckLevel) {
-		luckSpinner.setValue(luckLevel);
+		luckSpinner.setValue(Integer.parseInt(luckLevel));
 	}
 
 	public void setMovementAllowanceLevel(String movementAllowanceLevel) {
-		movementAllowanceSpinner.setValue(movementAllowanceLevel);
+		movementAllowanceSpinner.setValue(Integer.parseInt(movementAllowanceLevel));
 	}
 
 	public void setBodyLevel(String bodyLevel) {
-		bodySpinner.setValue(bodyLevel);
+		bodySpinner.setValue(Integer.parseInt(bodyLevel));
 	}
 
 	public void setCurrentEmpathyLevel(String currentEmpathyLevel) {
@@ -1450,19 +1575,19 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public void setTotalEmpathyLevel(String totalEmpathyLevel) {
-		totalEmpathySpinner.setValue(totalEmpathyLevel);
+		totalEmpathySpinner.setValue(Integer.parseInt(totalEmpathyLevel));
 	}
 
 	public void setRunLevel(String runLevel) {
-		runTextField.setText(runLevel);
+		runTextField.setText(runLevel + "m");
 	}
 
 	public void setLeapLevel(String leapLevel) {
-		leapTextField.setText(leapLevel);
+		leapTextField.setText(leapLevel + "m");
 	}
 
 	public void setLiftLevel(String liftLevel) {
-		liftTextField.setText(liftLevel);
+		liftTextField.setText(liftLevel + "kg");
 	}
 
 	public void setHeadArmorStoppingPower(String headArmor) {
@@ -1529,13 +1654,13 @@ public class CharacterCreationView extends JFrame {
 		technicalAbilitiesSkillMap.put(skill, rank);
 	}
 
-	public void drawInjuryPoints(double points) {
-		int fullStunGauges = (int) (points / CharacterCreationView.GAUGE_CELLS) - 1;
+	public void drawLoadedInjuryPoints(double points) {
+		int fullStunGauges = (int) (points / CharacterCreationView.MAXIMUM_CELLS_PER_GAUGE) - 1;
 		for (int i = 0; i <= fullStunGauges; i++) {
 			fillStunGauge(i);
 		}
 
-		double remainderStunGauges = points % CharacterCreationView.GAUGE_CELLS;
+		double remainderStunGauges = points % CharacterCreationView.MAXIMUM_CELLS_PER_GAUGE;
 		for (int j = 0; j < remainderStunGauges; j++) {
 			if (remainderStunGauges % 1 == 0) {
 				stunProgressPanels.get(fullStunGauges + 1).increaseStunGauge();
@@ -1544,6 +1669,60 @@ public class CharacterCreationView extends JFrame {
 			} else {
 				stunProgressPanels.get(fullStunGauges + 1).minorlyIncreaseStunGauge();
 			}
+		}
+	}
+
+	public void drawIncreasedInjuryPoints(double points) {
+		int targetIndex = (int) ((points - 1) / MAXIMUM_CELLS_PER_GAUGE);
+		StunGaugePanel targetPanel = stunProgressPanels.get(targetIndex);
+		if (points % MAXIMUM_CELLS_PER_GAUGE < 1 && points % MAXIMUM_CELLS_PER_GAUGE > 0) {
+			targetPanel.minorlyIncreaseStunGauge();
+			targetPanel.revalidate();
+			targetPanel.repaint();
+			targetPanel = stunProgressPanels.get(targetIndex + 1);
+			targetPanel.minorlyIncreaseStunGauge();
+			targetPanel.revalidate();
+			targetPanel.repaint();
+		} else {
+			targetPanel.increaseStunGauge();
+			targetPanel.revalidate();
+			targetPanel.repaint();
+		}
+	}
+
+	public void drawMinorlyIncreasedInjuryPoints(double points) {
+		int targetIndex = (int) ((points - 0.5) / MAXIMUM_CELLS_PER_GAUGE);
+		StunGaugePanel targetPanel = stunProgressPanels.get(targetIndex);
+		targetPanel.minorlyIncreaseStunGauge();
+
+		targetPanel.revalidate();
+		targetPanel.repaint();
+	}
+
+	public void drawMinorlyDecreaseInjuryPoints(double points) {
+		int targetIndex = (int) (points / MAXIMUM_CELLS_PER_GAUGE);
+		StunGaugePanel targetPanel = stunProgressPanels.get(targetIndex);
+		targetPanel.minorlyDecreaseStunGauge();
+
+		targetPanel.revalidate();
+		targetPanel.repaint();
+	}
+
+	public void drawDecreaseInjuryPoints(double points) {
+		int targetIndex = (int) (points / MAXIMUM_CELLS_PER_GAUGE);
+		StunGaugePanel targetPanel = stunProgressPanels.get(targetIndex);
+		if ((points + 1) % MAXIMUM_CELLS_PER_GAUGE < 1 && (points + 1) % MAXIMUM_CELLS_PER_GAUGE > 0) {
+			targetPanel.minorlyDecreaseStunGauge();
+			targetPanel.revalidate();
+			targetPanel.repaint();
+			targetPanel = stunProgressPanels.get(targetIndex + 1);
+			targetPanel.minorlyDecreaseStunGauge();
+			targetPanel.revalidate();
+			targetPanel.repaint();
+		} else {
+			targetPanel.decreaseStunGauge();
+			targetPanel.revalidate();
+			targetPanel.repaint();
 		}
 	}
 
@@ -1611,20 +1790,72 @@ public class CharacterCreationView extends JFrame {
 		targetMap.put(skill, 0);
 	}
 
-	public void addChangeRoleListener(ActionListener listenForRoleChange) {
-		roleComboBox.addActionListener(listenForRoleChange);
+	public void addHandleDocumentListener(DocumentListener listenerForHandleDocument) {
+		handleTextField.getDocument().addDocumentListener(listenerForHandleDocument);
 	}
 
-	public void addDocumentChangedListener(ChangeListener listenForDocumentChange) {
-		movementAllowanceSpinner.addChangeListener(listenForDocumentChange);
+	public void addRoleChangeListener(ActionListener listenerForRoleChange) {
+		roleComboBox.addActionListener(listenerForRoleChange);
 	}
 
-	public void addLoadCharacterListener(ActionListener listenForLoadButton) {
-		loadButton.addActionListener(listenForLoadButton);
+	public void addIntelligenceStatChangeListener(ChangeListener listenerForStatChange) {
+		intelligenceSpinner.addChangeListener(listenerForStatChange);
 	}
 
-	public void addSaveCharacterListener(ActionListener listenForSaveButton) {
-		saveButton.addActionListener(listenForSaveButton);
+	public void addUnmodifiedReflexesStatChangeListener(ChangeListener listenerForStatChange) {
+		unmodifiedReflexesSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addTechnicalAbilityStatChangeListener(ChangeListener listenerForStatChange) {
+		technicalAbilitySpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addCoolStatChangeListener(ChangeListener listenerForStatChange) {
+		coolSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addAttractivenessStatChangeListener(ChangeListener listenerForStatChange) {
+		attractivenessSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addLuckStatChangeListener(ChangeListener listenerForStatChange) {
+		luckSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addMovementAllowanceStatChangeListener(ChangeListener listenerForStatChange) {
+		movementAllowanceSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addBodyStatChangeListener(ChangeListener listenerForStatChange) {
+		bodySpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addTotalEmpathyStatChangeListener(ChangeListener listenerForStatChange) {
+		totalEmpathySpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addLoadCharacterActionListener(ActionListener listenerForLoadButton) {
+		loadButton.addActionListener(listenerForLoadButton);
+	}
+
+	public void addSaveCharacterActionListener(ActionListener listenerForSaveButton) {
+		saveButton.addActionListener(listenerForSaveButton);
+	}
+
+	public void addIncreaseInjuryActionListener(ActionListener listenerForIncreaseInjuryButton) {
+		increaseInjuryButton.addActionListener(listenerForIncreaseInjuryButton);
+	}
+
+	public void addMinorlyIncreaseInjuryActionListener(ActionListener listenerForMinorlyIncreaseInjuryButton) {
+		minorlyIncreaseInjuryButton.addActionListener(listenerForMinorlyIncreaseInjuryButton);
+	}
+
+	public void addMinorlyDecreaseInjuryActionListener(ActionListener listenerForMinorlyDecreaseInjuryButton) {
+		minorlyDecreaseInjuryButton.addActionListener(listenerForMinorlyDecreaseInjuryButton);
+	}
+
+	public void addDecreaseInjuryActionListener(ActionListener listenerForDecreaseInjuryButton) {
+		decreaseInjuryButton.addActionListener(listenerForDecreaseInjuryButton);
 	}
 
 	class CharFilter extends FileFilter {
@@ -1655,7 +1886,7 @@ public class CharacterCreationView extends JFrame {
 			int width = STUN_PROGRESS_CELL_WIDTH;
 			int height = STUN_PROGRESS_CELL_HEIGHT;
 			g.setColor(Color.BLACK);
-			for (int i = 0; i < GAUGE_CELLS; i++) {
+			for (int i = 0; i < MAXIMUM_CELLS_PER_GAUGE; i++) {
 				g.drawRect(x, y, width, height);
 				x += STUN_PROGRESS_CELL_WIDTH;
 			}
@@ -1666,13 +1897,13 @@ public class CharacterCreationView extends JFrame {
 		public void increaseStunGauge() {
 			double newWidth = rect.getWidth() + STUN_PROGRESS_CELL_WIDTH;
 			double newHeight = rect.getHeight();
-			rect = new Rectangle2D.Double(0, 0, newWidth, newHeight);
+			rect.setRect(new Rectangle2D.Double(0, 0, newWidth, newHeight));
 		}
 
 		public void minorlyIncreaseStunGauge() {
-			double newWidth = rect.getWidth() + (STUN_PROGRESS_CELL_WIDTH / 2);
+			double newWidth = rect.getWidth() + (STUN_PROGRESS_CELL_WIDTH / 2.0);
 			double newHeight = rect.getHeight();
-			rect = new Rectangle2D.Double(0, 0, newWidth, newHeight);
+			rect.setRect(new Rectangle2D.Double(0, 0, newWidth, newHeight));
 		}
 
 		public void decreaseStunGauge() {
@@ -1682,7 +1913,7 @@ public class CharacterCreationView extends JFrame {
 		}
 
 		public void minorlyDecreaseStunGauge() {
-			double newWidth = rect.getWidth() - (STUN_PROGRESS_CELL_WIDTH / 2);
+			double newWidth = rect.getWidth() - (STUN_PROGRESS_CELL_WIDTH / 2.0);
 			double newHeight = rect.getHeight();
 			rect = new Rectangle2D.Double(0, 0, newWidth, newHeight);
 		}

@@ -3,7 +3,7 @@ package core;
 import java.awt.EventQueue;
 
 import controller.CharacterCreationController;
-import model.Character;
+import model.CharacterCreationModel;
 import view.CharacterCreationView;
 
 public class Main {
@@ -12,10 +12,10 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Character character = new Character();
-					CharacterCreationView frame = new CharacterCreationView();
-					CharacterCreationController controller = new CharacterCreationController(character, frame);
-					frame.setVisible(true);
+					CharacterCreationModel characterModel = new CharacterCreationModel();
+					CharacterCreationView characterView = new CharacterCreationView();
+					CharacterCreationController characterController = new CharacterCreationController(characterModel, characterView);
+					characterView.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

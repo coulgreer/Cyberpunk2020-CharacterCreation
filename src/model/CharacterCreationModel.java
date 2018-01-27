@@ -5,46 +5,51 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Character {
-	private static final int DEFAULT_STAT_LEVEL = 2;
+import view.CharacterCreationView;
+
+public class CharacterCreationModel {
+	public static final int MINIMUM_INJURY_POINTS = 0;
+	public static final int MAXIMUM_INJURY_POINTS = 40;
 	
-	private String handle;
+	private static final int DEFAULT_STAT_LEVEL = 2;
+
+	private String characterName;
 	private Role role;
-	private int characterPoints ;
+	private int characterPoints;
 
-	private int intelligence ;
-	private int modifiedReflexes ;
-	private int unmodifiedReflexes ;
-	private int technicalAbility ;
-	private int cool ;
-	private int attractiveness ;
-	private int luck ;
-	private int movementAllowance ;
-	private int body ;
-	private int currentEmpathy ;
-	private int totalEmpathy ;
-	private double run ;
-	private double leap ;
-	private double carry;
-	private double lift ;
+	private int intelligenceLevel;
+	private int modifiedReflexesLevel;
+	private int unmodifiedReflexesLevel;
+	private int technicalAbilityLevel;
+	private int coolLevel;
+	private int attractivenessLevel;
+	private int luckLevel;
+	private int movementAllowanceLevel;
+	private int bodyLevel;
+	private int currentEmpathyLevel;
+	private int totalEmpathyLevel;
+	private double runDistance;
+	private double leapDistance;
+	private double carryCapacity;
+	private double liftCapacity;
 
-	private int headArmor ;
-	private int torsoArmor ;
-	private int rightArmArmor ;
-	private int leftArmArmor ;
-	private int rightLegArmor ;
-	private int leftLegArmor ;
+	private int headArmorSP;
+	private int torsoArmorSP;
+	private int rightArmArmorSP;
+	private int leftArmArmorSP;
+	private int rightLegArmorSP;
+	private int leftLegArmorSP;
 
-	private int saveModifier ;
-	private int bodyTypeModifier ;
+	private int saveModifier;
+	private int bodyTypeModifier;
 
-	private double injuryPoints ;
+	private double injuryPoints;
 
 	private Map<String, Skill> skills = new HashMap<String, Skill>();
 	private Map<String, Role> roles = new HashMap<String, Role>();
 
 	private Skill authority = new Skill.SkillBuilder() //
-			.withSkill("Authority") //
+			.withSkillName("Authority") //
 			.withDescription("The ability to intimidate or control others "
 					+ "through your position as a lawman. This attribute represents "
 					+ "the Cop's ability to call on the forces of the Law and "
@@ -62,7 +67,7 @@ public class Character {
 			.withType("SPECIAL ABILITIES") //
 			.build();
 	private Skill charismaticLeadership = new Skill.SkillBuilder() //
-			.withSkill("Charismatic Leadership") //
+			.withSkillName("Charismatic Leadership") //
 			.withDescription("This skill allows the Rocker to sway crowds equal to "
 					+ "his level squared times 200. This ability (added to your Cool "
 					+ "stat) allows the Rockerboy to control, incite and charm large "
@@ -84,7 +89,7 @@ public class Character {
 			.withType("SPECIAL ABILITIES") //
 			.build();
 	private Skill combatSense = new Skill.SkillBuilder() //
-			.withSkill("Combat Sense") //
+			.withSkillName("Combat Sense") //
 			.withDescription("This ability is based on the Solo's constant training "
 					+ "and professionalism. Combat Sense allows the Solo to perceive "
 					+ "danger, notice traps, and have an almost unearthly ability to "
@@ -93,7 +98,7 @@ public class Character {
 			.withType("SPECIAL ABILITIES") //
 			.build();
 	private Skill credibility = new Skill.SkillBuilder() //
-			.withSkill("Credibility") //
+			.withSkillName("Credibility") //
 			.withDescription("This is the ability to be believed: by your viewers, by "
 					+ "the police, by important and powerful people. This is critical "
 					+ "to getting your story heard and acted upon, as well as "
@@ -112,7 +117,7 @@ public class Character {
 			.withType("SPECIAL ABILITIES") //
 			.build();
 	private Skill family = new Skill.SkillBuilder() //
-			.withSkill("Family") //
+			.withSkillName("Family") //
 			.withDescription("This is the ability to call upon the resources and help"
 					+ " of any of the members of the Nomad`s large, extended tribal"
 					+ " family. This can be in the form of weapons, cash, information,"
@@ -127,7 +132,7 @@ public class Character {
 			.withType("SPECIAL ABILITIES") //
 			.build();
 	private Skill interf = new Skill.SkillBuilder() //
-			.withSkill("Interface") //
+			.withSkillName("Interface") //
 			.withDescription("This skill reflects the Netrunner's ability to manipulate"
 					+ " Interface programs, and is the Skill used when operating Menu "
 					+ "functions such as Locate Remote, Run Software, Control Remote, "
@@ -136,7 +141,7 @@ public class Character {
 			.withType("SPECIAL ABILITIES") //
 			.build();
 	private Skill juryRig = new Skill.SkillBuilder() //
-			.withSkill("Jury Rig") //
+			.withSkillName("Jury Rig") //
 			.withDescription("This general repair skill allows the Techie to "
 					+ "temporarily repair or alter anything for 1 D6 turns per level "
 					+ "of skill. This is not a permanent repair; after the elapsed "
@@ -144,7 +149,7 @@ public class Character {
 			.withType("SPECIAL ABILITIES") //
 			.build();
 	private Skill medicalTech = new Skill.SkillBuilder() //
-			.withSkill("Medical Tech") //
+			.withSkillName("Medical Tech") //
 			.withDescription("This is the skill used to perform major surgery and "
 					+ "medical repairs.\n\nMedical Tech skill assumes that the character"
 					+ " has studied medicine in a professional setting. This gives "
@@ -166,7 +171,7 @@ public class Character {
 			.withType("SPECIAL ABILITIES") //
 			.build();
 	private Skill resources = new Skill.SkillBuilder() //
-			.withSkill("Resources") //
+			.withSkillName("Resources") //
 			.withDescription("This represents the Corporate's ability to command "
 					+ "corporation resources. It is used as a persuasion skill, "
 					+ "based on the scale of resources requested. This could include"
@@ -184,7 +189,7 @@ public class Character {
 			.withType("SPECIAL ABILITIES") //
 			.build();
 	private Skill streetdeal = new Skill.SkillBuilder() //
-			.withSkill("Streetdeal") //
+			.withSkillName("Streetdeal") //
 			.withDescription("This is the ability to deal with the underground "
 					+ "information network. With Streetdeal, a Fixer can uncover "
 					+ "rumors and information, locate missing persons or things, "
@@ -201,7 +206,7 @@ public class Character {
 			.withType("SPECIAL ABILITIES") //
 			.build();
 	private Skill personalGrooming = new Skill.SkillBuilder() //
-			.withSkill("Personal Grooming") //
+			.withSkillName("Personal Grooming") //
 			.withDescription("This is the skill of knowing proper grooming, hair "
 					+ "styling, etc., to maximize your physical attractiveness. "
 					+ "Use of this skill allows players to increase their "
@@ -213,7 +218,7 @@ public class Character {
 			.withType("ATTRACTIVENESS") //
 			.build();
 	private Skill wardrobeAndStyle = new Skill.SkillBuilder() //
-			.withSkill("Wardrobe and Style") //
+			.withSkillName("Wardrobe and Style") //
 			.withDescription("The skill of knowing the right clothes to wear, when to "
 					+ "wear them, and how to look cool even in a spacesuit. With a "
 					+ "Wardrobe of +2 or better, you are good at choosing clothes off "
@@ -223,7 +228,7 @@ public class Character {
 			.withType("ATTRACTIVENESS") //
 			.build();
 	private Skill endurance = new Skill.SkillBuilder() //
-			.withSkill("Endurance") //
+			.withSkillName("Endurance") //
 			.withDescription("This is the ability to withstand pain or hardship, "
 					+ "particularly over long periods of time, by knowing the best "
 					+ "ways to conserve strength and energy. Endurance Skill checks "
@@ -232,7 +237,7 @@ public class Character {
 			.withType("BODY") //
 			.build();
 	private Skill strengthFeat = new Skill.SkillBuilder() //
-			.withSkill("Strength Feat") //
+			.withSkillName("Strength Feat") //
 			.withDescription("The user of this skill has practiced the art of bending "
 					+ "bars, crushing objects, ripping phone books apart and other "
 					+ "useful parlor tricks. At +2 you can crush cans, rip thin books "
@@ -242,12 +247,12 @@ public class Character {
 			.withType("BODY") //
 			.build();
 	private Skill swimming = new Skill.SkillBuilder() //
-			.withSkill("Swimming") //
+			.withSkillName("Swimming") //
 			.withDescription("This skill is required to know how to swim (see Athletics under Reflexes for details).") //
 			.withType("BODY") //
 			.build();
 	private Skill interrogation = new Skill.SkillBuilder() //
-			.withSkill("Interrogation") //
+			.withSkillName("Interrogation") //
 			.withDescription("The skill of drawing information from a subject and "
 					+ "forcing his secrets into the open. An Interrogation of +2 or "
 					+ "better will allow you to infallibly find out if your boyfriend "
@@ -258,7 +263,7 @@ public class Character {
 			.withType("COOL") //
 			.build();
 	private Skill intimidate = new Skill.SkillBuilder() //
-			.withSkill("Intimidate") //
+			.withSkillName("Intimidate") //
 			.withDescription("The skill of getting people to do what you want by "
 					+ "force of personality or physical coercion. At +3, you can "
 					+ "frighten almost any typical citizen, politician or low-level "
@@ -267,7 +272,7 @@ public class Character {
 			.withType("COOL") //
 			.build();
 	private Skill oratory = new Skill.SkillBuilder() //
-			.withSkill("Oratory") //
+			.withSkillName("Oratory") //
 			.withDescription("The skill of public speaking. At +2, you can wing high "
 					+ "school speech contests. At +6, you can be paid to speak in "
 					+ "public. At + 1 0, you are capable of delivering a speech to "
@@ -277,7 +282,7 @@ public class Character {
 			.withType("COOL") //
 			.build();
 	private Skill resistTortureAndDrugs = new Skill.SkillBuilder() //
-			.withSkill("Resist Torture/Drugs") //
+			.withSkillName("Resist Torture/Drugs") //
 			.withDescription("Characters with this skill are especially toughened "
 					+ "against interrogation, torture and mind control drugs. A "
 					+ "successful use of this skill will automatically increase the "
@@ -285,7 +290,7 @@ public class Character {
 			.withType("COOL") //
 			.build();
 	private Skill streetwise = new Skill.SkillBuilder() //
-			.withSkill("Streetwise") //
+			.withSkillName("Streetwise") //
 			.withDescription("The knowledge of the 'seamy' side of life-where to get "
 					+ "illegal and contraband things, how to talk to the criminal "
 					+ "element, and avoiding bad situations in bad neighborhoods. "
@@ -297,7 +302,7 @@ public class Character {
 			.withType("COOL") //
 			.build();
 	private Skill humanPerception = new Skill.SkillBuilder() //
-			.withSkill("Human Perception") //
+			.withSkillName("Human Perception") //
 			.withDescription("The skill of detecting lies, evasions, moods and other "
 					+ "emotional clues from others. At +2, you can usually tell when "
 					+ "you're not getting the whole truth. At +6, you can detect subtle "
@@ -306,7 +311,7 @@ public class Character {
 			.withType("EMPATHY") //
 			.build();
 	private Skill interview = new Skill.SkillBuilder() //
-			.withSkill("Interview") //
+			.withSkillName("Interview") //
 			.withDescription("The skill of eliciting interesting annecdotes from an "
 					+ "interview subject. This information will be of a more "
 					+ "nonspecific and personal nature rather than specific knowledge "
@@ -323,7 +328,7 @@ public class Character {
 			.withType("EMPATHY") //
 			.build();
 	private Skill leadership = new Skill.SkillBuilder() //
-			.withSkill("Leadership") //
+			.withSkillName("Leadership") //
 			.withDescription("The skill of leading and convincing people to follow "
 					+ "you. A leader with a skill of +2 can manage a small office "
 					+ "successfully and be respected for it. A leader with a skill of "
@@ -334,7 +339,7 @@ public class Character {
 			.withType("EMPATHY") //
 			.build();
 	private Skill seduction = new Skill.SkillBuilder() //
-			.withSkill("Seduction") //
+			.withSkillName("Seduction") //
 			.withDescription("The skill of forming and maintaining romantic "
 					+ "relationships (this includes your abilities as a lover). "
 					+ "This skill may be used to determine whether or not players can "
@@ -345,7 +350,7 @@ public class Character {
 			.withType("EMPATHY") //
 			.build();
 	private Skill social = new Skill.SkillBuilder() //
-			.withSkill("Social") //
+			.withSkillName("Social") //
 			.withDescription("The ability to deal with social situations, like "
 					+ "knowing the right fork to use or when not to tell the joke "
 					+ "about the farmer's daughter and the travelling cyberware salesman."
@@ -356,7 +361,7 @@ public class Character {
 			.withType("EMPATHY") //
 			.build();
 	private Skill persuasionAndFastTalk = new Skill.SkillBuilder() //
-			.withSkill("Persuasion And Fast Talk") //
+			.withSkillName("Persuasion And Fast Talk") //
 			.withDescription("The ability to talk others into doing what you want. This "
 					+ "may be used individually or on large groups. At +3, you can win "
 					+ "most debates or convince your girlfriend that the blonde you were "
@@ -365,7 +370,7 @@ public class Character {
 			.withType("EMPATHY") //
 			.build();
 	private Skill perform = new Skill.SkillBuilder() //
-			.withSkill("Perform") //
+			.withSkillName("Perform") //
 			.withDescription("The skill of trained acting, singing, etc. A trained "
 					+ "performer of +4 or greater can successfully sing for payment at "
 					+ "weddings or small clubs. Performers +6 or greater will be "
@@ -375,13 +380,13 @@ public class Character {
 			.withType("EMPATHY") //
 			.build();
 	private Skill accounting = new Skill.SkillBuilder() //
-			.withSkill("Accounting") //
+			.withSkillName("Accounting") //
 			.withDescription("The ability to balance books (or create false books), "
 					+ "juggle numbers, create budgets and handle day to day business operations.") //
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill anthropology = new Skill.SkillBuilder() //
-			.withSkill("Anthropology") //
+			.withSkillName("Anthropology") //
 			.withDescription("The knowledge of human cultures, habits and customs. "
 					+ "Unlike Streetwise (which covers only the cultures and customs of "
 					+ "the Street), or Social (which covers only what you should do in "
@@ -395,7 +400,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill awarenessAndNotice = new Skill.SkillBuilder() //
-			.withSkill("Awareness/Notice") //
+			.withSkillName("Awareness/Notice") //
 			.withDescription("This is the equivalent of a 'trained observer' skill, "
 					+ "allowing characters to notice or be aware of clues, shadowers "
 					+ "and other events. With an Awareness of +2 you will usually spot "
@@ -411,7 +416,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill biology = new Skill.SkillBuilder() //
-			.withSkill("Biology") //
+			.withSkillName("Biology") //
 			.withDescription("General knowledge of animals, plants, and other "
 					+ "biological systems. At level +3, you know most types of common "
 					+ "animals, plants. At +6, you have a general understanding of "
@@ -420,7 +425,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill botany = new Skill.SkillBuilder() //
-			.withSkill("Botany") //
+			.withSkillName("Botany") //
 			.withDescription("The general knowledge of plants and plant identification. "
 					+ "At level +3, you know most common plants and can identify which "
 					+ "ones are dangerous and why. At a +6, you can identify most important "
@@ -430,7 +435,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill chemistry = new Skill.SkillBuilder() //
-			.withSkill("Chemistry") //
+			.withSkillName("Chemistry") //
 			.withDescription("The required skill for mixing chemicals and creating "
 					+ "various compounds. A level +2 Chemistry is equal to high school "
 					+ "chemistry. A level +4 is equal to a trained pharmacist or "
@@ -438,7 +443,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill composition = new Skill.SkillBuilder() //
-			.withSkill("Composition") //
+			.withSkillName("Composition") //
 			.withDescription("The required skill for writing songs, articles, or "
 					+ "stories. A Composing Skill of +4 or greater gives your character "
 					+ "the ability to produce salable work. A Skill of +8 or more "
@@ -447,7 +452,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill diagnoseIllness = new Skill.SkillBuilder() //
-			.withSkill("Diagnose Illness") //
+			.withSkillName("Diagnose Illness") //
 			.withDescription("The skill of clinically diagnosing symptoms and medical "
 					+ "problems. A +3 is the equivalent of a high school nurse-you can "
 					+ "recognize most common injuries and complaints. At +6, you would "
@@ -458,7 +463,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill educationAndGeneralKnowledge = new Skill.SkillBuilder() //
-			.withSkill("Education and General Knowledge") //
+			.withSkillName("Education and General Knowledge") //
 			.withDescription("This skill is the equivalent of a basic public school "
 					+ "education, allowing you to know how to read, write, use basic "
 					+ "math, and know enough history to get by. In effect, it is a 'lore' "
@@ -472,7 +477,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill expert = new Skill.SkillBuilder() //
-			.withSkill("Expert...") //
+			.withSkillName("Expert...") //
 			.withDescription("You may use this skill to be an expert on one specific "
 					+ "subject, such as rare postage stamps, obscure weapons, a foreign "
 					+ "language, etc. At +3, you are the local expert. At +6, you know "
@@ -482,7 +487,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill gamble = new Skill.SkillBuilder() //
-			.withSkill("Gamble") //
+			.withSkillName("Gamble") //
 			.withDescription("The skill of knowing how to make bets, figure odds, and play "
 					+ "games of chance successfully. As any professional gambler knows, this "
 					+ "is not a luck skill. At +2, you are the local card shark at the "
@@ -492,7 +497,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill geology = new Skill.SkillBuilder() //
-			.withSkill("Geology") //
+			.withSkillName("Geology") //
 			.withDescription("A functional knowledge of rocks, minerals and geologic "
 					+ "structures. At +3, you can identify most common rocks and minerals. "
 					+ "At +6, you have the equivalent of a college degree in Geology "
@@ -501,7 +506,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill hideAndEvade = new Skill.SkillBuilder() //
-			.withSkill("Hide/Evade") //
+			.withSkillName("Hide/Evade") //
 			.withDescription("The skill of losing pursuers, covering tracks and "
 					+ "otherwise evading people on your trail. At +3, you can lose most "
 					+ "booster-gangers on the rampage. At +6, you can ditch cops and "
@@ -509,7 +514,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill history = new Skill.SkillBuilder() //
-			.withSkill("History") //
+			.withSkillName("History") //
 			.withDescription("The knowledge of facts and figures of past events. In "
 					+ "game play, this might be used to determine if a character is "
 					+ "familiar with a particular clue related to a past event. At +2, "
@@ -521,7 +526,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill language1 = new Skill.SkillBuilder() //
-			.withSkill("Language 1...") //
+			.withSkillName("Language 1...") //
 			.withDescription("The knowledge of a foreign tongue. At +2, you can 'get by' "
 					+ "with speaking the language. At +3, you can actually read a written "
 					+ "form of it. At +6 and above, you are fairly fluent, although no "
@@ -530,7 +535,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill language2 = new Skill.SkillBuilder() //
-			.withSkill("Language 2...") //
+			.withSkillName("Language 2...") //
 			.withDescription("The knowledge of a foreign tongue. At +2, you can 'get by' "
 					+ "with speaking the language. At +3, you can actually read a written "
 					+ "form of it. At +6 and above, you are fairly fluent, although no "
@@ -539,7 +544,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill language3 = new Skill.SkillBuilder() //
-			.withSkill("Language 3...") //
+			.withSkillName("Language 3...") //
 			.withDescription("The knowledge of a foreign tongue. At +2, you can 'get by' "
 					+ "with speaking the language. At +3, you can actually read a written "
 					+ "form of it. At +6 and above, you are fairly fluent, although no "
@@ -548,7 +553,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill librarySearch = new Skill.SkillBuilder() //
-			.withSkill("Library Search") //
+			.withSkillName("Library Search") //
 			.withDescription("The skill of using databases, DataTerms?, libraries and "
 					+ "other compiled information sources to find facts. With a skill of "
 					+ "+2 you can use most simple databases. With a skill of +6, you can "
@@ -557,7 +562,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill mathematics = new Skill.SkillBuilder() //
-			.withSkill("Mathematics") //
+			.withSkillName("Mathematics") //
 			.withDescription("The skill of understanding calculations and mathematical "
 					+ "formulas. At +3, you have the ability to add, subtract, divide and "
 					+ "multiply. At +4, you can do algebra and geometry. At +6, you can "
@@ -565,13 +570,13 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill physics = new Skill.SkillBuilder() //
-			.withSkill("Physics") //
+			.withSkillName("Physics") //
 			.withDescription("The ability to calculate physical principles, such as gas pressures, "
 					+ "mechanical energies, etc. This skill requires a basic Mathematics Skill of +4.") //
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill programming = new Skill.SkillBuilder() //
-			.withSkill("Programming") //
+			.withSkillName("Programming") //
 			.withDescription("The required skill to write programs and to re-program computer "
 					+ "systems. This skill does not allow players to actually do repairs "
 					+ "on a computer(this requires Electronics). With a Programming Skill "
@@ -588,14 +593,14 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill shadowAndTrack = new Skill.SkillBuilder() //
-			.withSkill("Shadow/Track") //
+			.withSkillName("Shadow/Track") //
 			.withDescription("The skill of shadowing and following people. This skill is "
 					+ "primarily used in urban or inhabited areas rather than in wilderness "
 					+ "(where the skill of Survival incorporates tracking game in the wilds).") //
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill stockMarket = new Skill.SkillBuilder() //
-			.withSkill("Stock Market") //
+			.withSkillName("Stock Market") //
 			.withDescription("The ability to play the stock market, engage in routine "
 					+ "stock transactions and manipulate stocks profitably. At +2, you know "
 					+ "enough to invest in junk bonds and lose your shirt. At +6, your "
@@ -605,7 +610,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill systemKnowledge = new Skill.SkillBuilder() //
-			.withSkill("System Knowledge") //
+			.withSkillName("System Knowledge") //
 			.withDescription("Basic knowledge of the geography of the Net, it's lore and "
 					+ "history, as well as knowledge of the important computer systems, "
 					+ "their strengths and their weaknesses. At +2, you can generally "
@@ -618,7 +623,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill teaching = new Skill.SkillBuilder() //
-			.withSkill("Teaching") //
+			.withSkillName("Teaching") //
 			.withDescription("The skill of imparting knowledge to someone else (if you "
 					+ "don't think this is a skill, you ought to try it sometime). Players "
 					+ "may not teach any skill unless they have a higher skill level than "
@@ -633,7 +638,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill wildernessSurvival = new Skill.SkillBuilder() //
-			.withSkill("Wilderness Survival") //
+			.withSkillName("Wilderness Survival") //
 			.withDescription("The required skill for knowing how to survive in the wilds. "
 					+ "Knowledge includes how to set traps, forage for wood, track "
 					+ "game, build shelters, make fires. The average Boy Scout has a "
@@ -643,7 +648,7 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill zoology = new Skill.SkillBuilder() //
-			.withSkill("Zoology") //
+			.withSkillName("Zoology") //
 			.withDescription("Knowledge of lifeforms, biological processes and their "
 					+ "relation to the environment. At +2, you know most common animals. "
 					+ "At +5, you know not only well known animals, but also about many "
@@ -653,13 +658,13 @@ public class Character {
 			.withType("INTELLIGENCE") //
 			.build();
 	private Skill archery = new Skill.SkillBuilder() //
-			.withSkill("Archery") //
+			.withSkillName("Archery") //
 			.withDescription("The skill required to use bows, crossbows and other "
 					+ "arrow-based ranged weapons. See Handgun under Reflexes for details.") //
 			.withType("REFLEXES") //
 			.build();
 	private Skill athletics = new Skill.SkillBuilder() //
-			.withSkill("Athletics") //
+			.withSkillName("Athletics") //
 			.withDescription("This skill is required for accurate throwing, climbing, "
 					+ "and balancing. It combines the basic elements of any high school level "
 					+ "sports program. At +3 and above, you are the equivalent of a real "
@@ -668,7 +673,7 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill brawling = new Skill.SkillBuilder() //
-			.withSkill("Brawling") //
+			.withSkillName("Brawling") //
 			.withDescription("The skill of fighting man to man with fist, feet and other "
 					+ "parts of the body. Brawling is not a trained skill -- it is learned on "
 					+ "the Street by getting into a lot of fights. Unlike Martial Arts, there "
@@ -676,7 +681,7 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill dance = new Skill.SkillBuilder() //
-			.withSkill("Dance") //
+			.withSkillName("Dance") //
 			.withDescription("The specific skill needed to become a professional dancer. A "
 					+ "trained dancer +4 or greater can successfully dance for payment in "
 					+ "small clubs or dance troupes. Dancers +6 or greater will be considered "
@@ -686,14 +691,14 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill dodgeAndEscape = new Skill.SkillBuilder() //
-			.withSkill("Dodge and Escape") //
+			.withSkillName("Dodge and Escape") //
 			.withDescription("This skill is required to dodge attacks and escape grapples "
 					+ "and holds. If an attack is made without your knowledge, you may not "
 					+ "apply this skill to your Defense roll.") //
 			.withType("REFLEXES") //
 			.build();
 	private Skill driving = new Skill.SkillBuilder() //
-			.withSkill("Driving") //
+			.withSkillName("Driving") //
 			.withDescription("This skill allows you to pilot all ground vehicles like cars, "
 					+ "trucks, tanks and hovercraft. This skill is not useable for "
 					+ "piloting aircraft. A skill of +3 is equal to that of a very good "
@@ -705,7 +710,7 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill fencing = new Skill.SkillBuilder() //
-			.withSkill("Fencing") //
+			.withSkillName("Fencing") //
 			.withDescription("The mastery of swords, rapiers and monoblades. A Fencing Skill "
 					+ "of +3 allows you to be competent with a blade. A Skill of +5 makes "
 					+ "you fairly skilled. A Fencing Skill of +6 might win you the National "
@@ -717,7 +722,7 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill handgun = new Skill.SkillBuilder() //
-			.withSkill("Handgun") //
+			.withSkillName("Handgun") //
 			.withDescription("You must have this skill to effectively use handguns of any "
 					+ "type, including cyberwear types. At +2, you can use a handgun effectively "
 					+ "on a target range, though combat will still rattle you. At +5, you are "
@@ -731,7 +736,7 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill heavyWeapons = new Skill.SkillBuilder() //
-			.withSkill("Heavy Weapons") //
+			.withSkillName("Heavy Weapons") //
 			.withDescription("The required skill for using grenade launchers, autocannon, mortars, "
 					+ "heavy machine guns, missiles and rocket launchers. A Level +5 skill "
 					+ "would be equivalent to a general military 'Heavy Weapons' training course, "
@@ -739,7 +744,7 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill martialArt1 = new Skill.SkillBuilder() //
-			.withSkill("Martial Art 1...") //
+			.withSkillName("Martial Art 1...") //
 			.withDescription("This skill covets any type of trained fighting style using "
 					+ "hands, feet, or specialized 'martial arts' weapons. You must elect "
 					+ "a style of martial art and take a separate skill for each style "
@@ -791,7 +796,7 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill martialArt2 = new Skill.SkillBuilder() //
-			.withSkill("Martial Art 2...") //
+			.withSkillName("Martial Art 2...") //
 			.withDescription("This skill covets any type of trained fighting style using "
 					+ "hands, feet, or specialized 'martial arts' weapons. You must elect "
 					+ "a style of martial art and take a separate skill for each style "
@@ -843,7 +848,7 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill martialArt3 = new Skill.SkillBuilder() //
-			.withSkill("Martial Art 3...") //
+			.withSkillName("Martial Art 3...") //
 			.withDescription("This skill covets any type of trained fighting style using "
 					+ "hands, feet, or specialized 'martial arts' weapons. You must elect "
 					+ "a style of martial art and take a separate skill for each style "
@@ -895,7 +900,7 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill melee = new Skill.SkillBuilder() //
-			.withSkill("Melee") //
+			.withSkillName("Melee") //
 			.withDescription("The ability to use knives, axes, clubs and other hand to "
 					+ "hand weapons in combat. Note: when using non-ranged cyberweapons "
 					+ "such as rippers, scratchers, slice n' dices, cyberbeasts, and "
@@ -903,19 +908,19 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill motorcycle = new Skill.SkillBuilder() //
-			.withSkill("Motorcycle") //
+			.withSkillName("Motorcycle") //
 			.withDescription("The required skill to operate motorcycles, cyberbikes and "
 					+ "other two and three-wheeled vehicles.") //
 			.withType("REFLEXES") //
 			.build();
 	private Skill operateHeavyMachinery = new Skill.SkillBuilder() //
-			.withSkill("Operate Heavy Machinery") //
+			.withSkillName("Operate Heavy Machinery") //
 			.withDescription(
 					"The required skill to operate tractors, tanks, very large trucks and construction equipment.") //
 			.withType("REFLEXES") //
 			.build();
 	private Skill pilotGyro = new Skill.SkillBuilder() //
-			.withSkill("Pilot (Gyro)") //
+			.withSkillName("Pilot (Gyro)") //
 			.withDescription("In general, this is the skill of controlling aircraft. "
 					+ "Aircraft are broken into categories: Gyro and Rotorcraft, fixed "
 					+ "Wing Aircraft, Dirigibles and Vectored Thrust Aerodynes (AV-s). "
@@ -933,7 +938,7 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill pilotFixedWing = new Skill.SkillBuilder() //
-			.withSkill("Pilot (Fixed Wing)") //
+			.withSkillName("Pilot (Fixed Wing)") //
 			.withDescription("In general, this is the skill of controlling aircraft. "
 					+ "Aircraft are broken into categories: Gyro and Rotorcraft, fixed "
 					+ "Wing Aircraft, Dirigibles and Vectored Thrust Aerodynes (AV-s). "
@@ -952,7 +957,7 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill pilotDirigible = new Skill.SkillBuilder() //
-			.withSkill("Pilot (Dirigible)") //
+			.withSkillName("Pilot (Dirigible)") //
 			.withDescription("In general, this is the skill of controlling aircraft. "
 					+ "Aircraft are broken into categories: Gyro and Rotorcraft, fixed "
 					+ "Wing Aircraft, Dirigibles and Vectored Thrust Aerodynes (AV-s). "
@@ -970,7 +975,7 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill pilotVectorThrustVehicle = new Skill.SkillBuilder() //
-			.withSkill("Pilot (Vector Thrust Vehicle)") //
+			.withSkillName("Pilot (Vector Thrust Vehicle)") //
 			.withDescription("In general, this is the skill of controlling aircraft. "
 					+ "Aircraft are broken into categories: Gyro and Rotorcraft, fixed "
 					+ "Wing Aircraft, Dirigibles and Vectored Thrust Aerodynes (AV-s). "
@@ -988,13 +993,13 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill rifle = new Skill.SkillBuilder() //
-			.withSkill("Rifle") //
+			.withSkillName("Rifle") //
 			.withDescription("You must have this skill to use rifles/shotguns effectively "
 					+ "(see Handguns under Reflexes for limitations and modifiers).") //
 			.withType("REFLEXES") //
 			.build();
 	private Skill stealth = new Skill.SkillBuilder() //
-			.withSkill("Stealth") //
+			.withSkillName("Stealth") //
 			.withDescription("The skill of hiding in shadows, moving silently, evading guards, "
 					+ "etc. A Stealth Skill of+ 1 is about the level of a very sneaky 10 "
 					+ "year old stealing cookies. At +3, you are able to get past most "
@@ -1005,13 +1010,13 @@ public class Character {
 			.withType("REFLEXES") //
 			.build();
 	private Skill submachinegun = new Skill.SkillBuilder() //
-			.withSkill("Submachingun") //
+			.withSkillName("Submachingun") //
 			.withDescription("You must have this skill to use any type of submachine gun "
 					+ "effectively (see Handguns under Reflexes for limitations and modifiers).") //
 			.withType("REFLEXES") //
 			.build();
 	private Skill aeroTech = new Skill.SkillBuilder() //
-			.withSkill("Aero Tech") //
+			.withSkillName("Aero Tech") //
 			.withDescription("The required skill for repairing fixed wing aircraft, including "
 					+ "Ospreys, jets, and light aircraft. With a Skill of +3, you can perform "
 					+ "most routine maintenance tasks. With a Skill of +6, you can do engine "
@@ -1020,7 +1025,7 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill avTech = new Skill.SkillBuilder() //
-			.withSkill("AV Tech") //
+			.withSkillName("AV Tech") //
 			.withDescription("The required skill for repairing all ducted fan aerodyne "
 					+ "vehicles. At +3, you can perform routine maintenance. At +6, you "
 					+ "can tear down engines and modify an AV. At+ I 0, you can design "
@@ -1028,7 +1033,7 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill basicTech = new Skill.SkillBuilder() //
-			.withSkill("Basic Tech") //
+			.withSkillName("Basic Tech") //
 			.withDescription("The required skills for building or repairing simple "
 					+ "mechanical and electrical devices, such as car engines, "
 					+ "television sets, etc. With a Basic Tech Skill of +3 or better, "
@@ -1042,7 +1047,7 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill cryotankOperation = new Skill.SkillBuilder() //
-			.withSkill("Cryotank Operation") //
+			.withSkillName("Cryotank Operation") //
 			.withDescription("The required skill for operating, repairing and maintaining "
 					+ "life suspension and body chilling devices. A minimum skill of +4 is "
 					+ "required to chill down a healthy person. A minumum skill of +6 for "
@@ -1050,7 +1055,7 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill cyberdeckDesign = new Skill.SkillBuilder() //
-			.withSkill("Cyberdeck Design") //
+			.withSkillName("Cyberdeck Design") //
 			.withDescription("The required skill for designing cyberdecks. At level +4, you "
 					+ "can modify an existing cyberdeck for greater speed or memory. At "
 					+ "level +6, you can design a deck equal to most existing designs. At +8, "
@@ -1058,7 +1063,7 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill cyberTech = new Skill.SkillBuilder() //
-			.withSkill("CyberTech") //
+			.withSkillName("CyberTech") //
 			.withDescription("The required skill for repairing and maintaining cyberwear. "
 					+ "At level +2, you can keep your cyberwear tuned up and can replace "
 					+ "its power batteries. At level +6, you can strip down most cyberwear "
@@ -1067,7 +1072,7 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill demolition = new Skill.SkillBuilder() //
-			.withSkill("Demolition") //
+			.withSkillName("Demolition") //
 			.withDescription("This skill allows the character to be knowledgeable in the "
 					+ "use of explosives, as well as knowing the best explosives to use "
 					+ "for which jobs, how to set timers and detonators, and how much "
@@ -1075,7 +1080,7 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill disguise = new Skill.SkillBuilder() //
-			.withSkill("Disguise") //
+			.withSkillName("Disguise") //
 			.withDescription("The skill of disguising your character to resemble someone "
 					+ "else, whether real or fictitious. This skill incorporates elements "
 					+ "of both makeup and acting, although it is not the same as the "
@@ -1083,14 +1088,14 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill electronics = new Skill.SkillBuilder() //
-			.withSkill("Electronics") //
+			.withSkillName("Electronics") //
 			.withDescription("The required skill for maintaining, repairing and modifying "
 					+ "electronic instruments such as computers, personal electronics "
 					+ "hardware, electronic security systems, cameras and monitors.") //
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill electronicSecurity = new Skill.SkillBuilder() //
-			.withSkill("Electronic Security") //
+			.withSkillName("Electronic Security") //
 			.withDescription("The skill of installing or countering electronic eyes, electronic "
 					+ "locks, bugs and tracers, security cameras, pressure plates, etc. At "
 					+ "level +3, you can jimmy or install most apartment locks and security "
@@ -1099,7 +1104,7 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill firstAid = new Skill.SkillBuilder() //
-			.withSkill("First Aid") //
+			.withSkillName("First Aid") //
 			.withDescription("This skill allows the user to bind wounds, stop bleeding, "
 					+ "and revive a stunned patient.\n\nFirst Aid involves cleaning and "
 					+ "dressing the wounds, administering medication, setting broken "
@@ -1114,20 +1119,20 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill forgery = new Skill.SkillBuilder() //
-			.withSkill("Forgery") //
+			.withSkillName("Forgery") //
 			.withDescription("The skill of copying and creating false documents and "
 					+ "identifications. This skill may also be applied to the detection "
 					+ "of same; if you can fake it, you can usually tell a fake as well.") //
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill gyroTech = new Skill.SkillBuilder() //
-			.withSkill("Gyro Tech") //
+			.withSkillName("Gyro Tech") //
 			.withDescription("The skill of repairing and maintaining rotorwing aircraft "
 					+ "such as helicopters and gyrocopters.") //
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill paintOrDraw = new Skill.SkillBuilder() //
-			.withSkill("Paint or Draw") //
+			.withSkillName("Paint or Draw") //
 			.withDescription("The skill of producing professional drawings. A Skill of "
 					+ "+3 allows you to produce salable 'modern' art. A Skill of +6 will "
 					+ "produce artwork that is recognizable and extremely pleasant to "
@@ -1137,7 +1142,7 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill photoAndFilm = new Skill.SkillBuilder() //
-			.withSkill("Photo and Film") //
+			.withSkillName("Photo and Film") //
 			.withDescription("The skill of producing professional-caliber photographs or "
 					+ "motion pictures. A Skill of +2 allows you to make decent home movies. "
 					+ "A Skill of +4 or better creates work capable of winning amateur "
@@ -1147,7 +1152,7 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill pharmacuticals = new Skill.SkillBuilder() //
-			.withSkill("Pharmacuticals") //
+			.withSkillName("Pharmacuticals") //
 			.withDescription("The skill of designing and manufacturing drugs and medicines. "
 					+ "A minimum Chemistry skill of +4 is required. At +4, you can make "
 					+ "asprin. At +6, you can make hallucinogenics or antibiotics. At level "
@@ -1155,7 +1160,7 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill pickLock = new Skill.SkillBuilder() //
-			.withSkill("Pick Lock") //
+			.withSkillName("Pick Lock") //
 			.withDescription("The skill required to pick locks and break into sealed "
 					+ "containers and rooms. At +3, you can jimmy most simple locks. At "
 					+ "+6 you can crack most safes. At +9 or better, you have a rep as a "
@@ -1163,14 +1168,14 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill pickPocket = new Skill.SkillBuilder() //
-			.withSkill("Pick Pocket") //
+			.withSkillName("Pick Pocket") //
 			.withDescription("The required skill for picking pockets without being noticed, "
 					+ "as well as 'shoplifting' small items. For ideas on levels of ability, "
 					+ "see Pick Lock, above.") //
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill playInstrument = new Skill.SkillBuilder() //
-			.withSkill("Play Instrument") //
+			.withSkillName("Play Instrument") //
 			.withDescription("The skill of knowing how to play a musical instrument. You "
 					+ "must take this skill separately for each type of instrument played. "
 					+ "A Skill of +4 or higher will qualify your character to play professional "
@@ -1181,7 +1186,7 @@ public class Character {
 			.withType("TECHNICAL ABILITY") //
 			.build();
 	private Skill weaponsmith = new Skill.SkillBuilder() //
-			.withSkill("Weaponsmith") //
+			.withSkillName("Weaponsmith") //
 			.withDescription("The required skill for repairing and maintaining weapons of "
 					+ "all types. At level +2, you can do repairs and field stripping. At "
 					+ "level +6, you can repair all types of weapons and make simple "
@@ -1388,7 +1393,7 @@ public class Character {
 			.addCareerSkill(wildernessSurvival) //
 			.build();
 	private Role rockerboy = new Role.RoleBuilder() //
-			.withName("Nomad") //
+			.withName("Rockerboy") //
 			.withBlurb(
 					"Rockerboys are rebellious musicians who use music and revolt to fight authority. They are a lot like '80s punk rockers who look down on corporate \"sellouts\" as "
 							+ "the traitors to the craft. Because they are so charismatic, they can sway, incite and charm a large number of people through musical performances.") //
@@ -1475,39 +1480,39 @@ public class Character {
 			.addCareerSkill(aeroTech, electronicSecurity, gyroTech, weaponsmith) //
 			.build();
 
-	public Character() {
-		handle = "Unknown";
+	public CharacterCreationModel() {
+		characterName = "Unknown";
 		role = cop;
 		characterPoints = 0;
 
-		intelligence = DEFAULT_STAT_LEVEL;
-		modifiedReflexes = DEFAULT_STAT_LEVEL;
-		unmodifiedReflexes = DEFAULT_STAT_LEVEL;
-		technicalAbility = DEFAULT_STAT_LEVEL;
-		cool = DEFAULT_STAT_LEVEL;
-		attractiveness = DEFAULT_STAT_LEVEL;
-		luck = DEFAULT_STAT_LEVEL;
-		movementAllowance = DEFAULT_STAT_LEVEL;
-		body = DEFAULT_STAT_LEVEL;
-		currentEmpathy = DEFAULT_STAT_LEVEL;
-		totalEmpathy = DEFAULT_STAT_LEVEL;
-		run = movementAllowance * 3.0;
-		leap = (movementAllowance * 3.0) / 4.0;
-		carry = body * 10;
-		lift = body * 40;
+		intelligenceLevel = DEFAULT_STAT_LEVEL;
+		modifiedReflexesLevel = DEFAULT_STAT_LEVEL;
+		unmodifiedReflexesLevel = DEFAULT_STAT_LEVEL;
+		technicalAbilityLevel = DEFAULT_STAT_LEVEL;
+		coolLevel = DEFAULT_STAT_LEVEL;
+		attractivenessLevel = DEFAULT_STAT_LEVEL;
+		luckLevel = DEFAULT_STAT_LEVEL;
+		movementAllowanceLevel = DEFAULT_STAT_LEVEL;
+		bodyLevel = DEFAULT_STAT_LEVEL;
+		currentEmpathyLevel = DEFAULT_STAT_LEVEL;
+		totalEmpathyLevel = DEFAULT_STAT_LEVEL;
+		runDistance = calculateRunDistance();
+		leapDistance = calculateLeapDistance();
+		carryCapacity = calculateCarryCapacity();
+		liftCapacity = calculateLiftCapacity();
 
-		headArmor = 0;
-		torsoArmor = 0;
-		rightArmArmor = 0;
-		leftArmArmor = 0;
-		rightLegArmor = 0;
-		leftLegArmor = 0;
+		headArmorSP = 0;
+		torsoArmorSP = 0;
+		rightArmArmorSP = 0;
+		leftArmArmorSP = 0;
+		rightLegArmorSP = 0;
+		leftLegArmorSP = 0;
 
-		saveModifier = 0;
-		bodyTypeModifier = 0;
+		saveModifier = calculateSaveModifier();
+		bodyTypeModifier = calculateBodyTypeModifier();
 
-		injuryPoints = 6.5;
-		
+		injuryPoints = 0;
+
 		skills.put(authority.getSkill(), authority);
 		skills.put(charismaticLeadership.getSkill(), charismaticLeadership);
 		skills.put(combatSense.getSkill(), combatSense);
@@ -1622,20 +1627,46 @@ public class Character {
 		roles.put(techie.getRoleName(), techie);
 	}
 
-	private void calculateRun() {
-		run = movementAllowance * 3.0;
+	private double calculateRunDistance() {
+		return movementAllowanceLevel * 3.0;
 	}
 
-	private void calculateLeap() {
-		leap = (movementAllowance * 3.0) / 4.0;
+	private double calculateLeapDistance() {
+		return (movementAllowanceLevel * 3.0) / 4.0;
 	}
 
-	private void calculateLift() {
-		lift = body * 10.0;
+	private double calculateCarryCapacity() {
+		return bodyLevel * 10.0;
+	}
+
+	private double calculateLiftCapacity() {
+		return bodyLevel * 40.0;
+	}
+
+	public int calculateSaveModifier() {
+		return bodyLevel - (int) ((injuryPoints - 0.5) / CharacterCreationView.MAXIMUM_CELLS_PER_GAUGE);
+	}
+
+	public int calculateBodyTypeModifier() {
+		if (bodyLevel == 2) {
+			return 0;
+		} else if (3 <= bodyLevel && bodyLevel <= 4) {
+			return -1;
+		} else if (5 <= bodyLevel && bodyLevel <= 7) {
+			return -2;
+		} else if (8 <= bodyLevel && bodyLevel <= 9) {
+			return -3;
+		} else if (bodyLevel == 10) {
+			return -4;
+		} else if (bodyLevel > 10) {
+			return -5;
+		} else {
+			return 0;
+		}
 	}
 
 	public String getHandle() {
-		return handle;
+		return characterName;
 	}
 
 	public Role getRole() {
@@ -1647,83 +1678,83 @@ public class Character {
 	}
 
 	public int getIntelligenceLevel() {
-		return intelligence;
+		return intelligenceLevel;
 	}
 
 	public int getUnmodifiedReflexesLevel() {
-		return unmodifiedReflexes;
+		return unmodifiedReflexesLevel;
 	}
 
 	public int getModifiedReflexesLevel() {
-		return modifiedReflexes;
+		return modifiedReflexesLevel;
 	}
 
 	public int getTechnicalAbilityLevel() {
-		return technicalAbility;
+		return technicalAbilityLevel;
 	}
 
 	public int getCoolLevel() {
-		return cool;
+		return coolLevel;
 	}
 
 	public int getAttractivenessLevel() {
-		return attractiveness;
+		return attractivenessLevel;
 	}
 
 	public int getLuckLevel() {
-		return luck;
+		return luckLevel;
 	}
 
 	public int getMovementAllowance() {
-		return movementAllowance;
+		return movementAllowanceLevel;
 	}
 
 	public int getBodyLevel() {
-		return body;
+		return bodyLevel;
 	}
 
 	public int getCurrentEmpathyLevel() {
-		return currentEmpathy;
+		return currentEmpathyLevel;
 	}
 
 	public int getTotalEmpathyLevel() {
-		return totalEmpathy;
+		return totalEmpathyLevel;
 	}
 
 	public double getRunLevel() {
-		return run;
+		return runDistance;
 	}
 
 	public double getLeapLevel() {
-		return leap;
+		return leapDistance;
 	}
 
 	public double getLiftLevel() {
-		return lift;
+		return liftCapacity;
 	}
 
 	public int getHeadArmorStoppingPower() {
-		return headArmor;
+		return headArmorSP;
 	}
 
 	public int getTorsoArmorStoppingPower() {
-		return torsoArmor;
+		return torsoArmorSP;
 	}
 
 	public int getRightArmArmorStoppingPower() {
-		return rightArmArmor;
+		return rightArmArmorSP;
 	}
 
 	public int getLeftArmArmorStoppingPower() {
-		return leftArmArmor;
+		return leftArmArmorSP;
 	}
 
 	public int getRightLegArmorStoppingPower() {
-		return rightLegArmor;
+		return rightLegArmorSP;
 	}
 
 	public int getLeftLegArmorStoppingPower() {
-		return leftLegArmor;
+		return leftLegArmorSP;
 	}
 
 	public int getSaveModifier() {
@@ -1742,8 +1773,8 @@ public class Character {
 		return skills;
 	}
 
-	public void setHandle(String newHandle) {
-		handle = newHandle;
+	public void setCharacterName(String name) {
+		characterName = name;
 	}
 
 	public void setRole(String newRole) {
@@ -1754,109 +1785,109 @@ public class Character {
 		}
 	}
 
-	public void setCharacterPoints(String newCharacterPointValue) {
-		characterPoints = Integer.parseInt(newCharacterPointValue);
+	public void setCharacterPoints(int points) {
+		characterPoints = points;
 	}
 
-	public void setIntelligenceLevel(String newIntelligence) {
-		intelligence = Integer.parseInt(newIntelligence);
+	public void setIntelligenceLevel(int level) {
+		intelligenceLevel = level;
 	}
 
-	public void setUnmodifiedReflexesLevel(String newUnmodifiedReflexes) {
-		unmodifiedReflexes = Integer.parseInt(newUnmodifiedReflexes);
+	public void setUnmodifiedReflexesLevel(int level) {
+		unmodifiedReflexesLevel = level;
 	}
 
-	public void setModifiedReflexesLevel(String newModifiedReflexes) {
-		modifiedReflexes = Integer.parseInt(newModifiedReflexes);
+	public void setModifiedReflexesLevel(int level) {
+		modifiedReflexesLevel = level;
 	}
 
-	public void setTechnicalAbilityLevel(String newTechnicalAbilityLevel) {
-		technicalAbility = Integer.parseInt(newTechnicalAbilityLevel);
+	public void setTechnicalAbilityLevel(int level) {
+		technicalAbilityLevel = level;
 	}
 
-	public void setCoolLevel(String newCoolLevel) {
-		cool = Integer.parseInt(newCoolLevel);
+	public void setCoolLevel(int level) {
+		coolLevel = level;
 	}
 
-	public void setAttractivenessLevel(String newAttractivenessLevel) {
-		attractiveness = Integer.parseInt(newAttractivenessLevel);
+	public void setAttractivenessLevel(int level) {
+		attractivenessLevel = level;
 	}
 
-	public void setLuckLevel(String newLuckLevel) {
-		luck = Integer.parseInt(newLuckLevel);
+	public void setLuckLevel(int level) {
+		luckLevel = level;
 	}
 
-	public void setMovementAllowance(String newMovementAllowance) {
-		try {
-		movementAllowance = Integer.parseInt(newMovementAllowance);
-		} catch(NumberFormatException e) {
-			movementAllowance = 2;
-		}
+	public void setMovementAllowance(int level) {
+		movementAllowanceLevel = level;
 
-		calculateRun();
-		calculateLeap();
+		runDistance = calculateRunDistance();
+		leapDistance = calculateLeapDistance();
 	}
 
-	public void setBodyLevel(String newBodyLevel) {
-		body = Integer.parseInt(newBodyLevel);
+	public void setBodyLevel(int level) {
+		bodyLevel = level;
 
-		calculateLift();
+		liftCapacity = calculateLiftCapacity();
 	}
 
-	public void setCurrentEmpathyLevel(String newCurrentEmpathyLevel) {
-		currentEmpathy = Integer.parseInt(newCurrentEmpathyLevel);
+	public void setCurrentEmpathyLevel(int level) {
+		currentEmpathyLevel = level;
 	}
 
-	public void setTotalEmpathyLevel(String newTotalEmpathyLevel) {
-		totalEmpathy = Integer.parseInt(newTotalEmpathyLevel);
+	public void setTotalEmpathyLevel(int level) {
+		totalEmpathyLevel = level;
 	}
 
-	public void setRunLevel(String newRunLevel) {
-		run = Double.parseDouble(newRunLevel);
+	public void setRunDistance(double distance) {
+		runDistance = distance;
 	}
 
-	public void setLeapLevel(String newLeapLevel) {
-		leap = Double.parseDouble(newLeapLevel);
+	public void setLeapDistance(double distance) {
+		leapDistance = distance;
 	}
 
-	public void setLiftLevel(String newLiftLevel) {
-		lift = Double.parseDouble(newLiftLevel);
+	public void setLiftCapacity(double capacity) {
+		liftCapacity = capacity;
 	}
 
-	public void setHeadArmorStoppingPower(String newHeadArmor) {
-		headArmor = Integer.parseInt(newHeadArmor);
+	public void setCarryCapacity(double capacity) {
+		carryCapacity = capacity;
 	}
 
-	public void setTorsoArmorStoppingPower(String newTorsoArmor) {
-		torsoArmor = Integer.parseInt(newTorsoArmor);
+	public void setHeadArmorStoppingPower(int stoppingPower) {
+		headArmorSP = stoppingPower;
 	}
 
-	public void setRightArmArmorStoppingPower(String newRightArmArmor) {
-		rightArmArmor = Integer.parseInt(newRightArmArmor);
+	public void setTorsoArmorStoppingPower(int stoppingPower) {
+		torsoArmorSP = stoppingPower;
 	}
 
-	public void setLeftArmArmorStoppingPower(String newLeftArmArmor) {
-		leftArmArmor = Integer.parseInt(newLeftArmArmor);
+	public void setRightArmArmorStoppingPower(int stoppingPower) {
+		rightArmArmorSP = stoppingPower;
 	}
 
-	public void setRightLegArmorStoppingPower(String newRightLegArmor) {
-		rightLegArmor = Integer.parseInt(newRightLegArmor);
+	public void setLeftArmArmorStoppingPower(int stoppingPower) {
+		leftArmArmorSP = stoppingPower;
 	}
 
-	public void setLeftLegArmorStoppingPower(String newLeftLegArmor) {
-		leftLegArmor = Integer.parseInt(newLeftLegArmor);
+	public void setRightLegArmorStoppingPower(int stoppingPower) {
+		rightLegArmorSP = stoppingPower;
 	}
 
-	public void setSaveModifier(String newSaveModifier) {
-		saveModifier = Integer.parseInt(newSaveModifier);
+	public void setLeftLegArmorStoppingPower(int stoppingPower) {
+		leftLegArmorSP = stoppingPower;
 	}
 
-	public void setBodyTypeModifier(String newBodyTypeModifier) {
-		bodyTypeModifier = Integer.parseInt(newBodyTypeModifier);
+	public void setSaveModifier(int modifier) {
+		saveModifier = modifier;
 	}
 
-	public void setInjuryPoints(String newInjuryPointValue) {
-		injuryPoints = Double.parseDouble(newInjuryPointValue);
+	public void setBodyTypeModifier(int modifier) {
+		bodyTypeModifier = modifier;
+	}
+
+	public void setInjuryPoints(double points) {
+		injuryPoints = points;
 	}
 
 	public static class Role {
@@ -1964,7 +1995,7 @@ public class Character {
 				return this;
 			}
 
-			public SkillBuilder withSkill(String skill) {
+			public SkillBuilder withSkillName(String skill) {
 				this.skill = skill;
 				return this;
 			}

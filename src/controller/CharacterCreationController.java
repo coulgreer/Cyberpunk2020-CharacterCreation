@@ -13,63 +13,186 @@ import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
-import model.Character;
+import model.CharacterCreationModel;
 import view.CharacterCreationView;
 
 public class CharacterCreationController {
-	private Character characterModel;
+	private CharacterCreationModel characterModel;
 	private CharacterCreationView characterView;
 
-	public CharacterCreationController(Character characterModel, CharacterCreationView characterView) {
+	public CharacterCreationController(CharacterCreationModel characterModel, CharacterCreationView characterView) {
 		this.characterModel = characterModel;
 		this.characterView = characterView;
 
-		this.characterView.drawInjuryPoints(characterModel.getInjuryPoints());
-		this.characterView.addDocumentChangedListener(new StatChangedListener());
-		this.characterView.addLoadCharacterListener(new LoadCharacterListener());
-		this.characterView.addChangeRoleListener(new ChangeRoleListener());
-		this.characterView.addSaveCharacterListener(new SaveCharacterListener());
+		this.characterView.addHandleDocumentListener(new HandleDocumentListener());
+		this.characterView.addRoleChangeListener(new RoleChangeListener());
+		this.characterView.addLoadCharacterActionListener(new LoadCharacterActionListener());
+		this.characterView.addSaveCharacterActionListener(new SaveCharacterActionListener());
+		this.characterView.addIntelligenceStatChangeListener(new IntelligenceChangeListener());
+		this.characterView.addUnmodifiedReflexesStatChangeListener(new UnmodifiedReflexesChangeListener());
+		this.characterView.addTechnicalAbilityStatChangeListener(new TechnicalAbilityChangeListener());
+		this.characterView.addCoolStatChangeListener(new CoolChangeListener());
+		this.characterView.addAttractivenessStatChangeListener(new AttractivenessChangeListener());
+		this.characterView.addLuckStatChangeListener(new LuckChangeListener());
+		this.characterView.addMovementAllowanceStatChangeListener(new MovementAllowanceChangeListener());
+		this.characterView.addBodyStatChangeListener(new BodyChangeListener());
+		this.characterView.addTotalEmpathyStatChangeListener(new TotalEmpathyChangeListener());
+		this.characterView.addIncreaseInjuryActionListener(new IncreaseInjuryActionListener());
+		this.characterView.addMinorlyIncreaseInjuryActionListener(new MinorlyIncreaseInjuryActionListener());
+		this.characterView.addMinorlyDecreaseInjuryActionListener(new MinorlyDecreaseInjuryActionListener());
+		this.characterView.addDecreaseInjuryActionListener(new DecreaseInjuryActionListener());
+
+		this.characterView.drawLoadedInjuryPoints(characterModel.getInjuryPoints());
+		this.characterView.setLeapLevel(Double.toString(this.characterModel.getLeapLevel()));
+		this.characterView.setLiftLevel(Double.toString(this.characterModel.getLiftLevel()));
+		this.characterView.setRunLevel(Double.toString(this.characterModel.getRunLevel()));
+		this.characterView.setSaveModifier("<=" + characterModel.getSaveModifier());
+		this.characterView.setBodyTypeModifier(Integer.toString(this.characterModel.getBodyTypeModifier()));
 
 		populateSkill();
 	}
 
 	private void populateSkill() {
-		for (Character.Skill skill : characterModel.getSkillList().values()) {
+		for (CharacterCreationModel.Skill skill : characterModel.getSkillList().values()) {
 			characterView.addSkill(skill.getType(), skill.getSkill(), skill.getDescription());
 		}
 	}
 
-	class ChangeRoleListener implements ActionListener {
+	class HandleDocumentListener implements DocumentListener {
+
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			JComboBox comboBox = (JComboBox) e.getSource();
+		public void changedUpdate(DocumentEvent event) {
+			characterModel.setCharacterName(characterView.getCharacterName());
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent event) {
+			characterModel.setCharacterName(characterView.getCharacterName());
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent event) {
+			characterModel.setCharacterName(characterView.getCharacterName());
+		}
+
+	}
+
+	class RoleChangeListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			JComboBox comboBox = (JComboBox) event.getSource();
 			String selectedRole = (String) comboBox.getSelectedItem();
 			characterModel.setRole(selectedRole);
 		}
 	}
 
-	// Currently only updates Handle for user
-	class StatChangedListener implements ChangeListener {
-
+	class IntelligenceChangeListener implements ChangeListener {
 		@Override
-		public void stateChanged(ChangeEvent e) {
-			characterModel.setMovementAllowance(((JSpinner) e.getSource()).getValue().toString());
-			characterView.setRunLevel(characterModel.getRunLevel() + "");
-			characterView.setLeapLevel(characterModel.getLeapLevel() + "");
-
+		public void stateChanged(ChangeEvent event) {
+			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
+			characterModel.setIntelligenceLevel(newLevel);
 		}
 
 	}
 
-	class LoadCharacterListener implements ActionListener {
+	class UnmodifiedReflexesChangeListener implements ChangeListener {
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
+		public void stateChanged(ChangeEvent event) {
+			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
+			characterModel.setUnmodifiedReflexesLevel(newLevel);
+		}
+
+	}
+
+	class TechnicalAbilityChangeListener implements ChangeListener {
+		@Override
+		public void stateChanged(ChangeEvent event) {
+			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
+			characterModel.setTechnicalAbilityLevel(newLevel);
+		}
+
+	}
+
+	class CoolChangeListener implements ChangeListener {
+		@Override
+		public void stateChanged(ChangeEvent event) {
+			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
+			characterModel.setCoolLevel(newLevel);
+		}
+
+	}
+
+	class AttractivenessChangeListener implements ChangeListener {
+		@Override
+		public void stateChanged(ChangeEvent event) {
+			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
+			characterModel.setAttractivenessLevel(newLevel);
+		}
+
+	}
+
+	class LuckChangeListener implements ChangeListener {
+		@Override
+		public void stateChanged(ChangeEvent event) {
+			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
+			characterModel.setLuckLevel(newLevel);
+		}
+
+	}
+
+	class MovementAllowanceChangeListener implements ChangeListener {
+		@Override
+		public void stateChanged(ChangeEvent event) {
+			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
+			characterModel.setMovementAllowance(newLevel);
+			characterView.setRunLevel(Double.toString(characterModel.getRunLevel()));
+			characterView.setLeapLevel(Double.toString(characterModel.getLeapLevel()));
+		}
+	}
+
+	class BodyChangeListener implements ChangeListener {
+		@Override
+		public void stateChanged(ChangeEvent event) {
+			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
+			characterModel.setBodyLevel(newLevel);
+
+			characterView.setLiftLevel(Double.toString(characterModel.getLiftLevel()));
+			characterView.setSaveModifier("<=" + characterModel.calculateSaveModifier());
+
+			int characterBodyTypeModifier = characterModel.calculateBodyTypeModifier();
+			characterModel.setBodyTypeModifier(characterBodyTypeModifier);
+			characterView.setBodyTypeModifier(Integer.toString(characterBodyTypeModifier));
+		}
+	}
+
+	class TotalEmpathyChangeListener implements ChangeListener {
+		@Override
+		public void stateChanged(ChangeEvent event) {
+			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
+			characterModel.setBodyLevel(newLevel);
+			characterView.setLiftLevel(Double.toString(characterModel.getLiftLevel()));
+		}
+	}
+
+	class LoadCharacterActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
 			int returnVal = characterView.getFileChooser().showOpenDialog(characterView);
 
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File originalFile = characterView.getFileChooser().getSelectedFile();
+				File formattedFile = new File(originalFile.toString() + ".char");
+				Scanner sc;
 				try {
-					Scanner sc = new Scanner(characterView.getFileChooser().getSelectedFile());
+					if (originalFile.toString().endsWith(".char")) {
+						sc = new Scanner(originalFile);
+					} else {
+						sc = new Scanner(formattedFile);
+					}
+
 					while (sc.hasNextLine()) {
 						String[] strings = sc.nextLine().split("\t");
 						String key = strings[0];
@@ -77,7 +200,7 @@ public class CharacterCreationController {
 						switch (key) {
 						case "handle":
 							characterView.setHandle(value);
-							characterModel.setHandle(value);
+							characterModel.setCharacterName(value);
 							break;
 						case "role":
 							characterView.setRole(value);
@@ -85,98 +208,102 @@ public class CharacterCreationController {
 							break;
 						case "character_points":
 							characterView.setCharacterPoints(value);
-							characterModel.setCharacterPoints(value);
+							characterModel.setCharacterPoints(Integer.parseInt(value));
 							break;
 						case "intelligence":
 							characterView.setIntelligenceLevel(value);
-							characterModel.setIntelligenceLevel(value);
+							characterModel.setIntelligenceLevel(Integer.parseInt(value));
 							break;
 						case "unmodified_reflexes":
 							characterView.setUnmodifiedReflexesLevel(value);
-							characterModel.setUnmodifiedReflexesLevel(value);
+							characterModel.setUnmodifiedReflexesLevel(Integer.parseInt(value));
 							break;
 						case "modified_reflexes":
 							characterView.setModifiedReflexesLevel(value);
-							characterModel.setModifiedReflexesLevel(value);
+							characterModel.setModifiedReflexesLevel(Integer.parseInt(value));
 							break;
 						case "technical_ability":
 							characterView.setTechnicalAbilityLevel(value);
-							characterModel.setTechnicalAbilityLevel(value);
+							characterModel.setTechnicalAbilityLevel(Integer.parseInt(value));
 							break;
 						case "cool":
 							characterView.setCoolLevel(value);
-							characterModel.setCoolLevel(value);
+							characterModel.setCoolLevel(Integer.parseInt(value));
 							break;
 						case "attractiveness":
 							characterView.setAttractivenessLevel(value);
-							characterModel.setAttractivenessLevel(value);
+							characterModel.setAttractivenessLevel(Integer.parseInt(value));
 							break;
 						case "luck":
 							characterView.setLuckLevel(value);
-							characterModel.setLuckLevel(value);
+							characterModel.setLuckLevel(Integer.parseInt(value));
 							break;
 						case "movement_allowance":
 							characterView.setMovementAllowanceLevel(value);
-							characterModel.setMovementAllowance(value);
+							characterModel.setMovementAllowance(Integer.parseInt(value));
 							break;
 						case "body":
 							characterView.setBodyLevel(value);
-							characterModel.setBodyLevel(value);
+							characterModel.setBodyLevel(Integer.parseInt(value));
 							break;
 						case "current_empathy":
 							characterView.setCurrentEmpathyLevel(value);
-							characterModel.setCurrentEmpathyLevel(value);
+							characterModel.setCurrentEmpathyLevel(Integer.parseInt(value));
 							break;
 						case "total_empathy":
 							characterView.setTotalEmpathyLevel(value);
-							characterModel.setTotalEmpathyLevel(value);
+							characterModel.setTotalEmpathyLevel(Integer.parseInt(value));
 							break;
 						case "run":
 							characterView.setRunLevel(value);
-							characterModel.setRunLevel(value);
+							characterModel.setRunDistance(Double.parseDouble(value));
 							break;
 						case "leap":
 							characterView.setLeapLevel(value);
-							characterModel.setLeapLevel(value);
+							characterModel.setLeapDistance(Double.parseDouble(value));
 							break;
 						case "lift":
 							characterView.setLiftLevel(value);
-							characterModel.setLiftLevel(value);
+							characterModel.setLiftCapacity(Double.parseDouble(value));
+							break;
+						case "carry":
+							characterModel.setCarryCapacity(Double.parseDouble(value));
 							break;
 						case "head_armor_sp":
 							characterView.setHeadArmorStoppingPower(value);
-							characterModel.setHeadArmorStoppingPower(value);
+							characterModel.setHeadArmorStoppingPower(Integer.parseInt(value));
 							break;
 						case "torso_armor_sp":
 							characterView.setTorsoArmorStoppingPower(value);
-							characterModel.setTorsoArmorStoppingPower(value);
+							characterModel.setTorsoArmorStoppingPower(Integer.parseInt(value));
 							break;
 						case "right_arm_armor_sp":
 							characterView.setRightArmArmorStoppingPower(value);
-							characterModel.setRightArmArmorStoppingPower(value);
+							characterModel.setRightArmArmorStoppingPower(Integer.parseInt(value));
 							break;
 						case "left_arm_armor_sp":
 							characterView.setLeftArmArmorStoppingPower(value);
-							characterModel.setLeftLegArmorStoppingPower(value);
+							characterModel.setLeftLegArmorStoppingPower(Integer.parseInt(value));
 							break;
 						case "right_leg_armor_sp":
 							characterView.setRightLegArmorStoppingPower(value);
-							characterModel.setRightLegArmorStoppingPower(value);
+							characterModel.setRightLegArmorStoppingPower(Integer.parseInt(value));
 							break;
 						case "left_leg_armor_sp":
 							characterView.setLeftLegArmorStoppingPower(value);
-							characterModel.setLeftLegArmorStoppingPower(value);
+							characterModel.setLeftLegArmorStoppingPower(Integer.parseInt(value));
 							break;
 						case "save_modifier":
 							characterView.setSaveModifier(value);
-							characterModel.setSaveModifier(value);
+							characterModel.setSaveModifier(Integer.parseInt(value));
 							break;
 						case "body_type_modifier":
 							characterView.setBodyTypeModifier(value);
-							characterModel.setBodyTypeModifier(value);
+							characterModel.setBodyTypeModifier(Integer.parseInt(value));
 							break;
 						case "injury_points":
-							characterModel.setInjuryPoints(value);
+							characterModel.setInjuryPoints(Double.parseDouble(value));
+							characterView.drawLoadedInjuryPoints(Double.parseDouble(value));
 							break;
 						default:
 							break;
@@ -186,81 +313,136 @@ public class CharacterCreationController {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				System.out.println("Opened: " + characterView.getFileChooser().getSelectedFile().getPath());
 			}
 		}
 
 	}
 
-	class SaveCharacterListener implements ActionListener {
+	class SaveCharacterActionListener implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			int returnVal;
-			returnVal = characterView.getFileChooser().showSaveDialog(characterView);
+		public void actionPerformed(ActionEvent event) {
+			int returnVal = characterView.getFileChooser().showSaveDialog(characterView);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				if (characterView.getFileChooser().getSelectedFile().exists()
-						|| new File(characterView.getFileChooser().getSelectedFile().toString() + ".char").exists()) {
+				File originalFile = characterView.getFileChooser().getSelectedFile();
+				File formattedFile = new File(originalFile.toString() + ".char");
+
+				if (originalFile.exists() || formattedFile.exists()) {
 					returnVal = JOptionPane.showConfirmDialog(
 							characterView, "Do you want to overwrite "
 									+ characterView.getFileChooser().getSelectedFile().getName() + " ?",
 							"Confirm Overwrite", JOptionPane.YES_NO_OPTION);
 					if (returnVal == JOptionPane.YES_OPTION) {
-						try {
-							writeDataToFile();
-						} catch (IOException ioe) {
-							ioe.printStackTrace();
-						}
+						writeDataToFile();
 					}
 				} else {
-					try {
-						writeDataToFile();
-					} catch (IOException ioe) {
-						ioe.printStackTrace();
-					}
+					writeDataToFile();
 				}
-				System.out.println("Saved to: " + characterView.getFileChooser().getSelectedFile().getPath());
+
 			}
 		}
 
-		private void writeDataToFile() throws IOException {
+		private void writeDataToFile() {
 			File file = characterView.getFileChooser().getSelectedFile();
 			String filename = file.toString();
 			FileWriter fw;
-			if (!filename.endsWith(".char")) {
-				filename += ".char";
-				fw = new FileWriter(filename);
-			} else {
-				fw = new FileWriter(filename);
+
+			try {
+				if (!filename.endsWith(".char")) {
+					filename += ".char";
+					fw = new FileWriter(filename);
+				} else {
+					fw = new FileWriter(filename);
+				}
+				fw.write("handle\t" + characterModel.getHandle() + "\n" //
+						+ "role\t" + characterModel.getRole().getRoleName() + "\n" //
+						+ "character_points\t" + characterModel.getCharacterPoints() + "\n" //
+						+ "intelligence\t" + characterModel.getIntelligenceLevel() + "\n" //
+						+ "unmodified_reflexes\t" + characterModel.getUnmodifiedReflexesLevel() + "\n" //
+						+ "modified_reflexes\t" + characterModel.getModifiedReflexesLevel() + "\n" //
+						+ "technical_ability\t" + characterModel.getTechnicalAbilityLevel() + "\n" //
+						+ "cool\t" + characterModel.getCoolLevel() + "\n" //
+						+ "attractiveness\t" + characterModel.getAttractivenessLevel() + "\n" //
+						+ "luck\t" + characterModel.getLuckLevel() + "\n" //
+						+ "movement_allowance\t" + characterModel.getMovementAllowance() + "\n" //
+						+ "body\t" + characterModel.getBodyLevel() + "\n" //
+						+ "current_empathy\t" + characterModel.getCurrentEmpathyLevel() + "\n" //
+						+ "total_empathy\t" + characterModel.getTotalEmpathyLevel() + "\n" //
+						+ "run\t" + characterModel.getRunLevel() + "\n" //
+						+ "leap\t" + characterModel.getLeapLevel() + "\n" //
+						+ "lift\t" + characterModel.getLiftLevel() + "\n" //
+						+ "head_armor_sp\t" + characterModel.getHeadArmorStoppingPower() + "\n" //
+						+ "torso_armor_sp\t" + characterModel.getTorsoArmorStoppingPower() + "\n" //
+						+ "right_arm_armor_sp\t" + characterModel.getRightArmArmorStoppingPower() + "\n" //
+						+ "left_arm_armor_sp\t" + characterModel.getLeftArmArmorStoppingPower() + "\n" //
+						+ "right_leg_armor_sp\t" + characterModel.getRightLegArmorStoppingPower() + "\n" //
+						+ "left_leg_armor_sp\t" + characterModel.getLeftLegArmorStoppingPower() + "\n" //
+						+ "save_modifier\t" + characterModel.getSaveModifier() + "\n" //
+						+ "body_type_modifier\t" + characterModel.getBodyTypeModifier() + "\n" //
+						+ "injury_points\t" + characterModel.getInjuryPoints() + "\n");
+				fw.close();
+			} catch (IOException exception) {
+				System.err.println("File does not exist.");
 			}
-			fw.write("handle\t" + characterModel.getHandle() + "\n" //
-					+ "role\t" + characterModel.getRole().getRoleName() + "\n" //
-					+ "character_points\t" + characterModel.getCharacterPoints() + "\n" //
-					+ "intelligence\t" + characterModel.getIntelligenceLevel() + "\n" //
-					+ "unmodified_reflexes\t" + characterModel.getUnmodifiedReflexesLevel() + "\n" //
-					+ "modified_reflexes\t" + characterModel.getModifiedReflexesLevel() + "\n" //
-					+ "technical_ability\t" + characterModel.getTechnicalAbilityLevel() + "\n" //
-					+ "cool\t" + characterModel.getCoolLevel() + "\n" //
-					+ "attractiveness\t" + characterModel.getAttractivenessLevel() + "\n" //
-					+ "luck\t" + characterModel.getLuckLevel() + "\n" //
-					+ "movement_allowance\t" + characterModel.getMovementAllowance() + "\n" //
-					+ "body\t" + characterModel.getBodyLevel() + "\n" //
-					+ "current_empathy\t" + characterModel.getCurrentEmpathyLevel() + "\n" //
-					+ "total_empathy\t" + characterModel.getTotalEmpathyLevel() + "\n" //
-					+ "run\t" + characterModel.getRunLevel() + "\n" //
-					+ "leap\t" + characterModel.getLeapLevel() + "\n" //
-					+ "lift\t" + characterModel.getLiftLevel() + "\n" //
-					+ "head_armor_sp\t" + characterModel.getHeadArmorStoppingPower() + " \n" //
-					+ "torso_armor_sp\t" + characterModel.getTorsoArmorStoppingPower() + "\n" //
-					+ "right_arm_armor_sp\t" + characterModel.getRightArmArmorStoppingPower() + "\n" //
-					+ "left_arm_armor_sp\t" + characterModel.getLeftArmArmorStoppingPower() + "\n" //
-					+ "right_leg_armor_sp\t" + characterModel.getRightLegArmorStoppingPower() + "\n" //
-					+ "left_leg_armor_sp\t" + characterModel.getLeftLegArmorStoppingPower() + "\n" //
-					+ "save_modifier\t" + characterModel.getSaveModifier() + "\n" //
-					+ "body_type_modifier\t" + characterModel.getBodyTypeModifier() + "\n" //
-					+ "injury_points\t" + characterModel.getInjuryPoints() + "\n");
-			fw.close();
-
 		}
+	}
 
+	class IncreaseInjuryActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			double currentInjuryPoints = characterModel.getInjuryPoints();
+			currentInjuryPoints += 1;
+			if (currentInjuryPoints <= CharacterCreationModel.MAXIMUM_INJURY_POINTS) {
+				characterModel.setInjuryPoints(currentInjuryPoints);
+				characterView.drawIncreasedInjuryPoints(characterModel.getInjuryPoints());
+
+				characterModel.setSaveModifier(characterModel.calculateSaveModifier());
+				characterView.setSaveModifier("<=" + characterModel.calculateSaveModifier());
+			}
+		}
+	}
+
+	class MinorlyIncreaseInjuryActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			double currentInjuryPoints = characterModel.getInjuryPoints();
+			currentInjuryPoints += 0.5;
+			if (currentInjuryPoints <= CharacterCreationModel.MAXIMUM_INJURY_POINTS) {
+				characterModel.setInjuryPoints(currentInjuryPoints);
+				characterView.drawMinorlyIncreasedInjuryPoints(characterModel.getInjuryPoints());
+
+				characterModel.setSaveModifier(characterModel.calculateSaveModifier());
+				characterView.setSaveModifier("<=" + characterModel.calculateSaveModifier());
+			}
+		}
+	}
+
+	class MinorlyDecreaseInjuryActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			double currentInjuryPoints = characterModel.getInjuryPoints();
+			currentInjuryPoints -= 0.5;
+			if (currentInjuryPoints >= CharacterCreationModel.MINIMUM_INJURY_POINTS) {
+				characterModel.setInjuryPoints(currentInjuryPoints);
+				characterView.drawMinorlyDecreaseInjuryPoints(characterModel.getInjuryPoints());
+
+				characterModel.setSaveModifier(characterModel.calculateSaveModifier());
+				characterView.setSaveModifier("<=" + characterModel.calculateSaveModifier());
+			}
+		}
+	}
+
+	class DecreaseInjuryActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			double currentInjuryPoints = characterModel.getInjuryPoints();
+			currentInjuryPoints -= 1;
+			if (currentInjuryPoints >= CharacterCreationModel.MINIMUM_INJURY_POINTS) {
+				characterModel.setInjuryPoints(currentInjuryPoints);
+				characterView.drawDecreaseInjuryPoints(characterModel.getInjuryPoints());
+
+				characterModel.setSaveModifier(characterModel.calculateSaveModifier());
+				characterView.setSaveModifier("<=" + characterModel.calculateSaveModifier());
+			}
+		}
 	}
 }
