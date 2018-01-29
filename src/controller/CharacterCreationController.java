@@ -2,9 +2,12 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.swing.JComboBox;
@@ -18,6 +21,7 @@ import javax.swing.event.DocumentListener;
 
 import model.CharacterCreationModel;
 import view.CharacterCreationView;
+import view.CharacterCreationView.StunGaugePanel;
 
 public class CharacterCreationController {
 	private CharacterCreationModel characterModel;
@@ -49,15 +53,22 @@ public class CharacterCreationController {
 		this.characterView.setLeapLevel(Double.toString(this.characterModel.getLeapLevel()));
 		this.characterView.setLiftLevel(Double.toString(this.characterModel.getLiftLevel()));
 		this.characterView.setRunLevel(Double.toString(this.characterModel.getRunLevel()));
-		this.characterView.setSaveModifier("<=" + characterModel.getSaveModifier());
+		this.characterView.setSaveModifier(Integer.toString(characterModel.getSaveModifier()));
 		this.characterView.setBodyTypeModifier(Integer.toString(this.characterModel.getBodyTypeModifier()));
 
-		populateSkill();
+		populateSkillPanels();
 	}
 
-	private void populateSkill() {
-		for (CharacterCreationModel.Skill skill : characterModel.getSkillList().values()) {
-			characterView.addSkill(skill.getType(), skill.getSkill(), skill.getDescription());
+	private void populateSkillPanels() {
+		for (Map<String, CharacterCreationModel.Skill> skillCategory : characterModel.getSkillCatelog().values()) {
+			for (CharacterCreationModel.Skill skill : skillCategory.values()) {
+				if (skill.getSpecifiedSkill().equals("")) {
+					characterView.drawBasicSkillPanel(skill.getType(), skill.getSkillName(), skill.getRank());
+				} else {
+					characterView.drawSpecificSkillPanel(skill.getType(), skill.getSkillName(), skill.getRank(),
+							skill.getDescription());
+				}
+			}
 		}
 	}
 
@@ -160,7 +171,7 @@ public class CharacterCreationController {
 			characterModel.setBodyLevel(newLevel);
 
 			characterView.setLiftLevel(Double.toString(characterModel.getLiftLevel()));
-			characterView.setSaveModifier("<=" + characterModel.calculateSaveModifier());
+			characterView.setSaveModifier(Integer.toString(characterModel.calculateSaveModifier()));
 
 			int characterBodyTypeModifier = characterModel.calculateBodyTypeModifier();
 			characterModel.setBodyTypeModifier(characterBodyTypeModifier);
@@ -306,9 +317,55 @@ public class CharacterCreationController {
 							characterView.drawLoadedInjuryPoints(Double.parseDouble(value));
 							break;
 						default:
+							String categoryCode = key.substring(0, 3);
+							String specificSkill = (key.matches("\\w+:\\w+\\.\\w+")) ? key.split("\\.")[1] : "";
+							Map<String, CharacterCreationModel.Skill> targetCategory;
+
+							switch (categoryCode) {
+							case "SPE":
+								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.SPEC);
+								break;
+							case "ATT":
+								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.ATT);
+								break;
+							case "BOD":
+								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.BOD);
+								break;
+							case "COO":
+								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.CL);
+								break;
+							case "EMP":
+								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.EMP);
+								break;
+							case "INT":
+								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.INT);
+								break;
+							case "REF":
+								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.REF);
+								break;
+							case "TEC":
+								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.TECH);
+								break;
+							default:
+								targetCategory = null;
+								break;
+							}
+
+							String skillCode = key.substring(4).toLowerCase();
+							for (CharacterCreationModel.Skill skill : targetCategory.values()) {
+								String formattedSkillName = skill.getSkillName().replace(" ", "_").toLowerCase();
+								if (skillCode.equals(formattedSkillName)) {
+									skill.setRank(Integer.parseInt(value));
+									skill.setSpecifiedSkill(specificSkill);
+								}
+							}
 							break;
 						}
+
 					}
+					characterView.clearSkillPanels();
+					populateSkillPanels();
+
 					sc.close();
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -379,6 +436,13 @@ public class CharacterCreationController {
 						+ "save_modifier\t" + characterModel.getSaveModifier() + "\n" //
 						+ "body_type_modifier\t" + characterModel.getBodyTypeModifier() + "\n" //
 						+ "injury_points\t" + characterModel.getInjuryPoints() + "\n");
+
+				for (Map.Entry<String, JSpinner> entry : characterView.getSkillSpinners().entrySet()) {
+					String skillName = entry.getKey();
+					String rank = entry.getValue().getValue().toString();
+					fw.write(skillName + "\t" + rank + "\n");
+				}
+
 				fw.close();
 			} catch (IOException exception) {
 				System.err.println("File does not exist.");
@@ -396,7 +460,7 @@ public class CharacterCreationController {
 				characterView.drawIncreasedInjuryPoints(characterModel.getInjuryPoints());
 
 				characterModel.setSaveModifier(characterModel.calculateSaveModifier());
-				characterView.setSaveModifier("<=" + characterModel.calculateSaveModifier());
+				characterView.setSaveModifier(Integer.toString(characterModel.calculateSaveModifier()));
 			}
 		}
 	}
@@ -411,7 +475,7 @@ public class CharacterCreationController {
 				characterView.drawMinorlyIncreasedInjuryPoints(characterModel.getInjuryPoints());
 
 				characterModel.setSaveModifier(characterModel.calculateSaveModifier());
-				characterView.setSaveModifier("<=" + characterModel.calculateSaveModifier());
+				characterView.setSaveModifier(Integer.toString(characterModel.calculateSaveModifier()));
 			}
 		}
 	}
@@ -426,7 +490,7 @@ public class CharacterCreationController {
 				characterView.drawMinorlyDecreaseInjuryPoints(characterModel.getInjuryPoints());
 
 				characterModel.setSaveModifier(characterModel.calculateSaveModifier());
-				characterView.setSaveModifier("<=" + characterModel.calculateSaveModifier());
+				characterView.setSaveModifier(Integer.toString(characterModel.calculateSaveModifier()));
 			}
 		}
 	}
@@ -441,7 +505,7 @@ public class CharacterCreationController {
 				characterView.drawDecreaseInjuryPoints(characterModel.getInjuryPoints());
 
 				characterModel.setSaveModifier(characterModel.calculateSaveModifier());
-				characterView.setSaveModifier("<=" + characterModel.calculateSaveModifier());
+				characterView.setSaveModifier(Integer.toString(characterModel.calculateSaveModifier()));
 			}
 		}
 	}

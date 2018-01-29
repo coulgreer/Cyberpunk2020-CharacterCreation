@@ -13,7 +13,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -46,6 +45,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
+
+import model.CharacterCreationModel;
 
 public class CharacterCreationView extends JFrame {
 	private static final int FRAME_WIDTH = 900;
@@ -118,20 +119,16 @@ public class CharacterCreationView extends JFrame {
 	private JSpinner totalEmpathySpinner;
 	private JFileChooser fileChooser;
 
-	private Map<String, Integer> specialAbilitiesSkillMap = new HashMap<String, Integer>();
-	private Map<String, Integer> attractivenessSkillMap = new HashMap<String, Integer>();
-	private Map<String, Integer> bodySkillMap = new HashMap<String, Integer>();
-	private Map<String, Integer> coolSkillMap = new HashMap<String, Integer>();
-	private Map<String, Integer> empathySkillMap = new HashMap<String, Integer>();
-	private Map<String, Integer> reflexesSkillMap = new HashMap<String, Integer>();
-	private Map<String, Integer> technicalAbilitiesSkillMap = new HashMap<String, Integer>();
-	private Map<String, Integer> intelligenceSkillMap = new HashMap<String, Integer>();
-	private List<StunGaugePanel> stunProgressPanels = new ArrayList<StunGaugePanel>();
+	private List<StunGaugePanel> stunProgressPanels;
+	private Map<String, JSpinner> skillSpinners;
 
 	/**
 	 * Create the frame.
 	 */
 	public CharacterCreationView() {
+		stunProgressPanels = new ArrayList<StunGaugePanel>();
+		skillSpinners = new HashMap<String, JSpinner>();
+
 		setTitle("Cyberpunk 2020 Character Creation");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, FRAME_WIDTH, FRAME_HEIGHT);
@@ -521,6 +518,7 @@ public class CharacterCreationView extends JFrame {
 		empathyStatPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblEmpathy = new JLabel("EMP");
+		lblEmpathy.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		empathyStatPanel.add(lblEmpathy, BorderLayout.CENTER);
 
 		JPanel empathyPointPanel = new JPanel();
@@ -530,7 +528,7 @@ public class CharacterCreationView extends JFrame {
 		currentEmpathyTextField = new JTextField();
 		currentEmpathyTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		empathyPointPanel.add(currentEmpathyTextField);
-		currentEmpathyTextField.setColumns(NUMBER_OF_TEXTFIELD_COLUMNS);
+		currentEmpathyTextField.setColumns(3);
 
 		JLabel lblEmpathyDivider = new JLabel("/");
 		lblEmpathyDivider.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -1112,10 +1110,6 @@ public class CharacterCreationView extends JFrame {
 		increaseInjuryButton = new JButton(
 				new ImageIcon(new ImageIcon(CharacterCreationView.class.getResource("/img/increase-arrow-64x64.png"))
 						.getImage().getScaledInstance(8, 8, Image.SCALE_SMOOTH)));
-		increaseInjuryButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		increaseInjuryButton.setPreferredSize(new Dimension(8, 8));
 		GridBagConstraints gbc_increaseInjuryButton = new GridBagConstraints();
 		gbc_increaseInjuryButton.fill = GridBagConstraints.BOTH;
@@ -1192,7 +1186,7 @@ public class CharacterCreationView extends JFrame {
 		skillPanel.add(cards, BorderLayout.CENTER);
 
 		JPanel cardSpecialAbilities = new JPanel();
-		cards.addTab("SPECIAL ABILITIES", null, cardSpecialAbilities, null);
+		cards.addTab(CharacterCreationModel.SPEC, null, cardSpecialAbilities, null);
 		cardSpecialAbilities.setLayout(new BorderLayout(0, 0));
 
 		JSplitPane specialAbilitiesSplitPane = new JSplitPane();
@@ -1214,7 +1208,7 @@ public class CharacterCreationView extends JFrame {
 		specialAbilitiesDescriptionScrollPane.setViewportView(specialAbilitiesTextArea);
 
 		JPanel cardAttractiveness = new JPanel();
-		cards.addTab("ATTRACTIVENESS", null, cardAttractiveness, null);
+		cards.addTab(CharacterCreationModel.ATT, null, cardAttractiveness, null);
 		cardAttractiveness.setLayout(new BorderLayout(0, 0));
 
 		JSplitPane attractivenessSplitPane = new JSplitPane();
@@ -1236,7 +1230,7 @@ public class CharacterCreationView extends JFrame {
 		attractivenessDescriptionPanel.setLayout(new BoxLayout(attractivenessDescriptionPanel, BoxLayout.Y_AXIS));
 
 		JPanel cardBody = new JPanel();
-		cards.addTab("BODY", null, cardBody, null);
+		cards.addTab(CharacterCreationModel.BOD, null, cardBody, null);
 		cardBody.setLayout(new BorderLayout(0, 0));
 
 		JSplitPane bodySplitPane = new JSplitPane();
@@ -1258,7 +1252,7 @@ public class CharacterCreationView extends JFrame {
 		bodyDescriptionPanel.setLayout(new BoxLayout(bodyDescriptionPanel, BoxLayout.Y_AXIS));
 
 		JPanel cardCool = new JPanel();
-		cards.addTab("COOL", null, cardCool, null);
+		cards.addTab(CharacterCreationModel.CL, null, cardCool, null);
 		cardCool.setLayout(new BorderLayout(0, 0));
 
 		JSplitPane coolSplitPane = new JSplitPane();
@@ -1280,7 +1274,7 @@ public class CharacterCreationView extends JFrame {
 		coolDescriptionPanel.setLayout(new BoxLayout(coolDescriptionPanel, BoxLayout.Y_AXIS));
 
 		JPanel cardEmpathy = new JPanel();
-		cards.addTab("EMPATHY", null, cardEmpathy, null);
+		cards.addTab(CharacterCreationModel.EMP, null, cardEmpathy, null);
 		cardEmpathy.setLayout(new BorderLayout(0, 0));
 
 		JSplitPane empathySplitPane = new JSplitPane();
@@ -1302,7 +1296,7 @@ public class CharacterCreationView extends JFrame {
 		empathyDescriptionPanel.setLayout(new BoxLayout(empathyDescriptionPanel, BoxLayout.Y_AXIS));
 
 		JPanel cardIntelligence = new JPanel();
-		cards.addTab("INTELLIGENCE", null, cardIntelligence, null);
+		cards.addTab(CharacterCreationModel.INT, null, cardIntelligence, null);
 		cardIntelligence.setLayout(new BorderLayout(0, 0));
 
 		JSplitPane intelligenceSplitPane = new JSplitPane();
@@ -1324,7 +1318,7 @@ public class CharacterCreationView extends JFrame {
 		intelligenceDescriptionPanel.setLayout(new BoxLayout(intelligenceDescriptionPanel, BoxLayout.Y_AXIS));
 
 		JPanel cardReflexes = new JPanel();
-		cards.addTab("REFLEXES", null, cardReflexes, null);
+		cards.addTab(CharacterCreationModel.REF, null, cardReflexes, null);
 		cardReflexes.setLayout(new BorderLayout(0, 0));
 
 		JSplitPane reflexesSplitPane = new JSplitPane();
@@ -1346,7 +1340,7 @@ public class CharacterCreationView extends JFrame {
 		reflexesDescriptionPanel.setLayout(new BoxLayout(reflexesDescriptionPanel, BoxLayout.Y_AXIS));
 
 		JPanel cardTechnicalAbilities = new JPanel();
-		cards.addTab("TECHNICAL ABILITIES", null, cardTechnicalAbilities, null);
+		cards.addTab(CharacterCreationModel.TECH, null, cardTechnicalAbilities, null);
 		cardTechnicalAbilities.setLayout(new BorderLayout(0, 0));
 
 		JSplitPane technicalAbilitiesSplitPane = new JSplitPane();
@@ -1482,44 +1476,16 @@ public class CharacterCreationView extends JFrame {
 		return Integer.parseInt(bodyTypeModifierTextField.getText());
 	}
 
-	public Map<String, Integer> getSpecialAbilitySkills() {
-		return specialAbilitiesSkillMap;
-	}
-
-	public Map<String, Integer> getAttractivenessSkills() {
-		return attractivenessSkillMap;
-	}
-
-	public Map<String, Integer> getBodySkills() {
-		return bodySkillMap;
-	}
-
-	public Map<String, Integer> getCoolSkills() {
-		return coolSkillMap;
-	}
-
-	public Map<String, Integer> getEmpathySkills() {
-		return empathySkillMap;
-	}
-
-	public Map<String, Integer> getIntelligenceSkills() {
-		return intelligenceSkillMap;
-	}
-
-	public Map<String, Integer> getReflexesSkills() {
-		return reflexesSkillMap;
-	}
-
-	public Map<String, Integer> getTechnicalAbilitySkills() {
-		return technicalAbilitiesSkillMap;
-	}
-
 	public JFileChooser getFileChooser() {
 		return fileChooser;
 	}
 
 	public List<StunGaugePanel> getStunProgress() {
 		return stunProgressPanels;
+	}
+
+	public Map<String, JSpinner> getSkillSpinners() {
+		return skillSpinners;
 	}
 
 	public void setHandle(String handle) {
@@ -1615,46 +1581,20 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public void setSaveModifier(String saveModifier) {
-		saveTextField.setText(saveModifier);
+		saveTextField.setText("<=" + saveModifier);
 	}
 
 	public void setBodyTypeModifier(String bodyTypeModifier) {
 		bodyTypeModifierTextField.setText(bodyTypeModifier);
 	}
 
-	public void setSpecialAbilitySkills(String skill, Integer rank) {
-		specialAbilitiesSkillMap.put(skill, rank);
-	}
-
-	public void setAttractivenessSkills(String skill, Integer rank) {
-		attractivenessSkillMap.put(skill, rank);
-	}
-
-	public void setBodySkills(String skill, Integer rank) {
-		bodySkillMap.put(skill, rank);
-	}
-
-	public void setCoolSkills(String skill, Integer rank) {
-		coolSkillMap.put(skill, rank);
-	}
-
-	public void setEmpathySkills(String skill, Integer rank) {
-		empathySkillMap.put(skill, rank);
-	}
-
-	public void setIntelligenceSkills(String skill, Integer rank) {
-		intelligenceSkillMap.put(skill, rank);
-	}
-
-	public void setReflexesSkills(String skill, Integer rank) {
-		reflexesSkillMap.put(skill, rank);
-	}
-
-	public void setTechnicalAbilitySkills(String skill, Integer rank) {
-		technicalAbilitiesSkillMap.put(skill, rank);
-	}
-
 	public void drawLoadedInjuryPoints(double points) {
+		for(StunGaugePanel panel : stunProgressPanels) {
+			panel.rect.setRect(new Rectangle2D.Double(0, 0, 0, 10));
+			panel.revalidate();
+			panel.repaint();
+		}
+		
 		int fullStunGauges = (int) (points / CharacterCreationView.MAXIMUM_CELLS_PER_GAUGE) - 1;
 		for (int i = 0; i <= fullStunGauges; i++) {
 			fillStunGauge(i);
@@ -1734,51 +1674,60 @@ public class CharacterCreationView extends JFrame {
 
 	}
 
-	public void addSkill(String skillCategory, String skill, String description) {
+	public void clearSkillPanels() {
+		List<JPanel> skillPanels = new ArrayList<JPanel>();
+		skillPanels.add(specialAbilitiesSkillPanel);
+		skillPanels.add(attractivenessSkillPanel);
+		skillPanels.add(bodySkillPanel);
+		skillPanels.add(coolSkillPanel);
+		skillPanels.add(empathySkillPanel);
+		skillPanels.add(intelligenceSkillPanel);
+		skillPanels.add(reflexesSkillPanel);
+		skillPanels.add(technicalAbilitiesSkillPanel);
+		for (JPanel panel : skillPanels) {
+			panel.removeAll();
+			panel.revalidate();
+			panel.repaint();
+		}
+
+	}
+
+	public void drawBasicSkillPanel(String skillCategory, String skill, int rank) {
 		JPanel targetPanel;
-		Map<String, Integer> targetMap;
 		JPanel skillPanel = new JPanel(new BorderLayout());
 		JLabel skillLabel = new JLabel(skill);
 		skillLabel.setFont(new Font("Garamond", Font.PLAIN, 10));
 		JSpinner rankSpinner = new JSpinner();
 		rankSpinner.setModel(new SpinnerNumberModel(0, 0, 10, 1));
+		rankSpinner.setValue(Integer.valueOf(rank));
 
 		switch (skillCategory.toUpperCase()) {
-		case "SPECIAL ABILITIES":
+		case CharacterCreationModel.SPEC:
 			targetPanel = specialAbilitiesSkillPanel;
-			targetMap = specialAbilitiesSkillMap;
 			break;
-		case "ATTRACTIVENESS":
+		case CharacterCreationModel.ATT:
 			targetPanel = attractivenessSkillPanel;
-			targetMap = attractivenessSkillMap;
 			break;
-		case "BODY":
+		case CharacterCreationModel.BOD:
 			targetPanel = bodySkillPanel;
-			targetMap = bodySkillMap;
 			break;
-		case "COOL":
+		case CharacterCreationModel.CL:
 			targetPanel = coolSkillPanel;
-			targetMap = coolSkillMap;
 			break;
-		case "EMPATHY":
+		case CharacterCreationModel.EMP:
 			targetPanel = empathySkillPanel;
-			targetMap = empathySkillMap;
 			break;
-		case "INTELLIGENCE":
+		case CharacterCreationModel.INT:
 			targetPanel = intelligenceSkillPanel;
-			targetMap = intelligenceSkillMap;
 			break;
-		case "REFLEXES":
+		case CharacterCreationModel.REF:
 			targetPanel = reflexesSkillPanel;
-			targetMap = reflexesSkillMap;
 			break;
-		case "TECHNICAL ABILITY":
+		case CharacterCreationModel.TECH:
 			targetPanel = technicalAbilitiesSkillPanel;
-			targetMap = technicalAbilitiesSkillMap;
 			break;
 		default:
 			targetPanel = null;
-			targetMap = null;
 			break;
 		}
 
@@ -1787,7 +1736,60 @@ public class CharacterCreationView extends JFrame {
 		skillPanel.add(skillLabel, BorderLayout.CENTER);
 		skillPanel.add(rankSpinner, BorderLayout.LINE_END);
 		targetPanel.add(skillPanel);
-		targetMap.put(skill, 0);
+
+		String skillCode = skillCategory.substring(0, 3) + ":" + skill.toLowerCase().replace(" ", "_");
+		skillSpinners.put(skillCode, rankSpinner);
+	}
+
+	public void drawSpecificSkillPanel(String skillCategory, String skill, int rank, String specifiedSkill) {
+		JPanel targetPanel;
+		JPanel skillPanel = new JPanel(new BorderLayout());
+		JLabel skillLabel = new JLabel(skill);
+		skillLabel.setFont(new Font("Garamond", Font.PLAIN, 10));
+		JSpinner rankSpinner = new JSpinner();
+		rankSpinner.setModel(new SpinnerNumberModel(0, 0, 10, 1));
+		rankSpinner.setValue(Integer.valueOf(rank));
+
+		switch (skillCategory.toUpperCase()) {
+		case CharacterCreationModel.SPEC:
+			targetPanel = specialAbilitiesSkillPanel;
+			break;
+		case CharacterCreationModel.ATT:
+			targetPanel = attractivenessSkillPanel;
+			break;
+		case CharacterCreationModel.BOD:
+			targetPanel = bodySkillPanel;
+			break;
+		case CharacterCreationModel.CL:
+			targetPanel = coolSkillPanel;
+			break;
+		case CharacterCreationModel.EMP:
+			targetPanel = empathySkillPanel;
+			break;
+		case CharacterCreationModel.INT:
+			targetPanel = intelligenceSkillPanel;
+			break;
+		case CharacterCreationModel.REF:
+			targetPanel = reflexesSkillPanel;
+			break;
+		case CharacterCreationModel.TECH:
+			targetPanel = technicalAbilitiesSkillPanel;
+			break;
+		default:
+			targetPanel = null;
+			break;
+		}
+
+		skillPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.BLACK));
+		skillPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		skillPanel.add(skillLabel, BorderLayout.CENTER);
+		skillPanel.add(rankSpinner, BorderLayout.LINE_END);
+		targetPanel.add(skillPanel);
+
+		String categoryCode = skillCategory.substring(0, 3);
+		String formattedSkill = skill.toLowerCase().replace(" ", "_");
+		String skillCode = categoryCode + ":" + formattedSkill + "." + specifiedSkill;
+		skillSpinners.put(skillCode, rankSpinner);
 	}
 
 	public void addHandleDocumentListener(DocumentListener listenerForHandleDocument) {
