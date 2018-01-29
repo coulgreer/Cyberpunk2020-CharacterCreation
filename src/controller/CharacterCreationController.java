@@ -2,16 +2,15 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
@@ -21,7 +20,6 @@ import javax.swing.event.DocumentListener;
 
 import model.CharacterCreationModel;
 import view.CharacterCreationView;
-import view.CharacterCreationView.StunGaugePanel;
 
 public class CharacterCreationController {
 	private CharacterCreationModel characterModel;
@@ -48,12 +46,11 @@ public class CharacterCreationController {
 		this.characterView.addMinorlyIncreaseInjuryActionListener(new MinorlyIncreaseInjuryActionListener());
 		this.characterView.addMinorlyDecreaseInjuryActionListener(new MinorlyDecreaseInjuryActionListener());
 		this.characterView.addDecreaseInjuryActionListener(new DecreaseInjuryActionListener());
-
-		this.characterView.drawLoadedInjuryPoints(characterModel.getInjuryPoints());
+		this.characterView.drawLoadedInjuryPoints(this.characterModel.getInjuryPoints());
 		this.characterView.setLeapLevel(Double.toString(this.characterModel.getLeapLevel()));
 		this.characterView.setLiftLevel(Double.toString(this.characterModel.getLiftLevel()));
 		this.characterView.setRunLevel(Double.toString(this.characterModel.getRunLevel()));
-		this.characterView.setSaveModifier(Integer.toString(characterModel.getSaveModifier()));
+		this.characterView.setSaveModifier(Integer.toString(this.characterModel.getSaveModifier()));
 		this.characterView.setBodyTypeModifier(Integer.toString(this.characterModel.getBodyTypeModifier()));
 
 		populateSkillPanels();
@@ -62,18 +59,17 @@ public class CharacterCreationController {
 	private void populateSkillPanels() {
 		for (Map<String, CharacterCreationModel.Skill> skillCategory : characterModel.getSkillCatelog().values()) {
 			for (CharacterCreationModel.Skill skill : skillCategory.values()) {
-				if (skill.getSpecifiedSkill().equals("")) {
+				if (!skill.getSkillName().endsWith("...") && skill.getSpecifiedSkill().equals("")) {
 					characterView.drawBasicSkillPanel(skill.getType(), skill.getSkillName(), skill.getRank());
 				} else {
 					characterView.drawSpecificSkillPanel(skill.getType(), skill.getSkillName(), skill.getRank(),
-							skill.getDescription());
+							skill.getSpecifiedSkill(), new SpecifiedSkillChangeListener());
 				}
 			}
 		}
 	}
 
 	class HandleDocumentListener implements DocumentListener {
-
 		@Override
 		public void changedUpdate(DocumentEvent event) {
 			characterModel.setCharacterName(characterView.getCharacterName());
@@ -317,11 +313,11 @@ public class CharacterCreationController {
 							characterView.drawLoadedInjuryPoints(Double.parseDouble(value));
 							break;
 						default:
-							String categoryCode = key.substring(0, 3);
+							String typeCode = key.substring(0, 3);
 							String specificSkill = (key.matches("\\w+:\\w+\\.\\w+")) ? key.split("\\.")[1] : "";
 							Map<String, CharacterCreationModel.Skill> targetCategory;
 
-							switch (categoryCode) {
+							switch (typeCode) {
 							case "SPE":
 								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.SPEC);
 								break;
@@ -353,8 +349,9 @@ public class CharacterCreationController {
 
 							String skillCode = key.substring(4).toLowerCase();
 							for (CharacterCreationModel.Skill skill : targetCategory.values()) {
-								String formattedSkillName = skill.getSkillName().replace(" ", "_").toLowerCase();
-								if (skillCode.equals(formattedSkillName)) {
+								String formattedSkillName = skill.getSkillName().replace(" ", "_").replace("...", ".")
+										.toLowerCase();
+								if (skillCode.contains(formattedSkillName)) {
 									skill.setRank(Integer.parseInt(value));
 									skill.setSpecifiedSkill(specificSkill);
 								}
@@ -437,10 +434,22 @@ public class CharacterCreationController {
 						+ "body_type_modifier\t" + characterModel.getBodyTypeModifier() + "\n" //
 						+ "injury_points\t" + characterModel.getInjuryPoints() + "\n");
 
-				for (Map.Entry<String, JSpinner> entry : characterView.getSkillSpinners().entrySet()) {
-					String skillName = entry.getKey();
-					String rank = entry.getValue().getValue().toString();
-					fw.write(skillName + "\t" + rank + "\n");
+				for (Map<String, CharacterCreationModel.Skill> skillCategory : characterModel.getSkillCatelog()
+						.values()) {
+					for (CharacterCreationModel.Skill skill : skillCategory.values()) {
+						String skillName = skill.getSkillName();
+						String skillType = skill.getType();
+						int skillRank = skill.getRank();
+						String specifiedSkill = skill.getSpecifiedSkill();
+						String skillCode = skillName.replaceAll(" ", "_").toLowerCase();
+						String typeCode = skillType.substring(0, 3);
+
+						String completeSkillCode = specifiedSkill.equals("")
+								? (typeCode + ":" + skillCode + "\t" + skillRank)
+								: (typeCode + ":" + skillCode.replace("...", ".") + specifiedSkill + "\t" + skillRank);
+						fw.write(completeSkillCode + "\n");
+
+					}
 				}
 
 				fw.close();
@@ -508,5 +517,50 @@ public class CharacterCreationController {
 				characterView.setSaveModifier(Integer.toString(characterModel.calculateSaveModifier()));
 			}
 		}
+	}
+
+	class SpecifiedSkillChangeListener implements ChangeListener {
+		@Override
+		public void stateChanged(ChangeEvent event) {
+			int newRank = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
+
+			if (newRank == 1) {
+				String returnVal = JOptionPane.showInputDialog(characterView, "Specify the wanted skill.",
+						"Choose Skill", JOptionPane.QUESTION_MESSAGE);
+				JSpinner currentSpinner = (JSpinner) event.getSource();
+				for (Map.Entry<String, JSpinner> spinnerMap : characterView.getSkillSpinners().entrySet()) {
+					if (spinnerMap.getValue().equals(currentSpinner)) {
+						JLabel label = characterView.getSkillLabels().get(spinnerMap.getKey());
+						String labelText = label.getText();
+						labelText = labelText.contains("...") ? (labelText.replace("...", "." + returnVal))
+								: (labelText.replaceAll("\\.\\w+", "." + returnVal));
+						label.setText(labelText);
+
+						CharacterCreationModel.Skill skill = characterModel.getSkill(spinnerMap.getKey());
+						skill.setSpecifiedSkill(returnVal);
+						skill.setRank(Integer.parseInt(spinnerMap.getValue().getValue().toString()));
+
+					}
+				}
+
+			} // TODO if newRank is less than one set to default '...'
+			else if (newRank == 0) {
+				JSpinner currentSpinner = (JSpinner) event.getSource();
+				for (Map.Entry<String, JSpinner> spinnerMap : characterView.getSkillSpinners().entrySet()) {
+					if (spinnerMap.getValue().equals(currentSpinner)) {
+						JLabel label = characterView.getSkillLabels().get(spinnerMap.getKey());
+						String labelText = label.getText();
+						labelText = labelText.replaceAll("\\.\\w+", "...");
+						label.setText(labelText);
+
+						CharacterCreationModel.Skill skill = characterModel.getSkill(spinnerMap.getKey());
+						skill.setSpecifiedSkill("");
+						skill.setRank(Integer.parseInt(spinnerMap.getValue().getValue().toString()));
+
+					}
+				}
+			}
+		}
+
 	}
 }

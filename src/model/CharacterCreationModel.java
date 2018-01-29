@@ -14,7 +14,7 @@ public class CharacterCreationModel {
 	public static final String REF = "REFLEXES";
 	public static final String CL = "COOL";
 	public static final String TECH = "TECHNICAL ABILITY";
-	public static final String LK ="LUCK";
+	public static final String LK = "LUCK";
 	public static final String ATT = "ATTRACTIVENESS";
 	public static final String MA = "MOVEMENT ALLOWANCE";
 	public static final String EMP = "EMPATHY";
@@ -1574,7 +1574,7 @@ public class CharacterCreationModel {
 		intelligenceSkills.put(biology.getSkillName(), biology);
 		intelligenceSkills.put(botany.getSkillName(), botany);
 		intelligenceSkills.put(chemistry.getSkillName(), chemistry);
-		intelligenceSkills.put(composition.getSkillName(), chemistry);
+		intelligenceSkills.put(composition.getSkillName(), composition);
 		intelligenceSkills.put(diagnoseIllness.getSkillName(), diagnoseIllness);
 		intelligenceSkills.put(educationAndGeneralKnowledge.getSkillName(), educationAndGeneralKnowledge);
 		intelligenceSkills.put(expert.getSkillName(), expert);
@@ -1800,6 +1800,49 @@ public class CharacterCreationModel {
 		return skillCatelog;
 	}
 
+	public Skill getSkill(String skillCode) {
+		Map<String, Skill> skillCategory;
+		String categoryCode = skillCode.substring(0, 3);
+		String skillName = skillCode.substring(4);
+		switch (categoryCode) {
+		case "SPE":
+			skillCategory = specialAbilitySkills;
+			break;
+		case "ATT":
+			skillCategory = attractivenessSkills;
+			break;
+		case "BOD":
+			skillCategory = bodySkills;
+			break;
+		case "COO":
+			skillCategory = coolSkills;
+			break;
+		case "EMP":
+			skillCategory = empathySkills;
+			break;
+		case "INT":
+			skillCategory = intelligenceSkills;
+			break;
+		case "REF":
+			skillCategory = reflexesSkills;
+			break;
+		case "TEC":
+			skillCategory = technicalAbilitySkills;
+			break;
+		default:
+			skillCategory = null;
+			break;
+		}
+
+		for (Skill skill : skillCategory.values()) {
+			String formattedSkillName = skill.getSkillName().replaceAll(" ", "_").toLowerCase();
+			if (formattedSkillName.equals(skillName)) {
+				return skill;
+			}
+		}
+		return null;
+	}
+
 	public void setCharacterName(String name) {
 		characterName = name;
 	}
@@ -2014,7 +2057,7 @@ public class CharacterCreationModel {
 		public int getRank() {
 			return rank;
 		}
-		
+
 		public void setSpecifiedSkill(String newSpecifiedSkill) {
 			specifiedSkill = newSpecifiedSkill;
 		}

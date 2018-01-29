@@ -120,6 +120,7 @@ public class CharacterCreationView extends JFrame {
 	private JFileChooser fileChooser;
 
 	private List<StunGaugePanel> stunProgressPanels;
+	private Map<String, JLabel> skillLabels;
 	private Map<String, JSpinner> skillSpinners;
 
 	/**
@@ -127,6 +128,7 @@ public class CharacterCreationView extends JFrame {
 	 */
 	public CharacterCreationView() {
 		stunProgressPanels = new ArrayList<StunGaugePanel>();
+		skillLabels = new HashMap<String, JLabel>();
 		skillSpinners = new HashMap<String, JSpinner>();
 
 		setTitle("Cyberpunk 2020 Character Creation");
@@ -1484,6 +1486,10 @@ public class CharacterCreationView extends JFrame {
 		return stunProgressPanels;
 	}
 
+	public Map<String, JLabel> getSkillLabels() {
+		return skillLabels;
+	}
+
 	public Map<String, JSpinner> getSkillSpinners() {
 		return skillSpinners;
 	}
@@ -1589,12 +1595,12 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public void drawLoadedInjuryPoints(double points) {
-		for(StunGaugePanel panel : stunProgressPanels) {
+		for (StunGaugePanel panel : stunProgressPanels) {
 			panel.rect.setRect(new Rectangle2D.Double(0, 0, 0, 10));
 			panel.revalidate();
 			panel.repaint();
 		}
-		
+
 		int fullStunGauges = (int) (points / CharacterCreationView.MAXIMUM_CELLS_PER_GAUGE) - 1;
 		for (int i = 0; i <= fullStunGauges; i++) {
 			fillStunGauge(i);
@@ -1738,17 +1744,22 @@ public class CharacterCreationView extends JFrame {
 		targetPanel.add(skillPanel);
 
 		String skillCode = skillCategory.substring(0, 3) + ":" + skill.toLowerCase().replace(" ", "_");
+		skillLabels.put(skillCode, skillLabel);
 		skillSpinners.put(skillCode, rankSpinner);
 	}
 
-	public void drawSpecificSkillPanel(String skillCategory, String skill, int rank, String specifiedSkill) {
+	public void drawSpecificSkillPanel(String skillCategory, String skill, int rank, String specifiedSkill,
+			ChangeListener listenerForRankSpinner) {
+		String skillLabelText = specifiedSkill.equals("") ? skill : skill.replace("...", ".") + specifiedSkill;
+
 		JPanel targetPanel;
 		JPanel skillPanel = new JPanel(new BorderLayout());
-		JLabel skillLabel = new JLabel(skill);
+		JLabel skillLabel = new JLabel(skillLabelText);
 		skillLabel.setFont(new Font("Garamond", Font.PLAIN, 10));
 		JSpinner rankSpinner = new JSpinner();
 		rankSpinner.setModel(new SpinnerNumberModel(0, 0, 10, 1));
 		rankSpinner.setValue(Integer.valueOf(rank));
+		rankSpinner.addChangeListener(listenerForRankSpinner);
 
 		switch (skillCategory.toUpperCase()) {
 		case CharacterCreationModel.SPEC:
@@ -1788,7 +1799,8 @@ public class CharacterCreationView extends JFrame {
 
 		String categoryCode = skillCategory.substring(0, 3);
 		String formattedSkill = skill.toLowerCase().replace(" ", "_");
-		String skillCode = categoryCode + ":" + formattedSkill + "." + specifiedSkill;
+		String skillCode = categoryCode + ":" + formattedSkill;
+		skillLabels.put(skillCode, skillLabel);
 		skillSpinners.put(skillCode, rankSpinner);
 	}
 
