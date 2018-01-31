@@ -10,16 +10,19 @@ import java.util.Scanner;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 import model.CharacterCreationModel;
 import view.CharacterCreationView;
+import view.CharacterCreationView.SkillTableModel;
 
 public class CharacterCreationController {
 	private CharacterCreationModel characterModel;
@@ -59,12 +62,8 @@ public class CharacterCreationController {
 	private void populateSkillPanels() {
 		for (Map<String, CharacterCreationModel.Skill> skillCategory : characterModel.getSkillCatelog().values()) {
 			for (CharacterCreationModel.Skill skill : skillCategory.values()) {
-				if (!skill.getSkillName().endsWith("...") && skill.getSpecifiedSkill().equals("")) {
-					characterView.drawBasicSkillPanel(skill.getType(), skill.getSkillName(), skill.getRank());
-				} else {
-					characterView.drawSpecificSkillPanel(skill.getType(), skill.getSkillName(), skill.getRank(),
-							skill.getSpecifiedSkill(), new SpecifiedSkillChangeListener());
-				}
+				characterView.drawBasicSkillPanel(skill.getType(), skill.getSkillName(), skill.getRank(),
+						skill.getSpecifiedSkill(), new SkillTableModelListener());
 			}
 		}
 	}
@@ -360,7 +359,7 @@ public class CharacterCreationController {
 						}
 
 					}
-					characterView.clearSkillPanels();
+					characterView.clearSkillTables();
 					populateSkillPanels();
 
 					sc.close();
@@ -519,44 +518,21 @@ public class CharacterCreationController {
 		}
 	}
 
-	class SpecifiedSkillChangeListener implements ChangeListener {
+	class SkillTableModelListener implements TableModelListener {
 		@Override
-		public void stateChanged(ChangeEvent event) {
-			int newRank = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
+		public void tableChanged(TableModelEvent event) {
+			if (event.getType() == TableModelEvent.UPDATE) {
+				SkillTableModel model = (SkillTableModel) event.getSource();
+				String skillName = (String) model.getValueAt(event.getFirstRow(), 0);
+				String specifiedSkill = (String) model.getValueAt(event.getFirstRow(), 1);
+				int rank = (Integer) model.getValueAt(event.getFirstRow(), 2);
 
-			if (newRank == 1) {
-				String returnVal = JOptionPane.showInputDialog(characterView, "Specify the wanted skill.",
-						"Choose Skill", JOptionPane.QUESTION_MESSAGE);
-				JSpinner currentSpinner = (JSpinner) event.getSource();
-				for (Map.Entry<String, JSpinner> spinnerMap : characterView.getSkillSpinners().entrySet()) {
-					if (spinnerMap.getValue().equals(currentSpinner)) {
-						JLabel label = characterView.getSkillLabels().get(spinnerMap.getKey());
-						String labelText = label.getText();
-						labelText = labelText.contains("...") ? (labelText.replace("...", "." + returnVal))
-								: (labelText.replaceAll("\\.\\w+", "." + returnVal));
-						label.setText(labelText);
-
-						CharacterCreationModel.Skill skill = characterModel.getSkill(spinnerMap.getKey());
-						skill.setSpecifiedSkill(returnVal);
-						skill.setRank(Integer.parseInt(spinnerMap.getValue().getValue().toString()));
-
-					}
-				}
-
-			} // TODO if newRank is less than one set to default '...'
-			else if (newRank == 0) {
-				JSpinner currentSpinner = (JSpinner) event.getSource();
-				for (Map.Entry<String, JSpinner> spinnerMap : characterView.getSkillSpinners().entrySet()) {
-					if (spinnerMap.getValue().equals(currentSpinner)) {
-						JLabel label = characterView.getSkillLabels().get(spinnerMap.getKey());
-						String labelText = label.getText();
-						labelText = labelText.replaceAll("\\.\\w+", "...");
-						label.setText(labelText);
-
-						CharacterCreationModel.Skill skill = characterModel.getSkill(spinnerMap.getKey());
-						skill.setSpecifiedSkill("");
-						skill.setRank(Integer.parseInt(spinnerMap.getValue().getValue().toString()));
-
+				for (Map<String, CharacterCreationModel.Skill> skillCategory : characterModel.getSkillCatelog()
+						.values()) {
+					if (skillCategory.containsKey(skillName)) {
+						CharacterCreationModel.Skill skill = skillCategory.get(skillName);
+						skill.setRank(rank);
+						skill.setSpecifiedSkill(specifiedSkill);
 					}
 				}
 			}

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -36,15 +37,21 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 
 import model.CharacterCreationModel;
 
@@ -98,14 +105,6 @@ public class CharacterCreationView extends JFrame {
 	private JTextField leftLegArmorTextField;
 	private JTextField saveTextField;
 	private JTextField bodyTypeModifierTextField;
-	private JPanel specialAbilitiesSkillPanel;
-	private JPanel attractivenessSkillPanel;
-	private JPanel bodySkillPanel;
-	private JPanel coolSkillPanel;
-	private JPanel empathySkillPanel;
-	private JPanel reflexesSkillPanel;
-	private JPanel technicalAbilitiesSkillPanel;
-	private JPanel intelligenceSkillPanel;
 	private JButton decreaseCharacterPointsButton;
 	private JButton increaseCharacterPointsButton;
 	private JButton saveButton;
@@ -120,16 +119,22 @@ public class CharacterCreationView extends JFrame {
 	private JFileChooser fileChooser;
 
 	private List<StunGaugePanel> stunProgressPanels;
-	private Map<String, JLabel> skillLabels;
-	private Map<String, JSpinner> skillSpinners;
+	private Map<String, SkillTableModel> skillTables;
+	private JTable specialAbilitiesSkillTable;
+	private JTable attractivenessSkillTable;
+	private JTable bodySkillTable;
+	private JTable coolSkillTable;
+	private JTable empathySkillTable;
+	private JTable intelligenceSkillTable;
+	private JTable reflexesSkillTable;
+	private JTable technicalAbilitiesSkillTable;
 
 	/**
 	 * Create the frame.
 	 */
 	public CharacterCreationView() {
 		stunProgressPanels = new ArrayList<StunGaugePanel>();
-		skillLabels = new HashMap<String, JLabel>();
-		skillSpinners = new HashMap<String, JSpinner>();
+		skillTables = new HashMap<String, SkillTableModel>();
 
 		setTitle("Cyberpunk 2020 Character Creation");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -1192,20 +1197,23 @@ public class CharacterCreationView extends JFrame {
 		cardSpecialAbilities.setLayout(new BorderLayout(0, 0));
 
 		JSplitPane specialAbilitiesSplitPane = new JSplitPane();
-		specialAbilitiesSplitPane.setResizeWeight(0.25);
 		cardSpecialAbilities.add(specialAbilitiesSplitPane);
 
 		JScrollPane specialAbilitiesSkillScrollPane = new JScrollPane();
 		specialAbilitiesSplitPane.setLeftComponent(specialAbilitiesSkillScrollPane);
 
-		specialAbilitiesSkillPanel = new JPanel();
-		specialAbilitiesSkillScrollPane.setViewportView(specialAbilitiesSkillPanel);
-		specialAbilitiesSkillPanel.setLayout(new BoxLayout(specialAbilitiesSkillPanel, BoxLayout.Y_AXIS));
+		specialAbilitiesSkillTable = new JTable(new SkillTableModel());
+		specialAbilitiesSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+		specialAbilitiesSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		specialAbilitiesSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		specialAbilitiesSkillTable.setFillsViewportHeight(true);
+		specialAbilitiesSkillScrollPane.setViewportView(specialAbilitiesSkillTable);
 
 		JScrollPane specialAbilitiesDescriptionScrollPane = new JScrollPane();
 		specialAbilitiesSplitPane.setRightComponent(specialAbilitiesDescriptionScrollPane);
 
 		JTextArea specialAbilitiesTextArea = new JTextArea();
+		specialAbilitiesTextArea.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		specialAbilitiesTextArea.setEditable(false);
 		specialAbilitiesDescriptionScrollPane.setViewportView(specialAbilitiesTextArea);
 
@@ -1220,16 +1228,19 @@ public class CharacterCreationView extends JFrame {
 		JScrollPane attractivenessSkillScrollPane = new JScrollPane();
 		attractivenessSplitPane.setLeftComponent(attractivenessSkillScrollPane);
 
-		attractivenessSkillPanel = new JPanel();
-		attractivenessSkillScrollPane.setViewportView(attractivenessSkillPanel);
-		attractivenessSkillPanel.setLayout(new BoxLayout(attractivenessSkillPanel, BoxLayout.Y_AXIS));
+		attractivenessSkillTable = new JTable(new SkillTableModel());
+		attractivenessSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+		attractivenessSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		attractivenessSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		attractivenessSkillTable.setFillsViewportHeight(true);
+		attractivenessSkillScrollPane.setViewportView(attractivenessSkillTable);
 
 		JScrollPane attractivenessDescriptionScrollPane = new JScrollPane();
 		attractivenessSplitPane.setRightComponent(attractivenessDescriptionScrollPane);
 
-		JPanel attractivenessDescriptionPanel = new JPanel();
-		attractivenessDescriptionScrollPane.setViewportView(attractivenessDescriptionPanel);
-		attractivenessDescriptionPanel.setLayout(new BoxLayout(attractivenessDescriptionPanel, BoxLayout.Y_AXIS));
+		JTextArea attractivenessTextArea = new JTextArea();
+		attractivenessTextArea.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		attractivenessDescriptionScrollPane.setViewportView(attractivenessTextArea);
 
 		JPanel cardBody = new JPanel();
 		cards.addTab(CharacterCreationModel.BOD, null, cardBody, null);
@@ -1242,9 +1253,12 @@ public class CharacterCreationView extends JFrame {
 		JScrollPane bodySkillScrollPane = new JScrollPane();
 		bodySplitPane.setLeftComponent(bodySkillScrollPane);
 
-		bodySkillPanel = new JPanel();
-		bodySkillScrollPane.setViewportView(bodySkillPanel);
-		bodySkillPanel.setLayout(new BoxLayout(bodySkillPanel, BoxLayout.Y_AXIS));
+		bodySkillTable = new JTable(new SkillTableModel());
+		bodySkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+		bodySkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		bodySkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		bodySkillTable.setFillsViewportHeight(true);
+		bodySkillScrollPane.setViewportView(bodySkillTable);
 
 		JScrollPane bodyDescriptionScrollPane = new JScrollPane();
 		bodySplitPane.setRightComponent(bodyDescriptionScrollPane);
@@ -1264,9 +1278,12 @@ public class CharacterCreationView extends JFrame {
 		JScrollPane coolSkillScrollPane = new JScrollPane();
 		coolSplitPane.setLeftComponent(coolSkillScrollPane);
 
-		coolSkillPanel = new JPanel();
-		coolSkillScrollPane.setViewportView(coolSkillPanel);
-		coolSkillPanel.setLayout(new BoxLayout(coolSkillPanel, BoxLayout.Y_AXIS));
+		coolSkillTable = new JTable(new SkillTableModel());
+		coolSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+		coolSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		coolSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		coolSkillTable.setFillsViewportHeight(true);
+		coolSkillScrollPane.setViewportView(coolSkillTable);
 
 		JScrollPane coolDescriptionScrollPane = new JScrollPane();
 		coolSplitPane.setRightComponent(coolDescriptionScrollPane);
@@ -1286,9 +1303,12 @@ public class CharacterCreationView extends JFrame {
 		JScrollPane empathySkillScrollPane = new JScrollPane();
 		empathySplitPane.setLeftComponent(empathySkillScrollPane);
 
-		empathySkillPanel = new JPanel();
-		empathySkillScrollPane.setViewportView(empathySkillPanel);
-		empathySkillPanel.setLayout(new BoxLayout(empathySkillPanel, BoxLayout.Y_AXIS));
+		empathySkillTable = new JTable(new SkillTableModel());
+		empathySkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+		empathySkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		empathySkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		empathySkillTable.setFillsViewportHeight(true);
+		empathySkillScrollPane.setViewportView(empathySkillTable);
 
 		JScrollPane empathyDescriptionScrollPane = new JScrollPane();
 		empathySplitPane.setRightComponent(empathyDescriptionScrollPane);
@@ -1308,9 +1328,12 @@ public class CharacterCreationView extends JFrame {
 		JScrollPane intelligenceSkillScrollPane = new JScrollPane();
 		intelligenceSplitPane.setLeftComponent(intelligenceSkillScrollPane);
 
-		intelligenceSkillPanel = new JPanel();
-		intelligenceSkillScrollPane.setViewportView(intelligenceSkillPanel);
-		intelligenceSkillPanel.setLayout(new BoxLayout(intelligenceSkillPanel, BoxLayout.Y_AXIS));
+		intelligenceSkillTable = new JTable(new SkillTableModel());
+		intelligenceSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+		intelligenceSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		intelligenceSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		intelligenceSkillTable.setFillsViewportHeight(true);
+		intelligenceSkillScrollPane.setViewportView(intelligenceSkillTable);
 
 		JScrollPane intelligenceDescriptionScrollPane = new JScrollPane();
 		intelligenceSplitPane.setRightComponent(intelligenceDescriptionScrollPane);
@@ -1330,9 +1353,12 @@ public class CharacterCreationView extends JFrame {
 		JScrollPane reflexesSkillScrollPane = new JScrollPane();
 		reflexesSplitPane.setLeftComponent(reflexesSkillScrollPane);
 
-		reflexesSkillPanel = new JPanel();
-		reflexesSkillScrollPane.setViewportView(reflexesSkillPanel);
-		reflexesSkillPanel.setLayout(new BoxLayout(reflexesSkillPanel, BoxLayout.Y_AXIS));
+		reflexesSkillTable = new JTable(new SkillTableModel());
+		reflexesSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+		reflexesSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		reflexesSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		reflexesSkillTable.setFillsViewportHeight(true);
+		reflexesSkillScrollPane.setViewportView(reflexesSkillTable);
 
 		JScrollPane reflexesDescriptionScrollPane = new JScrollPane();
 		reflexesSplitPane.setRightComponent(reflexesDescriptionScrollPane);
@@ -1352,9 +1378,12 @@ public class CharacterCreationView extends JFrame {
 		JScrollPane technicalAbilitiesSkillScrollPane = new JScrollPane();
 		technicalAbilitiesSplitPane.setLeftComponent(technicalAbilitiesSkillScrollPane);
 
-		technicalAbilitiesSkillPanel = new JPanel();
-		technicalAbilitiesSkillScrollPane.setViewportView(technicalAbilitiesSkillPanel);
-		technicalAbilitiesSkillPanel.setLayout(new BoxLayout(technicalAbilitiesSkillPanel, BoxLayout.Y_AXIS));
+		technicalAbilitiesSkillTable = new JTable(new SkillTableModel());
+		technicalAbilitiesSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+		technicalAbilitiesSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		technicalAbilitiesSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		technicalAbilitiesSkillTable.setFillsViewportHeight(true);
+		technicalAbilitiesSkillScrollPane.setViewportView(technicalAbilitiesSkillTable);
 
 		JScrollPane technicalDescriptionScrollPane = new JScrollPane();
 		technicalAbilitiesSplitPane.setRightComponent(technicalDescriptionScrollPane);
@@ -1376,6 +1405,211 @@ public class CharacterCreationView extends JFrame {
 
 		fileChooser = new JFileChooser();
 		fileChooser.addChoosableFileFilter(new CharFilter());
+	}
+
+	public void addAttractivenessStatChangeListener(ChangeListener listenerForStatChange) {
+		attractivenessSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addBodyStatChangeListener(ChangeListener listenerForStatChange) {
+		bodySpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addCoolStatChangeListener(ChangeListener listenerForStatChange) {
+		coolSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addDecreaseInjuryActionListener(ActionListener listenerForDecreaseInjuryButton) {
+		decreaseInjuryButton.addActionListener(listenerForDecreaseInjuryButton);
+	}
+
+	public void addHandleDocumentListener(DocumentListener listenerForHandleDocument) {
+		handleTextField.getDocument().addDocumentListener(listenerForHandleDocument);
+	}
+
+	public void addIncreaseInjuryActionListener(ActionListener listenerForIncreaseInjuryButton) {
+		increaseInjuryButton.addActionListener(listenerForIncreaseInjuryButton);
+	}
+
+	public void addIntelligenceStatChangeListener(ChangeListener listenerForStatChange) {
+		intelligenceSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addLoadCharacterActionListener(ActionListener listenerForLoadButton) {
+		loadButton.addActionListener(listenerForLoadButton);
+	}
+
+	public void addLuckStatChangeListener(ChangeListener listenerForStatChange) {
+		luckSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addMinorlyDecreaseInjuryActionListener(ActionListener listenerForMinorlyDecreaseInjuryButton) {
+		minorlyDecreaseInjuryButton.addActionListener(listenerForMinorlyDecreaseInjuryButton);
+	}
+
+	public void addMinorlyIncreaseInjuryActionListener(ActionListener listenerForMinorlyIncreaseInjuryButton) {
+		minorlyIncreaseInjuryButton.addActionListener(listenerForMinorlyIncreaseInjuryButton);
+	}
+
+	public void addMovementAllowanceStatChangeListener(ChangeListener listenerForStatChange) {
+		movementAllowanceSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addRoleChangeListener(ActionListener listenerForRoleChange) {
+		roleComboBox.addActionListener(listenerForRoleChange);
+	}
+
+	public void addSaveCharacterActionListener(ActionListener listenerForSaveButton) {
+		saveButton.addActionListener(listenerForSaveButton);
+	}
+
+	public void addTechnicalAbilityStatChangeListener(ChangeListener listenerForStatChange) {
+		technicalAbilitySpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addTotalEmpathyStatChangeListener(ChangeListener listenerForStatChange) {
+		totalEmpathySpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addUnmodifiedReflexesStatChangeListener(ChangeListener listenerForStatChange) {
+		unmodifiedReflexesSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void clearSkillTables() {
+		Map<String, JTable> skillTables = new HashMap<String, JTable>();
+		skillTables.put(CharacterCreationModel.SPEC, specialAbilitiesSkillTable);
+		skillTables.put(CharacterCreationModel.ATT, attractivenessSkillTable);
+		skillTables.put(CharacterCreationModel.BOD, bodySkillTable);
+		skillTables.put(CharacterCreationModel.CL, coolSkillTable);
+		skillTables.put(CharacterCreationModel.EMP, empathySkillTable);
+		skillTables.put(CharacterCreationModel.INT, intelligenceSkillTable);
+		skillTables.put(CharacterCreationModel.REF, reflexesSkillTable);
+		skillTables.put(CharacterCreationModel.TECH, technicalAbilitiesSkillTable);
+		for (JTable table : skillTables.values()) {
+			table.setModel(new SkillTableModel());
+			table.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+			table.revalidate();
+			table.repaint();
+		}
+
+	}
+
+	public void drawBasicSkillPanel(String skillCategory, String skill, int rank, String specificSkill,
+			TableModelListener listener) {
+		JTable targetTable;
+
+		switch (skillCategory.toUpperCase()) {
+		case CharacterCreationModel.SPEC:
+			targetTable = specialAbilitiesSkillTable;
+			break;
+		case CharacterCreationModel.ATT:
+			targetTable = attractivenessSkillTable;
+			break;
+		case CharacterCreationModel.BOD:
+			targetTable = bodySkillTable;
+			break;
+		case CharacterCreationModel.CL:
+			targetTable = coolSkillTable;
+			break;
+		case CharacterCreationModel.EMP:
+			targetTable = empathySkillTable;
+			break;
+		case CharacterCreationModel.INT:
+			targetTable = intelligenceSkillTable;
+			break;
+		case CharacterCreationModel.REF:
+			targetTable = reflexesSkillTable;
+			break;
+		case CharacterCreationModel.TECH:
+			targetTable = technicalAbilitiesSkillTable;
+			break;
+		default:
+			targetTable = null;
+			break;
+		}
+
+		SkillTableModel model = (SkillTableModel) targetTable.getModel();
+		model.addTableModelListener(listener);
+		model.addRow(new Object[] { skill, specificSkill, Integer.valueOf(rank) });
+
+	}
+
+	public void drawDecreaseInjuryPoints(double points) {
+		int targetIndex = (int) (points / MAXIMUM_CELLS_PER_GAUGE);
+		StunGaugePanel targetPanel = stunProgressPanels.get(targetIndex);
+		if ((points + 1) % MAXIMUM_CELLS_PER_GAUGE < 1 && (points + 1) % MAXIMUM_CELLS_PER_GAUGE > 0) {
+			targetPanel.minorlyDecreaseStunGauge();
+			targetPanel.revalidate();
+			targetPanel.repaint();
+			targetPanel = stunProgressPanels.get(targetIndex + 1);
+			targetPanel.minorlyDecreaseStunGauge();
+			targetPanel.revalidate();
+			targetPanel.repaint();
+		} else {
+			targetPanel.decreaseStunGauge();
+			targetPanel.revalidate();
+			targetPanel.repaint();
+		}
+	}
+
+	public void drawIncreasedInjuryPoints(double points) {
+		int targetIndex = (int) ((points - 1) / MAXIMUM_CELLS_PER_GAUGE);
+		StunGaugePanel targetPanel = stunProgressPanels.get(targetIndex);
+		if (points % MAXIMUM_CELLS_PER_GAUGE < 1 && points % MAXIMUM_CELLS_PER_GAUGE > 0) {
+			targetPanel.minorlyIncreaseStunGauge();
+			targetPanel.revalidate();
+			targetPanel.repaint();
+			targetPanel = stunProgressPanels.get(targetIndex + 1);
+			targetPanel.minorlyIncreaseStunGauge();
+			targetPanel.revalidate();
+			targetPanel.repaint();
+		} else {
+			targetPanel.increaseStunGauge();
+			targetPanel.revalidate();
+			targetPanel.repaint();
+		}
+	}
+
+	public void drawLoadedInjuryPoints(double points) {
+		for (StunGaugePanel panel : stunProgressPanels) {
+			panel.rect.setRect(new Rectangle2D.Double(0, 0, 0, 10));
+			panel.revalidate();
+			panel.repaint();
+		}
+
+		int fullStunGauges = (int) (points / CharacterCreationView.MAXIMUM_CELLS_PER_GAUGE) - 1;
+		for (int i = 0; i <= fullStunGauges; i++) {
+			fillStunGauge(i);
+		}
+
+		double remainderStunGauges = points % CharacterCreationView.MAXIMUM_CELLS_PER_GAUGE;
+		for (int j = 0; j < remainderStunGauges; j++) {
+			if (remainderStunGauges % 1 == 0) {
+				stunProgressPanels.get(fullStunGauges + 1).increaseStunGauge();
+			} else if ((remainderStunGauges - j) >= 1) {
+				stunProgressPanels.get(fullStunGauges + 1).increaseStunGauge();
+			} else {
+				stunProgressPanels.get(fullStunGauges + 1).minorlyIncreaseStunGauge();
+			}
+		}
+	}
+
+	public void drawMinorlyDecreaseInjuryPoints(double points) {
+		int targetIndex = (int) (points / MAXIMUM_CELLS_PER_GAUGE);
+		StunGaugePanel targetPanel = stunProgressPanels.get(targetIndex);
+		targetPanel.minorlyDecreaseStunGauge();
+
+		targetPanel.revalidate();
+		targetPanel.repaint();
+	}
+
+	public void drawMinorlyIncreasedInjuryPoints(double points) {
+		int targetIndex = (int) ((points - 0.5) / MAXIMUM_CELLS_PER_GAUGE);
+		StunGaugePanel targetPanel = stunProgressPanels.get(targetIndex);
+		targetPanel.minorlyIncreaseStunGauge();
+
+		targetPanel.revalidate();
+		targetPanel.repaint();
 	}
 
 	public String getCharacterName() {
@@ -1486,12 +1720,8 @@ public class CharacterCreationView extends JFrame {
 		return stunProgressPanels;
 	}
 
-	public Map<String, JLabel> getSkillLabels() {
-		return skillLabels;
-	}
-
-	public Map<String, JSpinner> getSkillSpinners() {
-		return skillSpinners;
+	public Map<String, SkillTableModel> getSkillTables() {
+		return skillTables;
 	}
 
 	public void setHandle(String handle) {
@@ -1594,282 +1824,12 @@ public class CharacterCreationView extends JFrame {
 		bodyTypeModifierTextField.setText(bodyTypeModifier);
 	}
 
-	public void drawLoadedInjuryPoints(double points) {
-		for (StunGaugePanel panel : stunProgressPanels) {
-			panel.rect.setRect(new Rectangle2D.Double(0, 0, 0, 10));
-			panel.revalidate();
-			panel.repaint();
-		}
-
-		int fullStunGauges = (int) (points / CharacterCreationView.MAXIMUM_CELLS_PER_GAUGE) - 1;
-		for (int i = 0; i <= fullStunGauges; i++) {
-			fillStunGauge(i);
-		}
-
-		double remainderStunGauges = points % CharacterCreationView.MAXIMUM_CELLS_PER_GAUGE;
-		for (int j = 0; j < remainderStunGauges; j++) {
-			if (remainderStunGauges % 1 == 0) {
-				stunProgressPanels.get(fullStunGauges + 1).increaseStunGauge();
-			} else if ((remainderStunGauges - j) >= 1) {
-				stunProgressPanels.get(fullStunGauges + 1).increaseStunGauge();
-			} else {
-				stunProgressPanels.get(fullStunGauges + 1).minorlyIncreaseStunGauge();
-			}
-		}
-	}
-
-	public void drawIncreasedInjuryPoints(double points) {
-		int targetIndex = (int) ((points - 1) / MAXIMUM_CELLS_PER_GAUGE);
-		StunGaugePanel targetPanel = stunProgressPanels.get(targetIndex);
-		if (points % MAXIMUM_CELLS_PER_GAUGE < 1 && points % MAXIMUM_CELLS_PER_GAUGE > 0) {
-			targetPanel.minorlyIncreaseStunGauge();
-			targetPanel.revalidate();
-			targetPanel.repaint();
-			targetPanel = stunProgressPanels.get(targetIndex + 1);
-			targetPanel.minorlyIncreaseStunGauge();
-			targetPanel.revalidate();
-			targetPanel.repaint();
-		} else {
-			targetPanel.increaseStunGauge();
-			targetPanel.revalidate();
-			targetPanel.repaint();
-		}
-	}
-
-	public void drawMinorlyIncreasedInjuryPoints(double points) {
-		int targetIndex = (int) ((points - 0.5) / MAXIMUM_CELLS_PER_GAUGE);
-		StunGaugePanel targetPanel = stunProgressPanels.get(targetIndex);
-		targetPanel.minorlyIncreaseStunGauge();
-
-		targetPanel.revalidate();
-		targetPanel.repaint();
-	}
-
-	public void drawMinorlyDecreaseInjuryPoints(double points) {
-		int targetIndex = (int) (points / MAXIMUM_CELLS_PER_GAUGE);
-		StunGaugePanel targetPanel = stunProgressPanels.get(targetIndex);
-		targetPanel.minorlyDecreaseStunGauge();
-
-		targetPanel.revalidate();
-		targetPanel.repaint();
-	}
-
-	public void drawDecreaseInjuryPoints(double points) {
-		int targetIndex = (int) (points / MAXIMUM_CELLS_PER_GAUGE);
-		StunGaugePanel targetPanel = stunProgressPanels.get(targetIndex);
-		if ((points + 1) % MAXIMUM_CELLS_PER_GAUGE < 1 && (points + 1) % MAXIMUM_CELLS_PER_GAUGE > 0) {
-			targetPanel.minorlyDecreaseStunGauge();
-			targetPanel.revalidate();
-			targetPanel.repaint();
-			targetPanel = stunProgressPanels.get(targetIndex + 1);
-			targetPanel.minorlyDecreaseStunGauge();
-			targetPanel.revalidate();
-			targetPanel.repaint();
-		} else {
-			targetPanel.decreaseStunGauge();
-			targetPanel.revalidate();
-			targetPanel.repaint();
-		}
-	}
-
 	private void fillStunGauge(int index) {
 		stunProgressPanels.get(index).increaseStunGauge();
 		stunProgressPanels.get(index).increaseStunGauge();
 		stunProgressPanels.get(index).increaseStunGauge();
 		stunProgressPanels.get(index).increaseStunGauge();
 
-	}
-
-	public void clearSkillPanels() {
-		List<JPanel> skillPanels = new ArrayList<JPanel>();
-		skillPanels.add(specialAbilitiesSkillPanel);
-		skillPanels.add(attractivenessSkillPanel);
-		skillPanels.add(bodySkillPanel);
-		skillPanels.add(coolSkillPanel);
-		skillPanels.add(empathySkillPanel);
-		skillPanels.add(intelligenceSkillPanel);
-		skillPanels.add(reflexesSkillPanel);
-		skillPanels.add(technicalAbilitiesSkillPanel);
-		for (JPanel panel : skillPanels) {
-			panel.removeAll();
-			panel.revalidate();
-			panel.repaint();
-		}
-
-	}
-
-	public void drawBasicSkillPanel(String skillCategory, String skill, int rank) {
-		JPanel targetPanel;
-		JPanel skillPanel = new JPanel(new BorderLayout());
-		JLabel skillLabel = new JLabel(skill);
-		skillLabel.setFont(new Font("Garamond", Font.PLAIN, 10));
-		JSpinner rankSpinner = new JSpinner();
-		rankSpinner.setModel(new SpinnerNumberModel(0, 0, 10, 1));
-		rankSpinner.setValue(Integer.valueOf(rank));
-
-		switch (skillCategory.toUpperCase()) {
-		case CharacterCreationModel.SPEC:
-			targetPanel = specialAbilitiesSkillPanel;
-			break;
-		case CharacterCreationModel.ATT:
-			targetPanel = attractivenessSkillPanel;
-			break;
-		case CharacterCreationModel.BOD:
-			targetPanel = bodySkillPanel;
-			break;
-		case CharacterCreationModel.CL:
-			targetPanel = coolSkillPanel;
-			break;
-		case CharacterCreationModel.EMP:
-			targetPanel = empathySkillPanel;
-			break;
-		case CharacterCreationModel.INT:
-			targetPanel = intelligenceSkillPanel;
-			break;
-		case CharacterCreationModel.REF:
-			targetPanel = reflexesSkillPanel;
-			break;
-		case CharacterCreationModel.TECH:
-			targetPanel = technicalAbilitiesSkillPanel;
-			break;
-		default:
-			targetPanel = null;
-			break;
-		}
-
-		skillPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.BLACK));
-		skillPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		skillPanel.add(skillLabel, BorderLayout.CENTER);
-		skillPanel.add(rankSpinner, BorderLayout.LINE_END);
-		targetPanel.add(skillPanel);
-
-		String skillCode = skillCategory.substring(0, 3) + ":" + skill.toLowerCase().replace(" ", "_");
-		skillLabels.put(skillCode, skillLabel);
-		skillSpinners.put(skillCode, rankSpinner);
-	}
-
-	public void drawSpecificSkillPanel(String skillCategory, String skill, int rank, String specifiedSkill,
-			ChangeListener listenerForRankSpinner) {
-		String skillLabelText = specifiedSkill.equals("") ? skill : skill.replace("...", ".") + specifiedSkill;
-
-		JPanel targetPanel;
-		JPanel skillPanel = new JPanel(new BorderLayout());
-		JLabel skillLabel = new JLabel(skillLabelText);
-		skillLabel.setFont(new Font("Garamond", Font.PLAIN, 10));
-		JSpinner rankSpinner = new JSpinner();
-		rankSpinner.setModel(new SpinnerNumberModel(0, 0, 10, 1));
-		rankSpinner.setValue(Integer.valueOf(rank));
-		rankSpinner.addChangeListener(listenerForRankSpinner);
-
-		switch (skillCategory.toUpperCase()) {
-		case CharacterCreationModel.SPEC:
-			targetPanel = specialAbilitiesSkillPanel;
-			break;
-		case CharacterCreationModel.ATT:
-			targetPanel = attractivenessSkillPanel;
-			break;
-		case CharacterCreationModel.BOD:
-			targetPanel = bodySkillPanel;
-			break;
-		case CharacterCreationModel.CL:
-			targetPanel = coolSkillPanel;
-			break;
-		case CharacterCreationModel.EMP:
-			targetPanel = empathySkillPanel;
-			break;
-		case CharacterCreationModel.INT:
-			targetPanel = intelligenceSkillPanel;
-			break;
-		case CharacterCreationModel.REF:
-			targetPanel = reflexesSkillPanel;
-			break;
-		case CharacterCreationModel.TECH:
-			targetPanel = technicalAbilitiesSkillPanel;
-			break;
-		default:
-			targetPanel = null;
-			break;
-		}
-
-		skillPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.BLACK));
-		skillPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		skillPanel.add(skillLabel, BorderLayout.CENTER);
-		skillPanel.add(rankSpinner, BorderLayout.LINE_END);
-		targetPanel.add(skillPanel);
-
-		String categoryCode = skillCategory.substring(0, 3);
-		String formattedSkill = skill.toLowerCase().replace(" ", "_");
-		String skillCode = categoryCode + ":" + formattedSkill;
-		skillLabels.put(skillCode, skillLabel);
-		skillSpinners.put(skillCode, rankSpinner);
-	}
-
-	public void addHandleDocumentListener(DocumentListener listenerForHandleDocument) {
-		handleTextField.getDocument().addDocumentListener(listenerForHandleDocument);
-	}
-
-	public void addRoleChangeListener(ActionListener listenerForRoleChange) {
-		roleComboBox.addActionListener(listenerForRoleChange);
-	}
-
-	public void addIntelligenceStatChangeListener(ChangeListener listenerForStatChange) {
-		intelligenceSpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addUnmodifiedReflexesStatChangeListener(ChangeListener listenerForStatChange) {
-		unmodifiedReflexesSpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addTechnicalAbilityStatChangeListener(ChangeListener listenerForStatChange) {
-		technicalAbilitySpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addCoolStatChangeListener(ChangeListener listenerForStatChange) {
-		coolSpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addAttractivenessStatChangeListener(ChangeListener listenerForStatChange) {
-		attractivenessSpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addLuckStatChangeListener(ChangeListener listenerForStatChange) {
-		luckSpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addMovementAllowanceStatChangeListener(ChangeListener listenerForStatChange) {
-		movementAllowanceSpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addBodyStatChangeListener(ChangeListener listenerForStatChange) {
-		bodySpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addTotalEmpathyStatChangeListener(ChangeListener listenerForStatChange) {
-		totalEmpathySpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addLoadCharacterActionListener(ActionListener listenerForLoadButton) {
-		loadButton.addActionListener(listenerForLoadButton);
-	}
-
-	public void addSaveCharacterActionListener(ActionListener listenerForSaveButton) {
-		saveButton.addActionListener(listenerForSaveButton);
-	}
-
-	public void addIncreaseInjuryActionListener(ActionListener listenerForIncreaseInjuryButton) {
-		increaseInjuryButton.addActionListener(listenerForIncreaseInjuryButton);
-	}
-
-	public void addMinorlyIncreaseInjuryActionListener(ActionListener listenerForMinorlyIncreaseInjuryButton) {
-		minorlyIncreaseInjuryButton.addActionListener(listenerForMinorlyIncreaseInjuryButton);
-	}
-
-	public void addMinorlyDecreaseInjuryActionListener(ActionListener listenerForMinorlyDecreaseInjuryButton) {
-		minorlyDecreaseInjuryButton.addActionListener(listenerForMinorlyDecreaseInjuryButton);
-	}
-
-	public void addDecreaseInjuryActionListener(ActionListener listenerForDecreaseInjuryButton) {
-		decreaseInjuryButton.addActionListener(listenerForDecreaseInjuryButton);
 	}
 
 	class CharFilter extends FileFilter {
@@ -1885,7 +1845,76 @@ public class CharacterCreationView extends JFrame {
 		}
 	}
 
-	public static class StunGaugePanel extends JPanel {
+	public class SkillTableModel extends AbstractTableModel {
+		private String[] columnNames = { "Skill", "Specific Skill", "Rank" };
+		private List<Object[]> data = new ArrayList<Object[]>();
+
+		@Override
+		public int getColumnCount() {
+			return columnNames.length;
+		}
+
+		@Override
+		public int getRowCount() {
+			return data.size();
+		}
+
+		@Override
+		public Object getValueAt(int row, int column) {
+			return data.get(row)[column];
+		}
+
+		public void addRow(Object[] rowData) {
+			data.add(rowData);
+		}
+
+		public String getColumnName(int column) {
+			return columnNames[column];
+		}
+
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			String skillName = (String) getValueAt(row, 0);
+			if (column == 1) {
+				int rank = (Integer) getValueAt(row, 2);
+				if (rank > 0 && skillName.contains("...")) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				if (column > 0) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+
+		public void setValueAt(Object value, int row, int col) {
+			data.get(row)[col] = value;
+			fireTableCellUpdated(row, col);
+		}
+	}
+
+	class SpinnerEditor extends AbstractCellEditor implements TableCellEditor {
+		JSpinner spinner = new JSpinner();
+
+		@Override
+		public Object getCellEditorValue() {
+			return spinner.getValue();
+		}
+
+		@Override
+		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
+				int column) {
+			spinner.setValue(value);
+			return spinner;
+		}
+
+	}
+
+	class StunGaugePanel extends JPanel {
 		private static final int STUN_PROGRESS_CELL_WIDTH = 15;
 		private static final int STUN_PROGRESS_CELL_HEIGHT = 10;
 

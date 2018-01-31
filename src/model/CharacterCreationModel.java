@@ -2025,14 +2025,14 @@ public class CharacterCreationModel {
 
 	public static class Skill {
 		private String type = "N/A";
-		private String skill = "NIL";
+		private String skillName = "NIL";
 		private String specifiedSkill = "";
 		private String description = "";
 		private int rank = 0;
 
 		private Skill(SkillBuilder skillBuilder) {
 			this.type = skillBuilder.type;
-			this.skill = skillBuilder.skill;
+			this.skillName = skillBuilder.skill;
 			this.specifiedSkill = skillBuilder.specifiedSkill;
 			this.description = skillBuilder.description;
 			this.rank = skillBuilder.rank;
@@ -2043,7 +2043,7 @@ public class CharacterCreationModel {
 		}
 
 		public String getSkillName() {
-			return skill;
+			return skillName;
 		}
 
 		public String getSpecifiedSkill() {
