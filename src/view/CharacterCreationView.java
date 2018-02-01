@@ -14,6 +14,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.util.ArrayList;
@@ -40,18 +42,20 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SpinnerModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 
 import model.CharacterCreationModel;
 
@@ -119,7 +123,8 @@ public class CharacterCreationView extends JFrame {
 	private JFileChooser fileChooser;
 
 	private List<StunGaugePanel> stunProgressPanels;
-	private Map<String, SkillTableModel> skillTables;
+	private Map<String, JTable> skillTables;
+	private Map<String, JTextArea> skillTextAreas;
 	private JTable specialAbilitiesSkillTable;
 	private JTable attractivenessSkillTable;
 	private JTable bodySkillTable;
@@ -134,7 +139,8 @@ public class CharacterCreationView extends JFrame {
 	 */
 	public CharacterCreationView() {
 		stunProgressPanels = new ArrayList<StunGaugePanel>();
-		skillTables = new HashMap<String, SkillTableModel>();
+		skillTables = new HashMap<String, JTable>();
+		skillTextAreas = new HashMap<String, JTextArea>();
 
 		setTitle("Cyberpunk 2020 Character Creation");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -1203,19 +1209,26 @@ public class CharacterCreationView extends JFrame {
 		specialAbilitiesSplitPane.setLeftComponent(specialAbilitiesSkillScrollPane);
 
 		specialAbilitiesSkillTable = new JTable(new SkillTableModel());
+		specialAbilitiesSkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		specialAbilitiesSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		specialAbilitiesSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		specialAbilitiesSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
 		specialAbilitiesSkillTable.setFillsViewportHeight(true);
 		specialAbilitiesSkillScrollPane.setViewportView(specialAbilitiesSkillTable);
+		skillTables.put(CharacterCreationModel.SPEC, specialAbilitiesSkillTable);
 
 		JScrollPane specialAbilitiesDescriptionScrollPane = new JScrollPane();
+		specialAbilitiesDescriptionScrollPane
+				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		specialAbilitiesSplitPane.setRightComponent(specialAbilitiesDescriptionScrollPane);
 
 		JTextArea specialAbilitiesTextArea = new JTextArea();
+		specialAbilitiesTextArea.setWrapStyleWord(true);
+		specialAbilitiesTextArea.setLineWrap(true);
 		specialAbilitiesTextArea.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		specialAbilitiesTextArea.setEditable(false);
 		specialAbilitiesDescriptionScrollPane.setViewportView(specialAbilitiesTextArea);
+		skillTextAreas.put(CharacterCreationModel.SPEC, specialAbilitiesTextArea);
 
 		JPanel cardAttractiveness = new JPanel();
 		cards.addTab(CharacterCreationModel.ATT, null, cardAttractiveness, null);
@@ -1229,18 +1242,26 @@ public class CharacterCreationView extends JFrame {
 		attractivenessSplitPane.setLeftComponent(attractivenessSkillScrollPane);
 
 		attractivenessSkillTable = new JTable(new SkillTableModel());
+		attractivenessSkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		attractivenessSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		attractivenessSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		attractivenessSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
 		attractivenessSkillTable.setFillsViewportHeight(true);
 		attractivenessSkillScrollPane.setViewportView(attractivenessSkillTable);
+		skillTables.put(CharacterCreationModel.ATT, attractivenessSkillTable);
 
 		JScrollPane attractivenessDescriptionScrollPane = new JScrollPane();
+		attractivenessDescriptionScrollPane
+				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		attractivenessSplitPane.setRightComponent(attractivenessDescriptionScrollPane);
 
 		JTextArea attractivenessTextArea = new JTextArea();
+		attractivenessTextArea.setWrapStyleWord(true);
+		attractivenessTextArea.setLineWrap(true);
 		attractivenessTextArea.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		attractivenessTextArea.setEditable(false);
 		attractivenessDescriptionScrollPane.setViewportView(attractivenessTextArea);
+		skillTextAreas.put(CharacterCreationModel.ATT, attractivenessTextArea);
 
 		JPanel cardBody = new JPanel();
 		cards.addTab(CharacterCreationModel.BOD, null, cardBody, null);
@@ -1254,18 +1275,23 @@ public class CharacterCreationView extends JFrame {
 		bodySplitPane.setLeftComponent(bodySkillScrollPane);
 
 		bodySkillTable = new JTable(new SkillTableModel());
+		bodySkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		bodySkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		bodySkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		bodySkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
 		bodySkillTable.setFillsViewportHeight(true);
 		bodySkillScrollPane.setViewportView(bodySkillTable);
+		skillTables.put(CharacterCreationModel.BOD, bodySkillTable);
 
 		JScrollPane bodyDescriptionScrollPane = new JScrollPane();
 		bodySplitPane.setRightComponent(bodyDescriptionScrollPane);
 
-		JPanel bodyDescriptionPanel = new JPanel();
-		bodyDescriptionScrollPane.setViewportView(bodyDescriptionPanel);
-		bodyDescriptionPanel.setLayout(new BoxLayout(bodyDescriptionPanel, BoxLayout.Y_AXIS));
+		JTextArea bodyTextArea = new JTextArea();
+		bodyTextArea.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		bodyTextArea.setWrapStyleWord(true);
+		bodyTextArea.setLineWrap(true);
+		bodyDescriptionScrollPane.setViewportView(bodyTextArea);
+		skillTextAreas.put(CharacterCreationModel.BOD, bodyTextArea);
 
 		JPanel cardCool = new JPanel();
 		cards.addTab(CharacterCreationModel.CL, null, cardCool, null);
@@ -1279,18 +1305,23 @@ public class CharacterCreationView extends JFrame {
 		coolSplitPane.setLeftComponent(coolSkillScrollPane);
 
 		coolSkillTable = new JTable(new SkillTableModel());
+		coolSkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		coolSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		coolSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		coolSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
 		coolSkillTable.setFillsViewportHeight(true);
 		coolSkillScrollPane.setViewportView(coolSkillTable);
+		skillTables.put(CharacterCreationModel.CL, coolSkillTable);
 
 		JScrollPane coolDescriptionScrollPane = new JScrollPane();
 		coolSplitPane.setRightComponent(coolDescriptionScrollPane);
 
-		JPanel coolDescriptionPanel = new JPanel();
-		coolDescriptionScrollPane.setViewportView(coolDescriptionPanel);
-		coolDescriptionPanel.setLayout(new BoxLayout(coolDescriptionPanel, BoxLayout.Y_AXIS));
+		JTextArea coolTextArea = new JTextArea();
+		coolTextArea.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		coolTextArea.setLineWrap(true);
+		coolTextArea.setWrapStyleWord(true);
+		coolDescriptionScrollPane.setViewportView(coolTextArea);
+		skillTextAreas.put(CharacterCreationModel.CL, coolTextArea);
 
 		JPanel cardEmpathy = new JPanel();
 		cards.addTab(CharacterCreationModel.EMP, null, cardEmpathy, null);
@@ -1304,18 +1335,23 @@ public class CharacterCreationView extends JFrame {
 		empathySplitPane.setLeftComponent(empathySkillScrollPane);
 
 		empathySkillTable = new JTable(new SkillTableModel());
+		empathySkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		empathySkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		empathySkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		empathySkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
 		empathySkillTable.setFillsViewportHeight(true);
 		empathySkillScrollPane.setViewportView(empathySkillTable);
+		skillTables.put(CharacterCreationModel.EMP, empathySkillTable);
 
 		JScrollPane empathyDescriptionScrollPane = new JScrollPane();
 		empathySplitPane.setRightComponent(empathyDescriptionScrollPane);
 
-		JPanel empathyDescriptionPanel = new JPanel();
-		empathyDescriptionScrollPane.setViewportView(empathyDescriptionPanel);
-		empathyDescriptionPanel.setLayout(new BoxLayout(empathyDescriptionPanel, BoxLayout.Y_AXIS));
+		JTextArea empathyTextArea = new JTextArea();
+		empathyTextArea.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		empathyTextArea.setWrapStyleWord(true);
+		empathyTextArea.setLineWrap(true);
+		empathyDescriptionScrollPane.setViewportView(empathyTextArea);
+		skillTextAreas.put(CharacterCreationModel.EMP, empathyTextArea);
 
 		JPanel cardIntelligence = new JPanel();
 		cards.addTab(CharacterCreationModel.INT, null, cardIntelligence, null);
@@ -1329,18 +1365,23 @@ public class CharacterCreationView extends JFrame {
 		intelligenceSplitPane.setLeftComponent(intelligenceSkillScrollPane);
 
 		intelligenceSkillTable = new JTable(new SkillTableModel());
+		intelligenceSkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		intelligenceSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		intelligenceSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		intelligenceSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
 		intelligenceSkillTable.setFillsViewportHeight(true);
 		intelligenceSkillScrollPane.setViewportView(intelligenceSkillTable);
+		skillTables.put(CharacterCreationModel.INT, intelligenceSkillTable);
 
 		JScrollPane intelligenceDescriptionScrollPane = new JScrollPane();
 		intelligenceSplitPane.setRightComponent(intelligenceDescriptionScrollPane);
 
-		JPanel intelligenceDescriptionPanel = new JPanel();
-		intelligenceDescriptionScrollPane.setViewportView(intelligenceDescriptionPanel);
-		intelligenceDescriptionPanel.setLayout(new BoxLayout(intelligenceDescriptionPanel, BoxLayout.Y_AXIS));
+		JTextArea intelligenceTextArea = new JTextArea();
+		intelligenceTextArea.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		intelligenceTextArea.setWrapStyleWord(true);
+		intelligenceTextArea.setLineWrap(true);
+		intelligenceDescriptionScrollPane.setViewportView(intelligenceTextArea);
+		skillTextAreas.put(CharacterCreationModel.INT, intelligenceTextArea);
 
 		JPanel cardReflexes = new JPanel();
 		cards.addTab(CharacterCreationModel.REF, null, cardReflexes, null);
@@ -1354,18 +1395,23 @@ public class CharacterCreationView extends JFrame {
 		reflexesSplitPane.setLeftComponent(reflexesSkillScrollPane);
 
 		reflexesSkillTable = new JTable(new SkillTableModel());
+		reflexesSkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		reflexesSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		reflexesSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		reflexesSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
 		reflexesSkillTable.setFillsViewportHeight(true);
 		reflexesSkillScrollPane.setViewportView(reflexesSkillTable);
+		skillTables.put(CharacterCreationModel.REF, reflexesSkillTable);
 
 		JScrollPane reflexesDescriptionScrollPane = new JScrollPane();
 		reflexesSplitPane.setRightComponent(reflexesDescriptionScrollPane);
 
-		JPanel reflexesDescriptionPanel = new JPanel();
-		reflexesDescriptionScrollPane.setViewportView(reflexesDescriptionPanel);
-		reflexesDescriptionPanel.setLayout(new BoxLayout(reflexesDescriptionPanel, BoxLayout.Y_AXIS));
+		JTextArea reflexesTextArea = new JTextArea();
+		reflexesTextArea.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		reflexesTextArea.setWrapStyleWord(true);
+		reflexesTextArea.setLineWrap(true);
+		reflexesDescriptionScrollPane.setViewportView(reflexesTextArea);
+		skillTextAreas.put(CharacterCreationModel.REF, reflexesTextArea);
 
 		JPanel cardTechnicalAbilities = new JPanel();
 		cards.addTab(CharacterCreationModel.TECH, null, cardTechnicalAbilities, null);
@@ -1379,19 +1425,23 @@ public class CharacterCreationView extends JFrame {
 		technicalAbilitiesSplitPane.setLeftComponent(technicalAbilitiesSkillScrollPane);
 
 		technicalAbilitiesSkillTable = new JTable(new SkillTableModel());
+		technicalAbilitiesSkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		technicalAbilitiesSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		technicalAbilitiesSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		technicalAbilitiesSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
 		technicalAbilitiesSkillTable.setFillsViewportHeight(true);
 		technicalAbilitiesSkillScrollPane.setViewportView(technicalAbilitiesSkillTable);
+		skillTables.put(CharacterCreationModel.TECH, technicalAbilitiesSkillTable);
 
 		JScrollPane technicalDescriptionScrollPane = new JScrollPane();
 		technicalAbilitiesSplitPane.setRightComponent(technicalDescriptionScrollPane);
 
-		JPanel technicalAbilitiesDescriptionPanel = new JPanel();
-		technicalDescriptionScrollPane.setViewportView(technicalAbilitiesDescriptionPanel);
-		technicalAbilitiesDescriptionPanel
-				.setLayout(new BoxLayout(technicalAbilitiesDescriptionPanel, BoxLayout.Y_AXIS));
+		JTextArea technicalAbilitiesTextArea = new JTextArea();
+		technicalAbilitiesTextArea.setWrapStyleWord(true);
+		technicalAbilitiesTextArea.setLineWrap(true);
+		technicalAbilitiesTextArea.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		technicalDescriptionScrollPane.setViewportView(technicalAbilitiesTextArea);
+		skillTextAreas.put(CharacterCreationModel.TECH, technicalAbilitiesTextArea);
 
 		JPanel cyberneticsPanel = new JPanel();
 		tabbedPane.addTab("Cybernetics", null, cyberneticsPanel, null);
@@ -1463,6 +1513,23 @@ public class CharacterCreationView extends JFrame {
 		saveButton.addActionListener(listenerForSaveButton);
 	}
 
+	public void addSelectAllTextFocusListeners(FocusAdapter adapter) {
+		JSpinner spinners[] = { intelligenceSpinner, unmodifiedReflexesSpinner, technicalAbilitySpinner, coolSpinner,
+				attractivenessSpinner, luckSpinner, movementAllowanceSpinner, bodySpinner, totalEmpathySpinner };
+		for (JSpinner spinner : spinners) {
+			JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spinner.getEditor();
+			JTextField textField = editor.getTextField();
+			textField.addFocusListener(adapter);
+		}
+	}
+
+	public void addListSelectionListeners(ListSelectionListener listener) {
+		for (JTable table : skillTables.values()) {
+			ListSelectionModel selectionModel = table.getSelectionModel();
+			selectionModel.addListSelectionListener(listener);
+		}
+	}
+
 	public void addTechnicalAbilityStatChangeListener(ChangeListener listenerForStatChange) {
 		technicalAbilitySpinner.addChangeListener(listenerForStatChange);
 	}
@@ -1497,6 +1564,7 @@ public class CharacterCreationView extends JFrame {
 	public void drawBasicSkillPanel(String skillCategory, String skill, int rank, String specificSkill,
 			TableModelListener listener) {
 		JTable targetTable;
+		Object[] row;
 
 		switch (skillCategory.toUpperCase()) {
 		case CharacterCreationModel.SPEC:
@@ -1530,7 +1598,8 @@ public class CharacterCreationView extends JFrame {
 
 		SkillTableModel model = (SkillTableModel) targetTable.getModel();
 		model.addTableModelListener(listener);
-		model.addRow(new Object[] { skill, specificSkill, Integer.valueOf(rank) });
+		row = new Object[] { skill, specificSkill, Integer.valueOf(rank) };
+		model.addRow(row);
 
 	}
 
@@ -1720,8 +1789,12 @@ public class CharacterCreationView extends JFrame {
 		return stunProgressPanels;
 	}
 
-	public Map<String, SkillTableModel> getSkillTables() {
+	public Map<String, JTable> getSkillTables() {
 		return skillTables;
+	}
+
+	public Map<String, JTextArea> getSkillTextAreas() {
+		return skillTextAreas;
 	}
 
 	public void setHandle(String handle) {
@@ -1898,7 +1971,11 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	class SpinnerEditor extends AbstractCellEditor implements TableCellEditor {
-		JSpinner spinner = new JSpinner();
+		JSpinner spinner;
+
+		public SpinnerEditor() {
+			spinner = new JSpinner();
+		}
 
 		@Override
 		public Object getCellEditorValue() {
@@ -1909,6 +1986,21 @@ public class CharacterCreationView extends JFrame {
 		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
 				int column) {
 			spinner.setValue(value);
+
+			JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spinner.getEditor();
+			editor.getTextField().addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent fe) {
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							JTextField txt = (JTextField) fe.getSource();
+							txt.selectAll();
+						}
+					});
+				}
+			});
+
 			return spinner;
 		}
 

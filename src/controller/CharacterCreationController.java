@@ -2,6 +2,8 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,11 +14,17 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -49,6 +57,9 @@ public class CharacterCreationController {
 		this.characterView.addMinorlyIncreaseInjuryActionListener(new MinorlyIncreaseInjuryActionListener());
 		this.characterView.addMinorlyDecreaseInjuryActionListener(new MinorlyDecreaseInjuryActionListener());
 		this.characterView.addDecreaseInjuryActionListener(new DecreaseInjuryActionListener());
+		this.characterView.addSelectAllTextFocusListeners(new SelectAllTextFocusListener());
+		this.characterView.addListSelectionListeners(new TableListSelectionListener());
+
 		this.characterView.drawLoadedInjuryPoints(this.characterModel.getInjuryPoints());
 		this.characterView.setLeapLevel(Double.toString(this.characterModel.getLeapLevel()));
 		this.characterView.setLiftLevel(Double.toString(this.characterModel.getLiftLevel()));
@@ -535,6 +546,67 @@ public class CharacterCreationController {
 						skill.setSpecifiedSkill(specifiedSkill);
 					}
 				}
+			}
+		}
+
+	}
+
+	class SelectAllTextFocusListener extends FocusAdapter {
+		@Override
+		public void focusLost(FocusEvent fe) {
+			// Do nothing
+		}
+
+		@Override
+		public void focusGained(FocusEvent fe) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					JTextField txt = (JTextField) fe.getSource();
+					txt.selectAll();
+				}
+			});
+		}
+	}
+
+	class TableListSelectionListener implements ListSelectionListener {
+		Map<String, JTable> tables;
+		Map<String, JTextArea> textAreas;
+
+		public TableListSelectionListener() {
+			tables = characterView.getSkillTables();
+			textAreas = characterView.getSkillTextAreas();
+		}
+
+		@Override
+		public void valueChanged(ListSelectionEvent event) {
+			ListSelectionModel listSelectionModel = (ListSelectionModel) event.getSource();
+
+			String key = getKeyFromListSelectionModel(listSelectionModel);
+			setTextFieldText(listSelectionModel, key);
+
+		}
+
+		private String getKeyFromListSelectionModel(ListSelectionModel listSelectionModel) {
+			for (Map.Entry<String, JTable> entry : tables.entrySet()) {
+				ListSelectionModel tempSelectionModel = entry.getValue().getSelectionModel();
+				if (listSelectionModel.equals(tempSelectionModel)) {
+					return entry.getKey();
+				}
+			}
+			return null;
+		}
+
+		private void setTextFieldText(ListSelectionModel listSelectionModel, String key) {
+			if (!listSelectionModel.isSelectionEmpty()) {
+				String categoryCode = key.substring(0, 3);
+				int index = listSelectionModel.getLeadSelectionIndex();
+				SkillTableModel tableModel = (SkillTableModel) tables.get(key).getModel();
+				String skillName = (String) tableModel.getValueAt(index, 0);
+				String skillCode = skillName.replace(" ", "_").toLowerCase();
+				CharacterCreationModel.Skill skill = characterModel.getSkill(categoryCode + ":" + skillCode);
+				textAreas.get(key).setText(skill.getDescription());
+
 			}
 		}
 
