@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -109,8 +109,9 @@ public class CharacterCreationView extends JFrame {
 	private JTextField leftLegArmorTextField;
 	private JTextField saveTextField;
 	private JTextField bodyTypeModifierTextField;
-	private JButton decreaseCharacterPointsButton;
-	private JButton increaseCharacterPointsButton;
+	private JButton randomCharacterPointsButton;
+	private JButton fastCharacterPointsButton;
+	private JButton manualCharacterPointsButton;
 	private JButton saveButton;
 	private JButton loadButton;
 	private JButton increaseInjuryButton;
@@ -120,9 +121,12 @@ public class CharacterCreationView extends JFrame {
 	private JComboBox<String> roleComboBox;
 	private JTextField modifiedReflexesTextField;
 	private JSpinner totalEmpathySpinner;
+	private JComboBox<Integer>[] statComboBoxes;
+	private JLabel[] statComboBoxLabels;
 	private JFileChooser fileChooser;
 
 	private List<StunGaugePanel> stunProgressPanels;
+	private JSpinner[] skillSpinners;
 	private Map<String, JTable> skillTables;
 	private Map<String, JTextArea> skillTextAreas;
 	private JTable specialAbilitiesSkillTable;
@@ -139,6 +143,7 @@ public class CharacterCreationView extends JFrame {
 	 */
 	public CharacterCreationView() {
 		stunProgressPanels = new ArrayList<StunGaugePanel>();
+		skillSpinners = new JSpinner[9];
 		skillTables = new HashMap<String, JTable>();
 		skillTextAreas = new HashMap<String, JTextArea>();
 
@@ -278,12 +283,13 @@ public class CharacterCreationView extends JFrame {
 		gbc_lblCharacterPoints.weightx = 0.1111;
 		gbc_lblCharacterPoints.ipadx = 10;
 		gbc_lblCharacterPoints.fill = GridBagConstraints.BOTH;
-		gbc_lblCharacterPoints.insets = new Insets(0, 0, 0, 3);
+		gbc_lblCharacterPoints.insets = new Insets(0, 0, 0, 5);
 		gbc_lblCharacterPoints.gridx = 0;
 		gbc_lblCharacterPoints.gridy = 0;
 		characterPointsPanel.add(lblCharacterPoints, gbc_lblCharacterPoints);
 
 		characterPointsTextField = new JTextField();
+		characterPointsTextField.setEditable(false);
 		characterPointsTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		characterPointsTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		GridBagConstraints gbc_characterPointsTextField = new GridBagConstraints();
@@ -296,26 +302,29 @@ public class CharacterCreationView extends JFrame {
 		characterPointsPanel.add(characterPointsTextField, gbc_characterPointsTextField);
 		characterPointsTextField.setColumns(NUMBER_OF_TEXTFIELD_COLUMNS);
 
-		decreaseCharacterPointsButton = new JButton("<");
-		GridBagConstraints gbc_decreaseCharacterPointsButton = new GridBagConstraints();
-		gbc_decreaseCharacterPointsButton.weightx = 0.1111;
-		gbc_decreaseCharacterPointsButton.fill = GridBagConstraints.BOTH;
-		gbc_decreaseCharacterPointsButton.insets = new Insets(0, 0, 0, 5);
-		gbc_decreaseCharacterPointsButton.gridx = 2;
-		gbc_decreaseCharacterPointsButton.gridy = 0;
-		characterPointsPanel.add(decreaseCharacterPointsButton, gbc_decreaseCharacterPointsButton);
+		randomCharacterPointsButton = new JButton("Random");
+		GridBagConstraints gbc_randomCharacterPointsButton = new GridBagConstraints();
+		gbc_randomCharacterPointsButton.weightx = 0.1111;
+		gbc_randomCharacterPointsButton.fill = GridBagConstraints.BOTH;
+		gbc_randomCharacterPointsButton.insets = new Insets(0, 0, 0, 5);
+		gbc_randomCharacterPointsButton.gridx = 2;
+		gbc_randomCharacterPointsButton.gridy = 0;
+		characterPointsPanel.add(randomCharacterPointsButton, gbc_randomCharacterPointsButton);
 
-		increaseCharacterPointsButton = new JButton(">");
-		GridBagConstraints gbc_increaseCharacterPointsButton = new GridBagConstraints();
-		gbc_increaseCharacterPointsButton.weightx = 0.1111;
-		gbc_increaseCharacterPointsButton.fill = GridBagConstraints.BOTH;
-		gbc_increaseCharacterPointsButton.gridx = 3;
-		gbc_increaseCharacterPointsButton.gridy = 0;
-		characterPointsPanel.add(increaseCharacterPointsButton, gbc_increaseCharacterPointsButton);
+		fastCharacterPointsButton = new JButton("Fast");
+		GridBagConstraints gbc_fastCharacterPointsButton = new GridBagConstraints();
+		gbc_fastCharacterPointsButton.insets = new Insets(0, 0, 0, 5);
+		gbc_fastCharacterPointsButton.weightx = 0.1111;
+		gbc_fastCharacterPointsButton.fill = GridBagConstraints.BOTH;
+		gbc_fastCharacterPointsButton.gridx = 3;
+		gbc_fastCharacterPointsButton.gridy = 0;
+		characterPointsPanel.add(fastCharacterPointsButton, gbc_fastCharacterPointsButton);
 
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.weightx = 0.5556;
-		characterPointsPanel.add(Box.createHorizontalGlue(), gbc);
+		manualCharacterPointsButton = new JButton("Manual");
+		GridBagConstraints gbc_manualCharacterPointsButton = new GridBagConstraints();
+		gbc_manualCharacterPointsButton.gridx = 4;
+		gbc_manualCharacterPointsButton.gridy = 0;
+		characterPointsPanel.add(manualCharacterPointsButton, gbc_manualCharacterPointsButton);
 
 		JPanel statPanel = new JPanel();
 		GridBagConstraints gbc_statPanel = new GridBagConstraints();
@@ -367,6 +376,7 @@ public class CharacterCreationView extends JFrame {
 		technicalAbilitySpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		technicalAbilitySpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		technicalAbilityStatPanel.add(technicalAbilitySpinner, BorderLayout.EAST);
+		skillSpinners[0] = technicalAbilitySpinner;
 
 		JPanel intelligenceStatPanel = new JPanel();
 		intelligenceStatPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -387,6 +397,7 @@ public class CharacterCreationView extends JFrame {
 		intelligenceSpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		intelligenceSpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		intelligenceStatPanel.add(intelligenceSpinner, BorderLayout.EAST);
+		skillSpinners[1] = intelligenceSpinner;
 
 		JPanel reflexesStatPanel = new JPanel();
 		reflexesStatPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -421,6 +432,7 @@ public class CharacterCreationView extends JFrame {
 		unmodifiedReflexesSpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		unmodifiedReflexesSpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		reflexesPointPanel.add(unmodifiedReflexesSpinner);
+		skillSpinners[2] = unmodifiedReflexesSpinner;
 
 		JPanel coolStatPanel = new JPanel();
 		coolStatPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -441,6 +453,7 @@ public class CharacterCreationView extends JFrame {
 		coolSpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		coolSpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		coolStatPanel.add(coolSpinner, BorderLayout.EAST);
+		skillSpinners[3] = coolSpinner;
 
 		JPanel attractivenessStatPanel = new JPanel();
 		attractivenessStatPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -461,6 +474,7 @@ public class CharacterCreationView extends JFrame {
 		attractivenessSpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		attractivenessSpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		attractivenessStatPanel.add(attractivenessSpinner, BorderLayout.EAST);
+		skillSpinners[4] = attractivenessSpinner;
 
 		JPanel luckPanel = new JPanel();
 		luckPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -481,6 +495,7 @@ public class CharacterCreationView extends JFrame {
 		luckSpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		luckSpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		luckPanel.add(luckSpinner, BorderLayout.EAST);
+		skillSpinners[5] = luckSpinner;
 
 		JPanel bodyStatPanel = new JPanel();
 		bodyStatPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -500,6 +515,7 @@ public class CharacterCreationView extends JFrame {
 		bodySpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		bodySpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		bodyStatPanel.add(bodySpinner, BorderLayout.EAST);
+		skillSpinners[6] = bodySpinner;
 
 		JPanel movementAllowancePanel = new JPanel();
 		movementAllowancePanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -519,6 +535,7 @@ public class CharacterCreationView extends JFrame {
 		movementAllowanceSpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		movementAllowanceSpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		movementAllowancePanel.add(movementAllowanceSpinner, BorderLayout.EAST);
+		skillSpinners[7] = movementAllowanceSpinner;
 
 		JPanel empathyStatPanel = new JPanel();
 		empathyStatPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -552,6 +569,7 @@ public class CharacterCreationView extends JFrame {
 		totalEmpathySpinner.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		totalEmpathySpinner.setModel(new SpinnerNumberModel(2, 2, 10, 1));
 		empathyPointPanel.add(totalEmpathySpinner);
+		skillSpinners[8] = totalEmpathySpinner;
 
 		JPanel runPanel = new JPanel();
 		runPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -1455,6 +1473,67 @@ public class CharacterCreationView extends JFrame {
 
 		fileChooser = new JFileChooser();
 		fileChooser.addChoosableFileFilter(new CharFilter());
+
+		setUpStatComboBoxes();
+	}
+
+	public void setUpStatComboBoxes() {
+		String labelText;
+		final int totalStatCount = 9;
+		statComboBoxes = new JComboBox[totalStatCount];
+		statComboBoxLabels = new JLabel[totalStatCount];
+
+		Random rnd = new Random();
+		int die1 = rnd.nextInt(8) + 3;
+		int die2 = rnd.nextInt(8) + 3;
+		int die3 = rnd.nextInt(8) + 3;
+		int die4 = rnd.nextInt(8) + 3;
+		int die5 = rnd.nextInt(8) + 3;
+		int die6 = rnd.nextInt(8) + 3;
+		int die7 = rnd.nextInt(8) + 3;
+		int die8 = rnd.nextInt(8) + 3;
+		int die9 = rnd.nextInt(8) + 3;
+		Integer[] dice = new Integer[] { die1, die2, die3, die4, die5, die6, die7, die8, die9 };
+
+		for (int i = 0; i < totalStatCount; i++) {
+			statComboBoxes[i] = new JComboBox<Integer>(dice);
+			statComboBoxes[i].setSelectedIndex(i);
+
+			switch (i) {
+			case 0:
+				labelText = "INT";
+				break;
+			case 1:
+				labelText = "REF";
+				break;
+			case 2:
+				labelText = "TECH";
+				break;
+			case 3:
+				labelText = "COOL";
+				break;
+			case 4:
+				labelText = "ATTR";
+				break;
+			case 5:
+				labelText = "LUCK";
+				break;
+			case 6:
+				labelText = "MA";
+				break;
+			case 7:
+				labelText = "BODY";
+				break;
+			case 8:
+				labelText = "EMP";
+				break;
+			default:
+				labelText = "";
+				break;
+			}
+
+			statComboBoxLabels[i] = new JLabel(labelText);
+		}
 	}
 
 	public void addAttractivenessStatChangeListener(ChangeListener listenerForStatChange) {
@@ -1485,7 +1564,7 @@ public class CharacterCreationView extends JFrame {
 		intelligenceSpinner.addChangeListener(listenerForStatChange);
 	}
 
-	public void addLoadCharacterActionListener(ActionListener listenerForLoadButton) {
+	public void addLoadCharacterButtonActionListener(ActionListener listenerForLoadButton) {
 		loadButton.addActionListener(listenerForLoadButton);
 	}
 
@@ -1509,14 +1588,15 @@ public class CharacterCreationView extends JFrame {
 		roleComboBox.addActionListener(listenerForRoleChange);
 	}
 
-	public void addSaveCharacterActionListener(ActionListener listenerForSaveButton) {
+	public void addSaveCharacterButtonActionListener(ActionListener listenerForSaveButton) {
 		saveButton.addActionListener(listenerForSaveButton);
 	}
 
 	public void addSelectAllTextFocusListeners(FocusAdapter adapter) {
-		JSpinner spinners[] = { intelligenceSpinner, unmodifiedReflexesSpinner, technicalAbilitySpinner, coolSpinner,
-				attractivenessSpinner, luckSpinner, movementAllowanceSpinner, bodySpinner, totalEmpathySpinner };
-		for (JSpinner spinner : spinners) {
+		JSpinner[] skillSpinners = new JSpinner[] { intelligenceSpinner, unmodifiedReflexesSpinner,
+				technicalAbilitySpinner, coolSpinner, attractivenessSpinner, luckSpinner, movementAllowanceSpinner,
+				bodySpinner, totalEmpathySpinner };
+		for (JSpinner spinner : skillSpinners) {
 			JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spinner.getEditor();
 			JTextField textField = editor.getTextField();
 			textField.addFocusListener(adapter);
@@ -1540,6 +1620,18 @@ public class CharacterCreationView extends JFrame {
 
 	public void addUnmodifiedReflexesStatChangeListener(ChangeListener listenerForStatChange) {
 		unmodifiedReflexesSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addRandomCharacterPointButtonActionListener(ActionListener listenerForRandomPoints) {
+		randomCharacterPointsButton.addActionListener(listenerForRandomPoints);
+	}
+
+	public void addFastCharacterPointButtonActionListener(ActionListener listenerForFastPoints) {
+		fastCharacterPointsButton.addActionListener(listenerForFastPoints);
+	}
+
+	public void addManualCharacterPointButtonActionListener(ActionListener listenerForManualPoints) {
+		manualCharacterPointsButton.addActionListener(listenerForManualPoints);
 	}
 
 	public void clearSkillTables() {
@@ -1789,12 +1881,24 @@ public class CharacterCreationView extends JFrame {
 		return stunProgressPanels;
 	}
 
+	public JSpinner[] getSkillSpinners() {
+		return skillSpinners;
+	}
+
 	public Map<String, JTable> getSkillTables() {
 		return skillTables;
 	}
 
 	public Map<String, JTextArea> getSkillTextAreas() {
 		return skillTextAreas;
+	}
+
+	public JComboBox<Integer>[] getStatComboBoxes() {
+		return statComboBoxes;
+	}
+
+	public JLabel[] getStatComboBoxLabels() {
+		return statComboBoxLabels;
 	}
 
 	public void setHandle(String handle) {

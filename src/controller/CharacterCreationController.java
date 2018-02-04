@@ -7,12 +7,16 @@ import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -42,8 +46,8 @@ public class CharacterCreationController {
 
 		this.characterView.addHandleDocumentListener(new HandleDocumentListener());
 		this.characterView.addRoleChangeListener(new RoleChangeListener());
-		this.characterView.addLoadCharacterActionListener(new LoadCharacterActionListener());
-		this.characterView.addSaveCharacterActionListener(new SaveCharacterActionListener());
+		this.characterView.addLoadCharacterButtonActionListener(new LoadCharacterActionListener());
+		this.characterView.addSaveCharacterButtonActionListener(new SaveCharacterActionListener());
 		this.characterView.addIntelligenceStatChangeListener(new IntelligenceChangeListener());
 		this.characterView.addUnmodifiedReflexesStatChangeListener(new UnmodifiedReflexesChangeListener());
 		this.characterView.addTechnicalAbilityStatChangeListener(new TechnicalAbilityChangeListener());
@@ -59,13 +63,33 @@ public class CharacterCreationController {
 		this.characterView.addDecreaseInjuryActionListener(new DecreaseInjuryActionListener());
 		this.characterView.addSelectAllTextFocusListeners(new SelectAllTextFocusListener());
 		this.characterView.addListSelectionListeners(new TableListSelectionListener());
+		this.characterView.addRandomCharacterPointButtonActionListener(new RandomCharacterPointActionListener());
+		this.characterView.addFastCharacterPointButtonActionListener(new FastCharacterPointActionListener());
+		this.characterView.addManualCharacterPointButtonActionListener(new ManualCharacterPointActionListener());
 
 		this.characterView.drawLoadedInjuryPoints(this.characterModel.getInjuryPoints());
+		this.characterView.setCharacterPoints(Integer.toString(this.characterModel.getCharacterPoints()
+				- this.characterModel.getIntelligenceLevel() - this.characterModel.getUnmodifiedReflexesLevel()
+				- this.characterModel.getTechnicalAbilityLevel() - this.characterModel.getCoolLevel()
+				- this.characterModel.getAttractivenessLevel() - this.characterModel.getLuckLevel()
+				- this.characterModel.getMovementAllowanceLevel() - this.characterModel.getBodyLevel()
+				- this.characterModel.getTotalEmpathyLevel()));
 		this.characterView.setLeapLevel(Double.toString(this.characterModel.getLeapLevel()));
 		this.characterView.setLiftLevel(Double.toString(this.characterModel.getLiftLevel()));
 		this.characterView.setRunLevel(Double.toString(this.characterModel.getRunLevel()));
 		this.characterView.setSaveModifier(Integer.toString(this.characterModel.getSaveModifier()));
 		this.characterView.setBodyTypeModifier(Integer.toString(this.characterModel.getBodyTypeModifier()));
+		this.characterView.setHeadArmorStoppingPower(Integer.toString(characterModel.getHeadArmorStoppingPower()));
+		this.characterView
+				.setTorsoArmorStoppingPower(Integer.toString(this.characterModel.getTorsoArmorStoppingPower()));
+		this.characterView
+				.setRightArmArmorStoppingPower(Integer.toString(this.characterModel.getRightArmArmorStoppingPower()));
+		this.characterView
+				.setLeftArmArmorStoppingPower(Integer.toString(this.characterModel.getLeftArmArmorStoppingPower()));
+		this.characterView
+				.setRightLegArmorStoppingPower(Integer.toString(this.characterModel.getRightLegArmorStoppingPower()));
+		this.characterView
+				.setLeftLegArmorStoppingPower(Integer.toString(this.characterModel.getLeftLegArmorStoppingPower()));
 
 		populateSkillPanels();
 	}
@@ -77,6 +101,28 @@ public class CharacterCreationController {
 						skill.getSpecifiedSkill(), new SkillTableModelListener());
 			}
 		}
+	}
+
+	private void resetStats() {
+		characterModel.setIntelligenceLevel(CharacterCreationModel.DEFAULT_STAT_LEVEL);
+		characterModel.setUnmodifiedReflexesLevel(CharacterCreationModel.DEFAULT_STAT_LEVEL);
+		characterModel.setTechnicalAbilityLevel(CharacterCreationModel.DEFAULT_STAT_LEVEL);
+		characterModel.setCoolLevel(CharacterCreationModel.DEFAULT_STAT_LEVEL);
+		characterModel.setAttractivenessLevel(CharacterCreationModel.DEFAULT_STAT_LEVEL);
+		characterModel.setLuckLevel(CharacterCreationModel.DEFAULT_STAT_LEVEL);
+		characterModel.setMovementAllowanceLevel(CharacterCreationModel.DEFAULT_STAT_LEVEL);
+		characterModel.setBodyLevel(CharacterCreationModel.DEFAULT_STAT_LEVEL);
+		characterModel.setTotalEmpathyLevel(CharacterCreationModel.DEFAULT_STAT_LEVEL);
+
+		characterView.setIntelligenceLevel(Integer.toString(characterModel.getIntelligenceLevel()));
+		characterView.setUnmodifiedReflexesLevel(Integer.toString(characterModel.getUnmodifiedReflexesLevel()));
+		characterView.setTechnicalAbilityLevel(Integer.toString(characterModel.getTechnicalAbilityLevel()));
+		characterView.setCoolLevel(Integer.toString(characterModel.getCoolLevel()));
+		characterView.setAttractivenessLevel(Integer.toString(characterModel.getAttractivenessLevel()));
+		characterView.setLuckLevel(Integer.toString(characterModel.getLuckLevel()));
+		characterView.setMovementAllowanceLevel(Integer.toString(characterModel.getMovementAllowanceLevel()));
+		characterView.setBodyLevel(Integer.toString(characterModel.getBodyLevel()));
+		characterView.setTotalEmpathyLevel(Integer.toString(characterModel.getTotalEmpathyLevel()));
 	}
 
 	class HandleDocumentListener implements DocumentListener {
@@ -111,6 +157,22 @@ public class CharacterCreationController {
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
 			characterModel.setIntelligenceLevel(newLevel);
+
+			int usedCharacterPoints = characterModel.getIntelligenceLevel()
+					+ characterModel.getUnmodifiedReflexesLevel() + characterModel.getTechnicalAbilityLevel()
+					+ characterModel.getCoolLevel() + characterModel.getAttractivenessLevel()
+					+ characterModel.getLuckLevel() + characterModel.getMovementAllowanceLevel()
+					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
+
+			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			while (remainingPoints < 0 && characterModel.getIntelligenceLevel() > 2) {
+				int intelligenceLevel = characterModel.getIntelligenceLevel() - 1;
+				characterModel.setIntelligenceLevel(intelligenceLevel);
+				characterView.setIntelligenceLevel(String.valueOf(intelligenceLevel));
+				remainingPoints++;
+			}
+
+			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
 	}
@@ -120,6 +182,22 @@ public class CharacterCreationController {
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
 			characterModel.setUnmodifiedReflexesLevel(newLevel);
+
+			int usedCharacterPoints = characterModel.getIntelligenceLevel()
+					+ characterModel.getUnmodifiedReflexesLevel() + characterModel.getTechnicalAbilityLevel()
+					+ characterModel.getCoolLevel() + characterModel.getAttractivenessLevel()
+					+ characterModel.getLuckLevel() + characterModel.getMovementAllowanceLevel()
+					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
+
+			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			while (remainingPoints < 0 && characterModel.getUnmodifiedReflexesLevel() > 2) {
+				int unmodifiedReflexesLevel = characterModel.getUnmodifiedReflexesLevel() - 1;
+				characterModel.setUnmodifiedReflexesLevel(unmodifiedReflexesLevel);
+				characterView.setUnmodifiedReflexesLevel(String.valueOf(unmodifiedReflexesLevel));
+				remainingPoints++;
+			}
+
+			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
 	}
@@ -129,6 +207,22 @@ public class CharacterCreationController {
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
 			characterModel.setTechnicalAbilityLevel(newLevel);
+
+			int usedCharacterPoints = characterModel.getIntelligenceLevel()
+					+ characterModel.getUnmodifiedReflexesLevel() + characterModel.getTechnicalAbilityLevel()
+					+ characterModel.getCoolLevel() + characterModel.getAttractivenessLevel()
+					+ characterModel.getLuckLevel() + characterModel.getMovementAllowanceLevel()
+					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
+
+			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			while (remainingPoints < 0 && characterModel.getTechnicalAbilityLevel() > 2) {
+				int technicalAbilityLevel = characterModel.getTechnicalAbilityLevel() - 1;
+				characterModel.setTechnicalAbilityLevel(technicalAbilityLevel);
+				characterView.setTechnicalAbilityLevel(String.valueOf(technicalAbilityLevel));
+				remainingPoints++;
+			}
+
+			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
 	}
@@ -138,6 +232,22 @@ public class CharacterCreationController {
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
 			characterModel.setCoolLevel(newLevel);
+
+			int usedCharacterPoints = characterModel.getIntelligenceLevel()
+					+ characterModel.getUnmodifiedReflexesLevel() + characterModel.getTechnicalAbilityLevel()
+					+ characterModel.getCoolLevel() + characterModel.getAttractivenessLevel()
+					+ characterModel.getLuckLevel() + characterModel.getMovementAllowanceLevel()
+					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
+
+			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			while (remainingPoints < 0 && characterModel.getCoolLevel() > 2) {
+				int coolLevel = characterModel.getCoolLevel() - 1;
+				characterModel.setCoolLevel(coolLevel);
+				characterView.setCoolLevel(String.valueOf(coolLevel));
+				remainingPoints++;
+			}
+
+			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
 	}
@@ -147,6 +257,22 @@ public class CharacterCreationController {
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
 			characterModel.setAttractivenessLevel(newLevel);
+
+			int usedCharacterPoints = characterModel.getIntelligenceLevel()
+					+ characterModel.getUnmodifiedReflexesLevel() + characterModel.getTechnicalAbilityLevel()
+					+ characterModel.getCoolLevel() + characterModel.getAttractivenessLevel()
+					+ characterModel.getLuckLevel() + characterModel.getMovementAllowanceLevel()
+					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
+
+			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			while (remainingPoints < 0 && characterModel.getAttractivenessLevel() > 2) {
+				int attractivenessLevel = characterModel.getAttractivenessLevel() - 1;
+				characterModel.setAttractivenessLevel(attractivenessLevel);
+				characterView.setAttractivenessLevel(String.valueOf(attractivenessLevel));
+				remainingPoints++;
+			}
+
+			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
 	}
@@ -156,6 +282,22 @@ public class CharacterCreationController {
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
 			characterModel.setLuckLevel(newLevel);
+
+			int usedCharacterPoints = characterModel.getIntelligenceLevel()
+					+ characterModel.getUnmodifiedReflexesLevel() + characterModel.getTechnicalAbilityLevel()
+					+ characterModel.getCoolLevel() + characterModel.getAttractivenessLevel()
+					+ characterModel.getLuckLevel() + characterModel.getMovementAllowanceLevel()
+					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
+
+			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			while (remainingPoints < 0 && characterModel.getLuckLevel() > 2) {
+				int luckLevel = characterModel.getLuckLevel() - 1;
+				characterModel.setLuckLevel(luckLevel);
+				characterView.setLuckLevel(String.valueOf(luckLevel));
+				remainingPoints++;
+			}
+
+			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
 	}
@@ -164,7 +306,24 @@ public class CharacterCreationController {
 		@Override
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
-			characterModel.setMovementAllowance(newLevel);
+			characterModel.setMovementAllowanceLevel(newLevel);
+
+			int usedCharacterPoints = characterModel.getIntelligenceLevel()
+					+ characterModel.getUnmodifiedReflexesLevel() + characterModel.getTechnicalAbilityLevel()
+					+ characterModel.getCoolLevel() + characterModel.getAttractivenessLevel()
+					+ characterModel.getLuckLevel() + characterModel.getMovementAllowanceLevel()
+					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
+
+			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			while (remainingPoints < 0 && characterModel.getMovementAllowanceLevel() > 2) {
+				int intelligenceLevel = characterModel.getMovementAllowanceLevel() - 1;
+				characterModel.setMovementAllowanceLevel(intelligenceLevel);
+				characterView.setMovementAllowanceLevel(String.valueOf(intelligenceLevel));
+				remainingPoints++;
+			}
+
+			characterView.setCharacterPoints(String.valueOf(remainingPoints));
+
 			characterView.setRunLevel(Double.toString(characterModel.getRunLevel()));
 			characterView.setLeapLevel(Double.toString(characterModel.getLeapLevel()));
 		}
@@ -175,6 +334,22 @@ public class CharacterCreationController {
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
 			characterModel.setBodyLevel(newLevel);
+
+			int usedCharacterPoints = characterModel.getIntelligenceLevel()
+					+ characterModel.getUnmodifiedReflexesLevel() + characterModel.getTechnicalAbilityLevel()
+					+ characterModel.getCoolLevel() + characterModel.getAttractivenessLevel()
+					+ characterModel.getLuckLevel() + characterModel.getMovementAllowanceLevel()
+					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
+
+			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			while (remainingPoints < 0 && characterModel.getBodyLevel() > 2) {
+				int intelligenceLevel = characterModel.getBodyLevel() - 1;
+				characterModel.setBodyLevel(intelligenceLevel);
+				characterView.setBodyLevel(String.valueOf(intelligenceLevel));
+				remainingPoints++;
+			}
+
+			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 
 			characterView.setLiftLevel(Double.toString(characterModel.getLiftLevel()));
 			characterView.setSaveModifier(Integer.toString(characterModel.calculateSaveModifier()));
@@ -189,8 +364,23 @@ public class CharacterCreationController {
 		@Override
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
-			characterModel.setBodyLevel(newLevel);
-			characterView.setLiftLevel(Double.toString(characterModel.getLiftLevel()));
+			characterModel.setTotalEmpathyLevel(newLevel);
+
+			int usedCharacterPoints = characterModel.getIntelligenceLevel()
+					+ characterModel.getUnmodifiedReflexesLevel() + characterModel.getTechnicalAbilityLevel()
+					+ characterModel.getCoolLevel() + characterModel.getAttractivenessLevel()
+					+ characterModel.getLuckLevel() + characterModel.getMovementAllowanceLevel()
+					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
+
+			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			while (remainingPoints < 0 && characterModel.getTotalEmpathyLevel() > 2) {
+				int totalEmpathyLevel = characterModel.getTotalEmpathyLevel() - 1;
+				characterModel.setTotalEmpathyLevel(totalEmpathyLevel);
+				characterView.setTotalEmpathyLevel(String.valueOf(totalEmpathyLevel));
+				remainingPoints++;
+			}
+
+			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 	}
 
@@ -257,7 +447,7 @@ public class CharacterCreationController {
 							break;
 						case "movement_allowance":
 							characterView.setMovementAllowanceLevel(value);
-							characterModel.setMovementAllowance(Integer.parseInt(value));
+							characterModel.setMovementAllowanceLevel(Integer.parseInt(value));
 							break;
 						case "body":
 							characterView.setBodyLevel(value);
@@ -427,7 +617,7 @@ public class CharacterCreationController {
 						+ "cool\t" + characterModel.getCoolLevel() + "\n" //
 						+ "attractiveness\t" + characterModel.getAttractivenessLevel() + "\n" //
 						+ "luck\t" + characterModel.getLuckLevel() + "\n" //
-						+ "movement_allowance\t" + characterModel.getMovementAllowance() + "\n" //
+						+ "movement_allowance\t" + characterModel.getMovementAllowanceLevel() + "\n" //
 						+ "body\t" + characterModel.getBodyLevel() + "\n" //
 						+ "current_empathy\t" + characterModel.getCurrentEmpathyLevel() + "\n" //
 						+ "total_empathy\t" + characterModel.getTotalEmpathyLevel() + "\n" //
@@ -611,4 +801,191 @@ public class CharacterCreationController {
 		}
 
 	}
+
+	class RandomCharacterPointActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			resetStats();
+
+			for (JSpinner spinner : characterView.getSkillSpinners()) {
+				spinner.setEnabled(true);
+			}
+
+			Random rnd = new Random();
+			int die1 = rnd.nextInt(10) + 1;
+			int die2 = rnd.nextInt(10) + 1;
+			int die3 = rnd.nextInt(10) + 1;
+			int die4 = rnd.nextInt(10) + 1;
+			int die5 = rnd.nextInt(10) + 1;
+			int die6 = rnd.nextInt(10) + 1;
+			int die7 = rnd.nextInt(10) + 1;
+			int die8 = rnd.nextInt(10) + 1;
+			int die9 = rnd.nextInt(10) + 1;
+
+			int points = die1 + die2 + die3 + die4 + die5 + die6 + die7 + die8 + die9;
+
+			int usedCharacterPoints = characterModel.getIntelligenceLevel()
+					+ characterModel.getUnmodifiedReflexesLevel() + characterModel.getTechnicalAbilityLevel()
+					+ characterModel.getCoolLevel() + characterModel.getAttractivenessLevel()
+					+ characterModel.getLuckLevel() + characterModel.getMovementAllowanceLevel()
+					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
+
+			characterModel.setCharacterPoints(points);
+			characterView.setCharacterPoints(Integer.toString(points - usedCharacterPoints));
+		}
+	}
+
+	class FastCharacterPointActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			resetStats();
+
+			for (JSpinner spinner : characterView.getSkillSpinners()) {
+				spinner.setEnabled(false);
+			}
+
+			JComboBox<Integer>[] comboBoxes = characterView.getStatComboBoxes();
+			JLabel[] labels = characterView.getStatComboBoxLabels();
+			JPanel row1 = new JPanel();
+			JPanel row2 = new JPanel();
+
+			int count = comboBoxes.length == labels.length ? comboBoxes.length : 0;
+			for (int i = 0; i < count; i++) {
+				if (i < count / 2) {
+					row1.add(labels[i]);
+					row1.add(comboBoxes[i]);
+				} else {
+					row2.add(labels[i]);
+					row2.add(comboBoxes[i]);
+				}
+
+			}
+
+			Object[] array = { row1, row2 };
+			int returnVal = JOptionPane.showConfirmDialog(characterView, array, "Distribute Rolled Points",
+					JOptionPane.OK_CANCEL_OPTION);
+
+			if (returnVal == JOptionPane.OK_OPTION) {
+				int totalPoints = 0;
+				for (int i = 0; i < comboBoxes[0].getItemCount(); i++) {
+					totalPoints += comboBoxes[0].getItemAt(i);
+				}
+				characterModel.setCharacterPoints(totalPoints);
+
+				Map<Integer, Integer> expectedCount = calculateExpectedInventory(comboBoxes[0]);
+
+				Map<Integer, Integer> actualCount = calculateActualInventory(comboBoxes);
+
+				if (expectedCount.equals(actualCount)) {
+					setDataAndView(comboBoxes);
+
+				} else {
+					calculateDifference(expectedCount, actualCount);
+				}
+
+			}
+		}
+
+		private Map<Integer, Integer> calculateExpectedInventory(JComboBox<Integer> comboBox) {
+			Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+			for (int i = 0; i < comboBox.getItemCount(); i++) {
+				Integer key = comboBox.getItemAt(i);
+				if (map.containsKey(key)) {
+					map.put(key, map.get(key) + 1);
+				} else {
+					map.put(key, 1);
+				}
+			}
+			return map;
+		}
+
+		private Map<Integer, Integer> calculateActualInventory(JComboBox<Integer>[] comboBoxes) {
+			Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+			int comboBoxCount = characterView.getStatComboBoxes().length;
+			for (int i = 0; i < comboBoxCount; i++) {
+				Integer key = (Integer) comboBoxes[i].getSelectedItem();
+				if (map.containsKey(key)) {
+					map.put(key, map.get(key) + 1);
+				} else {
+					map.put(key, 1);
+				}
+			}
+			return map;
+		}
+
+		private void setDataAndView(JComboBox<Integer>[] comboBoxes) {
+			characterModel.setIntelligenceLevel((Integer) comboBoxes[0].getSelectedItem());
+			characterView.setIntelligenceLevel(comboBoxes[0].getSelectedItem().toString());
+
+			characterModel.setUnmodifiedReflexesLevel((Integer) comboBoxes[1].getSelectedItem());
+			characterView.setUnmodifiedReflexesLevel(comboBoxes[1].getSelectedItem().toString());
+
+			characterModel.setTechnicalAbilityLevel((Integer) comboBoxes[2].getSelectedItem());
+			characterView.setTechnicalAbilityLevel(comboBoxes[2].getSelectedItem().toString());
+
+			characterModel.setCoolLevel((Integer) comboBoxes[3].getSelectedItem());
+			characterView.setCoolLevel(comboBoxes[3].getSelectedItem().toString());
+
+			characterModel.setAttractivenessLevel((Integer) comboBoxes[4].getSelectedItem());
+			characterView.setAttractivenessLevel(comboBoxes[4].getSelectedItem().toString());
+
+			characterModel.setLuckLevel((Integer) comboBoxes[5].getSelectedItem());
+			characterView.setLuckLevel(comboBoxes[5].getSelectedItem().toString());
+
+			characterModel.setMovementAllowanceLevel((Integer) comboBoxes[6].getSelectedItem());
+			characterView.setMovementAllowanceLevel(comboBoxes[6].getSelectedItem().toString());
+
+			characterModel.setBodyLevel((Integer) comboBoxes[7].getSelectedItem());
+			characterView.setBodyLevel(comboBoxes[7].getSelectedItem().toString());
+
+			characterModel.setTotalEmpathyLevel((Integer) comboBoxes[8].getSelectedItem());
+			characterView.setTotalEmpathyLevel(comboBoxes[8].getSelectedItem().toString());
+		}
+
+		private void calculateDifference(Map<Integer, Integer> expectedCount, Map<Integer, Integer> actualCount) {
+			Map<Integer, Integer> countDifference = expectedCount;
+			for (Integer key : actualCount.keySet()) {
+				int newValue = expectedCount.get(key) - actualCount.get(key);
+				countDifference.put(key, newValue);
+			}
+
+			String missing = "You are missing: ";
+			String additional = "\nYou have an additional: ";
+
+			for (Map.Entry<Integer, Integer> entry : countDifference.entrySet()) {
+				if (entry.getValue() < 0) {
+					additional += ("(" + Math.abs(entry.getValue()) + ") " + entry.getKey() + ", ");
+				} else if (entry.getValue() > 0) {
+					missing += ("(" + entry.getValue() + ") " + entry.getKey() + ", ");
+				}
+			}
+
+			JOptionPane.showMessageDialog(characterView,
+					missing + additional + "\nClick 'FAST' again to fix the error.", "Use All Rolled Values",
+					JOptionPane.WARNING_MESSAGE);
+		}
+	}
+
+	class ManualCharacterPointActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			resetStats();
+
+			for (JSpinner spinner : characterView.getSkillSpinners()) {
+				spinner.setEnabled(true);
+			}
+
+			String characterPoints = JOptionPane.showInputDialog("Enter the given amount of Character Points.");
+			try {
+				characterModel.setCharacterPoints(Integer.parseInt(characterPoints));
+				characterView.setCharacterPoints(String.valueOf(
+						(Integer.parseInt(characterPoints) - (CharacterCreationModel.DEFAULT_STAT_LEVEL * 9))));
+			} catch (NumberFormatException exception) {
+				JOptionPane.showMessageDialog(characterView, "Please enter a number");
+			}
+
+		}
+
+	}
+
 }

@@ -8,6 +8,7 @@ import java.util.TreeMap;
 import view.CharacterCreationView;
 
 public class CharacterCreationModel {
+	public static final int DEFAULT_STAT_LEVEL = 2;
 	public static final int MINIMUM_INJURY_POINTS = 0;
 	public static final int MAXIMUM_INJURY_POINTS = 40;
 	public static final String INT = "INTELLIGENCE";
@@ -20,8 +21,6 @@ public class CharacterCreationModel {
 	public static final String EMP = "EMPATHY";
 	public static final String SPEC = "SPECIAL ABILITIES";
 	public static final String BOD = "BODY";
-
-	private static final int DEFAULT_STAT_LEVEL = 2;
 
 	private String characterName;
 	private Role role;
@@ -1501,7 +1500,7 @@ public class CharacterCreationModel {
 	public CharacterCreationModel() {
 		characterName = "Unknown";
 		role = cop;
-		characterPoints = 0;
+		characterPoints = DEFAULT_STAT_LEVEL * 9;
 
 		intelligenceLevel = DEFAULT_STAT_LEVEL;
 		modifiedReflexesLevel = DEFAULT_STAT_LEVEL;
@@ -1732,7 +1731,7 @@ public class CharacterCreationModel {
 		return luckLevel;
 	}
 
-	public int getMovementAllowance() {
+	public int getMovementAllowanceLevel() {
 		return movementAllowanceLevel;
 	}
 
@@ -1887,7 +1886,7 @@ public class CharacterCreationModel {
 		luckLevel = level;
 	}
 
-	public void setMovementAllowance(int level) {
+	public void setMovementAllowanceLevel(int level) {
 		movementAllowanceLevel = level;
 
 		runDistance = calculateRunDistance();
