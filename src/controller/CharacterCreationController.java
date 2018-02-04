@@ -165,13 +165,14 @@ public class CharacterCreationController {
 					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
 
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			int intelligenceLevel = characterModel.getIntelligenceLevel();
 			while (remainingPoints < 0 && characterModel.getIntelligenceLevel() > 2) {
-				int intelligenceLevel = characterModel.getIntelligenceLevel() - 1;
-				characterModel.setIntelligenceLevel(intelligenceLevel);
-				characterView.setIntelligenceLevel(String.valueOf(intelligenceLevel));
+				intelligenceLevel = characterModel.getIntelligenceLevel() - 1;
 				remainingPoints++;
+				characterModel.setIntelligenceLevel(intelligenceLevel);
 			}
 
+			characterView.setIntelligenceLevel(String.valueOf(intelligenceLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
@@ -190,13 +191,14 @@ public class CharacterCreationController {
 					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
 
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			int unmodifiedReflexesLevel = characterModel.getUnmodifiedReflexesLevel();
 			while (remainingPoints < 0 && characterModel.getUnmodifiedReflexesLevel() > 2) {
-				int unmodifiedReflexesLevel = characterModel.getUnmodifiedReflexesLevel() - 1;
-				characterModel.setUnmodifiedReflexesLevel(unmodifiedReflexesLevel);
-				characterView.setUnmodifiedReflexesLevel(String.valueOf(unmodifiedReflexesLevel));
+				unmodifiedReflexesLevel = characterModel.getUnmodifiedReflexesLevel() - 1;
 				remainingPoints++;
+				characterModel.setUnmodifiedReflexesLevel(unmodifiedReflexesLevel);
 			}
 
+			characterView.setUnmodifiedReflexesLevel(String.valueOf(unmodifiedReflexesLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
@@ -215,13 +217,14 @@ public class CharacterCreationController {
 					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
 
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			int technicalAbilityLevel = characterModel.getTechnicalAbilityLevel();
 			while (remainingPoints < 0 && characterModel.getTechnicalAbilityLevel() > 2) {
-				int technicalAbilityLevel = characterModel.getTechnicalAbilityLevel() - 1;
+				technicalAbilityLevel = characterModel.getTechnicalAbilityLevel() - 1;
 				characterModel.setTechnicalAbilityLevel(technicalAbilityLevel);
-				characterView.setTechnicalAbilityLevel(String.valueOf(technicalAbilityLevel));
 				remainingPoints++;
 			}
 
+			characterView.setTechnicalAbilityLevel(String.valueOf(technicalAbilityLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
@@ -240,13 +243,14 @@ public class CharacterCreationController {
 					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
 
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			int coolLevel = characterModel.getCoolLevel();
 			while (remainingPoints < 0 && characterModel.getCoolLevel() > 2) {
-				int coolLevel = characterModel.getCoolLevel() - 1;
+				coolLevel = characterModel.getCoolLevel() - 1;
 				characterModel.setCoolLevel(coolLevel);
-				characterView.setCoolLevel(String.valueOf(coolLevel));
 				remainingPoints++;
 			}
 
+			characterView.setCoolLevel(String.valueOf(coolLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
@@ -265,13 +269,14 @@ public class CharacterCreationController {
 					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
 
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			int attractivenessLevel = characterModel.getAttractivenessLevel();
 			while (remainingPoints < 0 && characterModel.getAttractivenessLevel() > 2) {
-				int attractivenessLevel = characterModel.getAttractivenessLevel() - 1;
+				attractivenessLevel = characterModel.getAttractivenessLevel() - 1;
 				characterModel.setAttractivenessLevel(attractivenessLevel);
-				characterView.setAttractivenessLevel(String.valueOf(attractivenessLevel));
 				remainingPoints++;
 			}
 
+			characterView.setAttractivenessLevel(String.valueOf(attractivenessLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
@@ -290,13 +295,14 @@ public class CharacterCreationController {
 					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
 
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			int luckLevel = characterModel.getLuckLevel();
 			while (remainingPoints < 0 && characterModel.getLuckLevel() > 2) {
-				int luckLevel = characterModel.getLuckLevel() - 1;
+				luckLevel = characterModel.getLuckLevel() - 1;
 				characterModel.setLuckLevel(luckLevel);
-				characterView.setLuckLevel(String.valueOf(luckLevel));
 				remainingPoints++;
 			}
 
+			characterView.setLuckLevel(String.valueOf(luckLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
@@ -315,15 +321,15 @@ public class CharacterCreationController {
 					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
 
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			int movementAllowanceLevel = characterModel.getMovementAllowanceLevel();
 			while (remainingPoints < 0 && characterModel.getMovementAllowanceLevel() > 2) {
-				int intelligenceLevel = characterModel.getMovementAllowanceLevel() - 1;
-				characterModel.setMovementAllowanceLevel(intelligenceLevel);
-				characterView.setMovementAllowanceLevel(String.valueOf(intelligenceLevel));
+				movementAllowanceLevel = characterModel.getMovementAllowanceLevel() - 1;
+				characterModel.setMovementAllowanceLevel(movementAllowanceLevel);
 				remainingPoints++;
 			}
 
+			characterView.setMovementAllowanceLevel(String.valueOf(movementAllowanceLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
-
 			characterView.setRunLevel(Double.toString(characterModel.getRunLevel()));
 			characterView.setLeapLevel(Double.toString(characterModel.getLeapLevel()));
 		}
@@ -342,15 +348,15 @@ public class CharacterCreationController {
 					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
 
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			int bodyLevel = characterModel.getBodyLevel();
 			while (remainingPoints < 0 && characterModel.getBodyLevel() > 2) {
-				int intelligenceLevel = characterModel.getBodyLevel() - 1;
-				characterModel.setBodyLevel(intelligenceLevel);
-				characterView.setBodyLevel(String.valueOf(intelligenceLevel));
+				bodyLevel = characterModel.getBodyLevel() - 1;
+				characterModel.setBodyLevel(bodyLevel);
 				remainingPoints++;
 			}
 
+			characterView.setBodyLevel(String.valueOf(bodyLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
-
 			characterView.setLiftLevel(Double.toString(characterModel.getLiftLevel()));
 			characterView.setSaveModifier(Integer.toString(characterModel.calculateSaveModifier()));
 
@@ -373,13 +379,14 @@ public class CharacterCreationController {
 					+ characterModel.getBodyLevel() + characterModel.getTotalEmpathyLevel();
 
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
+			int totalEmpathyLevel = characterModel.getTotalEmpathyLevel();
 			while (remainingPoints < 0 && characterModel.getTotalEmpathyLevel() > 2) {
-				int totalEmpathyLevel = characterModel.getTotalEmpathyLevel() - 1;
+				totalEmpathyLevel = characterModel.getTotalEmpathyLevel() - 1;
 				characterModel.setTotalEmpathyLevel(totalEmpathyLevel);
-				characterView.setTotalEmpathyLevel(String.valueOf(totalEmpathyLevel));
 				remainingPoints++;
 			}
 
+			characterView.setTotalEmpathyLevel(String.valueOf(totalEmpathyLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 	}
