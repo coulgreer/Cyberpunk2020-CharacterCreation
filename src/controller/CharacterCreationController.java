@@ -40,6 +40,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.codec.binary.Base64;
 
+import components.ImagePreview;
 import model.CharacterCreationModel;
 import view.CharacterCreationView;
 import view.CharacterCreationView.SkillTableModel;
@@ -688,7 +689,7 @@ public class CharacterCreationController {
 					}
 				}
 				String encodedData = convertImageToBase64(characterView.getCharacterPortrait());
-				fw.write("portrait\t" + encodedData);
+				fw.write("portrait\t" + encodedData + "\n");
 
 				fw.close();
 			} catch (IOException exception) {
@@ -1046,8 +1047,10 @@ public class CharacterCreationController {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			JFileChooser chooser = new JFileChooser();
-			FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "gif", "png");
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpeg", "jpg", "gif", "tiff",
+					"tif", "png");
 			chooser.setFileFilter(filter);
+			chooser.setAccessory(new ImagePreview(chooser));
 			int returnVal = chooser.showOpenDialog(characterView);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = chooser.getSelectedFile();

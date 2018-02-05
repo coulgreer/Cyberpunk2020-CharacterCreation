@@ -39,6 +39,7 @@ public class CharacterCreationModel {
 	private int totalEmpathyLevel;
 	private double runDistance;
 	private double leapDistance;
+	// TODO Find where to display carryCapacity. Maybe showing in inventory tab
 	private double carryCapacity;
 	private double liftCapacity;
 
