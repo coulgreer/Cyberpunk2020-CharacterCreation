@@ -4,14 +4,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -31,6 +36,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.apache.commons.codec.binary.Base64;
 
 import model.CharacterCreationModel;
 import view.CharacterCreationView;
@@ -66,6 +74,7 @@ public class CharacterCreationController {
 		this.characterView.addRandomCharacterPointButtonActionListener(new RandomCharacterPointActionListener());
 		this.characterView.addFastCharacterPointButtonActionListener(new FastCharacterPointActionListener());
 		this.characterView.addManualCharacterPointButtonActionListener(new ManualCharacterPointActionListener());
+		this.characterView.addUploadButtonActionListener(new ChangeCharacterPortrait());
 
 		this.characterView.drawLoadedInjuryPoints(this.characterModel.getInjuryPoints());
 		this.characterView.setCharacterPoints(Integer.toString(this.characterModel.getCharacterPoints()
@@ -408,162 +417,169 @@ public class CharacterCreationController {
 					}
 
 					while (sc.hasNextLine()) {
-						String[] strings = sc.nextLine().split("\t");
-						String key = strings[0];
-						String value = strings[1];
-						switch (key) {
-						case "handle":
-							characterView.setHandle(value);
-							characterModel.setCharacterName(value);
-							break;
-						case "role":
-							characterView.setRole(value);
-							characterModel.setRole(value);
-							break;
-						case "character_points":
-							characterView.setCharacterPoints(value);
-							characterModel.setCharacterPoints(Integer.parseInt(value));
-							break;
-						case "intelligence":
-							characterView.setIntelligenceLevel(value);
-							characterModel.setIntelligenceLevel(Integer.parseInt(value));
-							break;
-						case "unmodified_reflexes":
-							characterView.setUnmodifiedReflexesLevel(value);
-							characterModel.setUnmodifiedReflexesLevel(Integer.parseInt(value));
-							break;
-						case "modified_reflexes":
-							characterView.setModifiedReflexesLevel(value);
-							characterModel.setModifiedReflexesLevel(Integer.parseInt(value));
-							break;
-						case "technical_ability":
-							characterView.setTechnicalAbilityLevel(value);
-							characterModel.setTechnicalAbilityLevel(Integer.parseInt(value));
-							break;
-						case "cool":
-							characterView.setCoolLevel(value);
-							characterModel.setCoolLevel(Integer.parseInt(value));
-							break;
-						case "attractiveness":
-							characterView.setAttractivenessLevel(value);
-							characterModel.setAttractivenessLevel(Integer.parseInt(value));
-							break;
-						case "luck":
-							characterView.setLuckLevel(value);
-							characterModel.setLuckLevel(Integer.parseInt(value));
-							break;
-						case "movement_allowance":
-							characterView.setMovementAllowanceLevel(value);
-							characterModel.setMovementAllowanceLevel(Integer.parseInt(value));
-							break;
-						case "body":
-							characterView.setBodyLevel(value);
-							characterModel.setBodyLevel(Integer.parseInt(value));
-							break;
-						case "current_empathy":
-							characterView.setCurrentEmpathyLevel(value);
-							characterModel.setCurrentEmpathyLevel(Integer.parseInt(value));
-							break;
-						case "total_empathy":
-							characterView.setTotalEmpathyLevel(value);
-							characterModel.setTotalEmpathyLevel(Integer.parseInt(value));
-							break;
-						case "run":
-							characterView.setRunLevel(value);
-							characterModel.setRunDistance(Double.parseDouble(value));
-							break;
-						case "leap":
-							characterView.setLeapLevel(value);
-							characterModel.setLeapDistance(Double.parseDouble(value));
-							break;
-						case "lift":
-							characterView.setLiftLevel(value);
-							characterModel.setLiftCapacity(Double.parseDouble(value));
-							break;
-						case "carry":
-							characterModel.setCarryCapacity(Double.parseDouble(value));
-							break;
-						case "head_armor_sp":
-							characterView.setHeadArmorStoppingPower(value);
-							characterModel.setHeadArmorStoppingPower(Integer.parseInt(value));
-							break;
-						case "torso_armor_sp":
-							characterView.setTorsoArmorStoppingPower(value);
-							characterModel.setTorsoArmorStoppingPower(Integer.parseInt(value));
-							break;
-						case "right_arm_armor_sp":
-							characterView.setRightArmArmorStoppingPower(value);
-							characterModel.setRightArmArmorStoppingPower(Integer.parseInt(value));
-							break;
-						case "left_arm_armor_sp":
-							characterView.setLeftArmArmorStoppingPower(value);
-							characterModel.setLeftLegArmorStoppingPower(Integer.parseInt(value));
-							break;
-						case "right_leg_armor_sp":
-							characterView.setRightLegArmorStoppingPower(value);
-							characterModel.setRightLegArmorStoppingPower(Integer.parseInt(value));
-							break;
-						case "left_leg_armor_sp":
-							characterView.setLeftLegArmorStoppingPower(value);
-							characterModel.setLeftLegArmorStoppingPower(Integer.parseInt(value));
-							break;
-						case "save_modifier":
-							characterView.setSaveModifier(value);
-							characterModel.setSaveModifier(Integer.parseInt(value));
-							break;
-						case "body_type_modifier":
-							characterView.setBodyTypeModifier(value);
-							characterModel.setBodyTypeModifier(Integer.parseInt(value));
-							break;
-						case "injury_points":
-							characterModel.setInjuryPoints(Double.parseDouble(value));
-							characterView.drawLoadedInjuryPoints(Double.parseDouble(value));
-							break;
-						default:
-							String typeCode = key.substring(0, 3);
-							String specificSkill = (key.matches("\\w+:\\w+\\.\\w+")) ? key.split("\\.")[1] : "";
-							Map<String, CharacterCreationModel.Skill> targetCategory;
-
-							switch (typeCode) {
-							case "SPE":
-								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.SPEC);
+						try {
+							String[] strings = sc.nextLine().split("\t");
+							String key = strings[0];
+							String value = strings[1];
+							switch (key) {
+							case "handle":
+								characterView.setHandle(value);
+								characterModel.setCharacterName(value);
 								break;
-							case "ATT":
-								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.ATT);
+							case "role":
+								characterView.setRole(value);
+								characterModel.setRole(value);
 								break;
-							case "BOD":
-								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.BOD);
+							case "character_points":
+								characterView.setCharacterPoints(value);
+								characterModel.setCharacterPoints(Integer.parseInt(value));
 								break;
-							case "COO":
-								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.CL);
+							case "intelligence":
+								characterView.setIntelligenceLevel(value);
+								characterModel.setIntelligenceLevel(Integer.parseInt(value));
 								break;
-							case "EMP":
-								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.EMP);
+							case "unmodified_reflexes":
+								characterView.setUnmodifiedReflexesLevel(value);
+								characterModel.setUnmodifiedReflexesLevel(Integer.parseInt(value));
 								break;
-							case "INT":
-								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.INT);
+							case "modified_reflexes":
+								characterView.setModifiedReflexesLevel(value);
+								characterModel.setModifiedReflexesLevel(Integer.parseInt(value));
 								break;
-							case "REF":
-								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.REF);
+							case "technical_ability":
+								characterView.setTechnicalAbilityLevel(value);
+								characterModel.setTechnicalAbilityLevel(Integer.parseInt(value));
 								break;
-							case "TEC":
-								targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.TECH);
+							case "cool":
+								characterView.setCoolLevel(value);
+								characterModel.setCoolLevel(Integer.parseInt(value));
+								break;
+							case "attractiveness":
+								characterView.setAttractivenessLevel(value);
+								characterModel.setAttractivenessLevel(Integer.parseInt(value));
+								break;
+							case "luck":
+								characterView.setLuckLevel(value);
+								characterModel.setLuckLevel(Integer.parseInt(value));
+								break;
+							case "movement_allowance":
+								characterView.setMovementAllowanceLevel(value);
+								characterModel.setMovementAllowanceLevel(Integer.parseInt(value));
+								break;
+							case "body":
+								characterView.setBodyLevel(value);
+								characterModel.setBodyLevel(Integer.parseInt(value));
+								break;
+							case "current_empathy":
+								characterView.setCurrentEmpathyLevel(value);
+								characterModel.setCurrentEmpathyLevel(Integer.parseInt(value));
+								break;
+							case "total_empathy":
+								characterView.setTotalEmpathyLevel(value);
+								characterModel.setTotalEmpathyLevel(Integer.parseInt(value));
+								break;
+							case "run":
+								characterView.setRunLevel(value);
+								characterModel.setRunDistance(Double.parseDouble(value));
+								break;
+							case "leap":
+								characterView.setLeapLevel(value);
+								characterModel.setLeapDistance(Double.parseDouble(value));
+								break;
+							case "lift":
+								characterView.setLiftLevel(value);
+								characterModel.setLiftCapacity(Double.parseDouble(value));
+								break;
+							case "carry":
+								characterModel.setCarryCapacity(Double.parseDouble(value));
+								break;
+							case "head_armor_sp":
+								characterView.setHeadArmorStoppingPower(value);
+								characterModel.setHeadArmorStoppingPower(Integer.parseInt(value));
+								break;
+							case "torso_armor_sp":
+								characterView.setTorsoArmorStoppingPower(value);
+								characterModel.setTorsoArmorStoppingPower(Integer.parseInt(value));
+								break;
+							case "right_arm_armor_sp":
+								characterView.setRightArmArmorStoppingPower(value);
+								characterModel.setRightArmArmorStoppingPower(Integer.parseInt(value));
+								break;
+							case "left_arm_armor_sp":
+								characterView.setLeftArmArmorStoppingPower(value);
+								characterModel.setLeftLegArmorStoppingPower(Integer.parseInt(value));
+								break;
+							case "right_leg_armor_sp":
+								characterView.setRightLegArmorStoppingPower(value);
+								characterModel.setRightLegArmorStoppingPower(Integer.parseInt(value));
+								break;
+							case "left_leg_armor_sp":
+								characterView.setLeftLegArmorStoppingPower(value);
+								characterModel.setLeftLegArmorStoppingPower(Integer.parseInt(value));
+								break;
+							case "save_modifier":
+								characterView.setSaveModifier(value);
+								characterModel.setSaveModifier(Integer.parseInt(value));
+								break;
+							case "body_type_modifier":
+								characterView.setBodyTypeModifier(value);
+								characterModel.setBodyTypeModifier(Integer.parseInt(value));
+								break;
+							case "injury_points":
+								characterModel.setInjuryPoints(Double.parseDouble(value));
+								characterView.drawLoadedInjuryPoints(Double.parseDouble(value));
+								break;
+							case "portrait":
+								convertBase64ToImage(value);
 								break;
 							default:
-								targetCategory = null;
+								String typeCode = key.substring(0, 3);
+								String specificSkill = (key.matches("\\w+:\\w+\\.\\w+")) ? key.split("\\.")[1] : "";
+								Map<String, CharacterCreationModel.Skill> targetCategory;
+
+								switch (typeCode) {
+								case "SPE":
+									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.SPEC);
+									break;
+								case "ATT":
+									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.ATT);
+									break;
+								case "BOD":
+									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.BOD);
+									break;
+								case "COO":
+									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.CL);
+									break;
+								case "EMP":
+									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.EMP);
+									break;
+								case "INT":
+									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.INT);
+									break;
+								case "REF":
+									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.REF);
+									break;
+								case "TEC":
+									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.TECH);
+									break;
+								default:
+									targetCategory = null;
+									break;
+								}
+
+								String skillCode = key.substring(4).toLowerCase();
+								for (CharacterCreationModel.Skill skill : targetCategory.values()) {
+									String formattedSkillName = skill.getSkillName().replace(" ", "_")
+											.replace("...", ".").toLowerCase();
+									if (skillCode.contains(formattedSkillName)) {
+										skill.setRank(Integer.parseInt(value));
+										skill.setSpecifiedSkill(specificSkill);
+									}
+								}
 								break;
 							}
-
-							String skillCode = key.substring(4).toLowerCase();
-							for (CharacterCreationModel.Skill skill : targetCategory.values()) {
-								String formattedSkillName = skill.getSkillName().replace(" ", "_").replace("...", ".")
-										.toLowerCase();
-								if (skillCode.contains(formattedSkillName)) {
-									skill.setRank(Integer.parseInt(value));
-									skill.setSpecifiedSkill(specificSkill);
-								}
-							}
-							break;
+						} catch (ArrayIndexOutOfBoundsException exception) {
+							JOptionPane.showMessageDialog(characterView, "Error with loading from save file");
 						}
 
 					}
@@ -574,6 +590,19 @@ public class CharacterCreationController {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
+		}
+
+		private void convertBase64ToImage(String base64String) {
+			byte[] decodedByte = Base64.decodeBase64(base64String);
+			InputStream in = new ByteArrayInputStream(decodedByte);
+			BufferedImage image;
+			try {
+				image = ImageIO.read(in);
+				characterView.setCharacterPortrait(image);
+			} catch (IOException exception) {
+				JOptionPane.showMessageDialog(characterView,
+						"There was an error when trying to load the character portrait.");
 			}
 		}
 
@@ -658,11 +687,28 @@ public class CharacterCreationController {
 
 					}
 				}
+				String encodedData = convertImageToBase64(characterView.getCharacterPortrait());
+				fw.write("portrait\t" + encodedData);
 
 				fw.close();
 			} catch (IOException exception) {
 				System.err.println("File does not exist.");
 			}
+		}
+
+		private String convertImageToBase64(BufferedImage image) {
+			String imageString = null;
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			try {
+				ImageIO.write(image, "png", bos);
+				byte[] bytes = bos.toByteArray();
+				imageString = Base64.encodeBase64String(bytes);
+				bos.close();
+			} catch (IOException exception) {
+				JOptionPane.showMessageDialog(characterView, "The file does not exist.");
+			}
+
+			return imageString;
 		}
 	}
 
@@ -989,6 +1035,29 @@ public class CharacterCreationController {
 						(Integer.parseInt(characterPoints) - (CharacterCreationModel.DEFAULT_STAT_LEVEL * 9))));
 			} catch (NumberFormatException exception) {
 				JOptionPane.showMessageDialog(characterView, "Please enter a number");
+			}
+
+		}
+
+	}
+
+	class ChangeCharacterPortrait implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			JFileChooser chooser = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "gif", "png");
+			chooser.setFileFilter(filter);
+			int returnVal = chooser.showOpenDialog(characterView);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = chooser.getSelectedFile();
+				try {
+					BufferedImage image = ImageIO.read(file);
+					characterView.setCharacterPortrait(image);
+				} catch (IOException exception) {
+					JOptionPane.showMessageDialog(characterView, "That file does not exist.");
+				}
+
 			}
 
 		}

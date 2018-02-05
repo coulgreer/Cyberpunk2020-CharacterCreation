@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,12 +29,14 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -118,6 +121,8 @@ public class CharacterCreationView extends JFrame {
 	private JButton minorlyIncreaseInjuryButton;
 	private JButton minorlyDecreaseInjuryButton;
 	private JButton decreaseInjuryButton;
+	private JButton btnChangePortrait;
+	private JLabel lblPortrait;
 	private JComboBox<String> roleComboBox;
 	private JTextField modifiedReflexesTextField;
 	private JSpinner totalEmpathySpinner;
@@ -160,6 +165,9 @@ public class CharacterCreationView extends JFrame {
 		FlowLayout flowLayout = (FlowLayout) toolbarPanel.getLayout();
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		contentPane.add(toolbarPanel, BorderLayout.NORTH);
+
+		btnChangePortrait = new JButton("Change Portrait");
+		toolbarPanel.add(btnChangePortrait);
 
 		saveButton = new JButton("Save Character");
 		saveButton.setRolloverEnabled(false);
@@ -1200,8 +1208,7 @@ public class CharacterCreationView extends JFrame {
 		portraitPanel.setPreferredSize(new Dimension(PORTRAIT_WIDTH, PORTRAIT_HEIGHT));
 		portraitPanel.setLayout(new BorderLayout(0, 0));
 
-		JLabel lblPortrait = new JLabel(
-				new ImageIcon(CharacterCreationView.class.getResource("/img/Adam_MD_bust.png")));
+		lblPortrait = new JLabel(new ImageIcon(CharacterCreationView.class.getResource("/img/Adam_MD_bust.png")));
 		lblPortrait.setPreferredSize(new Dimension(PORTRAIT_WIDTH, PORTRAIT_HEIGHT));
 		portraitPanel.add(lblPortrait);
 
@@ -1472,7 +1479,7 @@ public class CharacterCreationView extends JFrame {
 		tabbedPane.addTab("Inventory", null, inventoryPane, null);
 
 		fileChooser = new JFileChooser();
-		fileChooser.addChoosableFileFilter(new CharFilter());
+		fileChooser.setFileFilter(new CharFilter());
 
 		setUpStatComboBoxes();
 	}
@@ -1632,6 +1639,10 @@ public class CharacterCreationView extends JFrame {
 
 	public void addManualCharacterPointButtonActionListener(ActionListener listenerForManualPoints) {
 		manualCharacterPointsButton.addActionListener(listenerForManualPoints);
+	}
+
+	public void addUploadButtonActionListener(ActionListener listener) {
+		btnChangePortrait.addActionListener(listener);
 	}
 
 	public void clearSkillTables() {
@@ -1873,6 +1884,17 @@ public class CharacterCreationView extends JFrame {
 		return Integer.parseInt(bodyTypeModifierTextField.getText());
 	}
 
+	public BufferedImage getCharacterPortrait() {
+		Icon icon = lblPortrait.getIcon();
+
+		BufferedImage bi = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+		Graphics g = bi.createGraphics();
+		icon.paintIcon(null, g, 0, 0);
+		g.dispose();
+
+		return bi;
+	}
+
 	public JFileChooser getFileChooser() {
 		return fileChooser;
 	}
@@ -2001,6 +2023,17 @@ public class CharacterCreationView extends JFrame {
 		bodyTypeModifierTextField.setText(bodyTypeModifier);
 	}
 
+	public void setCharacterPortrait(BufferedImage image) {
+		try {
+			int x = (image.getWidth() / 2) - (PORTRAIT_WIDTH / 2);
+			int y = (image.getHeight() / 2) - (PORTRAIT_HEIGHT / 2);
+			image = image.getSubimage(x, y, PORTRAIT_WIDTH, PORTRAIT_HEIGHT);
+			lblPortrait.setIcon(new ImageIcon(image));
+		} catch (NullPointerException exception) {
+			JOptionPane.showMessageDialog(this, "Image file formatting error accord.");
+		}
+	}
+
 	private void fillStunGauge(int index) {
 		stunProgressPanels.get(index).increaseStunGauge();
 		stunProgressPanels.get(index).increaseStunGauge();
@@ -2013,12 +2046,12 @@ public class CharacterCreationView extends JFrame {
 		@Override
 		public boolean accept(File file) {
 			String filename = file.getName();
-			return filename.endsWith(".char");
+			return filename.endsWith(".char") | file.isDirectory();
 		}
 
 		@Override
 		public String getDescription() {
-			return "*.char";
+			return "Character Files";
 		}
 	}
 
