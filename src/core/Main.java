@@ -14,7 +14,8 @@ public class Main {
 				try {
 					CharacterCreationModel characterModel = new CharacterCreationModel();
 					CharacterCreationView characterView = new CharacterCreationView();
-					CharacterCreationController characterController = new CharacterCreationController(characterModel, characterView);
+					CharacterCreationController characterController = new CharacterCreationController(characterModel,
+							characterView);
 					characterView.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

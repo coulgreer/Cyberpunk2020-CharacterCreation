@@ -50,6 +50,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeListener;
@@ -63,6 +65,13 @@ import javax.swing.table.TableCellEditor;
 import model.CharacterCreationModel;
 
 public class CharacterCreationView extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2154320052712328616L;
+
+	public static final int MAXIMUM_CELLS_PER_GAUGE = 4;
+
 	private static final int FRAME_WIDTH = 900;
 	private static final int FRAME_HEIGHT = 600;
 	private static final int TABBED_PANEL_WIDTH = FRAME_WIDTH;
@@ -84,13 +93,21 @@ public class CharacterCreationView extends JFrame {
 	private static final int STUN_DIV_HEIGHT = WOUND_DIV_HEIGHT;
 	private static final int PORTRAIT_WIDTH = 300;
 	private static final int PORTRAIT_HEIGHT = 300;
-
 	private static final Font TITLE_FONT = new Font("Tahoma", Font.BOLD, 14);
 
-	public static final int MAXIMUM_CELLS_PER_GAUGE = 4;
-
 	private JPanel contentPane;
+
+	private JButton changePortraitButton;
+	private JButton saveButton;
+	private JButton loadButton;
+
 	private JTextField handleTextField;
+
+	private JTextField characterPointsTextField;
+	private JButton randomCharacterPointsButton;
+	private JButton fastCharacterPointsButton;
+	private JButton manualCharacterPointsButton;
+
 	private JSpinner intelligenceSpinner;
 	private JSpinner unmodifiedReflexesSpinner;
 	private JSpinner technicalAbilitySpinner;
@@ -98,12 +115,12 @@ public class CharacterCreationView extends JFrame {
 	private JSpinner attractivenessSpinner;
 	private JSpinner luckSpinner;
 	private JSpinner bodySpinner;
-	private JTextField characterPointsTextField;
 	private JSpinner movementAllowanceSpinner;
 	private JTextField currentEmpathyTextField;
 	private JTextField runTextField;
 	private JTextField leapTextField;
 	private JTextField liftTextField;
+
 	private JTextField headArmorTextField;
 	private JTextField torsoArmorTextField;
 	private JTextField rightArmArmorTextField;
@@ -112,17 +129,15 @@ public class CharacterCreationView extends JFrame {
 	private JTextField leftLegArmorTextField;
 	private JTextField saveTextField;
 	private JTextField bodyTypeModifierTextField;
-	private JButton randomCharacterPointsButton;
-	private JButton fastCharacterPointsButton;
-	private JButton manualCharacterPointsButton;
-	private JButton saveButton;
-	private JButton loadButton;
+
+	private List<StunGaugePanel> stunProgressPanels;
 	private JButton increaseInjuryButton;
 	private JButton minorlyIncreaseInjuryButton;
 	private JButton minorlyDecreaseInjuryButton;
 	private JButton decreaseInjuryButton;
-	private JButton btnChangePortrait;
-	private JLabel lblPortrait;
+
+	private JLabel lblCharacterPortrait;
+
 	private JComboBox<String> roleComboBox;
 	private JTextField modifiedReflexesTextField;
 	private JSpinner totalEmpathySpinner;
@@ -130,7 +145,6 @@ public class CharacterCreationView extends JFrame {
 	private JLabel[] statComboBoxLabels;
 	private JFileChooser fileChooser;
 
-	private List<StunGaugePanel> stunProgressPanels;
 	private JSpinner[] skillSpinners;
 	private Map<String, JTable> skillTables;
 	private Map<String, JTextArea> skillTextAreas;
@@ -147,6 +161,13 @@ public class CharacterCreationView extends JFrame {
 	 * Create the frame.
 	 */
 	public CharacterCreationView() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
+
 		stunProgressPanels = new ArrayList<StunGaugePanel>();
 		skillSpinners = new JSpinner[9];
 		skillTables = new HashMap<String, JTable>();
@@ -166,8 +187,8 @@ public class CharacterCreationView extends JFrame {
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		contentPane.add(toolbarPanel, BorderLayout.NORTH);
 
-		btnChangePortrait = new JButton("Change Portrait");
-		toolbarPanel.add(btnChangePortrait);
+		changePortraitButton = new JButton("Change Portrait");
+		toolbarPanel.add(changePortraitButton);
 
 		saveButton = new JButton("Save Character");
 		saveButton.setRolloverEnabled(false);
@@ -278,7 +299,7 @@ public class CharacterCreationView extends JFrame {
 		GridBagLayout gbl_characterPointsPanel = new GridBagLayout();
 		gbl_characterPointsPanel.columnWidths = new int[] { 0, 0, 0, 0, 0 };
 		gbl_characterPointsPanel.rowHeights = new int[] { 25, 0 };
-		gbl_characterPointsPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_characterPointsPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 		gbl_characterPointsPanel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		characterPointsPanel.setLayout(gbl_characterPointsPanel);
 
@@ -330,6 +351,7 @@ public class CharacterCreationView extends JFrame {
 
 		manualCharacterPointsButton = new JButton("Manual");
 		GridBagConstraints gbc_manualCharacterPointsButton = new GridBagConstraints();
+		gbc_manualCharacterPointsButton.fill = GridBagConstraints.BOTH;
 		gbc_manualCharacterPointsButton.gridx = 4;
 		gbc_manualCharacterPointsButton.gridy = 0;
 		characterPointsPanel.add(manualCharacterPointsButton, gbc_manualCharacterPointsButton);
@@ -1208,9 +1230,10 @@ public class CharacterCreationView extends JFrame {
 		portraitPanel.setPreferredSize(new Dimension(PORTRAIT_WIDTH, PORTRAIT_HEIGHT));
 		portraitPanel.setLayout(new BorderLayout(0, 0));
 
-		lblPortrait = new JLabel(new ImageIcon(CharacterCreationView.class.getResource("/img/Adam_MD_bust.png")));
-		lblPortrait.setPreferredSize(new Dimension(PORTRAIT_WIDTH, PORTRAIT_HEIGHT));
-		portraitPanel.add(lblPortrait);
+		lblCharacterPortrait = new JLabel(
+				new ImageIcon(CharacterCreationView.class.getResource("/img/Adam_MD_bust.png")));
+		lblCharacterPortrait.setPreferredSize(new Dimension(PORTRAIT_WIDTH, PORTRAIT_HEIGHT));
+		portraitPanel.add(lblCharacterPortrait);
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setPreferredSize(new Dimension(TABBED_PANEL_WIDTH, TABBED_PANEL_HEIGHT));
@@ -1484,12 +1507,364 @@ public class CharacterCreationView extends JFrame {
 		setUpStatComboBoxes();
 	}
 
+	public String getCharacterName() {
+		return handleTextField.getText();
+	}
+
+	public String getRole() {
+		return (String) roleComboBox.getSelectedItem();
+	}
+
+	public int getCharacterPoints() {
+		return Integer.parseInt(characterPointsTextField.getText());
+	}
+
+	public int getIntelligenceLevel() {
+		return (Integer) intelligenceSpinner.getValue();
+	}
+
+	public int getUnmodifiedReflexesLevel() {
+		return (Integer) unmodifiedReflexesSpinner.getValue();
+	}
+
+	public int getModifiedReflexesLevel() {
+		return Integer.parseInt(modifiedReflexesTextField.getText());
+	}
+
+	public int getTechnicalAbilityLevel() {
+		return (Integer) technicalAbilitySpinner.getValue();
+	}
+
+	public int getCoolLevel() {
+		return (Integer) coolSpinner.getValue();
+	}
+
+	public int getAttractivenessLevel() {
+		return (Integer) attractivenessSpinner.getValue();
+	}
+
+	public int getLuckLevel() {
+		return (Integer) luckSpinner.getValue();
+	}
+
+	public int getMovementAllowanceLevel() {
+		return (Integer) movementAllowanceSpinner.getValue();
+	}
+
+	public int getBodyLevel() {
+		return (Integer) bodySpinner.getValue();
+	}
+
+	public int getCurrentEmpathyLevel() {
+		return Integer.parseInt(currentEmpathyTextField.getText());
+	}
+
+	public int getTotalEmpathyLevel() {
+		return (Integer) totalEmpathySpinner.getValue();
+	}
+
+	public int getRunLevel() {
+		return Integer.parseInt(runTextField.getText());
+	}
+
+	public int getLeapLevel() {
+		return Integer.parseInt(leapTextField.getText());
+	}
+
+	public int getLiftLevel() {
+		return Integer.parseInt(liftTextField.getText());
+	}
+
+	public int getHeadArmor() {
+		return Integer.parseInt(headArmorTextField.getText());
+	}
+
+	public int getTorsoArmor() {
+		return Integer.parseInt(torsoArmorTextField.getText());
+	}
+
+	public int getRightArmArmor() {
+		return Integer.parseInt(rightArmArmorTextField.getText());
+	}
+
+	public int getLeftArmArmor() {
+		return Integer.parseInt(leftArmArmorTextField.getText());
+	}
+
+	public int getRightLegArmor() {
+		return Integer.parseInt(rightLegArmorTextField.getText());
+	}
+
+	public int getLeftLegArmor() {
+		return Integer.parseInt(leftLegArmorTextField.getText());
+	}
+
+	public int getSaveModifier() {
+		return Integer.parseInt(saveTextField.getText());
+	}
+
+	public int getBodyTypeModifier() {
+		return Integer.parseInt(bodyTypeModifierTextField.getText());
+	}
+
+	public BufferedImage getCharacterPortrait() {
+		Icon icon = lblCharacterPortrait.getIcon();
+	
+		BufferedImage bi = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+		Graphics g = bi.createGraphics();
+		icon.paintIcon(null, g, 0, 0);
+		g.dispose();
+	
+		return bi;
+	}
+
+	public JFileChooser getFileChooser() {
+		return fileChooser;
+	}
+
+	public List<StunGaugePanel> getStunProgress() {
+		return stunProgressPanels;
+	}
+
+	public JSpinner[] getSkillSpinners() {
+		return skillSpinners;
+	}
+
+	public Map<String, JTable> getSkillTables() {
+		return skillTables;
+	}
+
+	public Map<String, JTextArea> getSkillTextAreas() {
+		return skillTextAreas;
+	}
+
+	public JComboBox<Integer>[] getStatComboBoxes() {
+		return statComboBoxes;
+	}
+
+	public JLabel[] getStatComboBoxLabels() {
+		return statComboBoxLabels;
+	}
+
+	public void setHandle(String handle) {
+		handleTextField.setText(handle);
+	}
+
+	public void setRole(String role) {
+		roleComboBox.setSelectedItem(role);
+	}
+
+	public void setCharacterPoints(String characterPoints) {
+		characterPointsTextField.setText(characterPoints);
+	}
+
+	public void setIntelligenceLevel(String intelligenceLevel) {
+		intelligenceSpinner.setValue(Integer.parseInt(intelligenceLevel));
+	}
+
+	public void setUnmodifiedReflexesLevel(String unmodifiedReflexesLevel) {
+		unmodifiedReflexesSpinner.setValue(Integer.parseInt(unmodifiedReflexesLevel));
+	}
+
+	public void setModifiedReflexesLevel(String modifiedReflexesLevel) {
+		modifiedReflexesTextField.setText(modifiedReflexesLevel);
+	}
+
+	public void setTechnicalAbilityLevel(String technicalAbilityLevel) {
+		technicalAbilitySpinner.setValue(Integer.parseInt(technicalAbilityLevel));
+	}
+
+	public void setCoolLevel(String coolLevel) {
+		coolSpinner.setValue(Integer.parseInt(coolLevel));
+	}
+
+	public void setAttractivenessLevel(String attractivenessLevel) {
+		attractivenessSpinner.setValue(Integer.parseInt(attractivenessLevel));
+	}
+
+	public void setLuckLevel(String luckLevel) {
+		luckSpinner.setValue(Integer.parseInt(luckLevel));
+	}
+
+	public void setMovementAllowanceLevel(String movementAllowanceLevel) {
+		movementAllowanceSpinner.setValue(Integer.parseInt(movementAllowanceLevel));
+	}
+
+	public void setBodyLevel(String bodyLevel) {
+		bodySpinner.setValue(Integer.parseInt(bodyLevel));
+	}
+
+	public void setCurrentEmpathyLevel(String currentEmpathyLevel) {
+		currentEmpathyTextField.setText(currentEmpathyLevel);
+	}
+
+	public void setTotalEmpathyLevel(String totalEmpathyLevel) {
+		totalEmpathySpinner.setValue(Integer.parseInt(totalEmpathyLevel));
+	}
+
+	public void setRunLevel(String runLevel) {
+		runTextField.setText(runLevel + "m");
+	}
+
+	public void setLeapLevel(String leapLevel) {
+		leapTextField.setText(leapLevel + "m");
+	}
+
+	public void setLiftLevel(String liftLevel) {
+		liftTextField.setText(liftLevel + "kg");
+	}
+
+	public void setHeadArmorStoppingPower(String headArmor) {
+		headArmorTextField.setText(headArmor);
+	}
+
+	public void setTorsoArmorStoppingPower(String torsoArmor) {
+		torsoArmorTextField.setText(torsoArmor);
+	}
+
+	public void setRightArmArmorStoppingPower(String rightArmArmor) {
+		rightArmArmorTextField.setText(rightArmArmor);
+	}
+
+	public void setLeftArmArmorStoppingPower(String leftArmArmor) {
+		leftArmArmorTextField.setText(leftArmArmor);
+	}
+
+	public void setRightLegArmorStoppingPower(String rightLegArmor) {
+		rightLegArmorTextField.setText(rightLegArmor);
+	}
+
+	public void setLeftLegArmorStoppingPower(String leftLegArmor) {
+		leftLegArmorTextField.setText(leftLegArmor);
+	}
+
+	public void setSaveModifier(String saveModifier) {
+		saveTextField.setText("<=" + saveModifier);
+	}
+
+	public void setBodyTypeModifier(String bodyTypeModifier) {
+		bodyTypeModifierTextField.setText(bodyTypeModifier);
+	}
+
+	public void setCharacterPortrait(BufferedImage image) {
+		try {
+			int x = (image.getWidth() / 2) - (PORTRAIT_WIDTH / 2);
+			int y = (image.getHeight() / 2) - (PORTRAIT_HEIGHT / 2);
+			image = image.getSubimage(x, y, PORTRAIT_WIDTH, PORTRAIT_HEIGHT);
+			lblCharacterPortrait.setIcon(new ImageIcon(image));
+		} catch (NullPointerException exception) {
+			JOptionPane.showMessageDialog(this, "Image file formatting error accord.");
+		}
+	}
+
+	public void addAttractivenessStatChangeListener(ChangeListener listenerForStatChange) {
+		attractivenessSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addBodyStatChangeListener(ChangeListener listenerForStatChange) {
+		bodySpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addChangePortraitButtonActionListener(ActionListener listenerForChangePortrait) {
+		changePortraitButton.addActionListener(listenerForChangePortrait);
+	}
+
+	public void addCoolStatChangeListener(ChangeListener listenerForStatChange) {
+		coolSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addDecreaseInjuryActionListener(ActionListener listenerForDecreaseInjuryButton) {
+		decreaseInjuryButton.addActionListener(listenerForDecreaseInjuryButton);
+	}
+
+	public void addFastCharacterPointButtonActionListener(ActionListener listenerForFastPoints) {
+		fastCharacterPointsButton.addActionListener(listenerForFastPoints);
+	}
+
+	public void addHandleDocumentListener(DocumentListener listenerForHandleDocument) {
+		handleTextField.getDocument().addDocumentListener(listenerForHandleDocument);
+	}
+
+	public void addIncreaseInjuryActionListener(ActionListener listenerForIncreaseInjuryButton) {
+		increaseInjuryButton.addActionListener(listenerForIncreaseInjuryButton);
+	}
+
+	public void addIntelligenceStatChangeListener(ChangeListener listenerForStatChange) {
+		intelligenceSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addListSelectionListeners(ListSelectionListener listener) {
+		for (JTable table : skillTables.values()) {
+			ListSelectionModel selectionModel = table.getSelectionModel();
+			selectionModel.addListSelectionListener(listener);
+		}
+	}
+
+	public void addLoadCharacterButtonActionListener(ActionListener listenerForLoadButton) {
+		loadButton.addActionListener(listenerForLoadButton);
+	}
+
+	public void addLuckStatChangeListener(ChangeListener listenerForStatChange) {
+		luckSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addManualCharacterPointButtonActionListener(ActionListener listenerForManualPoints) {
+		manualCharacterPointsButton.addActionListener(listenerForManualPoints);
+	}
+
+	public void addMinorlyDecreaseInjuryActionListener(ActionListener listenerForMinorlyDecreaseInjuryButton) {
+		minorlyDecreaseInjuryButton.addActionListener(listenerForMinorlyDecreaseInjuryButton);
+	}
+
+	public void addMinorlyIncreaseInjuryActionListener(ActionListener listenerForMinorlyIncreaseInjuryButton) {
+		minorlyIncreaseInjuryButton.addActionListener(listenerForMinorlyIncreaseInjuryButton);
+	}
+
+	public void addMovementAllowanceStatChangeListener(ChangeListener listenerForStatChange) {
+		movementAllowanceSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addRandomCharacterPointButtonActionListener(ActionListener listenerForRandomPoints) {
+		randomCharacterPointsButton.addActionListener(listenerForRandomPoints);
+	}
+
+	public void addRoleChangeListener(ActionListener listenerForRoleChange) {
+		roleComboBox.addActionListener(listenerForRoleChange);
+	}
+
+	public void addSaveCharacterButtonActionListener(ActionListener listenerForSaveButton) {
+		saveButton.addActionListener(listenerForSaveButton);
+	}
+
+	public void addSelectAllTextFocusListeners(FocusAdapter adapter) {
+		JSpinner[] skillSpinners = new JSpinner[] { intelligenceSpinner, unmodifiedReflexesSpinner,
+				technicalAbilitySpinner, coolSpinner, attractivenessSpinner, luckSpinner, movementAllowanceSpinner,
+				bodySpinner, totalEmpathySpinner };
+		for (JSpinner spinner : skillSpinners) {
+			JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spinner.getEditor();
+			JTextField textField = editor.getTextField();
+			textField.addFocusListener(adapter);
+		}
+	}
+
+	public void addTechnicalAbilityStatChangeListener(ChangeListener listenerForStatChange) {
+		technicalAbilitySpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addTotalEmpathyStatChangeListener(ChangeListener listenerForStatChange) {
+		totalEmpathySpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addUnmodifiedReflexesStatChangeListener(ChangeListener listenerForStatChange) {
+		unmodifiedReflexesSpinner.addChangeListener(listenerForStatChange);
+	}
+
 	public void setUpStatComboBoxes() {
 		String labelText;
 		final int totalStatCount = 9;
 		statComboBoxes = new JComboBox[totalStatCount];
 		statComboBoxLabels = new JLabel[totalStatCount];
-
+	
 		Random rnd = new Random();
 		int die1 = rnd.nextInt(8) + 3;
 		int die2 = rnd.nextInt(8) + 3;
@@ -1501,11 +1876,11 @@ public class CharacterCreationView extends JFrame {
 		int die8 = rnd.nextInt(8) + 3;
 		int die9 = rnd.nextInt(8) + 3;
 		Integer[] dice = new Integer[] { die1, die2, die3, die4, die5, die6, die7, die8, die9 };
-
+	
 		for (int i = 0; i < totalStatCount; i++) {
 			statComboBoxes[i] = new JComboBox<Integer>(dice);
 			statComboBoxes[i].setSelectedIndex(i);
-
+	
 			switch (i) {
 			case 0:
 				labelText = "INT";
@@ -1538,111 +1913,9 @@ public class CharacterCreationView extends JFrame {
 				labelText = "";
 				break;
 			}
-
+	
 			statComboBoxLabels[i] = new JLabel(labelText);
 		}
-	}
-
-	public void addAttractivenessStatChangeListener(ChangeListener listenerForStatChange) {
-		attractivenessSpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addBodyStatChangeListener(ChangeListener listenerForStatChange) {
-		bodySpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addCoolStatChangeListener(ChangeListener listenerForStatChange) {
-		coolSpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addDecreaseInjuryActionListener(ActionListener listenerForDecreaseInjuryButton) {
-		decreaseInjuryButton.addActionListener(listenerForDecreaseInjuryButton);
-	}
-
-	public void addHandleDocumentListener(DocumentListener listenerForHandleDocument) {
-		handleTextField.getDocument().addDocumentListener(listenerForHandleDocument);
-	}
-
-	public void addIncreaseInjuryActionListener(ActionListener listenerForIncreaseInjuryButton) {
-		increaseInjuryButton.addActionListener(listenerForIncreaseInjuryButton);
-	}
-
-	public void addIntelligenceStatChangeListener(ChangeListener listenerForStatChange) {
-		intelligenceSpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addLoadCharacterButtonActionListener(ActionListener listenerForLoadButton) {
-		loadButton.addActionListener(listenerForLoadButton);
-	}
-
-	public void addLuckStatChangeListener(ChangeListener listenerForStatChange) {
-		luckSpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addMinorlyDecreaseInjuryActionListener(ActionListener listenerForMinorlyDecreaseInjuryButton) {
-		minorlyDecreaseInjuryButton.addActionListener(listenerForMinorlyDecreaseInjuryButton);
-	}
-
-	public void addMinorlyIncreaseInjuryActionListener(ActionListener listenerForMinorlyIncreaseInjuryButton) {
-		minorlyIncreaseInjuryButton.addActionListener(listenerForMinorlyIncreaseInjuryButton);
-	}
-
-	public void addMovementAllowanceStatChangeListener(ChangeListener listenerForStatChange) {
-		movementAllowanceSpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addRoleChangeListener(ActionListener listenerForRoleChange) {
-		roleComboBox.addActionListener(listenerForRoleChange);
-	}
-
-	public void addSaveCharacterButtonActionListener(ActionListener listenerForSaveButton) {
-		saveButton.addActionListener(listenerForSaveButton);
-	}
-
-	public void addSelectAllTextFocusListeners(FocusAdapter adapter) {
-		JSpinner[] skillSpinners = new JSpinner[] { intelligenceSpinner, unmodifiedReflexesSpinner,
-				technicalAbilitySpinner, coolSpinner, attractivenessSpinner, luckSpinner, movementAllowanceSpinner,
-				bodySpinner, totalEmpathySpinner };
-		for (JSpinner spinner : skillSpinners) {
-			JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spinner.getEditor();
-			JTextField textField = editor.getTextField();
-			textField.addFocusListener(adapter);
-		}
-	}
-
-	public void addListSelectionListeners(ListSelectionListener listener) {
-		for (JTable table : skillTables.values()) {
-			ListSelectionModel selectionModel = table.getSelectionModel();
-			selectionModel.addListSelectionListener(listener);
-		}
-	}
-
-	public void addTechnicalAbilityStatChangeListener(ChangeListener listenerForStatChange) {
-		technicalAbilitySpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addTotalEmpathyStatChangeListener(ChangeListener listenerForStatChange) {
-		totalEmpathySpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addUnmodifiedReflexesStatChangeListener(ChangeListener listenerForStatChange) {
-		unmodifiedReflexesSpinner.addChangeListener(listenerForStatChange);
-	}
-
-	public void addRandomCharacterPointButtonActionListener(ActionListener listenerForRandomPoints) {
-		randomCharacterPointsButton.addActionListener(listenerForRandomPoints);
-	}
-
-	public void addFastCharacterPointButtonActionListener(ActionListener listenerForFastPoints) {
-		fastCharacterPointsButton.addActionListener(listenerForFastPoints);
-	}
-
-	public void addManualCharacterPointButtonActionListener(ActionListener listenerForManualPoints) {
-		manualCharacterPointsButton.addActionListener(listenerForManualPoints);
-	}
-
-	public void addUploadButtonActionListener(ActionListener listener) {
-		btnChangePortrait.addActionListener(listener);
 	}
 
 	public void clearSkillTables() {
@@ -1784,256 +2057,6 @@ public class CharacterCreationView extends JFrame {
 		targetPanel.repaint();
 	}
 
-	public String getCharacterName() {
-		return handleTextField.getText();
-	}
-
-	public String getRole() {
-		return (String) roleComboBox.getSelectedItem();
-	}
-
-	public int getCharacterPoints() {
-		return Integer.parseInt(characterPointsTextField.getText());
-	}
-
-	public int getIntelligenceLevel() {
-		return (Integer) intelligenceSpinner.getValue();
-	}
-
-	public int getUnmodifiedReflexesLevel() {
-		return (Integer) unmodifiedReflexesSpinner.getValue();
-	}
-
-	public int getModifiedReflexesLevel() {
-		return Integer.parseInt(modifiedReflexesTextField.getText());
-	}
-
-	public int getTechnicalAbilityLevel() {
-		return (Integer) technicalAbilitySpinner.getValue();
-	}
-
-	public int getCoolLevel() {
-		return (Integer) coolSpinner.getValue();
-	}
-
-	public int getAttractivenessLevel() {
-		return (Integer) attractivenessSpinner.getValue();
-	}
-
-	public int getLuckLevel() {
-		return (Integer) luckSpinner.getValue();
-	}
-
-	public int getMovementAllowanceLevel() {
-		return (Integer) movementAllowanceSpinner.getValue();
-	}
-
-	public int getBodyLevel() {
-		return (Integer) bodySpinner.getValue();
-	}
-
-	public int getCurrentEmpathyLevel() {
-		return Integer.parseInt(currentEmpathyTextField.getText());
-	}
-
-	public int getTotalEmpathyLevel() {
-		return (Integer) totalEmpathySpinner.getValue();
-	}
-
-	public int getRunLevel() {
-		return Integer.parseInt(runTextField.getText());
-	}
-
-	public int getLeapLevel() {
-		return Integer.parseInt(leapTextField.getText());
-	}
-
-	public int getLiftLevel() {
-		return Integer.parseInt(liftTextField.getText());
-	}
-
-	public int getHeadArmor() {
-		return Integer.parseInt(headArmorTextField.getText());
-	}
-
-	public int getTorsoArmor() {
-		return Integer.parseInt(torsoArmorTextField.getText());
-	}
-
-	public int getRightArmArmor() {
-		return Integer.parseInt(rightArmArmorTextField.getText());
-	}
-
-	public int getLeftArmArmor() {
-		return Integer.parseInt(leftArmArmorTextField.getText());
-	}
-
-	public int getRightLegArmor() {
-		return Integer.parseInt(rightLegArmorTextField.getText());
-	}
-
-	public int getLeftLegArmor() {
-		return Integer.parseInt(leftLegArmorTextField.getText());
-	}
-
-	public int getSaveModifier() {
-		return Integer.parseInt(saveTextField.getText());
-	}
-
-	public int getBodyTypeModifier() {
-		return Integer.parseInt(bodyTypeModifierTextField.getText());
-	}
-
-	public BufferedImage getCharacterPortrait() {
-		Icon icon = lblPortrait.getIcon();
-
-		BufferedImage bi = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
-		Graphics g = bi.createGraphics();
-		icon.paintIcon(null, g, 0, 0);
-		g.dispose();
-
-		return bi;
-	}
-
-	public JFileChooser getFileChooser() {
-		return fileChooser;
-	}
-
-	public List<StunGaugePanel> getStunProgress() {
-		return stunProgressPanels;
-	}
-
-	public JSpinner[] getSkillSpinners() {
-		return skillSpinners;
-	}
-
-	public Map<String, JTable> getSkillTables() {
-		return skillTables;
-	}
-
-	public Map<String, JTextArea> getSkillTextAreas() {
-		return skillTextAreas;
-	}
-
-	public JComboBox<Integer>[] getStatComboBoxes() {
-		return statComboBoxes;
-	}
-
-	public JLabel[] getStatComboBoxLabels() {
-		return statComboBoxLabels;
-	}
-
-	public void setHandle(String handle) {
-		handleTextField.setText(handle);
-	}
-
-	public void setRole(String role) {
-		roleComboBox.setSelectedItem(role);
-	}
-
-	public void setCharacterPoints(String characterPoints) {
-		characterPointsTextField.setText(characterPoints);
-	}
-
-	public void setIntelligenceLevel(String intelligenceLevel) {
-		intelligenceSpinner.setValue(Integer.parseInt(intelligenceLevel));
-	}
-
-	public void setUnmodifiedReflexesLevel(String unmodifiedReflexesLevel) {
-		unmodifiedReflexesSpinner.setValue(Integer.parseInt(unmodifiedReflexesLevel));
-	}
-
-	public void setModifiedReflexesLevel(String modifiedReflexesLevel) {
-		modifiedReflexesTextField.setText(modifiedReflexesLevel);
-	}
-
-	public void setTechnicalAbilityLevel(String technicalAbilityLevel) {
-		technicalAbilitySpinner.setValue(Integer.parseInt(technicalAbilityLevel));
-	}
-
-	public void setCoolLevel(String coolLevel) {
-		coolSpinner.setValue(Integer.parseInt(coolLevel));
-	}
-
-	public void setAttractivenessLevel(String attractivenessLevel) {
-		attractivenessSpinner.setValue(Integer.parseInt(attractivenessLevel));
-	}
-
-	public void setLuckLevel(String luckLevel) {
-		luckSpinner.setValue(Integer.parseInt(luckLevel));
-	}
-
-	public void setMovementAllowanceLevel(String movementAllowanceLevel) {
-		movementAllowanceSpinner.setValue(Integer.parseInt(movementAllowanceLevel));
-	}
-
-	public void setBodyLevel(String bodyLevel) {
-		bodySpinner.setValue(Integer.parseInt(bodyLevel));
-	}
-
-	public void setCurrentEmpathyLevel(String currentEmpathyLevel) {
-		currentEmpathyTextField.setText(currentEmpathyLevel);
-	}
-
-	public void setTotalEmpathyLevel(String totalEmpathyLevel) {
-		totalEmpathySpinner.setValue(Integer.parseInt(totalEmpathyLevel));
-	}
-
-	public void setRunLevel(String runLevel) {
-		runTextField.setText(runLevel + "m");
-	}
-
-	public void setLeapLevel(String leapLevel) {
-		leapTextField.setText(leapLevel + "m");
-	}
-
-	public void setLiftLevel(String liftLevel) {
-		liftTextField.setText(liftLevel + "kg");
-	}
-
-	public void setHeadArmorStoppingPower(String headArmor) {
-		headArmorTextField.setText(headArmor);
-	}
-
-	public void setTorsoArmorStoppingPower(String torsoArmor) {
-		torsoArmorTextField.setText(torsoArmor);
-	}
-
-	public void setRightArmArmorStoppingPower(String rightArmArmor) {
-		rightArmArmorTextField.setText(rightArmArmor);
-	}
-
-	public void setLeftArmArmorStoppingPower(String leftArmArmor) {
-		leftArmArmorTextField.setText(leftArmArmor);
-	}
-
-	public void setRightLegArmorStoppingPower(String rightLegArmor) {
-		rightLegArmorTextField.setText(rightLegArmor);
-	}
-
-	public void setLeftLegArmorStoppingPower(String leftLegArmor) {
-		leftLegArmorTextField.setText(leftLegArmor);
-	}
-
-	public void setSaveModifier(String saveModifier) {
-		saveTextField.setText("<=" + saveModifier);
-	}
-
-	public void setBodyTypeModifier(String bodyTypeModifier) {
-		bodyTypeModifierTextField.setText(bodyTypeModifier);
-	}
-
-	public void setCharacterPortrait(BufferedImage image) {
-		try {
-			int x = (image.getWidth() / 2) - (PORTRAIT_WIDTH / 2);
-			int y = (image.getHeight() / 2) - (PORTRAIT_HEIGHT / 2);
-			image = image.getSubimage(x, y, PORTRAIT_WIDTH, PORTRAIT_HEIGHT);
-			lblPortrait.setIcon(new ImageIcon(image));
-		} catch (NullPointerException exception) {
-			JOptionPane.showMessageDialog(this, "Image file formatting error accord.");
-		}
-	}
-
 	private void fillStunGauge(int index) {
 		stunProgressPanels.get(index).increaseStunGauge();
 		stunProgressPanels.get(index).increaseStunGauge();
@@ -2056,6 +2079,10 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class SkillTableModel extends AbstractTableModel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -8313026752975772728L;
 		private String[] columnNames = { "Skill", "Specific Skill", "Rank" };
 		private List<Object[]> data = new ArrayList<Object[]>();
 
@@ -2108,6 +2135,10 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	class SpinnerEditor extends AbstractCellEditor implements TableCellEditor {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -8013171141753281824L;
 		JSpinner spinner;
 
 		public SpinnerEditor() {
@@ -2144,6 +2175,10 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	class StunGaugePanel extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -4630927308247810748L;
 		private static final int STUN_PROGRESS_CELL_WIDTH = 15;
 		private static final int STUN_PROGRESS_CELL_HEIGHT = 10;
 

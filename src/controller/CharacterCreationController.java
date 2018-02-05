@@ -74,7 +74,7 @@ public class CharacterCreationController {
 		this.characterView.addRandomCharacterPointButtonActionListener(new RandomCharacterPointActionListener());
 		this.characterView.addFastCharacterPointButtonActionListener(new FastCharacterPointActionListener());
 		this.characterView.addManualCharacterPointButtonActionListener(new ManualCharacterPointActionListener());
-		this.characterView.addUploadButtonActionListener(new ChangeCharacterPortrait());
+		this.characterView.addChangePortraitButtonActionListener(new ChangeCharacterPortrait());
 
 		this.characterView.drawLoadedInjuryPoints(this.characterModel.getInjuryPoints());
 		this.characterView.setCharacterPoints(Integer.toString(this.characterModel.getCharacterPoints()
