@@ -86,6 +86,7 @@ public class CharacterCreationController {
 		this.characterView.addInventoryChangeItemListener(new InventoryChangeListener());
 		this.characterView.addStoreChangeItemListener(new StoreChangeListener());
 		this.characterView.addAddToInventoryActionListener(new AddToInventoryActionListener());
+		this.characterView.addCalculateActionListener(new AddMoneyActionListener());
 
 		this.characterView.drawLoadedInjuryPoints(this.characterModel.getInjuryPoints());
 		this.characterView.setCharacterPoints(Integer.toString(this.characterModel.getCharacterPoints()
@@ -188,6 +189,20 @@ public class CharacterCreationController {
 		characterView.setTotalEmpathyLevel(Integer.toString(characterModel.getTotalEmpathyLevel()));
 	}
 
+	class AddMoneyActionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			int currentMoney = characterView.getMoney();
+			int moneyModifier = characterView.getMoneyModifier();
+			
+			characterView.setMoneyModifier("0");
+			characterView.setMoney(String.valueOf(currentMoney + moneyModifier));
+			
+		}
+		
+	}
+	
 	class AddToInventoryActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
