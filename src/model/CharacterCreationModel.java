@@ -39,7 +39,6 @@ public class CharacterCreationModel {
 	private int totalEmpathyLevel;
 	private double runDistance;
 	private double leapDistance;
-	// TODO Find where to display carryCapacity. Maybe showing in inventory tab
 	private double carryCapacity;
 	private double liftCapacity;
 
@@ -65,6 +64,10 @@ public class CharacterCreationModel {
 	private Map<String, Skill> reflexesSkills = new TreeMap<String, Skill>();
 	private Map<String, Skill> technicalAbilitySkills = new TreeMap<String, Skill>();
 	private Map<String, Role> roles = new TreeMap<String, Role>();
+	private Map<String, Weapon> weapons = new TreeMap<String, Weapon>();
+	private Map<String, Gear> gear = new TreeMap<String, Gear>();
+	private Map<String, Armor> armors = new TreeMap<String, Armor>();
+	private Map<String, Ammo> ammos = new TreeMap<String, Ammo>();
 
 	private Skill authority = new Skill.SkillBuilder() //
 			.withSkillName("Authority") //
@@ -78,7 +81,7 @@ public class CharacterCreationModel {
 					+ "proper arrest or search warrants to back his play. "
 					+ "However, authority is only as good as the guy holding the "
 					+ "badge-if the cop appears uncertain of his Authority, there's a "
-					+ "good chance he`ll get nailed by the people he`s trying to "
+					+ "good chance he'll get nailed by the people he's trying to "
 					+ "confront. The higher your Authority, the more able you are "
 					+ "to face down criminals, particularly high level mobsters and "
 					+ "officials. Authority is applied to your Cool stat.") //
@@ -137,7 +140,7 @@ public class CharacterCreationModel {
 	private Skill family = new Skill.SkillBuilder() //
 			.withSkillName("Family") //
 			.withDescription("This is the ability to call upon the resources and help"
-					+ " of any of the members of the Nomad`s large, extended tribal"
+					+ " of any of the members of the Nomad's large, extended tribal"
 					+ " family. This can be in the form of weapons, cash, information,"
 					+ " or a small army of relatives. The threat of a Nomad family's "
 					+ "vengeance may in itself stop harm to the Nomad. The higher "
@@ -495,7 +498,7 @@ public class CharacterCreationModel {
 			.withType(INT) //
 			.build();
 	private Skill expert = new Skill.SkillBuilder() //
-			.withSkillName("Expert...") //
+			.withSkillName("Expert*") //
 			.withDescription("You may use this skill to be an expert on one specific "
 					+ "subject, such as rare postage stamps, obscure weapons, a foreign "
 					+ "language, etc. At +3, you are the local expert. At +6, you know "
@@ -544,30 +547,60 @@ public class CharacterCreationModel {
 			.withType(INT) //
 			.build();
 	private Skill language1 = new Skill.SkillBuilder() //
-			.withSkillName("Language 1...") //
+			.withSkillName("Language 1*") //
 			.withDescription("The knowledge of a foreign tongue. At +2, you can 'get by' "
 					+ "with speaking the language. At +3, you can actually read a written "
 					+ "form of it. At +6 and above, you are fairly fluent, although no "
 					+ "native will be fooled by your ability. At +8 and "
-					+ "above, you speak and read the language like a native.") //
+					+ "above, you speak and read the language like a native.\n\n    "
+					+ "AFRICAN (2): Bantu, Fante, Ashanti, Kongo, Zulu, Swahili, Blackfolk"
+					+ "\n    BALTIC (2): Lithuanian, Extonian, Latvian, Finnish"
+					+ "\n    CELTIC (2): Gaelic, Welsh, Breton\n    FARSI (2)\n    "
+					+ "GERMANIC (1): Danish, Dutch, English, German, Norwegian, Swedish, Yiddish"
+					+ "\n    GREEK (2)\n    JAPANESE (2)\n    KOREAN (2)\n    PACIFIC ISLAND"
+					+ "GROUP (2): Micronesian, Tagalog, Polynesian, Javanese, Malayan, Sudanese, "
+					+ "Indonesian, Hawaiian\n    ROMANTIC (1): French, Italian, Spanish, Portuguese,"
+					+ " Latin\n    SEMETIC (1): Arabic, Hebrew\n    SINO-TIBETAN and SE ASIAN (3):"
+					+ " Burmese, Cantonese, Mandarin, Thai, Tibetan, Vietnamese\n    SLAVIC (3): "
+					+ "Bulgarian, Russian, Czech, Polish, Ukranian, Slovak") //
 			.withType(INT) //
 			.build();
 	private Skill language2 = new Skill.SkillBuilder() //
-			.withSkillName("Language 2...") //
+			.withSkillName("Language 2*") //
 			.withDescription("The knowledge of a foreign tongue. At +2, you can 'get by' "
 					+ "with speaking the language. At +3, you can actually read a written "
 					+ "form of it. At +6 and above, you are fairly fluent, although no "
 					+ "native will be fooled by your ability. At +8 and "
-					+ "above, you speak and read the lanquage like a native.") //
+					+ "above, you speak and read the language like a native.\n\n    "
+					+ "AFRICAN (2): Bantu, Fante, Ashanti, Kongo, Zulu, Swahili, Blackfolk"
+					+ "\n    BALTIC (2): Lithuanian, Extonian, Latvian, Finnish"
+					+ "\n    CELTIC (2): Gaelic, Welsh, Breton\n    FARSI (2)\n    "
+					+ "GERMANIC (1): Danish, Dutch, English, German, Norwegian, Swedish, Yiddish"
+					+ "\n    GREEK (2)\n    JAPANESE (2)\n    KOREAN (2)\n    PACIFIC ISLAND"
+					+ "GROUP (2): Micronesian, Tagalog, Polynesian, Javanese, Malayan, Sudanese, "
+					+ "Indonesian, Hawaiian\n    ROMANTIC (1): French, Italian, Spanish, Portuguese,"
+					+ " Latin\n    SEMETIC (1): Arabic, Hebrew\n    SINO-TIBETAN and SE ASIAN (3):"
+					+ " Burmese, Cantonese, Mandarin, Thai, Tibetan, Vietnamese\n    SLAVIC (3): "
+					+ "Bulgarian, Russian, Czech, Polish, Ukranian, Slovak") //
 			.withType(INT) //
 			.build();
 	private Skill language3 = new Skill.SkillBuilder() //
-			.withSkillName("Language 3...") //
+			.withSkillName("Language 3*") //
 			.withDescription("The knowledge of a foreign tongue. At +2, you can 'get by' "
 					+ "with speaking the language. At +3, you can actually read a written "
 					+ "form of it. At +6 and above, you are fairly fluent, although no "
 					+ "native will be fooled by your ability. At +8 and "
-					+ "above, you speak and read the lanquage like a native.") //
+					+ "above, you speak and read the language like a native.\n\n    "
+					+ "AFRICAN (2): Bantu, Fante, Ashanti, Kongo, Zulu, Swahili, Blackfolk"
+					+ "\n    BALTIC (2): Lithuanian, Extonian, Latvian, Finnish"
+					+ "\n    CELTIC (2): Gaelic, Welsh, Breton\n    FARSI (2)\n    "
+					+ "GERMANIC (1): Danish, Dutch, English, German, Norwegian, Swedish, Yiddish"
+					+ "\n    GREEK (2)\n    JAPANESE (2)\n    KOREAN (2)\n    PACIFIC ISLAND"
+					+ "GROUP (2): Micronesian, Tagalog, Polynesian, Javanese, Malayan, Sudanese, "
+					+ "Indonesian, Hawaiian\n    ROMANTIC (1): French, Italian, Spanish, Portuguese,"
+					+ " Latin\n    SEMETIC (1): Arabic, Hebrew\n    SINO-TIBETAN and SE ASIAN (3):"
+					+ " Burmese, Cantonese, Mandarin, Thai, Tibetan, Vietnamese\n    SLAVIC (3): "
+					+ "Bulgarian, Russian, Czech, Polish, Ukranian, Slovak") //
 			.withType(INT) //
 			.build();
 	private Skill librarySearch = new Skill.SkillBuilder() //
@@ -762,7 +795,7 @@ public class CharacterCreationModel {
 			.withType(REF) //
 			.build();
 	private Skill martialArt1 = new Skill.SkillBuilder() //
-			.withSkillName("Martial Art 1...") //
+			.withSkillName("Martial Art 1*") //
 			.withDescription("This skill covets any type of trained fighting style using "
 					+ "hands, feet, or specialized 'martial arts' weapons. You must elect "
 					+ "a style of martial art and take a separate skill for each style "
@@ -777,44 +810,44 @@ public class CharacterCreationModel {
 					+ "equal to the level of the Martial Arts skill; for example, a master "
 					+ "with a +10 Kung Fu Skill would add 10 points to his damage. This can "
 					+ "be a formidable advantage, particularly in head strikes (which double "
-					+ "damage). Martial Arts forms include:\n\tAikido (3): This form relies "
+					+ "damage). Martial Arts forms include:\n    Aikido (3): This form relies "
 					+ "on using the opponent's strength and momentum against him. It is a "
 					+ "perfect form for stopping an opponent peacefully while making yourself "
 					+ "very hard to hit. Key attacks are: blocks & parries, dodges, throws, "
 					+ "holds, escapes, chokes, sweeps, trips & sweets, trips & sweeps, "
-					+ "grapples.\n\n\tAnimal Kung Fu (3): These are forms based on animal "
+					+ "grapples.\n    Animal Kung Fu (3): These are forms based on animal "
 					+ "movements, such as crane, mantis, tiger, leopard and dragon forms. "
 					+ "These attacks are fast and dangerous, with a style that is exciting "
 					+ "and flashy. Key attacks include: strikes, punches, kicks, blocks "
-					+ "& parries, sweeps & trips.\n\n\tBoxing (1): The manly art of fisticuffs, "
+					+ "& parries, sweeps & trips.\n    Boxing (1): The manly art of fisticuffs, "
 					+ "this form delivers lightning punches and a tight blocking defense. "
-					+ "Key attacks are: punches, blocks & parries.\n\n\tCapoeria (3): Created "
+					+ "Key attacks are: punches, blocks & parries.\n    Capoeria (3): Created "
 					+ "by Carribean slaves this form combines dancelike movements with fast "
-					+ "kicks and low line sweeps & trips.\n\n\tChoi Li Fut (3): Descended "
+					+ "kicks and low line sweeps & trips.\n    Choi Li Fut (3): Descended "
 					+ "directly from the ancient Shaolin temples, this form combines powerful "
 					+ "roundhouse blows and sweeping kicks into a dynamic fighting style. "
 					+ "Key attacks are: strikes, punches, kicks, blocks & parries, dodges, "
-					+ "throws, and sweeps & trips.\n\n\tJudo (1): This system was designed "
+					+ "throws, and sweeps & trips.\n    Judo (1): This system was designed "
 					+ "as a sport form, but is very effective in combat as well. It uses "
 					+ "throws and sweeps to knock down the opponent. Key attacks include: "
-					+ "dodges, throws, holds, escapes, sweeps & trips and grappling.\n\n\t"
+					+ "dodges, throws, holds, escapes, sweeps & trips and grappling.\n    "
 					+ "Karate (2): The Japanese version of kung fu, this style uses straight "
 					+ "line movements and powerful blows. Variations includ shotokan and "
 					+ "kenpo, each with their own special moves. Key attacks are: punches, "
-					+ "kicks, and blocks & parries.\n\n\tTae Kwon Do (3): A very fast and "
+					+ "kicks, and blocks & parries.\n    Tae Kwon Do (3): A very fast and "
 					+ "precise form with graceful movements and some aerial kicks. Key "
 					+ "attacks include: strikes, punches, kicks, block & parries, dodges."
-					+ "\n\n\tThai Kick Boxing (4): One of the deadliest forms in existence, "
+					+ "\n    Thai Kick Boxing (4): One of the deadliest forms in existence, "
 					+ "this style is known for blinding kicks delivered with incredible power. "
 					+ "Key moves include: strikes, punches, kicks, blocks & parries, and grapples."
-					+ "\n\n\tWrestling (1): This form combines techniques of Olympic and "
+					+ "\n    Wrestling (1): This form combines techniques of Olympic and "
 					+ "Professional wrestling. The style uses a wide variety of throws and holds "
 					+ "to incapacitate the opponent. Key attacks include: throws, holds, escapes, "
 					+ "chokes, sweeps, trips, and grapples.") //
 			.withType(REF) //
 			.build();
 	private Skill martialArt2 = new Skill.SkillBuilder() //
-			.withSkillName("Martial Art 2...") //
+			.withSkillName("Martial Art 2*") //
 			.withDescription("This skill covets any type of trained fighting style using "
 					+ "hands, feet, or specialized 'martial arts' weapons. You must elect "
 					+ "a style of martial art and take a separate skill for each style "
@@ -829,44 +862,44 @@ public class CharacterCreationModel {
 					+ "equal to the level of the Martial Arts skill; for example, a master "
 					+ "with a +10 Kung Fu Skill would add 10 points to his damage. This can "
 					+ "be a formidable advantage, particularly in head strikes (which double "
-					+ "damage). Martial Arts forms include:\n\tAikido (3): This form relies "
+					+ "damage). Martial Arts forms include:\n    Aikido (3): This form relies "
 					+ "on using the opponent's strength and momentum against him. It is a "
 					+ "perfect form for stopping an opponent peacefully while making yourself "
 					+ "very hard to hit. Key attacks are: blocks & parries, dodges, throws, "
 					+ "holds, escapes, chokes, sweeps, trips & sweets, trips & sweeps, "
-					+ "grapples.\n\n\tAnimal Kung Fu (3): These are forms based on animal "
+					+ "grapples.\n    Animal Kung Fu (3): These are forms based on animal "
 					+ "movements, such as crane, mantis, tiger, leopard and dragon forms. "
 					+ "These attacks are fast and dangerous, with a style that is exciting "
 					+ "and flashy. Key attacks include: strikes, punches, kicks, blocks "
-					+ "& parries, sweeps & trips.\n\n\tBoxing (1): The manly art of fisticuffs, "
+					+ "& parries, sweeps & trips.\n    Boxing (1): The manly art of fisticuffs, "
 					+ "this form delivers lightning punches and a tight blocking defense. "
-					+ "Key attacks are: punches, blocks & parries.\n\n\tCapoeria (3): Created "
+					+ "Key attacks are: punches, blocks & parries.\n    Capoeria (3): Created "
 					+ "by Carribean slaves this form combines dancelike movements with fast "
-					+ "kicks and low line sweeps & trips.\n\n\tChoi Li Fut (3): Descended "
+					+ "kicks and low line sweeps & trips.\n    Choi Li Fut (3): Descended "
 					+ "directly from the ancient Shaolin temples, this form combines powerful "
 					+ "roundhouse blows and sweeping kicks into a dynamic fighting style. "
 					+ "Key attacks are: strikes, punches, kicks, blocks & parries, dodges, "
-					+ "throws, and sweeps & trips.\n\n\tJudo (1): This system was designed "
+					+ "throws, and sweeps & trips.\n    Judo (1): This system was designed "
 					+ "as a sport form, but is very effective in combat as well. It uses "
 					+ "throws and sweeps to knock down the opponent. Key attacks include: "
-					+ "dodges, throws, holds, escapes, sweeps & trips and grappling.\n\n\t"
+					+ "dodges, throws, holds, escapes, sweeps & trips and grappling.\n    "
 					+ "Karate (2): The Japanese version of kung fu, this style uses straight "
 					+ "line movements and powerful blows. Variations includ shotokan and "
 					+ "kenpo, each with their own special moves. Key attacks are: punches, "
-					+ "kicks, and blocks & parries.\n\n\tTae Kwon Do (3): A very fast and "
+					+ "kicks, and blocks & parries.\n    Tae Kwon Do (3): A very fast and "
 					+ "precise form with graceful movements and some aerial kicks. Key "
 					+ "attacks include: strikes, punches, kicks, block & parries, dodges."
-					+ "\n\n\tThai Kick Boxing (4): One of the deadliest forms in existence, "
+					+ "\n    Thai Kick Boxing (4): One of the deadliest forms in existence, "
 					+ "this style is known for blinding kicks delivered with incredible power. "
 					+ "Key moves include: strikes, punches, kicks, blocks & parries, and grapples."
-					+ "\n\n\tWrestling (1): This form combines techniques of Olympic and "
+					+ "\n    Wrestling (1): This form combines techniques of Olympic and "
 					+ "Professional wrestling. The style uses a wide variety of throws and holds "
 					+ "to incapacitate the opponent. Key attacks include: throws, holds, escapes, "
 					+ "chokes, sweeps, trips, and grapples.") //
 			.withType(REF) //
 			.build();
 	private Skill martialArt3 = new Skill.SkillBuilder() //
-			.withSkillName("Martial Art 3...") //
+			.withSkillName("Martial Art 3*") //
 			.withDescription("This skill covets any type of trained fighting style using "
 					+ "hands, feet, or specialized 'martial arts' weapons. You must elect "
 					+ "a style of martial art and take a separate skill for each style "
@@ -881,37 +914,37 @@ public class CharacterCreationModel {
 					+ "equal to the level of the Martial Arts skill; for example, a master "
 					+ "with a +10 Kung Fu Skill would add 10 points to his damage. This can "
 					+ "be a formidable advantage, particularly in head strikes (which double "
-					+ "damage). Martial Arts forms include:\n\tAikido (3): This form relies "
+					+ "damage). Martial Arts forms include:\n    Aikido (3): This form relies "
 					+ "on using the opponent's strength and momentum against him. It is a "
 					+ "perfect form for stopping an opponent peacefully while making yourself "
 					+ "very hard to hit. Key attacks are: blocks & parries, dodges, throws, "
 					+ "holds, escapes, chokes, sweeps, trips & sweets, trips & sweeps, "
-					+ "grapples.\n\n\tAnimal Kung Fu (3): These are forms based on animal "
+					+ "grapples.\n    Animal Kung Fu (3): These are forms based on animal "
 					+ "movements, such as crane, mantis, tiger, leopard and dragon forms. "
 					+ "These attacks are fast and dangerous, with a style that is exciting "
 					+ "and flashy. Key attacks include: strikes, punches, kicks, blocks "
-					+ "& parries, sweeps & trips.\n\n\tBoxing (1): The manly art of fisticuffs, "
+					+ "& parries, sweeps & trips.\n    Boxing (1): The manly art of fisticuffs, "
 					+ "this form delivers lightning punches and a tight blocking defense. "
-					+ "Key attacks are: punches, blocks & parries.\n\n\tCapoeria (3): Created "
+					+ "Key attacks are: punches, blocks & parries.\n    Capoeria (3): Created "
 					+ "by Carribean slaves this form combines dancelike movements with fast "
-					+ "kicks and low line sweeps & trips.\n\n\tChoi Li Fut (3): Descended "
+					+ "kicks and low line sweeps & trips.\n    Choi Li Fut (3): Descended "
 					+ "directly from the ancient Shaolin temples, this form combines powerful "
 					+ "roundhouse blows and sweeping kicks into a dynamic fighting style. "
 					+ "Key attacks are: strikes, punches, kicks, blocks & parries, dodges, "
-					+ "throws, and sweeps & trips.\n\n\tJudo (1): This system was designed "
+					+ "throws, and sweeps & trips.\n    Judo (1): This system was designed "
 					+ "as a sport form, but is very effective in combat as well. It uses "
 					+ "throws and sweeps to knock down the opponent. Key attacks include: "
-					+ "dodges, throws, holds, escapes, sweeps & trips and grappling.\n\n\t"
+					+ "dodges, throws, holds, escapes, sweeps & trips and grappling.\n    "
 					+ "Karate (2): The Japanese version of kung fu, this style uses straight "
 					+ "line movements and powerful blows. Variations includ shotokan and "
 					+ "kenpo, each with their own special moves. Key attacks are: punches, "
-					+ "kicks, and blocks & parries.\n\n\tTae Kwon Do (3): A very fast and "
+					+ "kicks, and blocks & parries.\n    Tae Kwon Do (3): A very fast and "
 					+ "precise form with graceful movements and some aerial kicks. Key "
 					+ "attacks include: strikes, punches, kicks, block & parries, dodges."
-					+ "\n\n\tThai Kick Boxing (4): One of the deadliest forms in existence, "
+					+ "\n    Thai Kick Boxing (4): One of the deadliest forms in existence, "
 					+ "this style is known for blinding kicks delivered with incredible power. "
 					+ "Key moves include: strikes, punches, kicks, blocks & parries, and grapples."
-					+ "\n\n\tWrestling (1): This form combines techniques of Olympic and "
+					+ "\n    Wrestling (1): This form combines techniques of Olympic and "
 					+ "Professional wrestling. The style uses a wide variety of throws and holds "
 					+ "to incapacitate the opponent. Key attacks include: throws, holds, escapes, "
 					+ "chokes, sweeps, trips, and grapples.") //
@@ -938,7 +971,7 @@ public class CharacterCreationModel {
 			.withType(REF) //
 			.build();
 	private Skill pilotGyro = new Skill.SkillBuilder() //
-			.withSkillName("Pilot (Gyro)") //
+			.withSkillName("Pilot Gyro") //
 			.withDescription("In general, this is the skill of controlling aircraft. "
 					+ "Aircraft are broken into categories: Gyro and Rotorcraft, fixed "
 					+ "Wing Aircraft, Dirigibles and Vectored Thrust Aerodynes (AV-s). "
@@ -956,7 +989,7 @@ public class CharacterCreationModel {
 			.withType(REF) //
 			.build();
 	private Skill pilotFixedWing = new Skill.SkillBuilder() //
-			.withSkillName("Pilot (Fixed Wing)") //
+			.withSkillName("Pilot Fixed Wing") //
 			.withDescription("In general, this is the skill of controlling aircraft. "
 					+ "Aircraft are broken into categories: Gyro and Rotorcraft, fixed "
 					+ "Wing Aircraft, Dirigibles and Vectored Thrust Aerodynes (AV-s). "
@@ -975,7 +1008,7 @@ public class CharacterCreationModel {
 			.withType(REF) //
 			.build();
 	private Skill pilotDirigible = new Skill.SkillBuilder() //
-			.withSkillName("Pilot (Dirigible)") //
+			.withSkillName("Pilot Dirigible") //
 			.withDescription("In general, this is the skill of controlling aircraft. "
 					+ "Aircraft are broken into categories: Gyro and Rotorcraft, fixed "
 					+ "Wing Aircraft, Dirigibles and Vectored Thrust Aerodynes (AV-s). "
@@ -993,7 +1026,7 @@ public class CharacterCreationModel {
 			.withType(REF) //
 			.build();
 	private Skill pilotVectorThrustVehicle = new Skill.SkillBuilder() //
-			.withSkillName("Pilot (Vector Thrust Vehicle)") //
+			.withSkillName("Pilot Vector Thrust Vehicle") //
 			.withDescription("In general, this is the skill of controlling aircraft. "
 					+ "Aircraft are broken into categories: Gyro and Rotorcraft, fixed "
 					+ "Wing Aircraft, Dirigibles and Vectored Thrust Aerodynes (AV-s). "
@@ -1017,11 +1050,11 @@ public class CharacterCreationModel {
 			.withType(REF) //
 			.build();
 	private Skill stealth = new Skill.SkillBuilder() //
-			.withSkillName("Stealth") //
+			.withSkillName("Stealth (2)") //
 			.withDescription("The skill of hiding in shadows, moving silently, evading guards, "
 					+ "etc. A Stealth Skill of+ 1 is about the level of a very sneaky 10 "
 					+ "year old stealing cookies. At +3, you are able to get past most "
-					+ "guards, or your parents if you`ve been grounded. At +6, you are "
+					+ "guards, or your parents if you've been grounded. At +6, you are "
 					+ "good enough to slip smoothly from shadow to shadow and not make any "
 					+ "noise. At +8, you are the equal of most Ninja warriors. At +10, you "
 					+ "move as silently as a shadow, making the Ninja sound like elephants.") //
@@ -1034,7 +1067,7 @@ public class CharacterCreationModel {
 			.withType(REF) //
 			.build();
 	private Skill aeroTech = new Skill.SkillBuilder() //
-			.withSkillName("Aero Tech") //
+			.withSkillName("Aero Tech (2)") //
 			.withDescription("The required skill for repairing fixed wing aircraft, including "
 					+ "Ospreys, jets, and light aircraft. With a Skill of +3, you can perform "
 					+ "most routine maintenance tasks. With a Skill of +6, you can do engine "
@@ -1043,7 +1076,7 @@ public class CharacterCreationModel {
 			.withType(TECH) //
 			.build();
 	private Skill avTech = new Skill.SkillBuilder() //
-			.withSkillName("AV Tech") //
+			.withSkillName("AV Tech (3)") //
 			.withDescription("The required skill for repairing all ducted fan aerodyne "
 					+ "vehicles. At +3, you can perform routine maintenance. At +6, you "
 					+ "can tear down engines and modify an AV. At+ I 0, you can design "
@@ -1051,7 +1084,7 @@ public class CharacterCreationModel {
 			.withType(TECH) //
 			.build();
 	private Skill basicTech = new Skill.SkillBuilder() //
-			.withSkillName("Basic Tech") //
+			.withSkillName("Basic Tech (2)") //
 			.withDescription("The required skills for building or repairing simple "
 					+ "mechanical and electrical devices, such as car engines, "
 					+ "television sets, etc. With a Basic Tech Skill of +3 or better, "
@@ -1073,7 +1106,7 @@ public class CharacterCreationModel {
 			.withType(TECH) //
 			.build();
 	private Skill cyberdeckDesign = new Skill.SkillBuilder() //
-			.withSkillName("Cyberdeck Design") //
+			.withSkillName("Cyberdeck Design (2)") //
 			.withDescription("The required skill for designing cyberdecks. At level +4, you "
 					+ "can modify an existing cyberdeck for greater speed or memory. At "
 					+ "level +6, you can design a deck equal to most existing designs. At +8, "
@@ -1081,7 +1114,7 @@ public class CharacterCreationModel {
 			.withType(TECH) //
 			.build();
 	private Skill cyberTech = new Skill.SkillBuilder() //
-			.withSkillName("CyberTech") //
+			.withSkillName("CyberTech (2)") //
 			.withDescription("The required skill for repairing and maintaining cyberwear. "
 					+ "At level +2, you can keep your cyberwear tuned up and can replace "
 					+ "its power batteries. At level +6, you can strip down most cyberwear "
@@ -1090,7 +1123,7 @@ public class CharacterCreationModel {
 			.withType(TECH) //
 			.build();
 	private Skill demolition = new Skill.SkillBuilder() //
-			.withSkillName("Demolition") //
+			.withSkillName("Demolition (2)") //
 			.withDescription("This skill allows the character to be knowledgeable in the "
 					+ "use of explosives, as well as knowing the best explosives to use "
 					+ "for which jobs, how to set timers and detonators, and how much "
@@ -1106,7 +1139,7 @@ public class CharacterCreationModel {
 			.withType(TECH) //
 			.build();
 	private Skill electronics = new Skill.SkillBuilder() //
-			.withSkillName("Electronics") //
+			.withSkillName("Electronics (2)") //
 			.withDescription("The required skill for maintaining, repairing and modifying "
 					+ "electronic instruments such as computers, personal electronics "
 					+ "hardware, electronic security systems, cameras and monitors.") //
@@ -1144,7 +1177,7 @@ public class CharacterCreationModel {
 			.withType(TECH) //
 			.build();
 	private Skill gyroTech = new Skill.SkillBuilder() //
-			.withSkillName("Gyro Tech") //
+			.withSkillName("Gyro Tech (3)") //
 			.withDescription("The skill of repairing and maintaining rotorwing aircraft "
 					+ "such as helicopters and gyrocopters.") //
 			.withType(TECH) //
@@ -1170,7 +1203,7 @@ public class CharacterCreationModel {
 			.withType(TECH) //
 			.build();
 	private Skill pharmacuticals = new Skill.SkillBuilder() //
-			.withSkillName("Pharmacuticals") //
+			.withSkillName("Pharmacuticals (2)") //
 			.withDescription("The skill of designing and manufacturing drugs and medicines. "
 					+ "A minimum Chemistry skill of +4 is required. At +4, you can make "
 					+ "asprin. At +6, you can make hallucinogenics or antibiotics. At level "
@@ -1204,7 +1237,7 @@ public class CharacterCreationModel {
 			.withType(TECH) //
 			.build();
 	private Skill weaponsmith = new Skill.SkillBuilder() //
-			.withSkillName("Weaponsmith") //
+			.withSkillName("Weaponsmith (2)") //
 			.withDescription("The required skill for repairing and maintaining weapons of "
 					+ "all types. At level +2, you can do repairs and field stripping. At "
 					+ "level +6, you can repair all types of weapons and make simple "
@@ -1498,6 +1531,1921 @@ public class CharacterCreationModel {
 			.addCareerSkill(aeroTech, electronicSecurity, gyroTech, weaponsmith) //
 			.build();
 
+	private Weapon budgetArmsC13 = new Weapon.WeaponBuilder() //
+			.withName("BudgetArms C-13") //
+			.withType("P") //
+			.withCategory("LP") //
+			.withAccuracy(-1) //
+			.withConcealability("P") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("1D6 (5mm)") //
+			.withNumberOfShots(8) //
+			.withRateOfFire(2) //
+			.withReliability("ST") //
+			.withRange("50m") //
+			.withWeight(0.5) //
+			.withCost(75) //
+			.build();
+	private Weapon daiLungCybermag15 = new Weapon.WeaponBuilder() //
+			.withName("Dai Lung Cybermag") //
+			.withType("P") //
+			.withCategory("LP") //
+			.withAccuracy(-1) //
+			.withConcealability("P") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("1D6+1 (6mm)") //
+			.withNumberOfShots(10) //
+			.withRateOfFire(2) //
+			.withReliability("UR") //
+			.withRange("50m") //
+			.withWeight(0.5) //
+			.withCost(50) //
+			.build();
+	private Weapon federatedArmsX22 = new Weapon.WeaponBuilder() //
+			.withName("Federated Arms X-22") //
+			.withType("P") //
+			.withCategory("LP") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("1D6+1 (6mm)") //
+			.withNumberOfShots(10) //
+			.withRateOfFire(2) //
+			.withReliability("ST") //
+			.withWeight(0.5) //
+			.withRange("50m") //
+			.withCost(150) //
+			.build();
+	private Weapon militechArmsAvenger = new Weapon.WeaponBuilder() //
+			.withName("Militech Arms Avenger") //
+			.withType("P") //
+			.withCategory("MP") //
+			.withAccuracy(0) //
+			.withConcealability("J") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("2D6+1 (9mm)") //
+			.withNumberOfShots(10) //
+			.withRateOfFire(2) //
+			.withReliability("VR") //
+			.withRange("50m") //
+			.withWeight(1) //
+			.withCost(250) //
+			.build();
+	private Weapon daiLungStreetmaster = new Weapon.WeaponBuilder() //
+			.withName("Dai Lung Streetmaster") //
+			.withType("P") //
+			.withCategory("MP") //
+			.withAccuracy(0) //
+			.withConcealability("J") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("2D6+3 (10mm)") //
+			.withNumberOfShots(12) //
+			.withRateOfFire(2) //
+			.withReliability("UR") //
+			.withRange("50m") //
+			.withWeight(1) //
+			.withCost(250) //
+			.build();
+	private Weapon federatedArmsX9mm = new Weapon.WeaponBuilder() //
+			.withName("Federated Arms X-9mm") //
+			.withType("P") //
+			.withCategory("MP") //
+			.withAccuracy(0) //
+			.withConcealability("J") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("2D6+1 (9mm)") //
+			.withNumberOfShots(12) //
+			.withRateOfFire(2) //
+			.withReliability("ST") //
+			.withRange("50m") //
+			.withWeight(1) //
+			.withCost(300) //
+			.build();
+	private Weapon budgetArmsAuto3 = new Weapon.WeaponBuilder() //
+			.withName("Budget Arms Auto 3") //
+			.withType("P") //
+			.withCategory("HP") //
+			.withAccuracy(-1) //
+			.withConcealability("J") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("3D6 (11mm)") //
+			.withNumberOfShots(8) //
+			.withRateOfFire(2) //
+			.withReliability("UR") //
+			.withRange("50m") //
+			.withWeight(1) //
+			.withCost(350) //
+			.build();
+	private Weapon sternmeyerType35 = new Weapon.WeaponBuilder() //
+			.withName("Sternmeyer Type 35") //
+			.withType("P") //
+			.withCategory("HP") //
+			.withAccuracy(0) //
+			.withConcealability("J") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("3D6 (11mm)") //
+			.withNumberOfShots(8) //
+			.withRateOfFire(2) //
+			.withReliability("VR") //
+			.withRange("50m") //
+			.withWeight(1) //
+			.withCost(400) //
+			.build();
+	private Weapon armalite44 = new Weapon.WeaponBuilder() //
+			.withName("Armalite 44") //
+			.withType("P") //
+			.withCategory("VHP") //
+			.withAccuracy(0) //
+			.withConcealability("J") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("4D6+1 (12mm)") //
+			.withNumberOfShots(8) //
+			.withRateOfFire(1) //
+			.withReliability("ST") //
+			.withRange("50m") //
+			.withWeight(3) //
+			.withCost(450) //
+			.build();
+	private Weapon coltAmtModel2000 = new Weapon.WeaponBuilder() //
+			.withName("Colt AMT Model 2000") //
+			.withType("P") //
+			.withCategory("VHP") //
+			.withAccuracy(0) //
+			.withConcealability("J") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("4D6+1 (12mm)") //
+			.withNumberOfShots(8) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("50m") //
+			.withWeight(3) //
+			.withCost(500) //
+			.build();
+	private Weapon uziMiniauto9 = new Weapon.WeaponBuilder() //
+			.withName("Uzi Miniauto 9") //
+			.withType("SMG") //
+			.withCategory("LSMG") //
+			.withAccuracy(1) //
+			.withConcealability("J") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("2D6+1 (9mm)") //
+			.withNumberOfShots(30) //
+			.withRateOfFire(35) //
+			.withReliability("VR") //
+			.withRange("150m") //
+			.withWeight(3) //
+			.withCost(475) //
+			.build();
+	private Weapon hkMp2013 = new Weapon.WeaponBuilder() //
+			.withName("H&K MP-2013") //
+			.withType("SMG") //
+			.withCategory("LSMG") //
+			.withAccuracy(1) //
+			.withConcealability("J") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("2D6+3 (10mm)") //
+			.withNumberOfShots(35) //
+			.withRateOfFire(32) //
+			.withReliability("ST") //
+			.withRange("150m") //
+			.withWeight(3) //
+			.withCost(450) //
+			.build();
+	private Weapon fedArmsTechAssaultII = new Weapon.WeaponBuilder() //
+			.withName("Federated Arms Tech Assault II") //
+			.withType("SMG") //
+			.withCategory("LSMG") //
+			.withAccuracy(1) //
+			.withConcealability("J") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("1D6+1 (6mm)") //
+			.withNumberOfShots(50) //
+			.withRateOfFire(25) //
+			.withReliability("ST") //
+			.withRange("150m") //
+			.withWeight(3) //
+			.withCost(400) //
+			.build();
+	private Weapon arasakaMinami10 = new Weapon.WeaponBuilder() //
+			.withName("Arasaka Minami 10") //
+			.withType("SMG") //
+			.withCategory("MSMG") //
+			.withAccuracy(0) //
+			.withConcealability("J") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("2D6+3 (10mm)") //
+			.withNumberOfShots(40) //
+			.withRateOfFire(20) //
+			.withReliability("VR") //
+			.withRange("200m") //
+			.withWeight(3) //
+			.withCost(500) //
+			.build();
+	private Weapon hkMpk9 = new Weapon.WeaponBuilder() //
+			.withName("H&K MPK-9") //
+			.withType("SMG") //
+			.withCategory("MSMG") //
+			.withAccuracy(1) //
+			.withConcealability("J") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("2D6+1 (9mm)") //
+			.withNumberOfShots(35) //
+			.withRateOfFire(25) //
+			.withReliability("ST") //
+			.withRange("200m") //
+			.withWeight(3) //
+			.withCost(520) //
+			.build();
+	private Weapon sternmeyerSmg21 = new Weapon.WeaponBuilder() //
+			.withName("Sternmeyer SMG 21") //
+			.withType("SMG") //
+			.withCategory("HSMG") //
+			.withAccuracy(-1) //
+			.withConcealability("L") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("3D6 (11mm)") //
+			.withNumberOfShots(30) //
+			.withRateOfFire(15) //
+			.withReliability("VR") //
+			.withRange("200m") //
+			.withWeight(3) //
+			.withCost(500) //
+			.build();
+	private Weapon hkMpk11 = new Weapon.WeaponBuilder() //
+			.withName("H&K MPK-11") //
+			.withType("SMG") //
+			.withCategory("HSMG") //
+			.withAccuracy(0) //
+			.withConcealability("L") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("3D6 (11mm)") //
+			.withNumberOfShots(30) //
+			.withRateOfFire(15) //
+			.withReliability("ST") //
+			.withRange("200m") //
+			.withWeight(3) //
+			.withCost(700) //
+			.build();
+	private Weapon ingramMac14 = new Weapon.WeaponBuilder() //
+			.withName("Ingram MAC 14") //
+			.withType("SMG") //
+			.withCategory("HSMG") //
+			.withAccuracy(-2) //
+			.withConcealability("L") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("4D6+1 (12mm)") //
+			.withNumberOfShots(20) //
+			.withRateOfFire(10) //
+			.withReliability("ST") //
+			.withRange("200m") //
+			.withWeight(3) //
+			.withCost(650) //
+			.build();
+	private Weapon militechRoninLightAssault = new Weapon.WeaponBuilder() //
+			.withName("Militech Ronin Light Assault") //
+			.withType("RIF") //
+			.withCategory("RIF") //
+			.withAccuracy(1) //
+			.withConcealability("N") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("5D6 (5.56)") //
+			.withNumberOfShots(35) //
+			.withRateOfFire(30) //
+			.withReliability("VR") //
+			.withRange("400m") //
+			.withWeight(4) //
+			.withCost(450) //
+			.build();
+	private Weapon akr20MediumAssault = new Weapon.WeaponBuilder() //
+			.withName("AKR-20 Medium Assault") //
+			.withType("RIF") //
+			.withCategory("RIF") //
+			.withAccuracy(0) //
+			.withConcealability("N") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("5D6 (5.56)") //
+			.withNumberOfShots(30) //
+			.withRateOfFire(30) //
+			.withReliability("ST") //
+			.withRange("400m") //
+			.withWeight(4) //
+			.withCost(500) //
+			.build();
+	private Weapon fnRalHeavyAssaultRifle = new Weapon.WeaponBuilder() //
+			.withName("FN-RAL Heavy Assault Rifle") //
+			.withType("RIF") //
+			.withCategory("RIF") //
+			.withAccuracy(-1) //
+			.withConcealability("N") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("6D6+2 (7.62)") //
+			.withNumberOfShots(30) //
+			.withRateOfFire(30) //
+			.withReliability("VR") //
+			.withRange("400m") //
+			.withWeight(4) //
+			.withCost(600) //
+			.build();
+	private Weapon kalishnikovA80HeavyRifle = new Weapon.WeaponBuilder() //
+			.withName("Kalishnikov A-80 Heavy Rifle") //
+			.withType("RIF") //
+			.withCategory("RIF") //
+			.withAccuracy(-1) //
+			.withConcealability("N") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("6D6+2 (7.62)") //
+			.withNumberOfShots(35) //
+			.withRateOfFire(25) //
+			.withReliability("ST") //
+			.withRange("400m") //
+			.withWeight(4) //
+			.withCost(550) //
+			.build();
+	private Weapon arasakaRapidAssault12 = new Weapon.WeaponBuilder() //
+			.withName("Arasaka Rapid Assault 12") //
+			.withType("SHG") //
+			.withCategory("SHG") //
+			.withAccuracy(-1) //
+			.withConcealability("N") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("4D6 (00)") //
+			.withNumberOfShots(20) //
+			.withRateOfFire(10) //
+			.withReliability("ST") //
+			.withRange("50m") //
+			.withWeight(3) //
+			.withCost(900) //
+			.build();
+	private Weapon sternmeyerStakeout10 = new Weapon.WeaponBuilder() //
+			.withName("Sternmeyer Stakeout 10") //
+			.withType("SHG") //
+			.withCategory("SHG") //
+			.withAccuracy(-2) //
+			.withConcealability("N") //
+			.withAvailability("R") //
+			.withDamageAndAmmo("4D6 (00)") //
+			.withNumberOfShots(10) //
+			.withRateOfFire(2) //
+			.withReliability("ST") //
+			.withRange("50m") //
+			.withWeight(3) //
+			.withCost(450) //
+			.build();
+	private Weapon barrettArasakaLight20mm = new Weapon.WeaponBuilder() //
+			.withName("Barrett-Arasaka Light 20mm") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("N") //
+			.withAvailability("R") //
+			.withDamageAndAmmo("4D10AP (20mm)") //
+			.withNumberOfShots(10) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("450m") //
+			.withCost(2000) //
+			.build();
+	private Weapon scorpion16MissileLauncher = new Weapon.WeaponBuilder() //
+			.withName("Scorpion 16 Missile Launcher") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(-1) //
+			.withConcealability("N") //
+			.withAvailability("R") //
+			.withDamageAndAmmo("7D10") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("1000m") //
+			.withCost(3000) //
+			.build();
+	private Weapon militechArmsRpgA = new Weapon.WeaponBuilder() //
+			.withName("Militech Arms RPG-A") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(-2) //
+			.withConcealability("N") //
+			.withAvailability("R") //
+			.withDamageAndAmmo("6D10") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("750m") //
+			.withCost(1500) //
+			.build();
+	private Weapon fragmentationGrenade = new Weapon.WeaponBuilder() //
+			.withName("Fragmentation Grenade") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("7D6") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("Throw") //
+			.withCost(30) //
+			.build();
+	private Weapon incendiaryGrenade = new Weapon.WeaponBuilder() //
+			.withName("Incendiary Grenade") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("4D6 for 3 turns") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("Throw") //
+			.withCost(30) //
+			.build();
+	private Weapon stunGrenade = new Weapon.WeaponBuilder() //
+			.withName("Stun Grenade") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("-5 to Stun") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("Throw") //
+			.withCost(30) //
+			.build();
+	private Weapon dazzleGrenade = new Weapon.WeaponBuilder() //
+			.withName("Dazzle Grenade") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("Blind for 4 turns") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("Throw") //
+			.withCost(30) //
+			.build();
+	private Weapon sonicGrenade = new Weapon.WeaponBuilder() //
+			.withName("Sonic Grenade") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("Deafened for 4 turns") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("Throw") //
+			.withCost(30) //
+			.build();
+	private Weapon nauseaGasGrenade = new Weapon.WeaponBuilder() //
+			.withName("Nausea Gas Grenade") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("-4 REF") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("Throw") //
+			.withCost(30) //
+			.build();
+	private Weapon teargasGrenade = new Weapon.WeaponBuilder() //
+			.withName("Teargas Grenade") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("-2 REF") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("Throw") //
+			.withCost(30) //
+			.build();
+	private Weapon sleepDrugGrenade = new Weapon.WeaponBuilder() //
+			.withName("Sleep Drug Grenade") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("Sleep / -2 to all stats") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("Throw") //
+			.withCost(30) //
+			.build();
+	private Weapon biotoxin1Grenade = new Weapon.WeaponBuilder() //
+			.withName("Biotoxin 1 Grenade") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("4D6") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("Throw") //
+			.withCost(30) //
+			.build();
+	private Weapon biotoxinIIGrenade = new Weapon.WeaponBuilder() //
+			.withName("Biotoxin II Grenade") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("8D6") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("Throw") //
+			.withCost(30) //
+			.build();
+	private Weapon nerveGasGrenade = new Weapon.WeaponBuilder() //
+			.withName("Nerve Gas Grenade") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("8D10") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("Throw") //
+			.withCost(30) //
+			.build();
+	private Weapon plastiqueExplosive = new Weapon.WeaponBuilder() //
+			.withName("Plastique Explosive") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("7D10 per kg.") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("4m") //
+			.withCost(100) //
+			.build();
+	private Weapon c6PlasticExplosive = new Weapon.WeaponBuilder() //
+			.withName("C-6 Plastic Explosive") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("8D10 per kg.") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("5m") //
+			.withCost(100) //
+			.build();
+	private Weapon tnt = new Weapon.WeaponBuilder() //
+			.withName("TNT") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("4D10 per stick") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("3m") //
+			.withCost(100) //
+			.build();
+	private Weapon molotovCocktail = new Weapon.WeaponBuilder() //
+			.withName("Molotov Cocktail") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("2D10") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("2m") //
+			.withCost(100) //
+			.build();
+	private Weapon landMine = new Weapon.WeaponBuilder() //
+			.withName("Land Mine") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("J") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("4D10") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("NA") //
+			.withCost(350) //
+			.build();
+	private Weapon claymore = new Weapon.WeaponBuilder() //
+			.withName("Claymore") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(0) //
+			.withConcealability("J") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("4D10") //
+			.withNumberOfShots(1) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("NA") //
+			.withCost(350) //
+			.build();
+	private Weapon kaF253Flamethrower = new Weapon.WeaponBuilder() //
+			.withName("K-A F-253 Flamethrower") //
+			.withType("HVY") //
+			.withCategory("HVY") //
+			.withAccuracy(-2) //
+			.withConcealability("N") //
+			.withAvailability("R") //
+			.withDamageAndAmmo("2D10+") //
+			.withNumberOfShots(10) //
+			.withRateOfFire(1) //
+			.withReliability("ST") //
+			.withRange("50m") //
+			.withCost(1500) //
+			.build();
+	private Weapon techtronica15Microwaver = new Weapon.WeaponBuilder() //
+			.withName("Techtronica 15 Microwaver") //
+			.withType("P") //
+			.withAccuracy(0) //
+			.withConcealability("J") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("1D6") //
+			.withNumberOfShots(10) //
+			.withRateOfFire(2) //
+			.withReliability("VR") //
+			.withRange("20m") //
+			.withCost(400) //
+			.build();
+	private Weapon militechElectricLaserCannon = new Weapon.WeaponBuilder() //
+			.withName("Militech Electrics Laser Cannon") //
+			.withType("RIF") //
+			.withAccuracy(0) //
+			.withConcealability("N") //
+			.withAvailability("R") //
+			.withDamageAndAmmo("1-5D6") //
+			.withNumberOfShots(10) //
+			.withRateOfFire(2) //
+			.withReliability("UR") //
+			.withRange("200m") //
+			.withWeight(4) //
+			.withCost(8000) //
+			.build();
+	private Weapon avanteP1135Needlegun = new Weapon.WeaponBuilder() //
+			.withName("Avante P-1135 Needlegun") //
+			.withType("P") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("Drugs") //
+			.withNumberOfShots(15) //
+			.withRateOfFire(2) //
+			.withReliability("ST") //
+			.withRange("40m") //
+			.withCost(200) //
+			.build();
+	private Weapon enertexAkmPowerSquirt = new Weapon.WeaponBuilder() //
+			.withName("Enertex AKM Power Squirt") //
+			.withType("P") //
+			.withAccuracy(-2) //
+			.withConcealability("J") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("Drugs") //
+			.withNumberOfShots(50) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("10m") //
+			.withCost(15) //
+			.build();
+	private Weapon nelspotWombat = new Weapon.WeaponBuilder() //
+			.withName("Nelspot \"Wombat\"") //
+			.withType("P") //
+			.withAccuracy(-1) //
+			.withConcealability("J") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("Drugs") //
+			.withNumberOfShots(20) //
+			.withRateOfFire(2) //
+			.withReliability("UR") //
+			.withRange("40m") //
+			.withCost(200) //
+			.build();
+	private Weapon militechElectronicsTaser = new Weapon.WeaponBuilder() //
+			.withName("Militech Electronics Taser") //
+			.withType("P") //
+			.withAccuracy(-1) //
+			.withConcealability("J") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("Stun") //
+			.withNumberOfShots(10) //
+			.withRateOfFire(1) //
+			.withReliability("ST") //
+			.withRange("10m") //
+			.withCost(60) //
+			.build();
+	private Weapon eagleTechTomcatCBow = new Weapon.WeaponBuilder() //
+			.withName("EagleTech \"Tomcat\" C-Bow") //
+			.withType("EX") //
+			.withAccuracy(0) //
+			.withConcealability("N") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("4D6") //
+			.withNumberOfShots(12) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("150m") //
+			.withCost(150) //
+			.build();
+	private Weapon eagleTechStrykerXBow = new Weapon.WeaponBuilder() //
+			.withName("EagleTech \"Stryker\" X-Bow") //
+			.withType("EX") //
+			.withAccuracy(-1) //
+			.withConcealability("N") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("3D6+3") //
+			.withNumberOfShots(12) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("50m") //
+			.withCost(220) //
+			.build();
+	private Weapon kendachiMonoknife = new Weapon.WeaponBuilder() //
+			.withName("Kendachi Monoknife") //
+			.withType("Melee") //
+			.withCategory("Melee") //
+			.withAccuracy(1) //
+			.withConcealability("P") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("2D6") //
+			.withNumberOfShots(0) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("1m") //
+			.withWeight(0.5) //
+			.withCost(200) //
+			.build();
+	private Weapon kendachiMonoKatana = new Weapon.WeaponBuilder() //
+			.withName("Kendachi MonoKatana") //
+			.withType("Melee") //
+			.withCategory("Melee") //
+			.withAccuracy(1) //
+			.withConcealability("N") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("4D6") //
+			.withNumberOfShots(0) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("1m") //
+			.withWeight(1) //
+			.withCost(600) //
+			.build();
+	private Weapon spm1Battleglove = new Weapon.WeaponBuilder() //
+			.withName("SPM-1 Battleglove") //
+			.withType("Melee") //
+			.withCategory("Melee") //
+			.withAccuracy(-2) //
+			.withConcealability("N") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("3D6/2D6") //
+			.withNumberOfShots(0) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("1m") //
+			.withWeight(2) //
+			.withCost(900) //
+			.build();
+	private Weapon club = new Weapon.WeaponBuilder() //
+			.withName("Club") //
+			.withType("Melee") //
+			.withCategory("Melee") //
+			.withAccuracy(0) //
+			.withConcealability("L") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("1D6") //
+			.withNumberOfShots(0) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("1m") //
+			.withWeight(1) //
+			.withCost(20) //
+			.build();
+	private Weapon knife = new Weapon.WeaponBuilder() //
+			.withName("Knife") //
+			.withType("Melee") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("1D6") //
+			.withNumberOfShots(0) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("1m") //
+			.withWeight(0.5) //
+			.withCost(20) //
+			.build();
+	private Weapon sword = new Weapon.WeaponBuilder() //
+			.withName("Sword") //
+			.withType("Melee") //
+			.withCategory("Melee") //
+			.withAccuracy(0) //
+			.withConcealability("N") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("2D6+2") //
+			.withNumberOfShots(0) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("1m") //
+			.withWeight(1) //
+			.withCost(200) //
+			.build();
+	private Weapon axe = new Weapon.WeaponBuilder() //
+			.withName("Axe") //
+			.withType("Melee") //
+			.withCategory("Melee") //
+			.withAccuracy(-1) //
+			.withConcealability("N") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("2D6+3") //
+			.withNumberOfShots(0) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("1m") //
+			.withWeight(1) //
+			.withCost(20) //
+			.build();
+	private Weapon nunchaku = new Weapon.WeaponBuilder() //
+			.withName("Nunchaku") //
+			.withType("Melee") //
+			.withAccuracy(0) //
+			.withConcealability("L") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("3D6") //
+			.withNumberOfShots(0) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("1m") //
+			.withWeight(0.5) //
+			.withCost(15) //
+			.build();
+	private Weapon naginata = new Weapon.WeaponBuilder() //
+			.withName("Naginata") //
+			.withType("Melee") //
+			.withCategory("Melee") //
+			.withAccuracy(0) //
+			.withConcealability("N") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("3D6") //
+			.withNumberOfShots(0) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("2m") //
+			.withWeight(0.5) //
+			.withCost(100) //
+			.build();
+	private Weapon shiriken = new Weapon.WeaponBuilder() //
+			.withName("Shiriken") //
+			.withType("Melee") //
+			.withCategory("Melee") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("1D6/3") //
+			.withNumberOfShots(0) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("Throw") //
+			.withWeight(0.5) //
+			.withCost(3) //
+			.build();
+	private Weapon switchblade = new Weapon.WeaponBuilder() //
+			.withName("Switchblade") //
+			.withType("Melee") //
+			.withCategory("Melee") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("1D6/2") //
+			.withNumberOfShots(0) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("1m") //
+			.withWeight(0.5) //
+			.withCost(15) //
+			.build();
+	private Weapon brassKnuckles = new Weapon.WeaponBuilder() //
+			.withName("Brass Knuckles") //
+			.withType("Melee") //
+			.withCategory("Melee") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("1D6+2") //
+			.withNumberOfShots(0) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("1m") //
+			.withWeight(0.5) //
+			.withCost(10) //
+			.build();
+	private Weapon sledgehammer = new Weapon.WeaponBuilder() //
+			.withName("Sledgehammer") //
+			.withType("Melee") //
+			.withCategory("Melee") //
+			.withAccuracy(-1) //
+			.withConcealability("N") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("4D6") //
+			.withNumberOfShots(0) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("1m") //
+			.withWeight(4) //
+			.withCost(20) //
+			.build();
+	private Weapon chainsaw = new Weapon.WeaponBuilder() //
+			.withName("Chainsaw") //
+			.withType("Melee") //
+			.withCategory("Melee") //
+			.withAccuracy(-3) //
+			.withConcealability("N") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("4D6") //
+			.withNumberOfShots(0) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("2m") //
+			.withWeight(4) //
+			.withCost(80) //
+			.build();
+	private Weapon swCombatMagnum = new Weapon.WeaponBuilder() //
+			.withName("S&W Combat Magnum") //
+			.withType("P") //
+			.withCategory("HP") //
+			.withAccuracy(1) //
+			.withConcealability("J") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("2D6+3 (.357)") //
+			.withNumberOfShots(6) //
+			.withRateOfFire(2) //
+			.withReliability("VR") //
+			.withRange("50m") //
+			.withWeight(1) //
+			.withCost(500) //
+			.build();
+	private Weapon llamaCommanche = new Weapon.WeaponBuilder() //
+			.withName("Llama Commanche") //
+			.withType("P") //
+			.withCategory("HP") //
+			.withAccuracy(0) //
+			.withConcealability("J") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("4D6 (.44)") //
+			.withNumberOfShots(6) //
+			.withRateOfFire(1) //
+			.withReliability("ST") //
+			.withRange("50m") //
+			.withWeight(1) //
+			.withCost(400) //
+			.build();
+	private Weapon colt45Peacemaker = new Weapon.WeaponBuilder() //
+			.withName("Colt .45 \"Peacemaker\"") //
+			.withType("P") //
+			.withCategory("VHP") //
+			.withAccuracy(0) //
+			.withConcealability("J") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("2D6+2 (.45)") //
+			.withNumberOfShots(6) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("50m") //
+			.withWeight(3) //
+			.withCost(100) //
+			.build();
+	private Weapon colt38Detective = new Weapon.WeaponBuilder() //
+			.withName("Colt .38 \"Detective\"") //
+			.withType("P") //
+			.withCategory("LP") //
+			.withAccuracy(1) //
+			.withConcealability("J") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("1D6+2 (.38)") //
+			.withNumberOfShots(6) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("50m") //
+			.withWeight(0.5) //
+			.withCost(200) //
+			.build();
+	private Weapon cop357Derringer = new Weapon.WeaponBuilder() //
+			.withName("C.O.P. .357 Derringer") //
+			.withType("P") //
+			.withCategory("HP") //
+			.withAccuracy(0) //
+			.withConcealability("P") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("2D6+3 (.357)") //
+			.withNumberOfShots(4) //
+			.withRateOfFire(2) //
+			.withReliability("VR") //
+			.withRange("50m") //
+			.withWeight(1) //
+			.withCost(250) //
+			.build();
+	private Weapon uzi = new Weapon.WeaponBuilder() //
+			.withName("UZI") //
+			.withType("SMG") //
+			.withCategory("MSMG") //
+			.withAccuracy(2) //
+			.withConcealability("J") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("2D6+1 (9mm)") //
+			.withNumberOfShots(30) //
+			.withRateOfFire(20) //
+			.withReliability("VR") //
+			.withRange("200m") //
+			.withWeight(3) //
+			.withCost(250) //
+			.build();
+	private Weapon vz61Skorpion = new Weapon.WeaponBuilder() //
+			.withName("Vz61 Skorpion") //
+			.withType("SMG") //
+			.withCategory("LSMG") //
+			.withAccuracy(2) //
+			.withConcealability("J") //
+			.withAvailability("P") //
+			.withDamageAndAmmo("1D6 (.25)") //
+			.withNumberOfShots(20) //
+			.withRateOfFire(25) //
+			.withReliability("VR") //
+			.withRange("150m") //
+			.withWeight(3) //
+			.withCost(150) //
+			.build();
+	private Weapon ingramMac10 = new Weapon.WeaponBuilder() //
+			.withName("Ingram MAC 10") //
+			.withType("SMG") //
+			.withCategory("MSMG") //
+			.withAccuracy(-1) //
+			.withConcealability("J") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("2D6+2 (.45)") //
+			.withNumberOfShots(30) //
+			.withRateOfFire(5) //
+			.withReliability("UR") //
+			.withRange("200m") //
+			.withWeight(3) //
+			.withCost(225) //
+			.build();
+	private Weapon hkMp5 = new Weapon.WeaponBuilder() //
+			.withName("H&K MP5") //
+			.withType("SMG") //
+			.withCategory("MSMG") //
+			.withAccuracy(1) //
+			.withConcealability("L") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("2D6+1 (9mm)") //
+			.withNumberOfShots(30) //
+			.withRateOfFire(20) //
+			.withReliability("VR") //
+			.withRange("100m") //
+			.withWeight(3) //
+			.withCost(320) //
+			.build();
+	private Weapon thompsonM1 = new Weapon.WeaponBuilder() //
+			.withName("Thompson M1") //
+			.withType("SMG") //
+			.withCategory("MSMG") //
+			.withAccuracy(2) //
+			.withConcealability("N") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("2D6+2 (.45)") //
+			.withNumberOfShots(30) //
+			.withRateOfFire(20) //
+			.withReliability("VR") //
+			.withRange("200m") //
+			.withWeight(3) //
+			.withCost(300) //
+			.build();
+	private Weapon bushmaster = new Weapon.WeaponBuilder() //
+			.withName("Bushmaster") //
+			.withType("SMG") //
+			.withCategory("HSMG") //
+			.withAccuracy(0) //
+			.withConcealability("N") //
+			.withAvailability("R") //
+			.withDamageAndAmmo("4D6 (5.56)") //
+			.withNumberOfShots(30) //
+			.withRateOfFire(20) //
+			.withReliability("ST") //
+			.withRange("200m") //
+			.withWeight(3) //
+			.withCost(300) //
+			.build();
+	private Weapon fnFal = new Weapon.WeaponBuilder() //
+			.withName("FN-FAL") //
+			.withType("RIF") //
+			.withCategory("RIF") //
+			.withAccuracy(0) //
+			.withConcealability("N") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("6D6+2 (7.56)") //
+			.withNumberOfShots(20) //
+			.withRateOfFire(21) //
+			.withReliability("VR") //
+			.withRange("400m") //
+			.withWeight(4) //
+			.withCost(450) //
+			.build();
+	private Weapon ak47 = new Weapon.WeaponBuilder() //
+			.withName("AK 47") //
+			.withType("RIF") //
+			.withCategory("RIF") //
+			.withAccuracy(0) //
+			.withConcealability("N") //
+			.withAvailability("E") //
+			.withDamageAndAmmo("5D6 (7.565)") //
+			.withNumberOfShots(30) //
+			.withRateOfFire(20) //
+			.withReliability("VR") //
+			.withRange("400m") //
+			.withWeight(4) //
+			.withCost(200) //
+			.build();
+	private Weapon m16A = new Weapon.WeaponBuilder() //
+			.withName("M-16A") //
+			.withType("RIF") //
+			.withCategory("RIF") //
+			.withAccuracy(2) //
+			.withConcealability("N") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("4D6 (5.56)") //
+			.withNumberOfShots(30) //
+			.withRateOfFire(25) //
+			.withReliability("UR") //
+			.withRange("400m") //
+			.withWeight(4) //
+			.withCost(200) //
+			.build();
+	private Weapon styerAug = new Weapon.WeaponBuilder() //
+			.withName("Styer AUG") //
+			.withType("RIF") //
+			.withCategory("RIF") //
+			.withAccuracy(2) //
+			.withConcealability("N") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("4D6 (5.56)") //
+			.withNumberOfShots(30) //
+			.withRateOfFire(20) //
+			.withReliability("VR") //
+			.withRange("400m") //
+			.withWeight(4) //
+			.withCost(400) //
+			.build();
+	private Weapon winchesterM70 = new Weapon.WeaponBuilder() //
+			.withName("Winchester M70") //
+			.withType("RIF") //
+			.withCategory("RIF") //
+			.withAccuracy(3) //
+			.withConcealability("N") //
+			.withAvailability("C") //
+			.withDamageAndAmmo("5D6+1 (30-06)") //
+			.withNumberOfShots(5) //
+			.withRateOfFire(1) //
+			.withReliability("VR") //
+			.withRange("500m") //
+			.withWeight(4) //
+			.withCost(250) //
+			.build();
+	private Weapon caws = new Weapon.WeaponBuilder() //
+			.withName("CAWS") //
+			.withType("SHG") //
+			.withCategory("SHG") //
+			.withAccuracy(0) //
+			.withConcealability("N") //
+			.withAvailability("R") //
+			.withDamageAndAmmo("4D6 (00)") //
+			.withNumberOfShots(10) //
+			.withRateOfFire(10) //
+			.withReliability("ST") //
+			.withRange("50m") //
+			.withWeight(3) //
+			.withCost(500) //
+			.build();
+
+	private Gear techscanner = new Gear.GearBuilder() //
+			.withType("Techscanner") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(600) //
+			.build();
+	private Gear cuttingTorch = new Gear.GearBuilder() //
+			.withType("Cutting Torch") //
+			.withQuantitiy(0) //
+			.withWeight(1) //
+			.withCost(40) //
+			.build();
+	private Gear techToolKit = new Gear.GearBuilder() //
+			.withType("Tech Toolkit") //
+			.withQuantitiy(0) //
+			.withWeight(1) //
+			.withCost(100) //
+			.build();
+	private Gear electronicsToolKit = new Gear.GearBuilder() //
+			.withType("Electronics Toolkit") //
+			.withQuantitiy(0) //
+			.withWeight(1) //
+			.withCost(100) //
+			.build();
+	private Gear protectiveGoggles = new Gear.GearBuilder() //
+			.withType("Protective Goggles") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(20) //
+			.build();
+	private Gear pocketFlashlight = new Gear.GearBuilder() //
+			.withType("Pocket Flashlight (25-30ft)") //
+			.withQuantitiy(0) //
+			.withWeight(0) //
+			.withCost(1) //
+			.build();
+	private Gear flashlight = new Gear.GearBuilder() //
+			.withType("Flashlight (100-120ft)") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(2) //
+			.build();
+	private Gear glowstik = new Gear.GearBuilder() //
+			.withType("Glowstik") //
+			.withQuantitiy(0) //
+			.withWeight(0) //
+			.withCost(1) //
+			.build();
+	private Gear flashPaint = new Gear.GearBuilder() //
+			.withType("Flash Paint (1 pt)") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(10) //
+			.build();
+	private Gear flashTape = new Gear.GearBuilder() //
+			.withType("Flash Tape (1 ft)") //
+			.withQuantitiy(0) //
+			.withWeight(0) //
+			.withCost(10) //
+			.build();
+	private Gear rope = new Gear.GearBuilder() //
+			.withType("Rope (1ft)") //
+			.withQuantitiy(0) //
+			.withWeight(0) //
+			.withCost(2) //
+			.build();
+	private Gear breathingMask = new Gear.GearBuilder() //
+			.withType("Breathing Mask") //
+			.withQuantitiy(0) //
+			.withWeight(1) //
+			.withCost(30) //
+			.build();
+	private Gear breathingMaskFilter = new Gear.GearBuilder() //
+			.withType("Breathing Mask Filter (10)") //
+			.withQuantitiy(0) //
+			.withWeight(0) //
+			.withCost(1) //
+			.build();
+	private Gear holoGenerator = new Gear.GearBuilder() //
+			.withType("Holo Generator") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(500) //
+			.build();
+	private Gear videoBoard = new Gear.GearBuilder() //
+			.withType("Video Board (1 sq ft)") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(100) //
+			.build();
+	private Gear dataChip = new Gear.GearBuilder() //
+			.withType("Data Chip") //
+			.withQuantitiy(0) //
+			.withWeight(0) //
+			.withCost(10) //
+			.build();
+	private Gear logcompass = new Gear.GearBuilder() //
+			.withType("Logcompass") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(50) //
+			.build();
+	private Gear digitalRecorder = new Gear.GearBuilder() //
+			.withType("Digital Recorder") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(300) //
+			.build();
+	private Gear digitalCamera = new Gear.GearBuilder() //
+			.withType("Digital Camera") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(150) //
+			.build();
+	private Gear videoCam = new Gear.GearBuilder() //
+			.withType("VideoCam") //
+			.withQuantitiy(0) //
+			.withWeight(1) //
+			.withCost(800) //
+			.build();
+	private Gear videoAudioTapePlayer = new Gear.GearBuilder() //
+			.withType("Video/Audio Tape Player") //
+			.withQuantitiy(0) //
+			.withWeight(1) //
+			.withCost(40) //
+			.build();
+	private Gear videoTape = new Gear.GearBuilder() //
+			.withType("VideoTape") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(4) //
+			.build();
+	private Gear pocketTV = new Gear.GearBuilder() //
+			.withType("Pocket TV") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(80) //
+			.build();
+	private Gear digitalChipPlayer = new Gear.GearBuilder() //
+			.withType("Digital Chip Player") //
+			.withQuantitiy(0) //
+			.withWeight(1) //
+			.withCost(150) //
+			.build();
+	private Gear digitalMusicChip = new Gear.GearBuilder() //
+			.withType("Digital Music Chip") //
+			.withQuantitiy(0) //
+			.withWeight(0) //
+			.withCost(20) //
+			.build();
+	private Gear electricGuitar = new Gear.GearBuilder() //
+			.withType("Electric Guitar") //
+			.withQuantitiy(0) //
+			.withWeight(3) //
+			.withCost(300) //
+			.build();
+	private Gear electronicKeyboard = new Gear.GearBuilder() //
+			.withType("Electronic Keyboard") //
+			.withQuantitiy(0) //
+			.withWeight(4) //
+			.withCost(550) //
+			.build();
+	private Gear drumSynthesizer = new Gear.GearBuilder() //
+			.withType("Drum Synthesizer") //
+			.withQuantitiy(0) //
+			.withWeight(3) //
+			.withCost(500) //
+			.build();
+	private Gear amplifier = new Gear.GearBuilder() //
+			.withType("Amplifier") //
+			.withQuantitiy(0) //
+			.withWeight(4) //
+			.withCost(750) //
+			.build();
+	private Gear mastoidCommo = new Gear.GearBuilder() //
+			.withType("Mastoid Commo") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(100) //
+			.build();
+	private Gear pocketCommo = new Gear.GearBuilder() //
+			.withType("Pocket Commo") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(50) //
+			.build();
+	private Gear cellularPhone = new Gear.GearBuilder() //
+			.withType("Cellular Phone") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(400) //
+			.build();
+	private Gear miniCellPhone = new Gear.GearBuilder() //
+			.withType("Mini Cell Phone") //
+			.withQuantitiy(0) //
+			.withWeight(0) //
+			.withCost(800) //
+			.build();
+	private Gear binoglasses = new Gear.GearBuilder() //
+			.withType("Binoglasses") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(200) //
+			.build();
+	private Gear binoculars = new Gear.GearBuilder() //
+			.withType("Binoculars") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(20) //
+			.build();
+	private Gear lightBoosterGoggles = new Gear.GearBuilder() //
+			.withType("Light Booster Goggles") //
+			.withQuantitiy(200) //
+			.withWeight(0.5) //
+			.withCost(200) //
+			.build();
+	private Gear irGoggles = new Gear.GearBuilder() //
+			.withType("IR Goggles") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(250) //
+			.build();
+	private Gear irFlash = new Gear.GearBuilder() //
+			.withType("IR Flash") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(50) //
+			.build();
+	private Gear dermalStapler = new Gear.GearBuilder() //
+			.withType("Dermal Stapler") //
+			.withQuantitiy(0) //
+			.withWeight(1) //
+			.withCost(1000) //
+			.build();
+	private Gear spraySkin = new Gear.GearBuilder() //
+			.withType("Spray Skin (1 can)") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(50) //
+			.build();
+	private Gear medkit = new Gear.GearBuilder() //
+			.withType("Medkit") //
+			.withQuantitiy(0) //
+			.withWeight(1) //
+			.withCost(50) //
+			.build();
+	private Gear surgicalKit = new Gear.GearBuilder() //
+			.withType("Surgical Kit") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(400) //
+			.build();
+	private Gear firstAidKit = new Gear.GearBuilder() //
+			.withType("First Aid Kit") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(10) //
+			.build();
+	private Gear medscanner = new Gear.GearBuilder() //
+			.withType("Medscanner") //
+			.withQuantitiy(0) //
+			.withWeight(1) //
+			.withCost(300) //
+			.build();
+	private Gear drugAnalyser = new Gear.GearBuilder() //
+			.withType("Drug Analyser") //
+			.withQuantitiy(0) //
+			.withWeight(1) //
+			.withCost(75) //
+			.build();
+	private Gear airhypo = new Gear.GearBuilder() //
+			.withType("Airhypo") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(100) //
+			.build();
+	private Gear nylonCarrybag = new Gear.GearBuilder() //
+			.withType("Nylon Carrybag") //
+			.withQuantitiy(0) //
+			.withWeight(0.5) //
+			.withCost(5) //
+			.build();
+	private Gear sleepingBag = new Gear.GearBuilder() //
+			.withType("Sleeping Bag") //
+			.withQuantitiy(0) //
+			.withWeight(1) //
+			.withCost(25) //
+			.build();
+	private Gear inflatableBed = new Gear.GearBuilder() //
+			.withType("Inflatable Bed") //
+			.withQuantitiy(0) //
+			.withWeight(3) //
+			.withCost(25) //
+			.build();
+
+	private Armor cloth = new Armor.ArmorBuilder() //
+			.withType("Cloth") //
+			.withArmorClass("Soft Armor") //
+			.thatCovers("Arms, Torso") //
+			.withStoppingPower(0) //
+			.withEncumbranceValue(0) //
+			.withWeight(0.5) //
+			.withCost(15) //
+			.build();
+	private Armor heavyLeatherJacket = new Armor.ArmorBuilder() //
+			.withType("Heavy Leather Jacket") //
+			.withArmorClass("Soft Armor") //
+			.thatCovers("Arms, Torso") //
+			.withStoppingPower(4) //
+			.withEncumbranceValue(0) //
+			.withWeight(0.5) //
+			.withCost(50) //
+			.build();
+	private Armor heavyLeatherPants = new Armor.ArmorBuilder() //
+			.withType("Heavy Leather Pants") //
+			.withArmorClass("Soft Armor") //
+			.thatCovers("Legs") //
+			.withStoppingPower(4) //
+			.withEncumbranceValue(0) //
+			.withWeight(0.5) //
+			.withCost(50) //
+			.build();
+	private Armor kevlarVest = new Armor.ArmorBuilder() //
+			.withType("Kevlar Vest") //
+			.withArmorClass("Soft Armor") //
+			.thatCovers("Torso") //
+			.withStoppingPower(10) //
+			.withEncumbranceValue(0) //
+			.withWeight(1) //
+			.withCost(90) //
+			.build();
+	private Armor steelHelmet = new Armor.ArmorBuilder() //
+			.withType("Steel Helmet") //
+			.withArmorClass("Hard Armor") //
+			.thatCovers("Head") //
+			.withStoppingPower(14) //
+			.withEncumbranceValue(0) //
+			.withWeight(1) //
+			.withCost(20) //
+			.build();
+	private Armor lightArmorJacket = new Armor.ArmorBuilder() //
+			.withType("Light Armor Jacket") //
+			.withArmorClass("Soft Armor") //
+			.thatCovers("Torso, Arms") //
+			.withStoppingPower(14) //
+			.withEncumbranceValue(0) //
+			.withWeight(3) //
+			.withCost(150) //
+			.build();
+	private Armor mediumArmorJacket = new Armor.ArmorBuilder() //
+			.withType("Medium Armor Jacket") //
+			.withArmorClass("Soft Armor") //
+			.thatCovers("Torso, Arms") //
+			.withStoppingPower(18) //
+			.withEncumbranceValue(1) //
+			.withWeight(3) //
+			.withCost(200) //
+			.build();
+	private Armor flackVest = new Armor.ArmorBuilder() //
+			.withType("Flack Vest") //
+			.withArmorClass("Hard Armor") //
+			.thatCovers("Torso") //
+			.withStoppingPower(20) //
+			.withEncumbranceValue(1) //
+			.withWeight(3) //
+			.withCost(200) //
+			.build();
+	private Armor nylonHelmet = new Armor.ArmorBuilder() //
+			.withType("Nylon Helmet") //
+			.withArmorClass("Hard Armor") //
+			.thatCovers("Head") //
+			.withStoppingPower(20) //
+			.withEncumbranceValue(0) //
+			.withWeight(0.5) //
+			.withCost(100) //
+			.build();
+	private Armor heavyArmorJacket = new Armor.ArmorBuilder() //
+			.withType("Heavy Armor Jacket") //
+			.withArmorClass("Soft Armor") //
+			.thatCovers("Torso, Arms") //
+			.withStoppingPower(20) //
+			.withEncumbranceValue(2) //
+			.withWeight(3) //
+			.withCost(250) //
+			.build();
+	private Armor doorGunnersVest = new Armor.ArmorBuilder() //
+			.withType("Door Gunner's Vest") //
+			.withArmorClass("Hard Armor") //
+			.thatCovers("Torso") //
+			.withStoppingPower(25) //
+			.withEncumbranceValue(3) //
+			.withWeight(4) //
+			.withCost(250) //
+			.build();
+	private Armor metalGear = new Armor.ArmorBuilder() //
+			.withType("MetalGear") //
+			.withArmorClass("Hard Armor") //
+			.thatCovers("Torso, Arms, Head, Legs") //
+			.withStoppingPower(25) //
+			.withEncumbranceValue(2) //
+			.withWeight(3) //
+			.withCost(600) //
+			.build();
+
+	private Ammo regularLightAmmo = new Ammo.AmmoBuilder() //
+			.withType("Reg Lt Pistol / Lt SMG Ammo") //
+			.isCaseless(true) //
+			.withQuantity(100) //
+			.withCost(15) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo armorPiercingLightAmmo = new Ammo.AmmoBuilder() //
+			.withType("AP Lt Pistol / Lt SMG Ammo") //
+			.withQuantity(100) //
+			.isCaseless(true) //
+			.withCost(45) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo regularLightBrassAmmo = new Ammo.AmmoBuilder() //
+			.withType("Brass Reg Lt Pistol / Lt SMG Ammo") //
+			.isCaseless(false) //
+			.withQuantity(100) //
+			.withCost(30) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo armorPiercingLightBrassAmmo = new Ammo.AmmoBuilder() //
+			.withType("Brass AP Lt Pistol / Lt SMG Ammo") //
+			.withQuantity(100) //
+			.isCaseless(false) //
+			.withCost(90) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo regularMediumAmmo = new Ammo.AmmoBuilder() //
+			.withType("Reg Med Pistol / Med SMG Ammo") //
+			.isCaseless(true) //
+			.withQuantity(50) //
+			.withCost(15) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo armorPiercingMediumAmmo = new Ammo.AmmoBuilder() //
+			.withType("AP Med Pistol / Med SMG Ammo") //
+			.withQuantity(50) //
+			.isCaseless(true) //
+			.withCost(45) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo regularMediumBrassAmmo = new Ammo.AmmoBuilder() //
+			.withType("Brass Reg Med Pistol / Med SMG Ammo") //
+			.isCaseless(false) //
+			.withQuantity(50) //
+			.withCost(30) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo armorPiercingMediumBrassAmmo = new Ammo.AmmoBuilder() //
+			.withType("Brass AP Med Pistol / Med SMG Ammo") //
+			.withQuantity(50) //
+			.isCaseless(false) //
+			.withCost(90) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo regularHeavyAmmo = new Ammo.AmmoBuilder() //
+			.withType("Reg Hvy Pistol / Hvy SMG Ammo") //
+			.isCaseless(true) //
+			.withQuantity(50) //
+			.withCost(18) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo armorPiercingHeavyAmmo = new Ammo.AmmoBuilder() //
+			.withType("AP Hvy Pistol / Hvy SMG Ammo") //
+			.withQuantity(50) //
+			.isCaseless(true) //
+			.withCost(54) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo regularHeavyBrassAmmo = new Ammo.AmmoBuilder() //
+			.withType("Brass Reg Hvy Pistol / Hvy SMG Ammo") //
+			.isCaseless(false) //
+			.withQuantity(50) //
+			.withCost(36) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo armorPiercingHeavyBrassAmmo = new Ammo.AmmoBuilder() //
+			.withType("Brass AP Hvy Pistol / Hvy SMG Ammo") //
+			.withQuantity(50) //
+			.isCaseless(false) //
+			.withCost(108) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo regularVeryHeavyAmmo = new Ammo.AmmoBuilder() //
+			.withType("Reg Very Hvy Pistol / Very Hvy SMG Ammo") //
+			.isCaseless(true) //
+			.withQuantity(50) //
+			.withCost(20) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo armorPiercingVeryHeavyAmmo = new Ammo.AmmoBuilder() //
+			.withType("AP Very Hvy Pistol / Very Hvy SMG Ammo") //
+			.withQuantity(50) //
+			.isCaseless(true) //
+			.withCost(60) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo regularVeryHeavyBrassAmmo = new Ammo.AmmoBuilder() //
+			.withType("Brass Reg Very Hvy Pistol / Very Heavy SMG Ammo") //
+			.isCaseless(false) //
+			.withQuantity(50) //
+			.withCost(40) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo armorPiercingVeryHeavyBrassAmmo = new Ammo.AmmoBuilder() //
+			.withType("Brass AP Very Hvy Pistol / Very Hvy SMG Ammo") //
+			.withQuantity(50) //
+			.isCaseless(false) //
+			.withCost(120) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo regularAssaultRifleAmmo = new Ammo.AmmoBuilder() //
+			.withType("Reg AR Ammo") //
+			.isCaseless(true) //
+			.withQuantity(100) //
+			.withCost(40) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo armorPiercingAssaultRifleAmmo = new Ammo.AmmoBuilder() //
+			.withType("AP AR Ammo") //
+			.withQuantity(100) //
+			.isCaseless(true) //
+			.withCost(120) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo regularAssaultRifleBrassAmmo = new Ammo.AmmoBuilder() //
+			.withType("Brass Reg AR Ammo") //
+			.isCaseless(false) //
+			.withQuantity(100) //
+			.withCost(80) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo armorPiercingAssaultRifleBrassAmmo = new Ammo.AmmoBuilder() //
+			.withType("Brass AR Ammo") //
+			.withQuantity(100) //
+			.isCaseless(false) //
+			.withCost(240) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo regularShotgunAmmo = new Ammo.AmmoBuilder() //
+			.withType("Reg SHG Ammo") //
+			.isCaseless(true) //
+			.withQuantity(12) //
+			.withCost(15) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo regularShotgunPlasticAmmo = new Ammo.AmmoBuilder() //
+			.withType("Plastic Reg SHG Ammo") //
+			.isCaseless(false) //
+			.withQuantity(12) //
+			.withCost(30) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo cannonRound = new Ammo.AmmoBuilder() //
+			.withType("20mm Cannon Round") //
+			.isCaseless(true) //
+			.withQuantity(1) //
+			.withCost(25) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo arrow = new Ammo.AmmoBuilder() //
+			.withType("Arrow(s)") //
+			.isCaseless(true) //
+			.withQuantity(20) //
+			.withCost(24) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo crossbowBolt = new Ammo.AmmoBuilder() //
+			.withType("Crossbow Bolt(s)") //
+			.isCaseless(true) //
+			.withQuantity(12) //
+			.withCost(30) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo airgunPaintPellet = new Ammo.AmmoBuilder() //
+			.withType("Airgun Paint Pellet") //
+			.isCaseless(true) //
+			.withQuantity(100) //
+			.withCost(6) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo airgunHallucinogenPellet = new Ammo.AmmoBuilder() //
+			.withType("Airgun Hallucinogen Pellet") //
+			.isCaseless(true) //
+			.withQuantity(100) //
+			.withCost(6) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo airgunNauseaDrugPellet = new Ammo.AmmoBuilder() //
+			.withType("Airgun Nausea Drug Pellet") //
+			.isCaseless(true) //
+			.withQuantity(100) //
+			.withCost(6) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo airgunSleepDrugPellet = new Ammo.AmmoBuilder() //
+			.withType("Airgun Sleep Drug Pellet") //
+			.isCaseless(true) //
+			.withQuantity(100) //
+			.withCost(6) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo airgunBiotoxinIPellet = new Ammo.AmmoBuilder() //
+			.withType("Airgun Biotoxin I Pellet") //
+			.isCaseless(true) //
+			.withQuantity(100) //
+			.withCost(6) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo airgunBiotoxinIIPellet = new Ammo.AmmoBuilder() //
+			.withType("Airgun Biotoxin II Pellet") //
+			.isCaseless(true) //
+			.withQuantity(100) //
+			.withCost(6) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo airgunNerveGasPellet = new Ammo.AmmoBuilder() //
+			.withType("Airgun Nerve Gas Pellet") //
+			.isCaseless(true) //
+			.withQuantity(100) //
+			.withCost(6) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo airgunAcidPellet = new Ammo.AmmoBuilder() //
+			.withType("Airgun Acid Pellet") //
+			.isCaseless(true) //
+			.withQuantity(100) //
+			.withCost(30) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo needlegunHallucinogenRound = new Ammo.AmmoBuilder() //
+			.withType("Needlegun Hallucinogen Round") //
+			.isCaseless(true) //
+			.withQuantity(50) //
+			.withCost(25) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo needlegunNauseaDrugRound = new Ammo.AmmoBuilder() //
+			.withType("Needlegun Nausea Drug Round") //
+			.isCaseless(true) //
+			.withQuantity(50) //
+			.withCost(25) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo needlegunSleepDrugRound = new Ammo.AmmoBuilder() //
+			.withType("Needlegun Sleep Drug Round") //
+			.isCaseless(true) //
+			.withQuantity(50) //
+			.withCost(25) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo needlegunBiotoxinIRound = new Ammo.AmmoBuilder() //
+			.withType("Needlegun Biotoxin I Round") //
+			.isCaseless(true) //
+			.withQuantity(50) //
+			.withCost(25) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo needlegunBiotoxinIIRound = new Ammo.AmmoBuilder() //
+			.withType("Needlegun Biotoxin II Round") //
+			.isCaseless(true) //
+			.withQuantity(50) //
+			.withCost(25) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo needlegunNerveGasRound = new Ammo.AmmoBuilder() //
+			.withType("Needlegun Nerve Gas Round") //
+			.isCaseless(true) //
+			.withQuantity(50) //
+			.withCost(25) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo flamethrowerReload = new Ammo.AmmoBuilder() //
+			.withType("Flamethrower Reload") //
+			.isCaseless(true) //
+			.withQuantity(1) //
+			.withCost(50) //
+			.withWeight(0.5) //
+			.build();
+	private Ammo microMissileReload = new Ammo.AmmoBuilder() //
+			.withType("Micro Missile Reload") //
+			.isCaseless(true) //
+			.withQuantity(4) //
+			.withCost(100) //
+			.withWeight(0.5) //
+			.build();
+
 	public CharacterCreationModel() {
 		characterName = "Unknown";
 		role = cop;
@@ -1652,6 +3600,195 @@ public class CharacterCreationModel {
 		roles.put(rockerboy.getRoleName(), rockerboy);
 		roles.put(solo.getRoleName(), solo);
 		roles.put(techie.getRoleName(), techie);
+
+		weapons.put(budgetArmsC13.getName(), budgetArmsC13);
+		weapons.put(daiLungCybermag15.getName(), daiLungCybermag15);
+		weapons.put(federatedArmsX22.getName(), federatedArmsX22);
+		weapons.put(militechArmsAvenger.getName(), militechArmsAvenger);
+		weapons.put(daiLungStreetmaster.getName(), daiLungStreetmaster);
+		weapons.put(federatedArmsX9mm.getName(), federatedArmsX9mm);
+		weapons.put(budgetArmsAuto3.getName(), budgetArmsAuto3);
+		weapons.put(sternmeyerType35.getName(), sternmeyerType35);
+		weapons.put(armalite44.getName(), armalite44);
+		weapons.put(coltAmtModel2000.getName(), coltAmtModel2000);
+		weapons.put(uziMiniauto9.getName(), uziMiniauto9);
+		weapons.put(hkMp2013.getName(), hkMp2013);
+		weapons.put(fedArmsTechAssaultII.getName(), fedArmsTechAssaultII);
+		weapons.put(arasakaMinami10.getName(), arasakaMinami10);
+		weapons.put(hkMpk9.getName(), hkMpk9);
+		weapons.put(sternmeyerSmg21.getName(), sternmeyerSmg21);
+		weapons.put(hkMpk11.getName(), hkMpk11);
+		weapons.put(ingramMac14.getName(), ingramMac14);
+		weapons.put(militechRoninLightAssault.getName(), militechRoninLightAssault);
+		weapons.put(akr20MediumAssault.getName(), akr20MediumAssault);
+		weapons.put(fnRalHeavyAssaultRifle.getName(), fnRalHeavyAssaultRifle);
+		weapons.put(kalishnikovA80HeavyRifle.getName(), kalishnikovA80HeavyRifle);
+		weapons.put(arasakaRapidAssault12.getName(), arasakaRapidAssault12);
+		weapons.put(sternmeyerStakeout10.getName(), sternmeyerStakeout10);
+		weapons.put(barrettArasakaLight20mm.getName(), barrettArasakaLight20mm);
+		weapons.put(scorpion16MissileLauncher.getName(), scorpion16MissileLauncher);
+		weapons.put(militechArmsRpgA.getName(), militechArmsRpgA);
+		weapons.put(fragmentationGrenade.getName(), fragmentationGrenade);
+		weapons.put(incendiaryGrenade.getName(), incendiaryGrenade);
+		weapons.put(stunGrenade.getName(), stunGrenade);
+		weapons.put(dazzleGrenade.getName(), dazzleGrenade);
+		weapons.put(sonicGrenade.getName(), sonicGrenade);
+		weapons.put(nauseaGasGrenade.getName(), nauseaGasGrenade);
+		weapons.put(teargasGrenade.getName(), teargasGrenade);
+		weapons.put(sleepDrugGrenade.getName(), sleepDrugGrenade);
+		weapons.put(biotoxin1Grenade.getName(), biotoxin1Grenade);
+		weapons.put(biotoxinIIGrenade.getName(), biotoxinIIGrenade);
+		weapons.put(nerveGasGrenade.getName(), nerveGasGrenade);
+		weapons.put(plastiqueExplosive.getName(), plastiqueExplosive);
+		weapons.put(c6PlasticExplosive.getName(), c6PlasticExplosive);
+		weapons.put(tnt.getName(), tnt);
+		weapons.put(molotovCocktail.getName(), molotovCocktail);
+		weapons.put(landMine.getName(), landMine);
+		weapons.put(claymore.getName(), claymore);
+		weapons.put(kaF253Flamethrower.getName(), kaF253Flamethrower);
+		weapons.put(techtronica15Microwaver.getName(), techtronica15Microwaver);
+		weapons.put(militechElectricLaserCannon.getName(), militechElectricLaserCannon);
+		weapons.put(avanteP1135Needlegun.getName(), avanteP1135Needlegun);
+		weapons.put(enertexAkmPowerSquirt.getName(), enertexAkmPowerSquirt);
+		weapons.put(nelspotWombat.getName(), nelspotWombat);
+		weapons.put(militechElectronicsTaser.getName(), militechElectronicsTaser);
+		weapons.put(eagleTechTomcatCBow.getName(), eagleTechTomcatCBow);
+		weapons.put(eagleTechStrykerXBow.getName(), eagleTechStrykerXBow);
+		weapons.put(kendachiMonoknife.getName(), kendachiMonoknife);
+		weapons.put(kendachiMonoKatana.getName(), kendachiMonoKatana);
+		weapons.put(spm1Battleglove.getName(), spm1Battleglove);
+		weapons.put(club.getName(), club);
+		weapons.put(knife.getName(), knife);
+		weapons.put(sword.getName(), sword);
+		weapons.put(axe.getName(), axe);
+		weapons.put(nunchaku.getName(), nunchaku);
+		weapons.put(naginata.getName(), naginata);
+		weapons.put(shiriken.getName(), shiriken);
+		weapons.put(switchblade.getName(), switchblade);
+		weapons.put(brassKnuckles.getName(), brassKnuckles);
+		weapons.put(sledgehammer.getName(), sledgehammer);
+		weapons.put(chainsaw.getName(), chainsaw);
+		weapons.put(swCombatMagnum.getName(), swCombatMagnum);
+		weapons.put(llamaCommanche.getName(), llamaCommanche);
+		weapons.put(colt45Peacemaker.getName(), colt45Peacemaker);
+		weapons.put(colt38Detective.getName(), colt38Detective);
+		weapons.put(cop357Derringer.getName(), cop357Derringer);
+		weapons.put(uzi.getName(), uzi);
+		weapons.put(vz61Skorpion.getName(), vz61Skorpion);
+		weapons.put(ingramMac10.getName(), ingramMac10);
+		weapons.put(hkMp5.getName(), hkMp5);
+		weapons.put(thompsonM1.getName(), thompsonM1);
+		weapons.put(bushmaster.getName(), bushmaster);
+		weapons.put(fnFal.getName(), fnFal);
+		weapons.put(ak47.getName(), ak47);
+		weapons.put(m16A.getName(), m16A);
+		weapons.put(styerAug.getName(), styerAug);
+		weapons.put(winchesterM70.getName(), winchesterM70);
+		weapons.put(caws.getName(), caws);
+
+		gear.put(techscanner.getType(), techscanner);
+		gear.put(cuttingTorch.getType(), cuttingTorch);
+		gear.put(techToolKit.getType(), techToolKit);
+		gear.put(electronicsToolKit.getType(), electronicsToolKit);
+		gear.put(protectiveGoggles.getType(), protectiveGoggles);
+		gear.put(pocketFlashlight.getType(), pocketFlashlight);
+		gear.put(flashlight.getType(), flashlight);
+		gear.put(glowstik.getType(), glowstik);
+		gear.put(flashPaint.getType(), flashPaint);
+		gear.put(flashTape.getType(), flashTape);
+		gear.put(rope.getType(), rope);
+		gear.put(breathingMask.getType(), breathingMask);
+		gear.put(breathingMaskFilter.getType(), breathingMaskFilter);
+		gear.put(holoGenerator.getType(), holoGenerator);
+		gear.put(videoBoard.getType(), videoBoard);
+		gear.put(dataChip.getType(), dataChip);
+		gear.put(logcompass.getType(), logcompass);
+		gear.put(digitalRecorder.getType(), digitalRecorder);
+		gear.put(digitalCamera.getType(), digitalCamera);
+		gear.put(videoCam.getType(), videoCam);
+		gear.put(videoAudioTapePlayer.getType(), videoAudioTapePlayer);
+		gear.put(videoTape.getType(), videoTape);
+		gear.put(pocketTV.getType(), pocketTV);
+		gear.put(digitalChipPlayer.getType(), digitalChipPlayer);
+		gear.put(digitalMusicChip.getType(), digitalMusicChip);
+		gear.put(electricGuitar.getType(), electricGuitar);
+		gear.put(electronicKeyboard.getType(), electronicKeyboard);
+		gear.put(drumSynthesizer.getType(), drumSynthesizer);
+		gear.put(amplifier.getType(), amplifier);
+		gear.put(mastoidCommo.getType(), mastoidCommo);
+		gear.put(pocketCommo.getType(), pocketCommo);
+		gear.put(cellularPhone.getType(), cellularPhone);
+		gear.put(miniCellPhone.getType(), miniCellPhone);
+		gear.put(binoglasses.getType(), binoglasses);
+		gear.put(binoculars.getType(), binoculars);
+		gear.put(lightBoosterGoggles.getType(), lightBoosterGoggles);
+		gear.put(irGoggles.getType(), irGoggles);
+		gear.put(irFlash.getType(), irFlash);
+		gear.put(dermalStapler.getType(), dermalStapler);
+		gear.put(spraySkin.getType(), spraySkin);
+		gear.put(medkit.getType(), medkit);
+		gear.put(surgicalKit.getType(), surgicalKit);
+		gear.put(firstAidKit.getType(), firstAidKit);
+		gear.put(medscanner.getType(), medscanner);
+		gear.put(drugAnalyser.getType(), drugAnalyser);
+		gear.put(airhypo.getType(), airhypo);
+		gear.put(nylonCarrybag.getType(), nylonCarrybag);
+		gear.put(sleepingBag.getType(), sleepingBag);
+		gear.put(inflatableBed.getType(), inflatableBed);
+
+		armors.put(cloth.getType(), cloth);
+		armors.put(heavyLeatherJacket.getType(), heavyLeatherJacket);
+		armors.put(heavyLeatherPants.getType(), heavyLeatherPants);
+		armors.put(kevlarVest.getType(), kevlarVest);
+		armors.put(steelHelmet.getType(), steelHelmet);
+		armors.put(lightArmorJacket.getType(), lightArmorJacket);
+		armors.put(mediumArmorJacket.getType(), mediumArmorJacket);
+		armors.put(flackVest.getType(), flackVest);
+		armors.put(nylonHelmet.getType(), nylonHelmet);
+		armors.put(heavyArmorJacket.getType(), heavyArmorJacket);
+		armors.put(doorGunnersVest.getType(), doorGunnersVest);
+		armors.put(metalGear.getType(), metalGear);
+
+		ammos.put(regularLightAmmo.getType(), regularLightAmmo);
+		ammos.put(armorPiercingLightAmmo.getType(), armorPiercingLightAmmo);
+		ammos.put(regularLightBrassAmmo.getType(), regularLightBrassAmmo);
+		ammos.put(armorPiercingLightBrassAmmo.getType(), armorPiercingLightBrassAmmo);
+		ammos.put(regularMediumAmmo.getType(), regularMediumAmmo);
+		ammos.put(armorPiercingMediumAmmo.getType(), armorPiercingMediumAmmo);
+		ammos.put(regularMediumBrassAmmo.getType(), regularMediumBrassAmmo);
+		ammos.put(armorPiercingMediumBrassAmmo.getType(), armorPiercingMediumBrassAmmo);
+		ammos.put(regularHeavyAmmo.getType(), regularHeavyAmmo);
+		ammos.put(armorPiercingHeavyAmmo.getType(), armorPiercingHeavyAmmo);
+		ammos.put(regularHeavyBrassAmmo.getType(), regularHeavyBrassAmmo);
+		ammos.put(armorPiercingHeavyBrassAmmo.getType(), armorPiercingHeavyBrassAmmo);
+		ammos.put(regularVeryHeavyAmmo.getType(), armorPiercingVeryHeavyAmmo);
+		ammos.put(regularVeryHeavyBrassAmmo.getType(), regularVeryHeavyBrassAmmo);
+		ammos.put(armorPiercingVeryHeavyBrassAmmo.getType(), armorPiercingVeryHeavyBrassAmmo);
+		ammos.put(regularAssaultRifleAmmo.getType(), regularAssaultRifleAmmo);
+		ammos.put(armorPiercingAssaultRifleAmmo.getType(), armorPiercingAssaultRifleAmmo);
+		ammos.put(regularAssaultRifleBrassAmmo.getType(), regularAssaultRifleBrassAmmo);
+		ammos.put(armorPiercingAssaultRifleBrassAmmo.getType(), armorPiercingAssaultRifleBrassAmmo);
+		ammos.put(regularShotgunAmmo.getType(), regularShotgunAmmo);
+		ammos.put(regularShotgunPlasticAmmo.getType(), regularShotgunPlasticAmmo);
+		ammos.put(cannonRound.getType(), cannonRound);
+		ammos.put(arrow.getType(), arrow);
+		ammos.put(crossbowBolt.getType(), crossbowBolt);
+		ammos.put(airgunPaintPellet.getType(), airgunPaintPellet);
+		ammos.put(airgunHallucinogenPellet.getType(), airgunHallucinogenPellet);
+		ammos.put(airgunNauseaDrugPellet.getType(), airgunNauseaDrugPellet);
+		ammos.put(airgunSleepDrugPellet.getType(), airgunSleepDrugPellet);
+		ammos.put(airgunBiotoxinIPellet.getType(), airgunBiotoxinIPellet);
+		ammos.put(airgunBiotoxinIIPellet.getType(), airgunBiotoxinIIPellet);
+		ammos.put(airgunNerveGasPellet.getType(), airgunNerveGasPellet);
+		ammos.put(airgunAcidPellet.getType(), airgunAcidPellet);
+		ammos.put(needlegunHallucinogenRound.getType(), needlegunHallucinogenRound);
+		ammos.put(needlegunNauseaDrugRound.getType(), needlegunNauseaDrugRound);
+		ammos.put(needlegunSleepDrugRound.getType(), needlegunSleepDrugRound);
+		ammos.put(needlegunBiotoxinIRound.getType(), needlegunBiotoxinIRound);
+		ammos.put(needlegunBiotoxinIIRound.getType(), needlegunBiotoxinIIRound);
+		ammos.put(needlegunNerveGasRound.getType(), needlegunNerveGasRound);
+		ammos.put(flamethrowerReload.getType(), flamethrowerReload);
+		ammos.put(microMissileReload.getType(), microMissileReload);
 	}
 
 	private double calculateRunDistance() {
@@ -1756,8 +3893,12 @@ public class CharacterCreationModel {
 		return leapDistance;
 	}
 
-	public double getLiftLevel() {
+	public double getLiftCapacity() {
 		return liftCapacity;
+	}
+
+	public double getCarryCapacity() {
+		return carryCapacity;
 	}
 
 	public int getHeadArmorStoppingPower() {
@@ -1843,6 +3984,22 @@ public class CharacterCreationModel {
 		return null;
 	}
 
+	public Map<String, Weapon> getWeapons() {
+		return weapons;
+	}
+
+	public Map<String, Gear> getGear() {
+		return gear;
+	}
+
+	public Map<String, Armor> getArmors() {
+		return armors;
+	}
+
+	public Map<String, Ammo> getAmmos() {
+		return ammos;
+	}
+
 	public void setCharacterName(String name) {
 		characterName = name;
 	}
@@ -1898,6 +4055,7 @@ public class CharacterCreationModel {
 		bodyLevel = level;
 
 		liftCapacity = calculateLiftCapacity();
+		carryCapacity = calculateCarryCapacity();
 	}
 
 	public void setCurrentEmpathyLevel(int level) {
@@ -1958,6 +4116,348 @@ public class CharacterCreationModel {
 
 	public void setInjuryPoints(double points) {
 		injuryPoints = points;
+	}
+
+	public static class Ammo {
+		private String type;
+		private boolean isCaseless;
+		private int quantity;
+		private int cost;
+		private double weight;
+
+		private Ammo(AmmoBuilder ammoBuilder) {
+			this.type = ammoBuilder.type;
+			this.isCaseless = ammoBuilder.isCaseless;
+			this.quantity = ammoBuilder.quantity;
+			this.cost = ammoBuilder.cost;
+			this.weight = ammoBuilder.weight;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public boolean isCaseless() {
+			return isCaseless;
+		}
+
+		public int getQuantity() {
+			return quantity;
+		}
+
+		public int getCost() {
+			return cost;
+		}
+
+		public double getWeight() {
+			return weight;
+		}
+
+		public static class AmmoBuilder {
+			private String type = "Unknown";
+			private boolean isCaseless = false;
+			private int quantity = 0;
+			private int cost = 0;
+			private double weight = 0.0;
+
+			public AmmoBuilder withType(String type) {
+				this.type = type;
+				return this;
+			}
+
+			public AmmoBuilder isCaseless(Boolean isCaseless) {
+				this.isCaseless = isCaseless;
+				return this;
+			}
+
+			public AmmoBuilder withQuantity(int quantity) {
+				this.quantity = quantity;
+				return this;
+			}
+
+			public AmmoBuilder withCost(int cost) {
+				this.cost = cost;
+				return this;
+			}
+
+			public AmmoBuilder withWeight(double weight) {
+				this.weight = weight;
+				return this;
+			}
+
+			public Ammo build() {
+				return new Ammo(this);
+			}
+		}
+	}
+
+	public static class Armor {
+		private String type;
+		private String armorClass;
+		private Map<String, Boolean> covers;
+		private int stoppingPower;
+		private int encumbranceValue;
+		private double weight;
+		private int cost;
+
+		private Armor(ArmorBuilder armorBuilder) {
+			this.type = armorBuilder.type;
+			this.armorClass = armorBuilder.armorClass;
+			this.covers = armorBuilder.covers;
+			this.stoppingPower = armorBuilder.stoppingPower;
+			this.encumbranceValue = armorBuilder.encumbranceValue;
+			this.weight = armorBuilder.weight;
+			this.cost = armorBuilder.cost;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public String getArmorClass() {
+			return armorClass;
+		}
+
+		public Map<String, Boolean> getCovers() {
+			return covers;
+		}
+
+		public int getStoppingPower() {
+			return stoppingPower;
+		}
+
+		public int getEncumbranceValue() {
+			return encumbranceValue;
+		}
+
+		public double getWeight() {
+			return weight;
+		}
+
+		public int getCost() {
+			return cost;
+		}
+
+		public static class ArmorBuilder {
+			private String type = "Unknown";
+			private String armorClass = "Unknown";
+			private Map<String, Boolean> covers;
+			private int stoppingPower = 0;
+			private int encumbranceValue = 0;
+			private double weight = 0.0;
+			private int cost = 0;
+
+			public ArmorBuilder withType(String type) {
+				this.type = type;
+				return this;
+			}
+
+			public ArmorBuilder withArmorClass(String armorClass) {
+				this.armorClass = armorClass;
+				return this;
+			}
+
+			public ArmorBuilder thatCovers(String coveredLocations) {
+				covers = new TreeMap<String, Boolean>();
+				covers.put("head", false);
+				covers.put("arms", false);
+				covers.put("torso", false);
+				covers.put("legs", false);
+
+				String[] locations = coveredLocations.split(",");
+				for (String location : locations) {
+					switch (location.toLowerCase().trim()) {
+					case "head":
+						covers.put("head", true);
+						break;
+					case "arms":
+						covers.put("arms", true);
+						break;
+					case "torso":
+						covers.put("torso", true);
+						break;
+					case "legs":
+						covers.put("legs", true);
+						break;
+					default:
+						break;
+					}
+				}
+				return this;
+			}
+
+			public ArmorBuilder withStoppingPower(int stoppingPower) {
+				this.stoppingPower = stoppingPower;
+				return this;
+			}
+
+			public ArmorBuilder withEncumbranceValue(int encumbranceValue) {
+				this.encumbranceValue = encumbranceValue;
+				return this;
+			}
+
+			public ArmorBuilder withWeight(double weight) {
+				this.weight = weight;
+				return this;
+			}
+
+			public ArmorBuilder withCost(int cost) {
+				this.cost = cost;
+				return this;
+			}
+
+			public Armor build() {
+				return new Armor(this);
+			}
+		}
+	}
+
+	// TODO finish the builder and plan on putting all cyberware into the store then
+	// adding the cyberware to equipped when bought
+	public static class Cyberware {
+		private String cyberware;
+		private String surgeryCode;
+		private String idCode;
+		private String description;
+		private int cost;
+		private String humanityLoss;
+
+		private Cyberware(CyberwareBuilder cyberBuilder) {
+			this.cyberware = cyberBuilder.cyberware;
+			this.surgeryCode = cyberBuilder.surgeryCode;
+			this.idCode = cyberBuilder.idCode;
+			this.description = cyberBuilder.description;
+			this.cost = cyberBuilder.cost;
+			this.humanityLoss = cyberBuilder.humanityLoss;
+		}
+		
+		public String getCyberware() {
+			return cyberware;
+		}
+		
+		public String getSurgeryCode() {
+			return surgeryCode;
+		}
+		
+		public String getIdCode() {
+			return idCode;
+		}
+		
+		public String getDescription() {
+			return description;
+		}
+		
+		public int getCost() {
+			return cost;
+		}
+		
+		public String getHumanityLoss() {
+			return humanityLoss;
+		}
+
+		public static class CyberwareBuilder {
+			private String cyberware = "Unkown";
+			private String surgeryCode = "-";
+			private String idCode = "--";
+			private String description = "-";
+			private int cost = 0;
+			private String humanityLoss = "0";
+
+			public CyberwareBuilder withCyberware(String cyberware) {
+				this.cyberware = cyberware;
+				return this;
+			}
+			
+			public CyberwareBuilder withSurgeryCode(String surgeryCode) {
+				this.surgeryCode = surgeryCode;
+				return this;
+			}
+			
+			public CyberwareBuilder withIdCode(String idCode) {
+				this.idCode = idCode;
+				return this;
+			}
+			
+			public CyberwareBuilder withDescription(String description) {
+				this.description = description;
+				return this;
+			}
+			
+			public CyberwareBuilder withCost(int cost) {
+				this.cost = cost;
+				return this;
+			}
+			
+			public CyberwareBuilder withHumanityLoss(String humanityLoss) {
+				this.humanityLoss = humanityLoss;
+				return this;
+			}
+			
+			public Cyberware build() {
+				return new Cyberware(this);
+			}
+		}
+	}
+
+	public static class Gear {
+		private String type;
+		private double quantity;
+		private double weight;
+		private int cost;
+
+		public String getType() {
+			return type;
+		}
+
+		public double getQuantity() {
+			return quantity;
+		}
+
+		public double getWeight() {
+			return weight;
+		}
+
+		public int getCost() {
+			return cost;
+		}
+
+		private Gear(GearBuilder gearBuilder) {
+			this.type = gearBuilder.type;
+			this.quantity = gearBuilder.quantity;
+			this.weight = gearBuilder.weight;
+			this.cost = gearBuilder.cost;
+		}
+
+		public static class GearBuilder {
+			private String type = "Unkown";
+			private double quantity = 0.0;
+			private double weight = 0;
+			private int cost = 0;
+
+			public GearBuilder withType(String type) {
+				this.type = type;
+				return this;
+			}
+
+			public GearBuilder withQuantitiy(double quantity) {
+				this.quantity = quantity;
+				return this;
+			}
+
+			public GearBuilder withWeight(double weight) {
+				this.weight = weight;
+				return this;
+			}
+
+			public GearBuilder withCost(int cost) {
+				this.cost = cost;
+				return this;
+			}
+
+			public Gear build() {
+				return new Gear(this);
+			}
+		}
 	}
 
 	public static class Role {
@@ -2104,6 +4604,257 @@ public class CharacterCreationModel {
 
 		}
 
+	}
+
+	public static class Weapon {
+		private String name;
+		private String type;
+		private String category;
+		private int accuracy;
+		private String concealability;
+		private String availability;
+		private String damageAndAmmo;
+		private int numberOfShots;
+		private int rateOfFire;
+		private String reliability;
+		private String range;
+		private double weight;
+		private int cost;
+
+		public String getName() {
+			return name;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public String getCategory() {
+			return category;
+		}
+
+		public int getAccuracy() {
+			return accuracy;
+		}
+
+		public String getConcealability() {
+			return concealability;
+		}
+
+		public String getAvailability() {
+			return availability;
+		}
+
+		public String getDamageAndAmmo() {
+			return damageAndAmmo;
+		}
+
+		public int getRateOfFire() {
+			return rateOfFire;
+		}
+
+		public int getNumberOfShots() {
+			return numberOfShots;
+		}
+
+		public String getReliability() {
+			return reliability;
+		}
+
+		public String getRange() {
+			return range;
+		}
+
+		public double getWeight() {
+			return weight;
+		}
+
+		public int getCost() {
+			return cost;
+		}
+
+		private Weapon(WeaponBuilder weaponBuilder) {
+			this.name = weaponBuilder.name;
+			this.type = weaponBuilder.type;
+			this.category = weaponBuilder.category;
+			this.accuracy = weaponBuilder.accuracy;
+			this.concealability = weaponBuilder.concealability;
+			this.availability = weaponBuilder.availability;
+			this.damageAndAmmo = weaponBuilder.damageAndAmmo;
+			this.numberOfShots = weaponBuilder.numberOfShots;
+			this.rateOfFire = weaponBuilder.rateOfFire;
+			this.reliability = weaponBuilder.reliability;
+			this.range = weaponBuilder.range;
+			this.weight = weaponBuilder.weight;
+			this.cost = weaponBuilder.cost;
+		}
+
+		public static class WeaponBuilder {
+			private String name = "Unkown";
+			private String type = "Unknown";
+			private String category = "Unknown";
+			private int accuracy = 0;
+			private String concealability = "";
+			private String availability = "";
+			private String damageAndAmmo = "";
+			private int numberOfShots = 0;
+			private int rateOfFire = 0;
+			private String reliability = "";
+			private String range = "0m";
+			private double weight = 0.0;
+			private int cost = 0;
+
+			public WeaponBuilder withName(String name) {
+				this.name = name;
+				return this;
+			}
+
+			public WeaponBuilder withType(String type) {
+				this.type = type;
+				return this;
+			}
+
+			public WeaponBuilder withCategory(String category) {
+				switch (category.toUpperCase()) {
+				case "LP":
+					this.category = "Lt Pistol";
+					break;
+				case "MP":
+					this.category = "Med Pistol";
+					break;
+				case "HP":
+					this.category = "Hvy Pistol";
+					break;
+				case "VHP":
+					this.category = "Very Hvy Pistol";
+					break;
+				case "LSMG":
+					this.category = "Lt SMG";
+					break;
+				case "MSMG":
+					this.category = "Med SMG";
+					break;
+				case "HSMG":
+					this.category = "Hvy SMG";
+					break;
+				case "RIF":
+					this.category = "AR";
+					break;
+				case "SHG":
+					this.category = "Shotgun";
+					break;
+				case "HVY":
+					this.category = "Hvy Weapon";
+					break;
+				case "M":
+					this.category = "Melee";
+					break;
+				default:
+					this.category = category;
+					break;
+				}
+				return this;
+			}
+
+			public WeaponBuilder withAccuracy(int accuracy) {
+				this.accuracy = accuracy;
+				return this;
+			}
+
+			public WeaponBuilder withConcealability(String concealability) {
+				switch (concealability.toUpperCase()) {
+				case "P":
+					this.concealability = "Pocket, Pants Leg or Sleeve";
+					break;
+				case "J":
+					this.concealability = "Jacket, Coat or Shoulder Rig";
+					break;
+				case "L":
+					this.concealability = "Long Coat";
+					break;
+				case "N":
+					this.concealability = "Cannot be Hidden";
+					break;
+				default:
+					this.concealability = concealability;
+					break;
+				}
+				return this;
+			}
+
+			public WeaponBuilder withAvailability(String availability) {
+				switch (availability.toUpperCase()) {
+				case "E":
+					this.availability = "Excellent";
+					break;
+				case "C":
+					this.availability = "Common";
+					break;
+				case "P":
+					this.availability = "Poor";
+					break;
+				case "R":
+					this.availability = "Rare";
+					break;
+				default:
+					this.availability = availability;
+					break;
+				}
+				return this;
+			}
+
+			public WeaponBuilder withDamageAndAmmo(String damageAndAmmo) {
+				this.damageAndAmmo = damageAndAmmo;
+				return this;
+			}
+
+			public WeaponBuilder withNumberOfShots(int numberOfShots) {
+				this.numberOfShots = numberOfShots;
+				return this;
+			}
+
+			public WeaponBuilder withRateOfFire(int rateOfFire) {
+				this.rateOfFire = rateOfFire;
+				return this;
+			}
+
+			public WeaponBuilder withReliability(String reliability) {
+				switch (reliability.toUpperCase()) {
+				case "VR":
+					this.reliability = "Very Reliable";
+					break;
+				case "ST":
+					this.reliability = "Standard";
+					break;
+				case "UR":
+					this.reliability = "Unreliable";
+					break;
+				default:
+					this.reliability = reliability;
+					break;
+				}
+				return this;
+			}
+
+			public WeaponBuilder withRange(String range) {
+				this.range = range;
+				return this;
+			}
+
+			public WeaponBuilder withWeight(double weight) {
+				this.weight = weight;
+				return this;
+			}
+
+			public WeaponBuilder withCost(int cost) {
+				this.cost = cost;
+				return this;
+			}
+
+			public Weapon build() {
+				return new Weapon(this);
+			}
+		}
 	}
 
 }

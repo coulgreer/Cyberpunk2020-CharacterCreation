@@ -1,9 +1,12 @@
 package controller;
 
+import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -43,6 +46,10 @@ import org.apache.commons.codec.binary.Base64;
 import components.ImagePreview;
 import model.CharacterCreationModel;
 import view.CharacterCreationView;
+import view.CharacterCreationView.InventoryAmmoTableModel;
+import view.CharacterCreationView.InventoryArmorTableModel;
+import view.CharacterCreationView.InventoryGearTableModel;
+import view.CharacterCreationView.InventoryWeaponTableModel;
 import view.CharacterCreationView.SkillTableModel;
 
 public class CharacterCreationController {
@@ -76,6 +83,9 @@ public class CharacterCreationController {
 		this.characterView.addFastCharacterPointButtonActionListener(new FastCharacterPointActionListener());
 		this.characterView.addManualCharacterPointButtonActionListener(new ManualCharacterPointActionListener());
 		this.characterView.addChangePortraitButtonActionListener(new ChangeCharacterPortrait());
+		this.characterView.addInventoryChangeItemListener(new InventoryChangeListener());
+		this.characterView.addStoreChangeItemListener(new StoreChangeListener());
+		this.characterView.addAddToInventoryActionListener(new AddToInventoryActionListener());
 
 		this.characterView.drawLoadedInjuryPoints(this.characterModel.getInjuryPoints());
 		this.characterView.setCharacterPoints(Integer.toString(this.characterModel.getCharacterPoints()
@@ -85,7 +95,8 @@ public class CharacterCreationController {
 				- this.characterModel.getMovementAllowanceLevel() - this.characterModel.getBodyLevel()
 				- this.characterModel.getTotalEmpathyLevel()));
 		this.characterView.setLeapLevel(Double.toString(this.characterModel.getLeapLevel()));
-		this.characterView.setLiftLevel(Double.toString(this.characterModel.getLiftLevel()));
+		this.characterView.setLiftCapacity(Double.toString(this.characterModel.getLiftCapacity()));
+		this.characterView.setCarryCapacity(Double.toString(this.characterModel.getCarryCapacity()));
 		this.characterView.setRunLevel(Double.toString(this.characterModel.getRunLevel()));
 		this.characterView.setSaveModifier(Integer.toString(this.characterModel.getSaveModifier()));
 		this.characterView.setBodyTypeModifier(Integer.toString(this.characterModel.getBodyTypeModifier()));
@@ -102,15 +113,57 @@ public class CharacterCreationController {
 				.setLeftLegArmorStoppingPower(Integer.toString(this.characterModel.getLeftLegArmorStoppingPower()));
 
 		populateSkillPanels();
+		populateStoreWeaponPanels();
+		populateStoreGearPanel();
+		populateStoreArmorTable();
+		populateAmmoTable();
 	}
 
 	private void populateSkillPanels() {
 		for (Map<String, CharacterCreationModel.Skill> skillCategory : characterModel.getSkillCatelog().values()) {
 			for (CharacterCreationModel.Skill skill : skillCategory.values()) {
-				characterView.drawBasicSkillPanel(skill.getType(), skill.getSkillName(), skill.getRank(),
+				characterView.addBasicSkillToPanel(skill.getType(), skill.getSkillName(), skill.getRank(),
 						skill.getSpecifiedSkill(), new SkillTableModelListener());
 			}
 		}
+		for (JTable table : characterView.getSkillTables().values()) {
+			characterView.resizeColumnWidth(table);
+		}
+	}
+
+	private void populateStoreWeaponPanels() {
+		for (CharacterCreationModel.Weapon weapon : characterModel.getWeapons().values()) {
+			characterView.addStoreWeaponToTable(weapon.getName(), weapon.getCategory(), weapon.getAccuracy(),
+					weapon.getConcealability(), weapon.getAvailability(), weapon.getDamageAndAmmo(),
+					weapon.getNumberOfShots(), weapon.getRateOfFire(), weapon.getReliability(), weapon.getRange(),
+					weapon.getCost(), new StoreWeaponListSelectionListener());
+		}
+		characterView.resizeColumnWidth(characterView.getStoreWeaponTable());
+	}
+
+	private void populateStoreGearPanel() {
+		for (CharacterCreationModel.Gear gear : characterModel.getGear().values()) {
+			characterView.addStoreGearToTable(gear.getType(), gear.getCost(), gear.getWeight(),
+					new StoreGearListSelectionListener());
+		}
+		characterView.resizeColumnWidth(characterView.getStoreGearTable());
+	}
+
+	private void populateStoreArmorTable() {
+		for (CharacterCreationModel.Armor armor : characterModel.getArmors().values()) {
+			characterView.addStoreArmorToTable(armor.getType(), armor.getArmorClass(), armor.getCovers(),
+					armor.getStoppingPower(), armor.getEncumbranceValue(), armor.getWeight(), armor.getCost(),
+					new StoreArmorListSelectionListener());
+		}
+		characterView.resizeColumnWidth(characterView.getStoreArmorTable());
+	}
+
+	private void populateAmmoTable() {
+		for (CharacterCreationModel.Ammo ammo : characterModel.getAmmos().values()) {
+			characterView.addAmmoToTable(ammo.getType(), ammo.getQuantity(), ammo.isCaseless(), ammo.getCost(),
+					ammo.getWeight(), new StoreAmmoListSelectionListener());
+		}
+		characterView.resizeColumnWidth(characterView.getStoreAmmoTable());
 	}
 
 	private void resetStats() {
@@ -135,6 +188,67 @@ public class CharacterCreationController {
 		characterView.setTotalEmpathyLevel(Integer.toString(characterModel.getTotalEmpathyLevel()));
 	}
 
+	class AddToInventoryActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			JTable storeWeaponTable = characterView.getStoreWeaponTable();
+			JTable storeGearTable = characterView.getStoreGearTable();
+			JTable storeArmorTable = characterView.getStoreArmorTable();
+			JTable storeAmmoTable = characterView.getStoreAmmoTable();
+			JTable inventoryWeaponTable = characterView.getInventoryWeaponTable();
+			JTable inventoryGearTable = characterView.getInventoryGearTable();
+			JTable inventoryArmorTable = characterView.getInventoryArmorTable();
+			JTable inventoryAmmoTable = characterView.getInventoryAmmoTable();
+
+			for (int rowIndex : storeWeaponTable.getSelectedRows()) {
+				Object[] row = new Object[storeWeaponTable.getColumnCount()];
+				for (int i = 0; i < storeWeaponTable.getColumnCount(); i++) {
+					Object item = storeWeaponTable.getValueAt(rowIndex, i);
+					row[i] = item;
+				}
+				((InventoryWeaponTableModel) inventoryWeaponTable.getModel()).addRow(row);
+			}
+			characterView.resizeColumnWidth(inventoryWeaponTable);
+
+			for (int rowIndex : storeGearTable.getSelectedRows()) {
+				Object[] row = new Object[storeGearTable.getColumnCount()];
+				for (int i = 0; i < storeGearTable.getColumnCount(); i++) {
+					Object item = storeGearTable.getValueAt(rowIndex, i);
+					row[i] = item;
+				}
+				((InventoryGearTableModel) inventoryGearTable.getModel()).addRow(row);
+			}
+			characterView.resizeColumnWidth(inventoryGearTable);
+
+			for (int rowIndex : storeArmorTable.getSelectedRows()) {
+				Object[] row = new Object[storeArmorTable.getColumnCount()];
+				for (int i = 0; i < storeArmorTable.getColumnCount(); i++) {
+					Object item = storeArmorTable.getValueAt(rowIndex, i);
+					row[i] = item;
+				}
+				((InventoryArmorTableModel) inventoryArmorTable.getModel()).addRow(row);
+			}
+			characterView.resizeColumnWidth(inventoryArmorTable);
+
+			for (int rowIndex : storeAmmoTable.getSelectedRows()) {
+				Object[] row = new Object[storeAmmoTable.getColumnCount()];
+				for (int i = 0; i < storeAmmoTable.getColumnCount(); i++) {
+					Object item = storeAmmoTable.getValueAt(rowIndex, i);
+					row[i] = item;
+				}
+				((InventoryAmmoTableModel) inventoryAmmoTable.getModel()).addRow(row);
+			}
+			characterView.resizeColumnWidth(inventoryAmmoTable);
+
+			characterView.setMoney(String.valueOf(characterView.getMoney() + totalCost));
+
+			storeWeaponTable.clearSelection();
+			storeGearTable.clearSelection();
+			storeArmorTable.clearSelection();
+			storeAmmoTable.clearSelection();
+		}
+	}
+
 	class HandleDocumentListener implements DocumentListener {
 		@Override
 		public void changedUpdate(DocumentEvent event) {
@@ -151,6 +265,24 @@ public class CharacterCreationController {
 			characterModel.setCharacterName(characterView.getCharacterName());
 		}
 
+	}
+
+	class InventoryChangeListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			JPanel cardsPanel = characterView.getInventoryCardPanel();
+			CardLayout layout = (CardLayout) cardsPanel.getLayout();
+			layout.show(cardsPanel, (String) event.getItem());
+		}
+	}
+
+	class StoreChangeListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			JPanel cardsPanel = characterView.getStoreCardPanel();
+			CardLayout layout = (CardLayout) cardsPanel.getLayout();
+			layout.show(cardsPanel, (String) event.getItem());
+		}
 	}
 
 	class RoleChangeListener implements ActionListener {
@@ -367,7 +499,8 @@ public class CharacterCreationController {
 
 			characterView.setBodyLevel(String.valueOf(bodyLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
-			characterView.setLiftLevel(Double.toString(characterModel.getLiftLevel()));
+			characterView.setLiftCapacity(Double.toString(characterModel.getLiftCapacity()));
+			characterView.setCarryCapacity(Double.toString(characterModel.getCarryCapacity()));
 			characterView.setSaveModifier(Integer.toString(characterModel.calculateSaveModifier()));
 
 			int characterBodyTypeModifier = characterModel.calculateBodyTypeModifier();
@@ -488,10 +621,11 @@ public class CharacterCreationController {
 								characterModel.setLeapDistance(Double.parseDouble(value));
 								break;
 							case "lift":
-								characterView.setLiftLevel(value);
+								characterView.setLiftCapacity(value);
 								characterModel.setLiftCapacity(Double.parseDouble(value));
 								break;
 							case "carry":
+								characterView.setCarryCapacity(value);
 								characterModel.setCarryCapacity(Double.parseDouble(value));
 								break;
 							case "head_armor_sp":
@@ -570,8 +704,8 @@ public class CharacterCreationController {
 
 								String skillCode = key.substring(4).toLowerCase();
 								for (CharacterCreationModel.Skill skill : targetCategory.values()) {
-									String formattedSkillName = skill.getSkillName().replace(" ", "_")
-											.replace("...", ".").toLowerCase();
+									String formattedSkillName = skill.getSkillName().replace(" ", "_").replace("*", ".")
+											.toLowerCase();
 									if (skillCode.contains(formattedSkillName)) {
 										skill.setRank(Integer.parseInt(value));
 										skill.setSpecifiedSkill(specificSkill);
@@ -660,7 +794,8 @@ public class CharacterCreationController {
 						+ "total_empathy\t" + characterModel.getTotalEmpathyLevel() + "\n" //
 						+ "run\t" + characterModel.getRunLevel() + "\n" //
 						+ "leap\t" + characterModel.getLeapLevel() + "\n" //
-						+ "lift\t" + characterModel.getLiftLevel() + "\n" //
+						+ "lift\t" + characterModel.getLiftCapacity() + "\n" //
+						+ "carry\t" + characterModel.getCarryCapacity() + "\n" //
 						+ "head_armor_sp\t" + characterModel.getHeadArmorStoppingPower() + "\n" //
 						+ "torso_armor_sp\t" + characterModel.getTorsoArmorStoppingPower() + "\n" //
 						+ "right_arm_armor_sp\t" + characterModel.getRightArmArmorStoppingPower() + "\n" //
@@ -683,7 +818,7 @@ public class CharacterCreationController {
 
 						String completeSkillCode = specifiedSkill.equals("")
 								? (typeCode + ":" + skillCode + "\t" + skillRank)
-								: (typeCode + ":" + skillCode.replace("...", ".") + specifiedSkill + "\t" + skillRank);
+								: (typeCode + ":" + skillCode.replace("*", ".") + specifiedSkill + "\t" + skillRank);
 						fw.write(completeSkillCode + "\n");
 
 					}
@@ -793,6 +928,92 @@ public class CharacterCreationController {
 			}
 		}
 
+	}
+
+	private static int totalCost = 0;
+	private static int totalWeaponCost = 0;
+	private static int totalGearCost = 0;
+	private static int totalArmorCost = 0;
+	private static int totalAmmoCost = 0;
+
+	class StoreWeaponListSelectionListener implements ListSelectionListener {
+		@Override
+		public void valueChanged(ListSelectionEvent event) {
+			int totalWeaponCost = 0;
+			JTable storeWeaponTable = characterView.getStoreWeaponTable();
+
+			if (event.getValueIsAdjusting()) {
+				return;
+			}
+			for (int rowIndex : storeWeaponTable.getSelectedRows()) {
+				totalWeaponCost -= (Integer) storeWeaponTable.getValueAt(rowIndex, 10);
+			}
+
+			CharacterCreationController.totalWeaponCost = totalWeaponCost;
+			totalCost = CharacterCreationController.totalWeaponCost + totalGearCost + totalArmorCost + totalAmmoCost;
+
+			characterView.setTotalCost(totalCost);
+		}
+	}
+
+	class StoreGearListSelectionListener implements ListSelectionListener {
+		@Override
+		public void valueChanged(ListSelectionEvent event) {
+			int totalGearCost = 0;
+			JTable storeGearTable = characterView.getStoreGearTable();
+
+			if (event.getValueIsAdjusting()) {
+				return;
+			}
+			for (int rowIndex : storeGearTable.getSelectedRows()) {
+				totalGearCost -= (Integer) storeGearTable.getValueAt(rowIndex, 1);
+			}
+
+			CharacterCreationController.totalGearCost = totalGearCost;
+			totalCost = totalWeaponCost + CharacterCreationController.totalGearCost + totalArmorCost + totalAmmoCost;
+
+			characterView.setTotalCost(totalCost);
+		}
+	}
+
+	class StoreArmorListSelectionListener implements ListSelectionListener {
+		@Override
+		public void valueChanged(ListSelectionEvent event) {
+			int totalArmorCost = 0;
+			JTable storeArmorTable = characterView.getStoreArmorTable();
+
+			if (event.getValueIsAdjusting()) {
+				return;
+			}
+			for (int rowIndex : storeArmorTable.getSelectedRows()) {
+				totalArmorCost -= (Integer) storeArmorTable.getValueAt(rowIndex, 6);
+			}
+
+			CharacterCreationController.totalArmorCost = totalArmorCost;
+			totalCost = totalWeaponCost + totalGearCost + CharacterCreationController.totalArmorCost + totalAmmoCost;
+
+			characterView.setTotalCost(totalCost);
+		}
+	}
+
+	class StoreAmmoListSelectionListener implements ListSelectionListener {
+		@Override
+		public void valueChanged(ListSelectionEvent event) {
+			int totalAmmoCost = 0;
+			JTable storeAmmoTable = characterView.getStoreAmmoTable();
+
+			if (event.getValueIsAdjusting()) {
+				return;
+			}
+			for (int rowIndex : storeAmmoTable.getSelectedRows()) {
+				totalAmmoCost -= (Integer) storeAmmoTable.getValueAt(rowIndex, 3);
+			}
+
+			CharacterCreationController.totalAmmoCost = totalAmmoCost;
+			totalCost = totalWeaponCost + totalGearCost + totalArmorCost + CharacterCreationController.totalAmmoCost;
+
+			characterView.setTotalCost(totalCost);
+		}
 	}
 
 	class SelectAllTextFocusListener extends FocusAdapter {
