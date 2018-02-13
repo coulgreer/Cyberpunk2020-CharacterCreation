@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.swing.AbstractCellEditor;
+import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -38,6 +39,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -47,6 +49,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
@@ -62,6 +65,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -178,6 +182,8 @@ public class CharacterCreationView extends JFrame {
 	private JTable inventoryAmmoTable;
 	private JButton addToInventoryButton;
 	private JButton calculateButton;
+	private JButton equipButton;
+	private JTable equippedTable;
 
 	/**
 	 * Create the frame.
@@ -1528,6 +1534,29 @@ public class CharacterCreationView extends JFrame {
 		JPanel cyberneticsPanel = new JPanel();
 		tabbedPane.addTab("Cybernetics", null, cyberneticsPanel, null);
 
+		JPanel equippedPanel = new JPanel();
+		tabbedPane.addTab("Equipped", null, equippedPanel, null);
+		equippedPanel.setLayout(new BorderLayout(0, 0));
+
+		JPanel equippedToolbar = new JPanel();
+		equippedPanel.add(equippedToolbar, BorderLayout.NORTH);
+
+		JPanel equippedCards = new JPanel();
+		equippedPanel.add(equippedCards, BorderLayout.CENTER);
+		equippedCards.setLayout(new BorderLayout(0, 0));
+
+		JScrollPane equppiedScrollPane = new JScrollPane();
+		equippedCards.add(equppiedScrollPane);
+
+		equippedTable = new JTable(new EquippedTableModel());
+		equippedTable.setFillsViewportHeight(true);
+		equppiedScrollPane.setViewportView(equippedTable);
+
+		JList<Object> equippedRowHeader = new JList<Object>(new EquippedRowHeaderListModel());
+		equippedRowHeader.setFixedCellHeight(equippedTable.getRowHeight() + equippedTable.getRowMargin());
+		equippedRowHeader.setCellRenderer(new RowHeaderRenderer(equippedTable));
+		equppiedScrollPane.setRowHeaderView(equippedRowHeader);
+
 		JPanel inventoryPanel = new JPanel(new BorderLayout(0, 0));
 		tabbedPane.addTab("Inventory", null, inventoryPanel, null);
 		inventoryPanel.setLayout(new BorderLayout(0, 0));
@@ -1548,18 +1577,24 @@ public class CharacterCreationView extends JFrame {
 		carryCapacityTextField.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		carryCapacityTextField.setEditable(false);
 		carryCapacityTextField.setColumns(5);
-		
+
+		JPanel inventoryButtonPanel = new JPanel();
+		inventoryToolbar.add(inventoryButtonPanel, BorderLayout.CENTER);
+
+		equipButton = new JButton("Equip");
+		inventoryButtonPanel.add(equipButton);
+
 		inventoryCategoryComboBox = new JComboBox<String>();
 		inventoryToolbar.add(inventoryCategoryComboBox, BorderLayout.EAST);
 		inventoryCategoryComboBox
-		.setModel(new DefaultComboBoxModel<String>(new String[] { "Weapons", "Gear", "Armor", "Ammo" }));
+				.setModel(new DefaultComboBoxModel<String>(new String[] { "Weapons", "Gear", "Armor", "Ammo" }));
 
 		inventoryCards = new JPanel();
 		inventoryPanel.add(inventoryCards, BorderLayout.CENTER);
 		inventoryCards.setLayout(new CardLayout(0, 0));
 
 		JPanel inventoryWeaponCard = new JPanel();
-		inventoryCards.add(inventoryWeaponCard, "Weapon");
+		inventoryCards.add(inventoryWeaponCard, "Weapons");
 		inventoryWeaponCard.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblInventoryWeapon = new JLabel("WEAPON");
@@ -1906,6 +1941,10 @@ public class CharacterCreationView extends JFrame {
 		return skillTables;
 	}
 
+	public JTable getEquippedTable() {
+		return equippedTable;
+	}
+
 	public JTable getInventoryWeaponTable() {
 		return inventoryWeaponTable;
 	}
@@ -1941,7 +1980,7 @@ public class CharacterCreationView extends JFrame {
 	public JPanel getInventoryCardPanel() {
 		return inventoryCards;
 	}
-	
+
 	public JPanel getStoreCardPanel() {
 		return storeCards;
 	}
@@ -2124,7 +2163,7 @@ public class CharacterCreationView extends JFrame {
 	public void addInventoryChangeItemListener(ItemListener listener) {
 		inventoryCategoryComboBox.addItemListener(listener);
 	}
-	
+
 	public void addStoreChangeItemListener(ItemListener listener) {
 		storeCategoryComboBox.addItemListener(listener);
 	}
@@ -2132,7 +2171,7 @@ public class CharacterCreationView extends JFrame {
 	public void addCalculateActionListener(ActionListener listenerForCalculateButton) {
 		calculateButton.addActionListener(listenerForCalculateButton);
 	}
-	
+
 	public void addAddToInventoryActionListener(ActionListener listenerForAddToInventoryButton) {
 		addToInventoryButton.addActionListener(listenerForAddToInventoryButton);
 	}
@@ -2201,6 +2240,14 @@ public class CharacterCreationView extends JFrame {
 
 	public void addUnmodifiedReflexesStatChangeListener(ChangeListener listenerForStatChange) {
 		unmodifiedReflexesSpinner.addChangeListener(listenerForStatChange);
+	}
+
+	public void addEquipButtonActionListener(ActionListener listener) {
+		equipButton.addActionListener(listener);
+	}
+	
+	public void addEquippedTableModelListener(TableModelListener listener) {
+		equippedTable.getModel().addTableModelListener(listener);
 	}
 
 	public void setUpStatComboBoxes() {
@@ -2422,21 +2469,13 @@ public class CharacterCreationView extends JFrame {
 		model.addRow(row);
 	}
 
-	public void addStoreArmorToTable(String type, String armorClass, Map<String, Boolean> covers, int stoppingPower,
+	public void addStoreArmorToTable(String type, String armorClass, String covers, int stoppingPower,
 			int encumbranceValue, double weight, int cost, ListSelectionListener listener) {
 		Object[] row;
 		StoreArmorTableModel model = (StoreArmorTableModel) storeArmorTable.getModel();
 
-		String coverString = "";
-		for (Map.Entry<String, Boolean> entry : covers.entrySet()) {
-			if (entry.getValue()) {
-				coverString += entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1) + ", ";
-			}
-		}
-		coverString = coverString.substring(0, coverString.length() - 2);
-
 		storeArmorTable.getSelectionModel().addListSelectionListener(listener);
-		row = new Object[] { type, armorClass, coverString, stoppingPower, encumbranceValue, weight, cost };
+		row = new Object[] { type, armorClass, covers, stoppingPower, encumbranceValue, weight, cost };
 		model.addRow(row);
 	}
 
@@ -2486,10 +2525,60 @@ public class CharacterCreationView extends JFrame {
 		}
 	}
 
-	public class InventoryWeaponTableModel extends AbstractTableModel {
-		private String[] columnNames = { "Name", "Category", "WA", "Conc", "Avail", "Damage(Ammo)", "#Shots", "ROF",
-				"Rel", "Range", "Cost" };
+	public class EquippedTableModel extends AbstractTableModel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 360410719203269579L;
+		private static final int MAX_LAYERS = 3;
+		private String[] columnNames = { "Head", "Torso", "R. Arm", "L. Arm", "R. Leg", "L. Leg" };
+		private List<Object[]> data = new ArrayList<Object[]>();
 
+		public EquippedTableModel() {
+			for (int i = 0; i < MAX_LAYERS; i++) {
+				addRow(new Object[] { "", "", "", "", "", "" });
+			}
+		}
+
+		@Override
+		public int getColumnCount() {
+			return columnNames.length;
+		}
+
+		@Override
+		public int getRowCount() {
+			return data.size();
+		}
+
+		@Override
+		public Object getValueAt(int row, int column) {
+			return data.get(row)[column];
+		}
+
+		@Override
+		public String getColumnName(int column) {
+			return columnNames[column];
+		}
+
+		public void setValueAt(Object value, int row, int column) {
+			data.get(row)[column] = value;
+			fireTableCellUpdated(getRowCount(), getRowCount());
+		}
+
+		public void addRow(Object[] rowData) {
+			data.add(rowData);
+			fireTableRowsInserted(getRowCount(), getRowCount());
+		}
+
+	}
+
+	public class InventoryWeaponTableModel extends AbstractTableModel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -1761873937398375095L;
+		private String[] columnNames = { "Name", "Category", "WA", "Conc", "Damage(Ammo)", "#Shots", "ROF", "Rel",
+				"Range" };
 		private List<Object[]> data = new ArrayList<Object[]>();
 
 		@Override
@@ -2512,6 +2601,7 @@ public class CharacterCreationView extends JFrame {
 			fireTableRowsInserted(getRowCount(), getRowCount());
 		}
 
+		@Override
 		public String getColumnName(int column) {
 			return columnNames[column];
 		}
@@ -2554,7 +2644,12 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class InventoryGearTableModel extends AbstractTableModel {
-		private String[] columnNames = { "Type", "Cost", "Weight" };
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 8900304778601188250L;
+
+		private String[] columnNames = { "Type", "Quantity", "Weight" };
 
 		private List<Object[]> data = new ArrayList<Object[]>();
 
@@ -2570,12 +2665,21 @@ public class CharacterCreationView extends JFrame {
 
 		@Override
 		public Object getValueAt(int row, int column) {
-			return data.get(row)[column];
+			if (column == 2) {
+				return data.get(row)[column] + " kg";
+			} else {
+				return data.get(row)[column];
+			}
 		}
 
 		public void addRow(Object[] rowData) {
 			data.add(rowData);
 			fireTableRowsInserted(getRowCount(), getRowCount());
+		}
+
+		public void removeRow(int row) {
+			data.remove(row);
+			fireTableRowsDeleted(getRowCount(), getRowCount());
 		}
 
 		public String getColumnName(int column) {
@@ -2622,7 +2726,12 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class InventoryArmorTableModel extends AbstractTableModel {
-		private String[] columnNames = { "Type", "Armor Class", "Covers", "SP", "EV", "Weight", "Cost" };
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -7812184298635202658L;
+
+		private String[] columnNames = { "Type", "Armor Class", "Covers", "SP", "EV", "Weight" };
 
 		private List<Object[]> data = new ArrayList<Object[]>();
 
@@ -2689,7 +2798,12 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class InventoryAmmoTableModel extends AbstractTableModel {
-		private String[] columnNames = { "Type", "Quantity", "Is Caseless", "Cost", "Weight" };
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 3636398298145221263L;
+
+		private String[] columnNames = { "Type", "Quantity", "Is Caseless", "Weight" };
 
 		private List<Object[]> data = new ArrayList<Object[]>();
 
@@ -2711,6 +2825,11 @@ public class CharacterCreationView extends JFrame {
 		public void addRow(Object[] rowData) {
 			data.add(rowData);
 			fireTableRowsInserted(getRowCount(), getRowCount());
+		}
+
+		public void removeRow(int row) {
+			data.remove(row);
+			fireTableRowsDeleted(getRowCount(), getRowCount());
 		}
 
 		public String getColumnName(int column) {
@@ -2811,6 +2930,50 @@ public class CharacterCreationView extends JFrame {
 			data.get(row)[col] = value;
 			fireTableCellUpdated(row, col);
 		}
+	}
+
+	class EquippedRowHeaderListModel extends AbstractListModel<Object> {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -8739692268186515252L;
+		String headers[] = new String[] { "Layer 1", "Layer 2", "Layer 3" };
+
+		@Override
+		public Object getElementAt(int index) {
+			return headers[index];
+		}
+
+		@Override
+		public int getSize() {
+			return headers.length;
+		}
+
+	}
+
+	class RowHeaderRenderer extends JLabel implements ListCellRenderer<Object> {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1948975573822493932L;
+
+		RowHeaderRenderer(JTable table) {
+			JTableHeader header = table.getTableHeader();
+			setOpaque(true);
+			setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+			setForeground(header.getForeground());
+			setBackground(header.getBackground());
+			setFont(header.getFont());
+		}
+
+		@Override
+		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+				boolean cellHasFocus) {
+			setText((value == null) ? "" : value.toString());
+			return this;
+		}
+
 	}
 
 	class SpinnerEditor extends AbstractCellEditor implements TableCellEditor {

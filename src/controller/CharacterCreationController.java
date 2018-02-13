@@ -14,7 +14,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
@@ -87,6 +89,8 @@ public class CharacterCreationController {
 		this.characterView.addStoreChangeItemListener(new StoreChangeListener());
 		this.characterView.addAddToInventoryActionListener(new AddToInventoryActionListener());
 		this.characterView.addCalculateActionListener(new AddMoneyActionListener());
+		this.characterView.addEquipButtonActionListener(new EquipActionListener());
+		this.characterView.addEquippedTableModelListener(new EquippedTableModelListener());
 
 		this.characterView.drawLoadedInjuryPoints(this.characterModel.getInjuryPoints());
 		this.characterView.setCharacterPoints(Integer.toString(this.characterModel.getCharacterPoints()
@@ -161,7 +165,7 @@ public class CharacterCreationController {
 
 	private void populateAmmoTable() {
 		for (CharacterCreationModel.Ammo ammo : characterModel.getAmmos().values()) {
-			characterView.addAmmoToTable(ammo.getType(), ammo.getQuantity(), ammo.isCaseless(), ammo.getCost(),
+			characterView.addAmmoToTable(ammo.getType(), ammo.getQuantityPerBox(), ammo.isCaseless(), ammo.getCost(),
 					ammo.getWeight(), new StoreAmmoListSelectionListener());
 		}
 		characterView.resizeColumnWidth(characterView.getStoreAmmoTable());
@@ -195,14 +199,14 @@ public class CharacterCreationController {
 		public void actionPerformed(ActionEvent event) {
 			int currentMoney = characterView.getMoney();
 			int moneyModifier = characterView.getMoneyModifier();
-			
+
 			characterView.setMoneyModifier("0");
 			characterView.setMoney(String.valueOf(currentMoney + moneyModifier));
-			
+
 		}
-		
+
 	}
-	
+
 	class AddToInventoryActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
@@ -216,40 +220,79 @@ public class CharacterCreationController {
 			JTable inventoryAmmoTable = characterView.getInventoryAmmoTable();
 
 			for (int rowIndex : storeWeaponTable.getSelectedRows()) {
-				Object[] row = new Object[storeWeaponTable.getColumnCount()];
-				for (int i = 0; i < storeWeaponTable.getColumnCount(); i++) {
-					Object item = storeWeaponTable.getValueAt(rowIndex, i);
-					row[i] = item;
-				}
+				Object[] row;
+				String type = (String) storeWeaponTable.getValueAt(rowIndex, 0);
+				CharacterCreationModel.Weapon weapon = characterModel.getWeapons().get(type);
+
+				row = new Object[] { weapon.getName(), weapon.getCategory(), weapon.getAccuracy(),
+						weapon.getConcealability(), weapon.getDamageAndAmmo(), weapon.getNumberOfShots(),
+						weapon.getRateOfFire(), weapon.getReliability(), weapon.getRange() };
+
 				((InventoryWeaponTableModel) inventoryWeaponTable.getModel()).addRow(row);
 			}
 			characterView.resizeColumnWidth(inventoryWeaponTable);
 
 			for (int rowIndex : storeGearTable.getSelectedRows()) {
-				Object[] row = new Object[storeGearTable.getColumnCount()];
-				for (int i = 0; i < storeGearTable.getColumnCount(); i++) {
-					Object item = storeGearTable.getValueAt(rowIndex, i);
-					row[i] = item;
+				Object[] row;
+				String type = (String) storeGearTable.getValueAt(rowIndex, 0);
+				CharacterCreationModel.Gear gear = characterModel.getGear().get(type);
+				gear.setQuantity(gear.getQuantity() + 1);
+				characterModel.getGear().put(type, gear);
+
+				row = new Object[] { gear.getType(), gear.getQuantity(), (gear.getWeight() * gear.getQuantity()) };
+
+				boolean entryExists = false;
+				int duplicateRowIndex = 0;
+				for (int i = 0; i < inventoryGearTable.getRowCount(); i++) {
+					String tempType = (String) inventoryGearTable.getValueAt(i, 0);
+					if (tempType.equals(type)) {
+						duplicateRowIndex = i;
+						entryExists = true;
+						break;
+					}
+				}
+				if (entryExists) {
+					((InventoryGearTableModel) inventoryGearTable.getModel()).removeRow(duplicateRowIndex);
 				}
 				((InventoryGearTableModel) inventoryGearTable.getModel()).addRow(row);
 			}
 			characterView.resizeColumnWidth(inventoryGearTable);
 
 			for (int rowIndex : storeArmorTable.getSelectedRows()) {
-				Object[] row = new Object[storeArmorTable.getColumnCount()];
-				for (int i = 0; i < storeArmorTable.getColumnCount(); i++) {
-					Object item = storeArmorTable.getValueAt(rowIndex, i);
-					row[i] = item;
-				}
+				Object[] row;
+				String type = (String) storeArmorTable.getValueAt(rowIndex, 0);
+				CharacterCreationModel.Armor armor = characterModel.getArmors().get(type);
+
+				row = new Object[] { armor.getType(), armor.getArmorClass(), armor.getCovers(),
+						armor.getStoppingPower(), armor.getEncumbranceValue(), armor.getWeight() };
+
 				((InventoryArmorTableModel) inventoryArmorTable.getModel()).addRow(row);
 			}
 			characterView.resizeColumnWidth(inventoryArmorTable);
 
 			for (int rowIndex : storeAmmoTable.getSelectedRows()) {
-				Object[] row = new Object[storeAmmoTable.getColumnCount()];
-				for (int i = 0; i < storeAmmoTable.getColumnCount(); i++) {
-					Object item = storeAmmoTable.getValueAt(rowIndex, i);
-					row[i] = item;
+				Object[] row;
+
+				String type = (String) storeAmmoTable.getValueAt(rowIndex, 0);
+				CharacterCreationModel.Ammo ammo = characterModel.getAmmos().get(type);
+				ammo.setQuantity(ammo.getQuantity() + ammo.getQuantityPerBox());
+				characterModel.getAmmos().put(type, ammo);
+
+				row = new Object[] { ammo.getType(), ammo.getQuantity(), ammo.isCaseless(),
+						((ammo.getQuantity() / ammo.getQuantityPerBox()) * ammo.getWeight()) };
+
+				boolean entryExists = false;
+				int duplicateRowIndex = 0;
+				for (int i = 0; i < inventoryAmmoTable.getRowCount(); i++) {
+					String tempType = (String) inventoryAmmoTable.getValueAt(i, 0);
+					if (tempType.equals(type)) {
+						duplicateRowIndex = i;
+						entryExists = true;
+						break;
+					}
+				}
+				if (entryExists) {
+					((InventoryAmmoTableModel) inventoryAmmoTable.getModel()).removeRow(duplicateRowIndex);
 				}
 				((InventoryAmmoTableModel) inventoryAmmoTable.getModel()).addRow(row);
 			}
@@ -262,6 +305,204 @@ public class CharacterCreationController {
 			storeArmorTable.clearSelection();
 			storeAmmoTable.clearSelection();
 		}
+	}
+
+	class EquipActionListener implements ActionListener {
+		private static final int EQUIPPED_HEAD_INDEX = 0;
+		private static final int EQUIPPED_TORSO_INDEX = 1;
+		private static final int EQUIPPED_RIGHT_ARM_INDEX = 2;
+		private static final int EQUIPPED_LEFT_ARM_INDEX = 3;
+		private static final int EQUIPPED_RIGHT_LEG_INDEX = 4;
+		private static final int EQUIPPED_LEFT_LEG_INDEX = 5;
+		private static final int ARMOR_TYPE_INDEX = 0;
+		private static final int MAX_ARMOR_LAYERS = 3;
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			JTable inventoryArmorTable = characterView.getInventoryArmorTable();
+			JTable equippedTable = characterView.getEquippedTable();
+
+			for (int rowIndex : inventoryArmorTable.getSelectedRows()) {
+				String type = (String) inventoryArmorTable.getValueAt(rowIndex, ARMOR_TYPE_INDEX);
+				CharacterCreationModel.Armor selectedArmor = characterModel.getArmors().get(type);
+				String selectedArmorArmorClass = selectedArmor.getArmorClass();
+				boolean isConflicted = false;
+
+				for (int i = 0; i < equippedTable.getRowCount(); i++) {
+					CharacterCreationModel.Armor tempArmor;
+					String tempArmorArmorClass;
+
+					if (selectedArmor.getCovers().contains("Head")) {
+						if (!equippedTable.getValueAt(i, EQUIPPED_HEAD_INDEX).equals("")) {
+							tempArmor = characterModel.getArmors()
+									.get(equippedTable.getValueAt(i, EQUIPPED_HEAD_INDEX));
+							tempArmorArmorClass = tempArmor.getArmorClass();
+							if (selectedArmorArmorClass.equals("Hard Armor")
+									&& tempArmorArmorClass.equals("Hard Armor")) {
+								JOptionPane.showMessageDialog(characterView,
+										"You cannot equip " + tempArmor.getType() + " and " + selectedArmor.getType()
+												+ " because they are both Hard Armor Class.");
+								isConflicted = true;
+							}
+						}
+
+					}
+
+					if (selectedArmor.getCovers().contains("Torso")) {
+						if (!equippedTable.getValueAt(i, EQUIPPED_TORSO_INDEX).equals("")) {
+							tempArmor = characterModel.getArmors()
+									.get(equippedTable.getValueAt(i, EQUIPPED_TORSO_INDEX));
+							tempArmorArmorClass = tempArmor.getArmorClass();
+							if (selectedArmorArmorClass.equals("Hard Armor")
+									&& tempArmorArmorClass.equals("Hard Armor")) {
+								JOptionPane.showMessageDialog(characterView,
+										"You cannot equip " + tempArmor.getType() + " and " + selectedArmor.getType()
+												+ " because they are both Hard Armor Class.");
+								isConflicted = true;
+							}
+						}
+
+					}
+
+					if (selectedArmor.getCovers().contains("Arms")) {
+						if (!equippedTable.getValueAt(i, EQUIPPED_RIGHT_ARM_INDEX).equals("")) {
+							tempArmor = characterModel.getArmors()
+									.get(equippedTable.getValueAt(i, EQUIPPED_RIGHT_ARM_INDEX));
+							tempArmorArmorClass = tempArmor.getArmorClass();
+							if (selectedArmorArmorClass.equals("Hard Armor")
+									&& tempArmorArmorClass.equals("Hard Armor")) {
+								JOptionPane.showMessageDialog(characterView,
+										"You cannot equip " + tempArmor.getType() + " and " + selectedArmor.getType()
+												+ " because they are both Hard Armor Class.");
+								isConflicted = true;
+							}
+						}
+					}
+
+					if (selectedArmor.getCovers().contains("Legs")) {
+						if (!equippedTable.getValueAt(i, EQUIPPED_RIGHT_LEG_INDEX).equals("")) {
+							tempArmor = characterModel.getArmors()
+									.get(equippedTable.getValueAt(i, EQUIPPED_RIGHT_LEG_INDEX));
+							tempArmorArmorClass = tempArmor.getArmorClass();
+							if (selectedArmorArmorClass.equals("Hard Armor")
+									&& tempArmorArmorClass.equals("Hard Armor")) {
+								JOptionPane.showMessageDialog(characterView,
+										"You cannot equip " + tempArmor.getType() + " and " + selectedArmor.getType()
+												+ " because they are both Hard Armor Class.");
+								isConflicted = true;
+							}
+						}
+					}
+				}
+
+				if (selectedArmor.getCovers().contains("Head")) {
+					int filledSlots = 0;
+					for (int i = 0; i < equippedTable.getRowCount(); i++) {
+						String equippedArmorType = (String) equippedTable.getValueAt(i, EQUIPPED_HEAD_INDEX);
+						if (!equippedArmorType.equals("")) {
+							filledSlots++;
+						}
+					}
+					if (filledSlots >= MAX_ARMOR_LAYERS) {
+						isConflicted = true;
+					}
+				}
+
+				if (selectedArmor.getCovers().contains("Torso")) {
+					int filledSlots = 0;
+					for (int i = 0; i < equippedTable.getRowCount(); i++) {
+						String equippedArmorType = (String) equippedTable.getValueAt(i, EQUIPPED_TORSO_INDEX);
+						if (!equippedArmorType.equals("")) {
+							filledSlots++;
+						}
+					}
+					if (filledSlots >= MAX_ARMOR_LAYERS) {
+						isConflicted = true;
+					}
+				}
+
+				if (selectedArmor.getCovers().contains("Arms")) {
+					int filledSlots = 0;
+					for (int i = 0; i < equippedTable.getRowCount(); i++) {
+						String equippedArmorType = (String) equippedTable.getValueAt(i, EQUIPPED_RIGHT_ARM_INDEX);
+						if (!equippedArmorType.equals("")) {
+							filledSlots++;
+						}
+					}
+					if (filledSlots >= MAX_ARMOR_LAYERS) {
+						isConflicted = true;
+					}
+				}
+
+				if (selectedArmor.getCovers().contains("Legs")) {
+					int filledSlots = 0;
+					for (int i = 0; i < equippedTable.getRowCount(); i++) {
+						String equippedArmorType = (String) equippedTable.getValueAt(i, EQUIPPED_RIGHT_LEG_INDEX);
+						if (!equippedArmorType.equals("")) {
+							filledSlots++;
+						}
+					}
+					if (filledSlots >= MAX_ARMOR_LAYERS) {
+						isConflicted = true;
+					}
+				}
+
+				if (!isConflicted) {
+					if (selectedArmor.getCovers().contains("Head")) {
+						for (int i = 0; i < equippedTable.getRowCount(); i++) {
+							if (equippedTable.getValueAt(i, EQUIPPED_HEAD_INDEX).equals("")) {
+								equippedTable.setValueAt(selectedArmor.getType(), i, EQUIPPED_HEAD_INDEX);
+								break;
+							}
+						}
+					}
+
+					if (selectedArmor.getCovers().contains("Torso")) {
+						for (int i = 0; i < equippedTable.getRowCount(); i++) {
+							if (equippedTable.getValueAt(i, EQUIPPED_TORSO_INDEX).equals("")) {
+								equippedTable.setValueAt(selectedArmor.getType(), i, EQUIPPED_TORSO_INDEX);
+								break;
+							}
+						}
+
+					}
+
+					if (selectedArmor.getCovers().contains("Arms")) {
+						for (int i = 0; i < equippedTable.getRowCount(); i++) {
+							if (equippedTable.getValueAt(i, EQUIPPED_RIGHT_ARM_INDEX).equals("")) {
+								equippedTable.setValueAt(selectedArmor.getType(), i, EQUIPPED_RIGHT_ARM_INDEX);
+								break;
+							}
+						}
+						for (int i = 0; i < equippedTable.getRowCount(); i++) {
+							if (equippedTable.getValueAt(i, EQUIPPED_LEFT_ARM_INDEX).equals("")) {
+								equippedTable.setValueAt(selectedArmor.getType(), i, EQUIPPED_LEFT_ARM_INDEX);
+								break;
+							}
+						}
+
+					}
+
+					if (selectedArmor.getCovers().contains("Legs")) {
+						for (int i = 0; i < equippedTable.getRowCount(); i++) {
+							if (equippedTable.getValueAt(i, EQUIPPED_RIGHT_LEG_INDEX).equals("")) {
+								equippedTable.setValueAt(selectedArmor.getType(), i, EQUIPPED_RIGHT_LEG_INDEX);
+								break;
+							}
+						}
+						for (int i = 0; i < equippedTable.getRowCount(); i++) {
+							if (equippedTable.getValueAt(i, EQUIPPED_LEFT_LEG_INDEX).equals("")) {
+								equippedTable.setValueAt(selectedArmor.getType(), i, EQUIPPED_LEFT_LEG_INDEX);
+								break;
+							}
+						}
+
+					}
+				}
+
+			}
+		}
+
 	}
 
 	class HandleDocumentListener implements DocumentListener {
@@ -289,6 +530,7 @@ public class CharacterCreationController {
 			CardLayout layout = (CardLayout) cardsPanel.getLayout();
 			layout.show(cardsPanel, (String) event.getItem());
 		}
+
 	}
 
 	class StoreChangeListener implements ItemListener {
@@ -941,6 +1183,112 @@ public class CharacterCreationController {
 					}
 				}
 			}
+		}
+
+	}
+
+	class EquippedTableModelListener implements TableModelListener {
+		private static final int EQUIPPED_HEAD_INDEX = 0;
+		private static final int EQUIPPED_TORSO_INDEX = 1;
+		private static final int EQUIPPED_RIGHT_ARM_INDEX = 2;
+		private static final int EQUIPPED_LEFT_ARM_INDEX = 3;
+		private static final int EQUIPPED_RIGHT_LEG_INDEX = 4;
+		private static final int EQUIPPED_LEFT_LEG_INDEX = 5;
+		private static final int EQUIPPED_LAYER_1_INDEX = 0;
+		private static final int EQUIPPED_LAYER_2_INDEX = 1;
+		private static final int EQUIPPED_LAYER_3_INDEX = 2;
+
+		@Override
+		public void tableChanged(TableModelEvent event) {
+
+			int layers = 0;
+			int stoppingPower = 0;
+			CharacterCreationModel.Armor armorLayer1 = null;
+			CharacterCreationModel.Armor armorLayer2 = null;
+			CharacterCreationModel.Armor armorLayer3 = null;
+
+			String armorLayer1Type = (String) characterView.getEquippedTable().getValueAt(EQUIPPED_LAYER_1_INDEX,
+					EQUIPPED_TORSO_INDEX);
+			String armorLayer2Type = (String) characterView.getEquippedTable().getValueAt(EQUIPPED_LAYER_2_INDEX,
+					EQUIPPED_TORSO_INDEX);
+			String armorLayer3Type = (String) characterView.getEquippedTable().getValueAt(EQUIPPED_LAYER_3_INDEX,
+					EQUIPPED_TORSO_INDEX);
+
+			if (!armorLayer1Type.equals("")) {
+				armorLayer1 = characterModel.getArmors().get(armorLayer1Type);
+				layers++;
+			}
+
+			if (!armorLayer2Type.equals("")) {
+				armorLayer2 = characterModel.getArmors().get(armorLayer2Type);
+				layers++;
+			}
+
+			if (!armorLayer3Type.equals("")) {
+				armorLayer3 = characterModel.getArmors().get(armorLayer3Type);
+				layers++;
+			}
+
+			if (layers == 1) {
+				characterModel.setTorsoEncumbranceValue(0);
+			} else if (layers == 2) {
+				characterModel.setTorsoEncumbranceValue(1);
+			} else if (layers == 3) {
+				characterModel.setTorsoEncumbranceValue(3);
+			}
+
+			int encumbranceValue = characterModel.getHeadEncumbranceValue() + characterModel.getTorsoEncumbranceValue()
+					+ characterModel.getRightArmEncumbranceValue() + characterModel.getLeftArmEncumbranceValue()
+					+ characterModel.getRightLegEncumbranceValue() + characterModel.getLeftLegEncumbranceValue();
+			characterView.setModifiedReflexesLevel(
+					Integer.valueOf(characterModel.getUnmodifiedReflexesLevel() - encumbranceValue).toString());
+
+			List<Integer> stoppingPowers = new ArrayList<Integer>();
+			if (armorLayer1 != null) {
+				stoppingPowers.add(armorLayer1.getStoppingPower());
+			}
+
+			if (armorLayer2 != null) {
+				stoppingPowers.add(armorLayer2.getStoppingPower());
+			}
+
+			if (armorLayer3 != null) {
+				stoppingPowers.add(armorLayer3.getStoppingPower());
+			}
+
+			int length = stoppingPowers.size();
+			for (int i = 0; i < length - 1; i++) {
+				int minId = i;
+				for (int j = i + 1; j < length; j++) {
+					if (stoppingPowers.get(i) < stoppingPowers.get(minId)) {
+						minId = j;
+					}
+					int temp = stoppingPowers.get(minId);
+					stoppingPowers.set(minId, stoppingPowers.get(i));
+					stoppingPowers.set(i, temp);
+				}
+			}
+
+			stoppingPower = stoppingPowers.get(0);
+
+			for (int i = 1; i < length; i++) {
+				int difference = stoppingPower - stoppingPowers.get(i);
+				if (0 <= difference && difference <= 4) {
+					stoppingPower += 5;
+				} else if (5 <= difference && difference <= 8) {
+					stoppingPower += 4;
+				} else if (9 <= difference && difference <= 14) {
+					stoppingPower += 3;
+				} else if (15 <= difference && difference <= 20) {
+					stoppingPower += 2;
+				} else if (21 <= difference && difference <= 26) {
+					stoppingPower += 1;
+				} else if (27 <= difference) {
+					stoppingPower += 0;
+				}
+			}
+
+			characterView.setTorsoArmorStoppingPower(String.valueOf(stoppingPower));
 		}
 
 	}

@@ -27,6 +27,12 @@ public class CharacterCreationModel {
 	private int characterPoints;
 
 	private int intelligenceLevel;
+	private int headEncumbranceValue;
+	private int torsoEncumbranceValue;
+	private int rightArmEncumbranceValue;
+	private int leftArmEncumbranceValue;
+	private int rightLegEncumbranceValue;
+	private int leftLegEncumbranceValue;
 	private int modifiedReflexesLevel;
 	private int unmodifiedReflexesLevel;
 	private int technicalAbilityLevel;
@@ -2188,6 +2194,7 @@ public class CharacterCreationModel {
 	private Weapon techtronica15Microwaver = new Weapon.WeaponBuilder() //
 			.withName("Techtronica 15 Microwaver") //
 			.withType("P") //
+			.withCategory("P") //
 			.withAccuracy(0) //
 			.withConcealability("J") //
 			.withAvailability("P") //
@@ -2201,6 +2208,7 @@ public class CharacterCreationModel {
 	private Weapon militechElectricLaserCannon = new Weapon.WeaponBuilder() //
 			.withName("Militech Electrics Laser Cannon") //
 			.withType("RIF") //
+			.withCategory("RIF") //
 			.withAccuracy(0) //
 			.withConcealability("N") //
 			.withAvailability("R") //
@@ -2241,6 +2249,7 @@ public class CharacterCreationModel {
 	private Weapon nelspotWombat = new Weapon.WeaponBuilder() //
 			.withName("Nelspot \"Wombat\"") //
 			.withType("P") //
+			.withCategory("P") //
 			.withAccuracy(-1) //
 			.withConcealability("J") //
 			.withAvailability("C") //
@@ -2254,6 +2263,7 @@ public class CharacterCreationModel {
 	private Weapon militechElectronicsTaser = new Weapon.WeaponBuilder() //
 			.withName("Militech Electronics Taser") //
 			.withType("P") //
+			.withCategory("P") //
 			.withAccuracy(-1) //
 			.withConcealability("J") //
 			.withAvailability("C") //
@@ -2353,6 +2363,7 @@ public class CharacterCreationModel {
 	private Weapon knife = new Weapon.WeaponBuilder() //
 			.withName("Knife") //
 			.withType("Melee") //
+			.withCategory("Melee") //
 			.withAccuracy(0) //
 			.withConcealability("P") //
 			.withAvailability("C") //
@@ -2397,6 +2408,7 @@ public class CharacterCreationModel {
 	private Weapon nunchaku = new Weapon.WeaponBuilder() //
 			.withName("Nunchaku") //
 			.withType("Melee") //
+			.withCategory("Melee") //
 			.withAccuracy(0) //
 			.withConcealability("L") //
 			.withAvailability("C") //
@@ -3161,13 +3173,13 @@ public class CharacterCreationModel {
 	private Ammo regularLightAmmo = new Ammo.AmmoBuilder() //
 			.withType("Reg Lt Pistol / Lt SMG Ammo") //
 			.isCaseless(true) //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.withCost(15) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo armorPiercingLightAmmo = new Ammo.AmmoBuilder() //
 			.withType("AP Lt Pistol / Lt SMG Ammo") //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.isCaseless(true) //
 			.withCost(45) //
 			.withWeight(0.5) //
@@ -3175,13 +3187,13 @@ public class CharacterCreationModel {
 	private Ammo regularLightBrassAmmo = new Ammo.AmmoBuilder() //
 			.withType("Brass Reg Lt Pistol / Lt SMG Ammo") //
 			.isCaseless(false) //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.withCost(30) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo armorPiercingLightBrassAmmo = new Ammo.AmmoBuilder() //
 			.withType("Brass AP Lt Pistol / Lt SMG Ammo") //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.isCaseless(false) //
 			.withCost(90) //
 			.withWeight(0.5) //
@@ -3189,13 +3201,13 @@ public class CharacterCreationModel {
 	private Ammo regularMediumAmmo = new Ammo.AmmoBuilder() //
 			.withType("Reg Med Pistol / Med SMG Ammo") //
 			.isCaseless(true) //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.withCost(15) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo armorPiercingMediumAmmo = new Ammo.AmmoBuilder() //
 			.withType("AP Med Pistol / Med SMG Ammo") //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.isCaseless(true) //
 			.withCost(45) //
 			.withWeight(0.5) //
@@ -3203,13 +3215,13 @@ public class CharacterCreationModel {
 	private Ammo regularMediumBrassAmmo = new Ammo.AmmoBuilder() //
 			.withType("Brass Reg Med Pistol / Med SMG Ammo") //
 			.isCaseless(false) //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.withCost(30) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo armorPiercingMediumBrassAmmo = new Ammo.AmmoBuilder() //
 			.withType("Brass AP Med Pistol / Med SMG Ammo") //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.isCaseless(false) //
 			.withCost(90) //
 			.withWeight(0.5) //
@@ -3217,13 +3229,13 @@ public class CharacterCreationModel {
 	private Ammo regularHeavyAmmo = new Ammo.AmmoBuilder() //
 			.withType("Reg Hvy Pistol / Hvy SMG Ammo") //
 			.isCaseless(true) //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.withCost(18) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo armorPiercingHeavyAmmo = new Ammo.AmmoBuilder() //
 			.withType("AP Hvy Pistol / Hvy SMG Ammo") //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.isCaseless(true) //
 			.withCost(54) //
 			.withWeight(0.5) //
@@ -3231,13 +3243,13 @@ public class CharacterCreationModel {
 	private Ammo regularHeavyBrassAmmo = new Ammo.AmmoBuilder() //
 			.withType("Brass Reg Hvy Pistol / Hvy SMG Ammo") //
 			.isCaseless(false) //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.withCost(36) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo armorPiercingHeavyBrassAmmo = new Ammo.AmmoBuilder() //
 			.withType("Brass AP Hvy Pistol / Hvy SMG Ammo") //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.isCaseless(false) //
 			.withCost(108) //
 			.withWeight(0.5) //
@@ -3245,13 +3257,13 @@ public class CharacterCreationModel {
 	private Ammo regularVeryHeavyAmmo = new Ammo.AmmoBuilder() //
 			.withType("Reg Very Hvy Pistol / Very Hvy SMG Ammo") //
 			.isCaseless(true) //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.withCost(20) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo armorPiercingVeryHeavyAmmo = new Ammo.AmmoBuilder() //
 			.withType("AP Very Hvy Pistol / Very Hvy SMG Ammo") //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.isCaseless(true) //
 			.withCost(60) //
 			.withWeight(0.5) //
@@ -3259,13 +3271,13 @@ public class CharacterCreationModel {
 	private Ammo regularVeryHeavyBrassAmmo = new Ammo.AmmoBuilder() //
 			.withType("Brass Reg Very Hvy Pistol / Very Heavy SMG Ammo") //
 			.isCaseless(false) //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.withCost(40) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo armorPiercingVeryHeavyBrassAmmo = new Ammo.AmmoBuilder() //
 			.withType("Brass AP Very Hvy Pistol / Very Hvy SMG Ammo") //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.isCaseless(false) //
 			.withCost(120) //
 			.withWeight(0.5) //
@@ -3273,13 +3285,13 @@ public class CharacterCreationModel {
 	private Ammo regularAssaultRifleAmmo = new Ammo.AmmoBuilder() //
 			.withType("Reg AR Ammo") //
 			.isCaseless(true) //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.withCost(40) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo armorPiercingAssaultRifleAmmo = new Ammo.AmmoBuilder() //
 			.withType("AP AR Ammo") //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.isCaseless(true) //
 			.withCost(120) //
 			.withWeight(0.5) //
@@ -3287,13 +3299,13 @@ public class CharacterCreationModel {
 	private Ammo regularAssaultRifleBrassAmmo = new Ammo.AmmoBuilder() //
 			.withType("Brass Reg AR Ammo") //
 			.isCaseless(false) //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.withCost(80) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo armorPiercingAssaultRifleBrassAmmo = new Ammo.AmmoBuilder() //
 			.withType("Brass AR Ammo") //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.isCaseless(false) //
 			.withCost(240) //
 			.withWeight(0.5) //
@@ -3301,147 +3313,147 @@ public class CharacterCreationModel {
 	private Ammo regularShotgunAmmo = new Ammo.AmmoBuilder() //
 			.withType("Reg SHG Ammo") //
 			.isCaseless(true) //
-			.withQuantity(12) //
+			.withQuantityPerBox(12) //
 			.withCost(15) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo regularShotgunPlasticAmmo = new Ammo.AmmoBuilder() //
 			.withType("Plastic Reg SHG Ammo") //
 			.isCaseless(false) //
-			.withQuantity(12) //
+			.withQuantityPerBox(12) //
 			.withCost(30) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo cannonRound = new Ammo.AmmoBuilder() //
 			.withType("20mm Cannon Round") //
 			.isCaseless(true) //
-			.withQuantity(1) //
+			.withQuantityPerBox(1) //
 			.withCost(25) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo arrow = new Ammo.AmmoBuilder() //
 			.withType("Arrow(s)") //
 			.isCaseless(true) //
-			.withQuantity(20) //
+			.withQuantityPerBox(20) //
 			.withCost(24) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo crossbowBolt = new Ammo.AmmoBuilder() //
 			.withType("Crossbow Bolt(s)") //
 			.isCaseless(true) //
-			.withQuantity(12) //
+			.withQuantityPerBox(12) //
 			.withCost(30) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo airgunPaintPellet = new Ammo.AmmoBuilder() //
 			.withType("Airgun Paint Pellet") //
 			.isCaseless(true) //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.withCost(6) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo airgunHallucinogenPellet = new Ammo.AmmoBuilder() //
 			.withType("Airgun Hallucinogen Pellet") //
 			.isCaseless(true) //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.withCost(6) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo airgunNauseaDrugPellet = new Ammo.AmmoBuilder() //
 			.withType("Airgun Nausea Drug Pellet") //
 			.isCaseless(true) //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.withCost(6) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo airgunSleepDrugPellet = new Ammo.AmmoBuilder() //
 			.withType("Airgun Sleep Drug Pellet") //
 			.isCaseless(true) //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.withCost(6) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo airgunBiotoxinIPellet = new Ammo.AmmoBuilder() //
 			.withType("Airgun Biotoxin I Pellet") //
 			.isCaseless(true) //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.withCost(6) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo airgunBiotoxinIIPellet = new Ammo.AmmoBuilder() //
 			.withType("Airgun Biotoxin II Pellet") //
 			.isCaseless(true) //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.withCost(6) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo airgunNerveGasPellet = new Ammo.AmmoBuilder() //
 			.withType("Airgun Nerve Gas Pellet") //
 			.isCaseless(true) //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.withCost(6) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo airgunAcidPellet = new Ammo.AmmoBuilder() //
 			.withType("Airgun Acid Pellet") //
 			.isCaseless(true) //
-			.withQuantity(100) //
+			.withQuantityPerBox(100) //
 			.withCost(30) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo needlegunHallucinogenRound = new Ammo.AmmoBuilder() //
 			.withType("Needlegun Hallucinogen Round") //
 			.isCaseless(true) //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.withCost(25) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo needlegunNauseaDrugRound = new Ammo.AmmoBuilder() //
 			.withType("Needlegun Nausea Drug Round") //
 			.isCaseless(true) //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.withCost(25) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo needlegunSleepDrugRound = new Ammo.AmmoBuilder() //
 			.withType("Needlegun Sleep Drug Round") //
 			.isCaseless(true) //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.withCost(25) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo needlegunBiotoxinIRound = new Ammo.AmmoBuilder() //
 			.withType("Needlegun Biotoxin I Round") //
 			.isCaseless(true) //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.withCost(25) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo needlegunBiotoxinIIRound = new Ammo.AmmoBuilder() //
 			.withType("Needlegun Biotoxin II Round") //
 			.isCaseless(true) //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.withCost(25) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo needlegunNerveGasRound = new Ammo.AmmoBuilder() //
 			.withType("Needlegun Nerve Gas Round") //
 			.isCaseless(true) //
-			.withQuantity(50) //
+			.withQuantityPerBox(50) //
 			.withCost(25) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo flamethrowerReload = new Ammo.AmmoBuilder() //
 			.withType("Flamethrower Reload") //
 			.isCaseless(true) //
-			.withQuantity(1) //
+			.withQuantityPerBox(1) //
 			.withCost(50) //
 			.withWeight(0.5) //
 			.build();
 	private Ammo microMissileReload = new Ammo.AmmoBuilder() //
 			.withType("Micro Missile Reload") //
 			.isCaseless(true) //
-			.withQuantity(4) //
+			.withQuantityPerBox(4) //
 			.withCost(100) //
 			.withWeight(0.5) //
 			.build();
@@ -3452,6 +3464,12 @@ public class CharacterCreationModel {
 		characterPoints = DEFAULT_STAT_LEVEL * 9;
 
 		intelligenceLevel = DEFAULT_STAT_LEVEL;
+		headEncumbranceValue = 0;
+		torsoEncumbranceValue = 0;
+		rightArmEncumbranceValue = 0;
+		leftArmEncumbranceValue = 0;
+		rightLegEncumbranceValue = 0;
+		leftLegEncumbranceValue = 0;
 		modifiedReflexesLevel = DEFAULT_STAT_LEVEL;
 		unmodifiedReflexesLevel = DEFAULT_STAT_LEVEL;
 		technicalAbilityLevel = DEFAULT_STAT_LEVEL;
@@ -3845,6 +3863,30 @@ public class CharacterCreationModel {
 		return intelligenceLevel;
 	}
 
+	public int getHeadEncumbranceValue() {
+		return headEncumbranceValue;
+	}
+	
+	public int getTorsoEncumbranceValue() {
+		return torsoEncumbranceValue;
+	}
+	
+	public int getRightArmEncumbranceValue() {
+		return rightArmEncumbranceValue;
+	}
+	
+	public int getLeftArmEncumbranceValue() {
+		return leftArmEncumbranceValue;
+	}
+	
+	public int getRightLegEncumbranceValue() {
+		return rightLegEncumbranceValue;
+	}
+	
+	public int getLeftLegEncumbranceValue() {
+		return leftLegEncumbranceValue;
+	}
+
 	public int getUnmodifiedReflexesLevel() {
 		return unmodifiedReflexesLevel;
 	}
@@ -4020,6 +4062,30 @@ public class CharacterCreationModel {
 		intelligenceLevel = level;
 	}
 
+	public void setHeadEncumbranceValue(int value) {
+		headEncumbranceValue = value;
+	}
+	
+	public void setTorsoEncumbranceValue(int value) {
+		torsoEncumbranceValue = value;
+	}
+	
+	public void setRightArmEncumbranceValue(int value) {
+		rightArmEncumbranceValue = value;
+	}
+	
+	public void setLeftArmEncumbranceValue(int value) {
+		leftArmEncumbranceValue = value;
+	}
+	
+	public void setRightLegEncumbranceValue(int value) {
+		rightLegEncumbranceValue = value;
+	}
+	
+	public void setLeftLegEncumbranceValue(int value) {
+		leftLegEncumbranceValue = value;
+	}
+
 	public void setUnmodifiedReflexesLevel(int level) {
 		unmodifiedReflexesLevel = level;
 	}
@@ -4122,6 +4188,7 @@ public class CharacterCreationModel {
 		private String type;
 		private boolean isCaseless;
 		private int quantity;
+		private int quantityPerBox;
 		private int cost;
 		private double weight;
 
@@ -4129,6 +4196,7 @@ public class CharacterCreationModel {
 			this.type = ammoBuilder.type;
 			this.isCaseless = ammoBuilder.isCaseless;
 			this.quantity = ammoBuilder.quantity;
+			this.quantityPerBox = ammoBuilder.quantityPerBox;
 			this.cost = ammoBuilder.cost;
 			this.weight = ammoBuilder.weight;
 		}
@@ -4145,6 +4213,10 @@ public class CharacterCreationModel {
 			return quantity;
 		}
 
+		public int getQuantityPerBox() {
+			return quantityPerBox;
+		}
+
 		public int getCost() {
 			return cost;
 		}
@@ -4153,10 +4225,15 @@ public class CharacterCreationModel {
 			return weight;
 		}
 
+		public void setQuantity(int quantity) {
+			this.quantity = quantity;
+		}
+
 		public static class AmmoBuilder {
 			private String type = "Unknown";
 			private boolean isCaseless = false;
 			private int quantity = 0;
+			private int quantityPerBox = 0;
 			private int cost = 0;
 			private double weight = 0.0;
 
@@ -4172,6 +4249,11 @@ public class CharacterCreationModel {
 
 			public AmmoBuilder withQuantity(int quantity) {
 				this.quantity = quantity;
+				return this;
+			}
+
+			public AmmoBuilder withQuantityPerBox(int quantityPerBox) {
+				this.quantityPerBox = quantityPerBox;
 				return this;
 			}
 
@@ -4218,8 +4300,16 @@ public class CharacterCreationModel {
 			return armorClass;
 		}
 
-		public Map<String, Boolean> getCovers() {
-			return covers;
+		public String getCovers() {
+			String coverString = "";
+			for (Map.Entry<String, Boolean> entry : covers.entrySet()) {
+				if (entry.getValue()) {
+					coverString += entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1) + ", ";
+				}
+			}
+			coverString = coverString.substring(0, coverString.length() - 2);
+
+			return coverString;
 		}
 
 		public int getStoppingPower() {
@@ -4330,27 +4420,27 @@ public class CharacterCreationModel {
 			this.cost = cyberBuilder.cost;
 			this.humanityLoss = cyberBuilder.humanityLoss;
 		}
-		
+
 		public String getCyberware() {
 			return cyberware;
 		}
-		
+
 		public String getSurgeryCode() {
 			return surgeryCode;
 		}
-		
+
 		public String getIdCode() {
 			return idCode;
 		}
-		
+
 		public String getDescription() {
 			return description;
 		}
-		
+
 		public int getCost() {
 			return cost;
 		}
-		
+
 		public String getHumanityLoss() {
 			return humanityLoss;
 		}
@@ -4367,32 +4457,32 @@ public class CharacterCreationModel {
 				this.cyberware = cyberware;
 				return this;
 			}
-			
+
 			public CyberwareBuilder withSurgeryCode(String surgeryCode) {
 				this.surgeryCode = surgeryCode;
 				return this;
 			}
-			
+
 			public CyberwareBuilder withIdCode(String idCode) {
 				this.idCode = idCode;
 				return this;
 			}
-			
+
 			public CyberwareBuilder withDescription(String description) {
 				this.description = description;
 				return this;
 			}
-			
+
 			public CyberwareBuilder withCost(int cost) {
 				this.cost = cost;
 				return this;
 			}
-			
+
 			public CyberwareBuilder withHumanityLoss(String humanityLoss) {
 				this.humanityLoss = humanityLoss;
 				return this;
 			}
-			
+
 			public Cyberware build() {
 				return new Cyberware(this);
 			}
@@ -4419,6 +4509,10 @@ public class CharacterCreationModel {
 
 		public int getCost() {
 			return cost;
+		}
+
+		public void setQuantity(double quantity) {
+			this.quantity = quantity;
 		}
 
 		private Gear(GearBuilder gearBuilder) {
@@ -4716,6 +4810,9 @@ public class CharacterCreationModel {
 
 			public WeaponBuilder withCategory(String category) {
 				switch (category.toUpperCase()) {
+				case "P":
+					this.category = "Pistol";
+					break;
 				case "LP":
 					this.category = "Lt Pistol";
 					break;
