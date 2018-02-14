@@ -322,189 +322,114 @@ public class CharacterCreationController {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			JTable inventoryArmorTable = characterView.getInventoryArmorTable();
-			JTable equippedTable = characterView.getEquippedTable();
 
 			for (int rowIndex : inventoryArmorTable.getSelectedRows()) {
 				String type = (String) inventoryArmorTable.getValueAt(rowIndex, ARMOR_TYPE_INDEX);
 				CharacterCreationModel.Armor selectedArmor = characterModel.getArmors().get(type);
-				String selectedArmorArmorClass = selectedArmor.getArmorClass();
-				boolean isConflicted = false;
+				boolean hasHardArmor = false;
+				boolean hasMaxLayers = false;
 
-				for (int i = 0; i < equippedTable.getRowCount(); i++) {
-					CharacterCreationModel.Armor tempArmor;
-					String tempArmorArmorClass;
-
-					if (selectedArmor.getCovers().contains("Head")) {
-						if (!equippedTable.getValueAt(i, EQUIPPED_HEAD_INDEX).equals("")) {
-							tempArmor = characterModel.getArmors()
-									.get(equippedTable.getValueAt(i, EQUIPPED_HEAD_INDEX));
-							tempArmorArmorClass = tempArmor.getArmorClass();
-							if (selectedArmorArmorClass.equals("Hard Armor")
-									&& tempArmorArmorClass.equals("Hard Armor")) {
-								JOptionPane.showMessageDialog(characterView,
-										"You cannot equip " + tempArmor.getType() + " and " + selectedArmor.getType()
-												+ " because they are both Hard Armor Class.");
-								isConflicted = true;
-							}
-						}
-
-					}
-
-					if (selectedArmor.getCovers().contains("Torso")) {
-						if (!equippedTable.getValueAt(i, EQUIPPED_TORSO_INDEX).equals("")) {
-							tempArmor = characterModel.getArmors()
-									.get(equippedTable.getValueAt(i, EQUIPPED_TORSO_INDEX));
-							tempArmorArmorClass = tempArmor.getArmorClass();
-							if (selectedArmorArmorClass.equals("Hard Armor")
-									&& tempArmorArmorClass.equals("Hard Armor")) {
-								JOptionPane.showMessageDialog(characterView,
-										"You cannot equip " + tempArmor.getType() + " and " + selectedArmor.getType()
-												+ " because they are both Hard Armor Class.");
-								isConflicted = true;
-							}
-						}
-
-					}
-
-					if (selectedArmor.getCovers().contains("Arms")) {
-						if (!equippedTable.getValueAt(i, EQUIPPED_RIGHT_ARM_INDEX).equals("")) {
-							tempArmor = characterModel.getArmors()
-									.get(equippedTable.getValueAt(i, EQUIPPED_RIGHT_ARM_INDEX));
-							tempArmorArmorClass = tempArmor.getArmorClass();
-							if (selectedArmorArmorClass.equals("Hard Armor")
-									&& tempArmorArmorClass.equals("Hard Armor")) {
-								JOptionPane.showMessageDialog(characterView,
-										"You cannot equip " + tempArmor.getType() + " and " + selectedArmor.getType()
-												+ " because they are both Hard Armor Class.");
-								isConflicted = true;
-							}
-						}
-					}
-
-					if (selectedArmor.getCovers().contains("Legs")) {
-						if (!equippedTable.getValueAt(i, EQUIPPED_RIGHT_LEG_INDEX).equals("")) {
-							tempArmor = characterModel.getArmors()
-									.get(equippedTable.getValueAt(i, EQUIPPED_RIGHT_LEG_INDEX));
-							tempArmorArmorClass = tempArmor.getArmorClass();
-							if (selectedArmorArmorClass.equals("Hard Armor")
-									&& tempArmorArmorClass.equals("Hard Armor")) {
-								JOptionPane.showMessageDialog(characterView,
-										"You cannot equip " + tempArmor.getType() + " and " + selectedArmor.getType()
-												+ " because they are both Hard Armor Class.");
-								isConflicted = true;
-							}
-						}
-					}
+				if (!hasHardArmor && selectedArmor.getCovers().contains("Head")) {
+					hasHardArmor = hasHardArmor(selectedArmor, EQUIPPED_HEAD_INDEX);
+				} else if (!hasHardArmor && selectedArmor.getCovers().contains("Torso")) {
+					hasHardArmor = hasHardArmor(selectedArmor, EQUIPPED_TORSO_INDEX);
+				} else if (!hasHardArmor && selectedArmor.getCovers().contains("Arms")) {
+					hasHardArmor = hasHardArmor(selectedArmor, EQUIPPED_RIGHT_ARM_INDEX);
+				} else if (!hasHardArmor && selectedArmor.getCovers().contains("Arms")) {
+					hasHardArmor = hasHardArmor(selectedArmor, EQUIPPED_LEFT_ARM_INDEX);
+				} else if (!hasHardArmor && selectedArmor.getCovers().contains("Legs")) {
+					hasHardArmor = hasHardArmor(selectedArmor, EQUIPPED_RIGHT_LEG_INDEX);
+				} else if (!hasHardArmor && selectedArmor.getCovers().contains("Legs")) {
+					hasHardArmor = hasHardArmor(selectedArmor, EQUIPPED_LEFT_LEG_INDEX);
 				}
 
-				if (selectedArmor.getCovers().contains("Head")) {
-					int filledSlots = 0;
-					for (int i = 0; i < equippedTable.getRowCount(); i++) {
-						String equippedArmorType = (String) equippedTable.getValueAt(i, EQUIPPED_HEAD_INDEX);
-						if (!equippedArmorType.equals("")) {
-							filledSlots++;
-						}
-					}
-					if (filledSlots >= MAX_ARMOR_LAYERS) {
-						isConflicted = true;
-					}
+				if (!hasMaxLayers && selectedArmor.getCovers().contains("Head")) {
+					hasMaxLayers = hasMaxLayers(EQUIPPED_HEAD_INDEX);
+				} else if (!hasMaxLayers && selectedArmor.getCovers().contains("Torso")) {
+					hasMaxLayers = hasMaxLayers(EQUIPPED_TORSO_INDEX);
+				} else if (!hasMaxLayers && selectedArmor.getCovers().contains("Arms")) {
+					hasMaxLayers = hasMaxLayers(EQUIPPED_RIGHT_ARM_INDEX);
+				} else if (!hasMaxLayers && selectedArmor.getCovers().contains("Arms")) {
+					hasMaxLayers = hasMaxLayers(EQUIPPED_LEFT_ARM_INDEX);
+				} else if (!hasMaxLayers && selectedArmor.getCovers().contains("Legs")) {
+					hasMaxLayers = hasMaxLayers(EQUIPPED_RIGHT_LEG_INDEX);
+				} else if (!hasMaxLayers && selectedArmor.getCovers().contains("Legs")) {
+					hasMaxLayers = hasMaxLayers(EQUIPPED_LEFT_LEG_INDEX);
 				}
 
-				if (selectedArmor.getCovers().contains("Torso")) {
-					int filledSlots = 0;
-					for (int i = 0; i < equippedTable.getRowCount(); i++) {
-						String equippedArmorType = (String) equippedTable.getValueAt(i, EQUIPPED_TORSO_INDEX);
-						if (!equippedArmorType.equals("")) {
-							filledSlots++;
-						}
-					}
-					if (filledSlots >= MAX_ARMOR_LAYERS) {
-						isConflicted = true;
-					}
-				}
-
-				if (selectedArmor.getCovers().contains("Arms")) {
-					int filledSlots = 0;
-					for (int i = 0; i < equippedTable.getRowCount(); i++) {
-						String equippedArmorType = (String) equippedTable.getValueAt(i, EQUIPPED_RIGHT_ARM_INDEX);
-						if (!equippedArmorType.equals("")) {
-							filledSlots++;
-						}
-					}
-					if (filledSlots >= MAX_ARMOR_LAYERS) {
-						isConflicted = true;
-					}
-				}
-
-				if (selectedArmor.getCovers().contains("Legs")) {
-					int filledSlots = 0;
-					for (int i = 0; i < equippedTable.getRowCount(); i++) {
-						String equippedArmorType = (String) equippedTable.getValueAt(i, EQUIPPED_RIGHT_LEG_INDEX);
-						if (!equippedArmorType.equals("")) {
-							filledSlots++;
-						}
-					}
-					if (filledSlots >= MAX_ARMOR_LAYERS) {
-						isConflicted = true;
-					}
-				}
-
-				if (!isConflicted) {
+				if (!hasHardArmor && !hasMaxLayers) {
 					characterModel.setGeneralEncumbranceValue(
 							characterModel.getGeneralEncumbranceValue() + selectedArmor.getEncumbranceValue());
 
 					if (selectedArmor.getCovers().contains("Head")) {
-						for (int i = 0; i < equippedTable.getRowCount(); i++) {
-							if (equippedTable.getValueAt(i, EQUIPPED_HEAD_INDEX).equals("")) {
-								equippedTable.setValueAt(selectedArmor.getType(), i, EQUIPPED_HEAD_INDEX);
-								break;
-							}
-						}
+						addTypeToEquippedTable(selectedArmor.getType(), EQUIPPED_HEAD_INDEX);
 					}
 
 					if (selectedArmor.getCovers().contains("Torso")) {
-						for (int i = 0; i < equippedTable.getRowCount(); i++) {
-							if (equippedTable.getValueAt(i, EQUIPPED_TORSO_INDEX).equals("")) {
-								equippedTable.setValueAt(selectedArmor.getType(), i, EQUIPPED_TORSO_INDEX);
-								break;
-							}
-						}
-
+						addTypeToEquippedTable(selectedArmor.getType(), EQUIPPED_TORSO_INDEX);
 					}
 
 					if (selectedArmor.getCovers().contains("Arms")) {
-						for (int i = 0; i < equippedTable.getRowCount(); i++) {
-							if (equippedTable.getValueAt(i, EQUIPPED_RIGHT_ARM_INDEX).equals("")) {
-								equippedTable.setValueAt(selectedArmor.getType(), i, EQUIPPED_RIGHT_ARM_INDEX);
-								break;
-							}
-						}
-						for (int i = 0; i < equippedTable.getRowCount(); i++) {
-							if (equippedTable.getValueAt(i, EQUIPPED_LEFT_ARM_INDEX).equals("")) {
-								equippedTable.setValueAt(selectedArmor.getType(), i, EQUIPPED_LEFT_ARM_INDEX);
-								break;
-							}
-						}
-
+						addTypeToEquippedTable(selectedArmor.getType(), EQUIPPED_RIGHT_ARM_INDEX);
+						addTypeToEquippedTable(selectedArmor.getType(), EQUIPPED_LEFT_ARM_INDEX);
 					}
 
 					if (selectedArmor.getCovers().contains("Legs")) {
-						for (int i = 0; i < equippedTable.getRowCount(); i++) {
-							if (equippedTable.getValueAt(i, EQUIPPED_RIGHT_LEG_INDEX).equals("")) {
-								equippedTable.setValueAt(selectedArmor.getType(), i, EQUIPPED_RIGHT_LEG_INDEX);
-								break;
-							}
-						}
-						for (int i = 0; i < equippedTable.getRowCount(); i++) {
-							if (equippedTable.getValueAt(i, EQUIPPED_LEFT_LEG_INDEX).equals("")) {
-								equippedTable.setValueAt(selectedArmor.getType(), i, EQUIPPED_LEFT_LEG_INDEX);
-								break;
-							}
-						}
-
+						addTypeToEquippedTable(selectedArmor.getType(), EQUIPPED_RIGHT_LEG_INDEX);
+						addTypeToEquippedTable(selectedArmor.getType(), EQUIPPED_LEFT_LEG_INDEX);
 					}
 				}
 
+			}
+		}
+
+		private boolean hasHardArmor(CharacterCreationModel.Armor selectedArmor, int column) {
+			JTable equippedTable = characterView.getEquippedTable();
+			String selectedArmorArmorClass = selectedArmor.getArmorClass();
+			CharacterCreationModel.Armor tempArmor;
+			String tempArmorArmorClass;
+
+			for (int i = 0; i < equippedTable.getRowCount(); i++) {
+				String tempArmorType = (String) equippedTable.getValueAt(i, column);
+				if (!tempArmorType.equals("")) {
+					tempArmor = characterModel.getArmors().get(tempArmorType);
+					tempArmorArmorClass = tempArmor.getArmorClass();
+					if (selectedArmorArmorClass.equals("Hard Armor") && tempArmorArmorClass.equals("Hard Armor")) {
+						JOptionPane.showMessageDialog(characterView, "You cannot equip " + tempArmor.getType() + " and "
+								+ selectedArmor.getType() + " because they are both Hard Armor Class.");
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		private boolean hasMaxLayers(int column) {
+			JTable equippedTable = characterView.getEquippedTable();
+			int filledSlots = 0;
+			for (int i = 0; i < equippedTable.getRowCount(); i++) {
+				String equippedArmorType = (String) equippedTable.getValueAt(i, column);
+				if (!equippedArmorType.equals("")) {
+					filledSlots++;
+				}
+			}
+
+			if (filledSlots >= MAX_ARMOR_LAYERS) {
+				JOptionPane.showMessageDialog(characterView,
+						"You cannot equip anymore armor for your " + equippedTable.getColumnName(column));
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		private void addTypeToEquippedTable(String armorType, int column) {
+			JTable equippedTable = characterView.getEquippedTable();
+			for (int i = 0; i < equippedTable.getRowCount(); i++) {
+				if (equippedTable.getValueAt(i, column).equals("")) {
+					equippedTable.setValueAt(armorType, i, column);
+					break;
+				}
 			}
 		}
 
