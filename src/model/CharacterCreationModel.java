@@ -27,6 +27,7 @@ public class CharacterCreationModel {
 	private int characterPoints;
 
 	private int intelligenceLevel;
+	private int generalEncumbranceValue;
 	private int headEncumbranceValue;
 	private int torsoEncumbranceValue;
 	private int rightArmEncumbranceValue;
@@ -3464,6 +3465,7 @@ public class CharacterCreationModel {
 		characterPoints = DEFAULT_STAT_LEVEL * 9;
 
 		intelligenceLevel = DEFAULT_STAT_LEVEL;
+		generalEncumbranceValue = 0;
 		headEncumbranceValue = 0;
 		torsoEncumbranceValue = 0;
 		rightArmEncumbranceValue = 0;
@@ -3862,6 +3864,10 @@ public class CharacterCreationModel {
 	public int getIntelligenceLevel() {
 		return intelligenceLevel;
 	}
+	
+	public int getGeneralEncumbranceValue() {
+		return generalEncumbranceValue;
+	}
 
 	public int getHeadEncumbranceValue() {
 		return headEncumbranceValue;
@@ -4062,6 +4068,10 @@ public class CharacterCreationModel {
 		intelligenceLevel = level;
 	}
 
+	public void setGeneralEncumbranceValue(int value) {
+		generalEncumbranceValue = value;
+	}
+	
 	public void setHeadEncumbranceValue(int value) {
 		headEncumbranceValue = value;
 	}

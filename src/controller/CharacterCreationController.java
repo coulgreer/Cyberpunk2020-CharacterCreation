@@ -93,6 +93,8 @@ public class CharacterCreationController {
 		this.characterView.addEquippedTableModelListener(new EquippedTableModelListener());
 
 		this.characterView.drawLoadedInjuryPoints(this.characterModel.getInjuryPoints());
+		this.characterView.setModifiedReflexesLevel(Integer.toString(this.characterModel.getModifiedReflexesLevel()));
+		this.characterView.setCurrentEmpathyLevel(Integer.toString(this.characterModel.getCurrentEmpathyLevel()));
 		this.characterView.setCharacterPoints(Integer.toString(this.characterModel.getCharacterPoints()
 				- this.characterModel.getIntelligenceLevel() - this.characterModel.getUnmodifiedReflexesLevel()
 				- this.characterModel.getTechnicalAbilityLevel() - this.characterModel.getCoolLevel()
@@ -448,6 +450,9 @@ public class CharacterCreationController {
 				}
 
 				if (!isConflicted) {
+					characterModel.setGeneralEncumbranceValue(
+							characterModel.getGeneralEncumbranceValue() + selectedArmor.getEncumbranceValue());
+
 					if (selectedArmor.getCovers().contains("Head")) {
 						for (int i = 0; i < equippedTable.getRowCount(); i++) {
 							if (equippedTable.getValueAt(i, EQUIPPED_HEAD_INDEX).equals("")) {
@@ -599,6 +604,14 @@ public class CharacterCreationController {
 
 			characterView.setUnmodifiedReflexesLevel(String.valueOf(unmodifiedReflexesLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
+
+			int encumbranceValue = characterModel.getGeneralEncumbranceValue()
+					+ characterModel.getHeadEncumbranceValue() + characterModel.getTorsoEncumbranceValue()
+					+ characterModel.getRightArmEncumbranceValue() + characterModel.getLeftArmEncumbranceValue()
+					+ characterModel.getRightLegEncumbranceValue() + characterModel.getLeftLegEncumbranceValue();
+			characterModel.setModifiedReflexesLevel(characterModel.getUnmodifiedReflexesLevel() - encumbranceValue);
+			characterView.setModifiedReflexesLevel(
+					Integer.toString(characterModel.getUnmodifiedReflexesLevel() - encumbranceValue));
 		}
 
 	}
@@ -1200,95 +1213,164 @@ public class CharacterCreationController {
 
 		@Override
 		public void tableChanged(TableModelEvent event) {
-
-			int layers = 0;
-			int stoppingPower = 0;
 			CharacterCreationModel.Armor armorLayer1 = null;
 			CharacterCreationModel.Armor armorLayer2 = null;
 			CharacterCreationModel.Armor armorLayer3 = null;
 
-			String armorLayer1Type = (String) characterView.getEquippedTable().getValueAt(EQUIPPED_LAYER_1_INDEX,
-					EQUIPPED_TORSO_INDEX);
-			String armorLayer2Type = (String) characterView.getEquippedTable().getValueAt(EQUIPPED_LAYER_2_INDEX,
-					EQUIPPED_TORSO_INDEX);
-			String armorLayer3Type = (String) characterView.getEquippedTable().getValueAt(EQUIPPED_LAYER_3_INDEX,
-					EQUIPPED_TORSO_INDEX);
+			for (int i = 0; i < 6; i++) {
+				int layers = 0;
+				int stoppingPower = 0;
+				String armorLayer1Type = (String) characterView.getEquippedTable().getValueAt(EQUIPPED_LAYER_1_INDEX,
+						i);
+				String armorLayer2Type = (String) characterView.getEquippedTable().getValueAt(EQUIPPED_LAYER_2_INDEX,
+						i);
+				String armorLayer3Type = (String) characterView.getEquippedTable().getValueAt(EQUIPPED_LAYER_3_INDEX,
+						i);
+				List<Integer> stoppingPowers = new ArrayList<Integer>();
 
-			if (!armorLayer1Type.equals("")) {
-				armorLayer1 = characterModel.getArmors().get(armorLayer1Type);
-				layers++;
+				if (!armorLayer1Type.equals("")) {
+					armorLayer1 = characterModel.getArmors().get(armorLayer1Type);
+					stoppingPowers.add(armorLayer1.getStoppingPower());
+					layers++;
+				}
+
+				if (!armorLayer2Type.equals("")) {
+					armorLayer2 = characterModel.getArmors().get(armorLayer2Type);
+					stoppingPowers.add(armorLayer2.getStoppingPower());
+					layers++;
+				}
+
+				if (!armorLayer3Type.equals("")) {
+					armorLayer3 = characterModel.getArmors().get(armorLayer3Type);
+					stoppingPowers.add(armorLayer3.getStoppingPower());
+					layers++;
+				}
+
+				stoppingPower = calculateLayeredStoppingPower(stoppingPowers);
+
+				switch (i) {
+				case EQUIPPED_HEAD_INDEX:
+					if (layers == 1) {
+						characterModel.setHeadEncumbranceValue(0);
+					} else if (layers == 2) {
+						characterModel.setHeadEncumbranceValue(1);
+					} else if (layers == 3) {
+						characterModel.setHeadEncumbranceValue(3);
+					}
+					characterModel.setHeadArmorStoppingPower(stoppingPower);
+					characterView.setHeadArmorStoppingPower(String.valueOf(stoppingPower));
+					break;
+				case EQUIPPED_TORSO_INDEX:
+					if (layers == 1) {
+						characterModel.setTorsoEncumbranceValue(0);
+					} else if (layers == 2) {
+						characterModel.setTorsoEncumbranceValue(1);
+					} else if (layers == 3) {
+						characterModel.setTorsoEncumbranceValue(3);
+					}
+					characterModel.setTorsoArmorStoppingPower(stoppingPower);
+					characterView.setTorsoArmorStoppingPower(String.valueOf(stoppingPower));
+					break;
+				case EQUIPPED_RIGHT_ARM_INDEX:
+					if (layers == 1) {
+						characterModel.setRightArmEncumbranceValue(0);
+					} else if (layers == 2) {
+						characterModel.setRightArmEncumbranceValue(1);
+					} else if (layers == 3) {
+						characterModel.setRightArmEncumbranceValue(3);
+					}
+					characterModel.setRightArmArmorStoppingPower(stoppingPower);
+					characterView.setRightArmArmorStoppingPower(String.valueOf(stoppingPower));
+					break;
+				case EQUIPPED_LEFT_ARM_INDEX:
+					if (layers == 1) {
+						characterModel.setLeftArmEncumbranceValue(0);
+					} else if (layers == 2) {
+						characterModel.setLeftArmEncumbranceValue(1);
+					} else if (layers == 3) {
+						characterModel.setLeftArmEncumbranceValue(3);
+					}
+					characterModel.setLeftArmArmorStoppingPower(stoppingPower);
+					characterView.setLeftArmArmorStoppingPower(String.valueOf(stoppingPower));
+					break;
+				case EQUIPPED_RIGHT_LEG_INDEX:
+					if (layers == 1) {
+						characterModel.setRightLegEncumbranceValue(0);
+					} else if (layers == 2) {
+						characterModel.setRightLegEncumbranceValue(1);
+					} else if (layers == 3) {
+						characterModel.setRightLegEncumbranceValue(3);
+					}
+					characterModel.setRightLegArmorStoppingPower(stoppingPower);
+					characterView.setRightLegArmorStoppingPower(String.valueOf(stoppingPower));
+					break;
+				case EQUIPPED_LEFT_LEG_INDEX:
+					if (layers == 1) {
+						characterModel.setLeftLegEncumbranceValue(0);
+					} else if (layers == 2) {
+						characterModel.setLeftLegEncumbranceValue(1);
+					} else if (layers == 3) {
+						characterModel.setLeftLegEncumbranceValue(3);
+					}
+					characterModel.setLeftLegArmorStoppingPower(stoppingPower);
+					characterView.setLeftLegArmorStoppingPower(String.valueOf(stoppingPower));
+					break;
+				default:
+					break;
+				}
+
 			}
 
-			if (!armorLayer2Type.equals("")) {
-				armorLayer2 = characterModel.getArmors().get(armorLayer2Type);
-				layers++;
-			}
-
-			if (!armorLayer3Type.equals("")) {
-				armorLayer3 = characterModel.getArmors().get(armorLayer3Type);
-				layers++;
-			}
-
-			if (layers == 1) {
-				characterModel.setTorsoEncumbranceValue(0);
-			} else if (layers == 2) {
-				characterModel.setTorsoEncumbranceValue(1);
-			} else if (layers == 3) {
-				characterModel.setTorsoEncumbranceValue(3);
-			}
-
-			int encumbranceValue = characterModel.getHeadEncumbranceValue() + characterModel.getTorsoEncumbranceValue()
+			int encumbranceValue = characterModel.getGeneralEncumbranceValue()
+					+ characterModel.getHeadEncumbranceValue() + characterModel.getTorsoEncumbranceValue()
 					+ characterModel.getRightArmEncumbranceValue() + characterModel.getLeftArmEncumbranceValue()
 					+ characterModel.getRightLegEncumbranceValue() + characterModel.getLeftLegEncumbranceValue();
+			characterModel.setModifiedReflexesLevel(characterModel.getUnmodifiedReflexesLevel() - encumbranceValue);
 			characterView.setModifiedReflexesLevel(
-					Integer.valueOf(characterModel.getUnmodifiedReflexesLevel() - encumbranceValue).toString());
+					Integer.toString((characterModel.getUnmodifiedReflexesLevel() - encumbranceValue)));
+		}
 
-			List<Integer> stoppingPowers = new ArrayList<Integer>();
-			if (armorLayer1 != null) {
-				stoppingPowers.add(armorLayer1.getStoppingPower());
+		private int calculateLayeredStoppingPower(List<Integer> list) {
+			list = sortList(list);
+			if (list.size() > 0) {
+				int stoppingPower = list.get(0);
+				for (int i = 1; i < list.size(); i++) {
+					int difference = stoppingPower - list.get(i);
+					if (0 <= difference && difference <= 4) {
+						stoppingPower += 5;
+					} else if (5 <= difference && difference <= 8) {
+						stoppingPower += 4;
+					} else if (9 <= difference && difference <= 14) {
+						stoppingPower += 3;
+					} else if (15 <= difference && difference <= 20) {
+						stoppingPower += 2;
+					} else if (21 <= difference && difference <= 26) {
+						stoppingPower += 1;
+					} else if (27 <= difference) {
+						stoppingPower += 0;
+					}
+				}
+
+				return stoppingPower;
+			} else {
+				return 0;
 			}
+		}
 
-			if (armorLayer2 != null) {
-				stoppingPowers.add(armorLayer2.getStoppingPower());
-			}
-
-			if (armorLayer3 != null) {
-				stoppingPowers.add(armorLayer3.getStoppingPower());
-			}
-
-			int length = stoppingPowers.size();
+		private List<Integer> sortList(List<Integer> list) {
+			int length = list.size();
 			for (int i = 0; i < length - 1; i++) {
 				int minId = i;
 				for (int j = i + 1; j < length; j++) {
-					if (stoppingPowers.get(i) < stoppingPowers.get(minId)) {
+					if (list.get(i) < list.get(minId)) {
 						minId = j;
 					}
-					int temp = stoppingPowers.get(minId);
-					stoppingPowers.set(minId, stoppingPowers.get(i));
-					stoppingPowers.set(i, temp);
+					int temp = list.get(minId);
+					list.set(minId, list.get(i));
+					list.set(i, temp);
 				}
 			}
-
-			stoppingPower = stoppingPowers.get(0);
-
-			for (int i = 1; i < length; i++) {
-				int difference = stoppingPower - stoppingPowers.get(i);
-				if (0 <= difference && difference <= 4) {
-					stoppingPower += 5;
-				} else if (5 <= difference && difference <= 8) {
-					stoppingPower += 4;
-				} else if (9 <= difference && difference <= 14) {
-					stoppingPower += 3;
-				} else if (15 <= difference && difference <= 20) {
-					stoppingPower += 2;
-				} else if (21 <= difference && difference <= 26) {
-					stoppingPower += 1;
-				} else if (27 <= difference) {
-					stoppingPower += 0;
-				}
-			}
-
-			characterView.setTorsoArmorStoppingPower(String.valueOf(stoppingPower));
+			return list;
 		}
 
 	}
@@ -1578,6 +1660,14 @@ public class CharacterCreationController {
 
 			characterModel.setTotalEmpathyLevel((Integer) comboBoxes[8].getSelectedItem());
 			characterView.setTotalEmpathyLevel(comboBoxes[8].getSelectedItem().toString());
+
+			int encumbranceValue = characterModel.getGeneralEncumbranceValue()
+					+ characterModel.getHeadEncumbranceValue() + characterModel.getTorsoEncumbranceValue()
+					+ characterModel.getRightArmEncumbranceValue() + characterModel.getLeftArmEncumbranceValue()
+					+ characterModel.getRightLegEncumbranceValue() + characterModel.getLeftLegEncumbranceValue();
+			characterModel.setModifiedReflexesLevel(characterModel.getUnmodifiedReflexesLevel() - encumbranceValue);
+			characterView.setModifiedReflexesLevel(
+					Integer.toString(characterModel.getUnmodifiedReflexesLevel() - encumbranceValue));
 		}
 
 		private void calculateDifference(Map<Integer, Integer> expectedCount, Map<Integer, Integer> actualCount) {

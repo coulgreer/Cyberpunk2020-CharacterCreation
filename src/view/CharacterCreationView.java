@@ -2245,7 +2245,7 @@ public class CharacterCreationView extends JFrame {
 	public void addEquipButtonActionListener(ActionListener listener) {
 		equipButton.addActionListener(listener);
 	}
-	
+
 	public void addEquippedTableModelListener(TableModelListener listener) {
 		equippedTable.getModel().addTableModelListener(listener);
 	}
