@@ -183,6 +183,7 @@ public class CharacterCreationView extends JFrame {
 	private JButton addToInventoryButton;
 	private JButton calculateButton;
 	private JButton equipButton;
+	private JButton unequipButton;
 	private JTable equippedTable;
 
 	/**
@@ -1540,6 +1541,9 @@ public class CharacterCreationView extends JFrame {
 
 		JPanel equippedToolbar = new JPanel();
 		equippedPanel.add(equippedToolbar, BorderLayout.NORTH);
+		
+		unequipButton = new JButton("Unequip");
+		equippedToolbar.add(unequipButton);
 
 		JPanel equippedCards = new JPanel();
 		equippedPanel.add(equippedCards, BorderLayout.CENTER);
@@ -1549,7 +1553,9 @@ public class CharacterCreationView extends JFrame {
 		equippedCards.add(equppiedScrollPane);
 
 		equippedTable = new JTable(new EquippedTableModel());
+		equippedTable.setCellSelectionEnabled(true);
 		equippedTable.setFillsViewportHeight(true);
+		equippedTable.getTableHeader().setReorderingAllowed(false);
 		equppiedScrollPane.setViewportView(equippedTable);
 
 		JList<Object> equippedRowHeader = new JList<Object>(new EquippedRowHeaderListModel());
@@ -1609,6 +1615,7 @@ public class CharacterCreationView extends JFrame {
 
 		inventoryWeaponTable = new JTable(new InventoryWeaponTableModel());
 		inventoryWeaponTable.setFillsViewportHeight(true);
+		inventoryWeaponTable.getTableHeader().setReorderingAllowed(false);
 		inventoryWeaponScrollPane.setViewportView(inventoryWeaponTable);
 
 		JPanel inventoryGearCard = new JPanel();
@@ -1627,6 +1634,7 @@ public class CharacterCreationView extends JFrame {
 
 		inventoryGearTable = new JTable(new InventoryGearTableModel());
 		inventoryGearTable.setFillsViewportHeight(true);
+		inventoryGearTable.getTableHeader().setReorderingAllowed(false);
 		inventoryGearScrollPane.setViewportView(inventoryGearTable);
 
 		JPanel inventoryArmorCard = new JPanel();
@@ -1645,6 +1653,7 @@ public class CharacterCreationView extends JFrame {
 
 		inventoryArmorTable = new JTable(new InventoryArmorTableModel());
 		inventoryArmorTable.setFillsViewportHeight(true);
+		inventoryArmorTable.getTableHeader().setReorderingAllowed(false);
 		inventoryArmorScrollPane.setViewportView(inventoryArmorTable);
 
 		JPanel inventoryAmmoCard = new JPanel();
@@ -1663,6 +1672,7 @@ public class CharacterCreationView extends JFrame {
 
 		inventoryAmmoTable = new JTable(new InventoryAmmoTableModel());
 		inventoryAmmoTable.setFillsViewportHeight(true);
+		inventoryAmmoTable.getTableHeader().setReorderingAllowed(false);
 		inventoryAmmoScrollPane.setViewportView(inventoryAmmoTable);
 
 		JPanel storePanel = new JPanel();
@@ -2244,6 +2254,10 @@ public class CharacterCreationView extends JFrame {
 
 	public void addEquipButtonActionListener(ActionListener listener) {
 		equipButton.addActionListener(listener);
+	}
+	
+	public void addUnequipButtonActionListener(ActionListener listener) {
+		unequipButton.addActionListener(listener);
 	}
 
 	public void addEquippedTableModelListener(TableModelListener listener) {
