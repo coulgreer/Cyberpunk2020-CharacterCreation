@@ -31,6 +31,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -42,6 +43,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
@@ -59,6 +61,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
@@ -169,6 +172,7 @@ public class CharacterCreationView extends JFrame {
 	private JTable intelligenceSkillTable;
 	private JTable reflexesSkillTable;
 	private JTable technicalAbilitiesSkillTable;
+
 	private JTextField carryCapacityTextField;
 	private JTable storeWeaponTable;
 	private JTable storeGearTable;
@@ -180,11 +184,38 @@ public class CharacterCreationView extends JFrame {
 	private JTable inventoryGearTable;
 	private JTable inventoryArmorTable;
 	private JTable inventoryAmmoTable;
+	private JTable equippedTable;
 	private JButton addToInventoryButton;
 	private JButton calculateButton;
 	private JButton equipButton;
 	private JButton unequipButton;
-	private JTable equippedTable;
+
+	private JTextField clothingTextfield;
+	private JButton randomizeClothingButton;
+	private JTextField hairstyleTextfield;
+	private JButton randomizeHairstyleButton;
+	private JTextField affectationsTextfield;
+	private JButton randomizeAffectationsButton;
+	private JComboBox<String> ethnicityComboBox;
+	private JButton randomizeEthnicityButton;
+
+	private JComboBox<String> familyRankingComboBox;
+	private JButton randomizeFamilyRankingButton;
+	private JComboBox<String> parentsFateComboBox;
+	private JButton randomizeParentsFateButton;
+	private JComboBox<String> parentEventComboBox;
+	private JButton randomizeParentEventButton;
+	private JComboBox<String> familyStatusComboBox;
+	private JButton randomizeFamilyStatusButton;
+	private JComboBox<String> familyTragedyComboBox;
+	private JButton randomizeFamilyTragedyButton;
+	private JComboBox<String> childhoodEnvironmentComboBox;
+	private JButton randomizeChildhoodEnvironmentButton;
+
+	private JPanel siblingsDetailPanel;
+	private List<SiblingPanel> siblingPanels;
+	private JComboBox<String> siblingCountComboBox;
+	private JButton randomizeSiblingAmountButton;
 
 	/**
 	 * Create the frame.
@@ -201,6 +232,7 @@ public class CharacterCreationView extends JFrame {
 		skillSpinners = new JSpinner[9];
 		skillTables = new HashMap<String, JTable>();
 		skillTextAreas = new HashMap<String, JTextArea>();
+		siblingPanels = new ArrayList<SiblingPanel>();
 
 		setTitle("Cyberpunk 2020 Character Creation");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -1264,15 +1296,206 @@ public class CharacterCreationView extends JFrame {
 		lblCharacterPortrait.setPreferredSize(new Dimension(PORTRAIT_WIDTH, PORTRAIT_HEIGHT));
 		portraitPanel.add(lblCharacterPortrait);
 
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setPreferredSize(new Dimension(TABBED_PANEL_WIDTH, TABBED_PANEL_HEIGHT));
-		contentPane.add(tabbedPane, BorderLayout.SOUTH);
+		JTabbedPane detailsTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		detailsTabbedPane.setPreferredSize(new Dimension(TABBED_PANEL_WIDTH, TABBED_PANEL_HEIGHT));
+		contentPane.add(detailsTabbedPane, BorderLayout.SOUTH);
 
-		JPanel lifepathPanel = new JPanel();
-		tabbedPane.addTab("Lifepath", null, lifepathPanel, null);
+		JTabbedPane lifepathTabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+		detailsTabbedPane.addTab("Lifepath", null, lifepathTabbedPane, null);
+
+		JPanel stylePanel = new JPanel();
+		lifepathTabbedPane.addTab("Style", null, stylePanel, null);
+		stylePanel.setLayout(new GridLayout(0, 2, 0, 0));
+
+		JPanel clothingPanel = new JPanel();
+		clothingPanel.setBorder(new TitledBorder(null, "Clothing", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		stylePanel.add(clothingPanel);
+
+		clothingTextfield = new JTextField();
+		clothingPanel.add(clothingTextfield);
+		clothingTextfield.setColumns(10);
+
+		randomizeClothingButton = new JButton("Randomize");
+		clothingPanel.add(randomizeClothingButton);
+
+		JPanel hairstylePanel = new JPanel();
+		hairstylePanel
+				.setBorder(new TitledBorder(null, "Hairstyle", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		stylePanel.add(hairstylePanel);
+
+		hairstyleTextfield = new JTextField();
+		hairstylePanel.add(hairstyleTextfield);
+		hairstyleTextfield.setColumns(10);
+
+		randomizeHairstyleButton = new JButton("Randomize");
+		hairstylePanel.add(randomizeHairstyleButton);
+
+		JPanel affectationsPanel = new JPanel();
+		affectationsPanel
+				.setBorder(new TitledBorder(null, "Affections", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		stylePanel.add(affectationsPanel);
+
+		affectationsTextfield = new JTextField();
+		affectationsPanel.add(affectationsTextfield);
+		affectationsTextfield.setColumns(10);
+
+		randomizeAffectationsButton = new JButton("Randomize");
+		affectationsPanel.add(randomizeAffectationsButton);
+
+		JPanel ethnicityPanel = new JPanel();
+		ethnicityPanel
+				.setBorder(new TitledBorder(null, "Ethnicity", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		stylePanel.add(ethnicityPanel);
+
+		ethnicityComboBox = new JComboBox<String>();
+		ethnicityComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Anglo-American", "African",
+				"Japanese/Korean", "Central European/Soviet", "Pacific Islander", "Chinese/Southeast Asian",
+				"Black American", "Hispanic American", "Central /South American", "Eurpean" }));
+		ethnicityPanel.add(ethnicityComboBox);
+
+		randomizeEthnicityButton = new JButton("Randomize");
+		ethnicityPanel.add(randomizeEthnicityButton);
+
+		JScrollPane scrollPane = new JScrollPane();
+		lifepathTabbedPane.addTab("Family", null, scrollPane, null);
+
+		JPanel familyPanel = new JPanel();
+		scrollPane.setViewportView(familyPanel);
+		familyPanel.setLayout(new BoxLayout(familyPanel, BoxLayout.Y_AXIS));
+
+		JPanel familyRankingPanel = new JPanel();
+		familyRankingPanel.setBorder(
+				new TitledBorder(null, "Family Ranking", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		familyPanel.add(familyRankingPanel);
+
+		familyRankingComboBox = new JComboBox<String>();
+		familyRankingComboBox.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		familyRankingComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "<Choose family ranking>",
+				"Corporate Executive", "Corporate Manager", "Corporate Technician", "Nomad Pack", "Pirate Fleet",
+				"Gang Family", "Crime Lord", "Combat Zone Poor", "Urban homeless", "Arcology family" }));
+		familyRankingPanel.add(familyRankingComboBox);
+
+		randomizeFamilyRankingButton = new JButton("Randomize");
+		randomizeFamilyRankingButton.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		familyRankingPanel.add(randomizeFamilyRankingButton);
+
+		JPanel parentsFatePanel = new JPanel();
+		parentsFatePanel
+				.setBorder(new TitledBorder(null, "Parents' Fate", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		familyPanel.add(parentsFatePanel);
+
+		parentsFateComboBox = new JComboBox<String>();
+		parentsFateComboBox.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		parentsFateComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "<Choose a fate for your parents>",
+				"Both parents are living", "Somthing has happened to one or both parents" }));
+		parentsFatePanel.add(parentsFateComboBox);
+
+		randomizeParentsFateButton = new JButton("Randomize");
+		randomizeParentsFateButton.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		parentsFatePanel.add(randomizeParentsFateButton);
+
+		JPanel somethingHappenedToParentsPanel = new JPanel();
+		somethingHappenedToParentsPanel.setBorder(new TitledBorder(null, "Something Happened to Your Parents",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		familyPanel.add(somethingHappenedToParentsPanel);
+
+		parentEventComboBox = new JComboBox<String>();
+		parentEventComboBox.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		parentEventComboBox.setModel(new DefaultComboBoxModel<String>(
+				new String[] { "<Choose what happened to your parents>", "Your parent(s) died in warfare",
+						"Your parent(s) died in an accident", "Your parent(s) were murdered",
+						"Your parent(s) have amnesia and don't remember you", "You never knew your parent(s)",
+						"Your parent(s) are in hiding to protect you", "You were left with relatives for safekeeping",
+						"You grew up on the Street and never had parents", "Your parent(s) gave you up for adoption",
+						"Your parent(s) sold you for money" }));
+		somethingHappenedToParentsPanel.add(parentEventComboBox);
+
+		randomizeParentEventButton = new JButton("Randomize");
+		randomizeParentEventButton.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		somethingHappenedToParentsPanel.add(randomizeParentEventButton);
+
+		JPanel familyStatusPanel = new JPanel();
+		familyStatusPanel
+				.setBorder(new TitledBorder(null, "Family Status", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		familyPanel.add(familyStatusPanel);
+
+		familyStatusComboBox = new JComboBox<String>();
+		familyStatusComboBox.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		familyStatusComboBox.setModel(new DefaultComboBoxModel<String>(
+				new String[] { "<Choose family's status>", "Family status in danger, and you risk losing everything",
+						"Family status is OK, even if parents are missing or dead" }));
+		familyStatusPanel.add(familyStatusComboBox);
+
+		randomizeFamilyStatusButton = new JButton("Randomize");
+		randomizeFamilyStatusButton.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		familyStatusPanel.add(randomizeFamilyStatusButton);
+
+		JPanel familyTragedyPanel = new JPanel();
+		familyTragedyPanel.setBorder(
+				new TitledBorder(null, "Family Tragedy", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		familyPanel.add(familyTragedyPanel);
+
+		familyTragedyComboBox = new JComboBox<String>();
+		familyTragedyComboBox.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		familyTragedyComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "<Choose family tragedy>",
+				"Family lost everything through betrayal", "Family lost everything through bad management",
+				"Family exiled or otherwise driven from their original home/nation/corporation",
+				"Family is imprisoned and you alone escaped", "Family canished. You are the only remaining member",
+				"Family was murdered/killed and you were the only survivor",
+				"Family is involved in a longterm conspiracy, organization or association, such as a crime family or revolutionary group",
+				"Your family was scattered to the winds due to misfortune",
+				"Your family is cursed with a hereditary feud that has lasted for generations",
+				"You are the inheritor of a family debt; you must honor this debt before moving on with your life" }));
+		familyTragedyPanel.add(familyTragedyComboBox);
+
+		randomizeFamilyTragedyButton = new JButton("Randomize");
+		randomizeFamilyTragedyButton.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		familyTragedyPanel.add(randomizeFamilyTragedyButton);
+
+		JPanel childhoodEnvironmentPanel = new JPanel();
+		childhoodEnvironmentPanel.setBorder(
+				new TitledBorder(null, "Childhood Environment", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		familyPanel.add(childhoodEnvironmentPanel);
+
+		childhoodEnvironmentComboBox = new JComboBox<String>();
+		childhoodEnvironmentComboBox
+				.setModel(new DefaultComboBoxModel<String>(new String[] { "<Choose your childhood environment>",
+						"Spent on the Street, with no adult supervision", "Spent in a safe Corporate Suburbia",
+						"In a Nomad Pack moving from town to town", "In a decaying, once upscale neighborhood",
+						"In a defended Corporate Zone in the central City", "In the heart of the Combat Zone",
+						"In a small village or town far from the City", "In a large arcology city",
+						"In an aquatic Pirate Pack", "On a Corporate controlled Farm or Research Facility" }));
+		childhoodEnvironmentComboBox.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		childhoodEnvironmentPanel.add(childhoodEnvironmentComboBox);
+
+		randomizeChildhoodEnvironmentButton = new JButton("Randomize");
+		randomizeChildhoodEnvironmentButton.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		childhoodEnvironmentPanel.add(randomizeChildhoodEnvironmentButton);
+
+		JPanel siblingsPanel = new JPanel();
+		siblingsPanel.setBorder(new TitledBorder(null, "Siblings", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		familyPanel.add(siblingsPanel);
+		siblingsPanel.setLayout(new BoxLayout(siblingsPanel, BoxLayout.Y_AXIS));
+
+		JPanel siblingAmountPanel = new JPanel();
+		siblingsPanel.add(siblingAmountPanel);
+
+		siblingCountComboBox = new JComboBox<String>();
+		siblingAmountPanel.add(siblingCountComboBox);
+		siblingCountComboBox.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		siblingCountComboBox.setModel(new DefaultComboBoxModel<String>(
+				new String[] { "<Choose number of siblings>", "1", "2", "3", "4", "5", "6", "7", "Only child" }));
+
+		randomizeSiblingAmountButton = new JButton("Randomize");
+		siblingAmountPanel.add(randomizeSiblingAmountButton);
+		randomizeSiblingAmountButton.setFont(new Font("Tahoma", Font.PLAIN, 10));
+
+		siblingsDetailPanel = new JPanel();
+		siblingsPanel.add(siblingsDetailPanel);
+		siblingsDetailPanel.setLayout(new BoxLayout(siblingsDetailPanel, BoxLayout.Y_AXIS));
 
 		JPanel skillPanel = new JPanel();
-		tabbedPane.addTab("Skills", null, skillPanel, null);
+		detailsTabbedPane.addTab("Skills", null, skillPanel, null);
 		skillPanel.setLayout(new BorderLayout(0, 0));
 
 		JTabbedPane cards = new JTabbedPane(JTabbedPane.LEFT);
@@ -1533,15 +1756,15 @@ public class CharacterCreationView extends JFrame {
 		skillTextAreas.put(CharacterCreationModel.TECH, technicalAbilitiesTextArea);
 
 		JPanel cyberneticsPanel = new JPanel();
-		tabbedPane.addTab("Cybernetics", null, cyberneticsPanel, null);
+		detailsTabbedPane.addTab("Cybernetics", null, cyberneticsPanel, null);
 
 		JPanel equippedPanel = new JPanel();
-		tabbedPane.addTab("Equipped", null, equippedPanel, null);
+		detailsTabbedPane.addTab("Equipped", null, equippedPanel, null);
 		equippedPanel.setLayout(new BorderLayout(0, 0));
 
 		JPanel equippedToolbar = new JPanel();
 		equippedPanel.add(equippedToolbar, BorderLayout.NORTH);
-		
+
 		unequipButton = new JButton("Unequip");
 		equippedToolbar.add(unequipButton);
 
@@ -1564,7 +1787,7 @@ public class CharacterCreationView extends JFrame {
 		equppiedScrollPane.setRowHeaderView(equippedRowHeader);
 
 		JPanel inventoryPanel = new JPanel(new BorderLayout(0, 0));
-		tabbedPane.addTab("Inventory", null, inventoryPanel, null);
+		detailsTabbedPane.addTab("Inventory", null, inventoryPanel, null);
 		inventoryPanel.setLayout(new BorderLayout(0, 0));
 
 		JPanel inventoryToolbar = new JPanel();
@@ -1676,7 +1899,7 @@ public class CharacterCreationView extends JFrame {
 		inventoryAmmoScrollPane.setViewportView(inventoryAmmoTable);
 
 		JPanel storePanel = new JPanel();
-		tabbedPane.addTab("Store", null, storePanel, null);
+		detailsTabbedPane.addTab("Store", null, storePanel, null);
 		storePanel.setLayout(new BorderLayout(0, 0));
 
 		JPanel storeToolbar = new JPanel();
@@ -1935,12 +2158,56 @@ public class CharacterCreationView extends JFrame {
 		return bi;
 	}
 
-	public JFileChooser getFileChooser() {
-		return fileChooser;
+	public String getClothing() {
+		return clothingTextfield.getText();
 	}
 
-	public List<StunGaugePanel> getStunProgress() {
-		return stunProgressPanels;
+	public String getHairstyle() {
+		return hairstyleTextfield.getText();
+	}
+
+	public String getAffectation() {
+		return affectationsTextfield.getText();
+	}
+
+	public String getEthnicity() {
+		return (String) ethnicityComboBox.getSelectedItem();
+	}
+
+	public String getFamilyRanking() {
+		return (String) familyRankingComboBox.getSelectedItem();
+	}
+
+	public String getParentsFate() {
+		return (String) parentsFateComboBox.getSelectedItem();
+	}
+
+	public String getParentEvent() {
+		return (String) parentEventComboBox.getSelectedItem();
+	}
+
+	public String getFamilyStatus() {
+		return (String) familyStatusComboBox.getSelectedItem();
+	}
+
+	public String getFamilyTragedy() {
+		return (String) familyTragedyComboBox.getSelectedItem();
+	}
+
+	public String getChildhoodEnvironment() {
+		return (String) childhoodEnvironmentComboBox.getSelectedItem();
+	}
+
+	public String getSiblingCount() {
+		return (String) siblingCountComboBox.getSelectedItem();
+	}
+
+	public JComboBox<String> getSiblingAmountComboBox() {
+		return siblingCountComboBox;
+	}
+
+	public JFileChooser getFileChooser() {
+		return fileChooser;
 	}
 
 	public JSpinner[] getSkillSpinners() {
@@ -1949,6 +2216,10 @@ public class CharacterCreationView extends JFrame {
 
 	public Map<String, JTable> getSkillTables() {
 		return skillTables;
+	}
+
+	public List<SiblingPanel> getSiblingPanels() {
+		return siblingPanels;
 	}
 
 	public JTable getEquippedTable() {
@@ -1995,12 +2266,44 @@ public class CharacterCreationView extends JFrame {
 		return storeCards;
 	}
 
+	public JPanel getSiblingsDetailPanel() {
+		return siblingsDetailPanel;
+	}
+
 	public Map<String, JTextArea> getSkillTextAreas() {
 		return skillTextAreas;
 	}
 
 	public JComboBox<Integer>[] getStatComboBoxes() {
 		return statComboBoxes;
+	}
+
+	public JComboBox<String> getEthnicityComboBox() {
+		return ethnicityComboBox;
+	}
+
+	public JComboBox<String> getFamilyRankingComboBox() {
+		return familyRankingComboBox;
+	}
+
+	public JComboBox<String> getParentsFateComboBox() {
+		return parentsFateComboBox;
+	}
+
+	public JComboBox<String> getParentEventComboBox() {
+		return parentEventComboBox;
+	}
+
+	public JComboBox<String> getFamilyStatusComboBox() {
+		return familyStatusComboBox;
+	}
+
+	public JComboBox<String> getFamilyTragedyComboBox() {
+		return familyTragedyComboBox;
+	}
+
+	public JComboBox<String> getChildhoodEnvironmentComboBox() {
+		return childhoodEnvironmentComboBox;
 	}
 
 	public JLabel[] getStatComboBoxLabels() {
@@ -2134,6 +2437,116 @@ public class CharacterCreationView extends JFrame {
 		lblTotalCost.setText("Total Cost: " + totalCost);
 	}
 
+	public void setClothing(String clothing) {
+		clothing = clothing.replace("\"", "");
+
+		if (clothing.equalsIgnoreCase("null")) {
+			clothingTextfield.setText("");
+		} else {
+			clothingTextfield.setText(clothing);
+		}
+	}
+
+	public void setHairstyle(String hairstyle) {
+		hairstyle = hairstyle.replace("\"", "");
+
+		if (hairstyle.equalsIgnoreCase("null")) {
+			hairstyleTextfield.setText("");
+		} else {
+			hairstyleTextfield.setText(hairstyle);
+		}
+	}
+
+	public void setAffectations(String affectations) {
+		affectations = affectations.replace("\"", "");
+
+		if (affectations.equalsIgnoreCase("null")) {
+			affectationsTextfield.setText("");
+		} else {
+			affectationsTextfield.setText(affectations);
+		}
+	}
+
+	public void setEthnicity(String ethnicity) {
+		ethnicity = ethnicity.replace("\"", "");
+
+		if (ethnicity.equalsIgnoreCase("null")) {
+			ethnicityComboBox.setSelectedIndex(0);
+		} else {
+			ethnicityComboBox.setSelectedItem(ethnicity);
+		}
+	}
+
+	public void setFamilyRanking(String familyRanking) {
+		familyRanking = familyRanking.replace("\"", "");
+
+		if (familyRanking.equalsIgnoreCase("null")) {
+			familyRankingComboBox.setSelectedIndex(0);
+		} else {
+			familyRankingComboBox.setSelectedItem(familyRanking);
+		}
+	}
+
+	public void setParentsFate(String parentsFate) {
+		parentsFate = parentsFate.replace("\"", "");
+
+		if (parentsFate.equalsIgnoreCase("null")) {
+			parentsFateComboBox.setSelectedIndex(0);
+		} else {
+			parentsFateComboBox.setSelectedItem(parentsFate);
+		}
+	}
+
+	public void setParentEvent(String parentEvent) {
+		parentEvent = parentEvent.replace("\"", "");
+
+		if (parentEvent.equalsIgnoreCase("null")) {
+			parentEventComboBox.setSelectedIndex(0);
+		} else {
+			parentEventComboBox.setSelectedItem(parentEvent);
+		}
+	}
+
+	public void setFamilyStatus(String familyStatus) {
+		familyStatus = familyStatus.replace("\"", "");
+
+		if (familyStatus.equalsIgnoreCase("null")) {
+			familyStatusComboBox.setSelectedIndex(0);
+		} else {
+			familyStatusComboBox.setSelectedItem(familyStatus);
+		}
+	}
+
+	public void setFamilyTragedy(String familyTragedy) {
+		familyTragedy = familyTragedy.replace("\"", "");
+
+		if (familyTragedy.equalsIgnoreCase("null")) {
+			familyTragedyComboBox.setSelectedIndex(0);
+		} else {
+			familyTragedyComboBox.setSelectedItem(familyTragedy);
+		}
+	}
+
+	public void setChildhoodEnvironment(String childhoodEnvironment) {
+		childhoodEnvironment = childhoodEnvironment.replace("\"", "");
+
+		if (childhoodEnvironment.equalsIgnoreCase("null")) {
+			childhoodEnvironmentComboBox.setSelectedIndex(0);
+		} else {
+			childhoodEnvironmentComboBox.setSelectedItem(childhoodEnvironment);
+		}
+	}
+
+	public void setSiblingCount(String siblingCount) {
+		siblingCount = siblingCount.replace("\"", "");
+
+		if (siblingCount.equalsIgnoreCase("null")) {
+			siblingCountComboBox.setSelectedIndex(0);
+		} else {
+			siblingCountComboBox.setSelectedItem(siblingCount);
+		}
+	}
+
 	public void addAttractivenessStatChangeListener(ChangeListener listenerForStatChange) {
 		attractivenessSpinner.addChangeListener(listenerForStatChange);
 	}
@@ -2170,11 +2583,11 @@ public class CharacterCreationView extends JFrame {
 		intelligenceSpinner.addChangeListener(listenerForStatChange);
 	}
 
-	public void addInventoryChangeItemListener(ItemListener listener) {
+	public void addInventoryItemListener(ItemListener listener) {
 		inventoryCategoryComboBox.addItemListener(listener);
 	}
 
-	public void addStoreChangeItemListener(ItemListener listener) {
+	public void addStoreItemListener(ItemListener listener) {
 		storeCategoryComboBox.addItemListener(listener);
 	}
 
@@ -2255,13 +2668,97 @@ public class CharacterCreationView extends JFrame {
 	public void addEquipButtonActionListener(ActionListener listener) {
 		equipButton.addActionListener(listener);
 	}
-	
+
 	public void addUnequipButtonActionListener(ActionListener listener) {
 		unequipButton.addActionListener(listener);
 	}
 
 	public void addEquippedTableModelListener(TableModelListener listener) {
 		equippedTable.getModel().addTableModelListener(listener);
+	}
+
+	public void addClothingDocumentListener(DocumentListener listener) {
+		clothingTextfield.getDocument().addDocumentListener(listener);
+	}
+
+	public void addClothingRandomizerActionListener(ActionListener listener) {
+		randomizeClothingButton.addActionListener(listener);
+	}
+
+	public void addHairstyleDocumentListener(DocumentListener listener) {
+		hairstyleTextfield.getDocument().addDocumentListener(listener);
+	}
+
+	public void addHairstyleRandomizerActionListener(ActionListener listener) {
+		randomizeHairstyleButton.addActionListener(listener);
+	}
+
+	public void addAffectationsDocumentListener(DocumentListener listener) {
+		affectationsTextfield.getDocument().addDocumentListener(listener);
+	}
+
+	public void addAffectionsRandomizerActionListener(ActionListener listener) {
+		randomizeAffectationsButton.addActionListener(listener);
+	}
+
+	public void addEthnicityItemListener(ItemListener listener) {
+		ethnicityComboBox.addItemListener(listener);
+	}
+
+	public void addEthnicityRandomizerActionListener(ActionListener listener) {
+		randomizeEthnicityButton.addActionListener(listener);
+	}
+
+	public void addSiblingCountItemListener(ItemListener listener) {
+		siblingCountComboBox.addItemListener(listener);
+	}
+
+	public void addSiblingAmountRandomizerActionListener(ActionListener listener) {
+		randomizeSiblingAmountButton.addActionListener(listener);
+	}
+
+	public void addFamilyRankingItemListener(ItemListener listener) {
+		familyRankingComboBox.addItemListener(listener);
+	}
+
+	public void addFamilyRankingRandomizerActionListener(ActionListener listener) {
+		randomizeFamilyRankingButton.addActionListener(listener);
+	}
+
+	public void addParentsFateItemListener(ItemListener listener) {
+		parentsFateComboBox.addItemListener(listener);
+	}
+
+	public void addParentsFateRandomizerActionListener(ActionListener listener) {
+		randomizeParentsFateButton.addActionListener(listener);
+	}
+
+	public void addParentEventItemListener(ItemListener listener) {
+		parentEventComboBox.addItemListener(listener);
+	}
+
+	public void addParentEventRandomizerActionListener(ActionListener listener) {
+		randomizeParentEventButton.addActionListener(listener);
+	}
+
+	public void addFamilyStatusItemListener(ItemListener listener) {
+		familyStatusComboBox.addItemListener(listener);
+	}
+
+	public void addFamilyStatusRandomizerActionListener(ActionListener listener) {
+		randomizeFamilyStatusButton.addActionListener(listener);
+	}
+
+	public void addFamilyTragedyItemListener(ItemListener listener) {
+		familyTragedyComboBox.addItemListener(listener);
+	}
+
+	public void addFamilyTragedyRandomizerActionListener(ActionListener listener) {
+		randomizeFamilyTragedyButton.addActionListener(listener);
+	}
+
+	public void addChildhoodEnvironmentRandomizerActionListener(ActionListener listener) {
+		randomizeChildhoodEnvironmentButton.addActionListener(listener);
 	}
 
 	public void setUpStatComboBoxes() {
@@ -2503,14 +3000,6 @@ public class CharacterCreationView extends JFrame {
 		model.addRow(row);
 	}
 
-	private void fillStunGauge(int index) {
-		stunProgressPanels.get(index).increaseStunGauge();
-		stunProgressPanels.get(index).increaseStunGauge();
-		stunProgressPanels.get(index).increaseStunGauge();
-		stunProgressPanels.get(index).increaseStunGauge();
-
-	}
-
 	public void resizeColumnWidth(JTable table) {
 		final TableColumnModel columnModel = table.getColumnModel();
 		for (int column = 0; column < table.getColumnCount(); column++) {
@@ -2524,6 +3013,14 @@ public class CharacterCreationView extends JFrame {
 				width = 200;
 			columnModel.getColumn(column).setPreferredWidth(width);
 		}
+	}
+
+	private void fillStunGauge(int index) {
+		stunProgressPanels.get(index).increaseStunGauge();
+		stunProgressPanels.get(index).increaseStunGauge();
+		stunProgressPanels.get(index).increaseStunGauge();
+		stunProgressPanels.get(index).increaseStunGauge();
+
 	}
 
 	class CharFilter extends FileFilter {
@@ -2584,6 +3081,16 @@ public class CharacterCreationView extends JFrame {
 			fireTableRowsInserted(getRowCount(), getRowCount());
 		}
 
+		public void removeRow(int row) {
+			data.set(row, new Object[] { "", "", "", "", "", "" });
+			fireTableRowsDeleted(getRowCount(), getRowCount());
+		}
+
+		public void clear() {
+			for (int i = (getRowCount() - 1); i >= 0; i--) {
+				removeRow(i);
+			}
+		}
 	}
 
 	public class InventoryWeaponTableModel extends AbstractTableModel {
@@ -2615,9 +3122,20 @@ public class CharacterCreationView extends JFrame {
 			fireTableRowsInserted(getRowCount(), getRowCount());
 		}
 
+		public void removeRow(int row) {
+			data.remove(row);
+			fireTableRowsDeleted(getRowCount(), getRowCount());
+		}
+
 		@Override
 		public String getColumnName(int column) {
 			return columnNames[column];
+		}
+
+		public void clear() {
+			for (int i = (getRowCount() - 1); i >= 0; i--) {
+				removeRow(i);
+			}
 		}
 
 	}
@@ -2700,6 +3218,12 @@ public class CharacterCreationView extends JFrame {
 			return columnNames[column];
 		}
 
+		public void clear() {
+			for (int i = (getRowCount() - 1); i >= 0; i--) {
+				removeRow(i);
+			}
+		}
+
 	}
 
 	public class StoreGearTableModel extends AbstractTableModel {
@@ -2769,8 +3293,19 @@ public class CharacterCreationView extends JFrame {
 			fireTableRowsInserted(getRowCount(), getRowCount());
 		}
 
+		public void removeRow(int row) {
+			data.remove(row);
+			fireTableRowsDeleted(getRowCount(), getRowCount());
+		}
+
 		public String getColumnName(int column) {
 			return columnNames[column];
+		}
+
+		public void clear() {
+			for (int i = (getRowCount() - 1); i >= 0; i--) {
+				removeRow(i);
+			}
 		}
 
 	}
@@ -2848,6 +3383,12 @@ public class CharacterCreationView extends JFrame {
 
 		public String getColumnName(int column) {
 			return columnNames[column];
+		}
+
+		public void clear() {
+			for (int i = (getRowCount() - 1); i >= 0; i--) {
+				removeRow(i);
+			}
 		}
 
 	}
@@ -3028,6 +3569,186 @@ public class CharacterCreationView extends JFrame {
 			return spinner;
 		}
 
+	}
+
+	public static class SiblingPanel extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -1685143249981857828L;
+		private JTextField siblingNameTextField;
+		private JButton randomizeNameButton;
+		private JComboBox<String> siblingAgeComboBox;
+		private JButton randomizeAgeButton;
+		private JRadioButton maleRadioButton;
+		private JRadioButton femaleRadioButton;
+		private JButton randomizeGenderButton;
+		private JComboBox<String> siblingRelationshipComboBox;
+		private JButton randomizeSiblingRelationship;
+
+		public SiblingPanel() {
+			setLayout(new GridLayout(0, 1));
+
+			siblingNameTextField = new JTextField();
+			siblingNameTextField.setColumns(15);
+
+			siblingAgeComboBox = new JComboBox<String>(new DefaultComboBoxModel<String>(
+					new String[] { "<Choose your siblings relative age>", "Older", "Younger", "Twin" }));
+
+			maleRadioButton = new JRadioButton("Male");
+			maleRadioButton.setActionCommand("Male");
+			femaleRadioButton = new JRadioButton("Female");
+			femaleRadioButton.setActionCommand("Female");
+
+			siblingRelationshipComboBox = new JComboBox<String>(new DefaultComboBoxModel<String>(
+					new String[] { "<Choose siblings feelings toward you>", "Sibling dislikes you", "Sibling likes you",
+							"Sibling is neutral", "They hero worship you", "They hate you" }));
+
+			drawNamePanel();
+			drawAgePanel();
+			drawGenderPanel();
+			drawRelationshipPanel();
+		}
+
+		public void addNameDocumentListener(DocumentListener listener) {
+			siblingNameTextField.getDocument().addDocumentListener(listener);
+		}
+
+		public void addNameRandomizerActionListener(ActionListener listener) {
+			randomizeNameButton.addActionListener(listener);
+		}
+
+		public void addAgeItemListener(ItemListener listener) {
+			siblingAgeComboBox.addItemListener(listener);
+		}
+
+		public void addAgeRandomizerActionListener(ActionListener listener) {
+			randomizeAgeButton.addActionListener(listener);
+		}
+
+		public void addMaleRadioButtonActionListener(ActionListener listener) {
+			maleRadioButton.addActionListener(listener);
+		}
+
+		public void addFemaleRadioButtonActionListener(ActionListener listener) {
+			femaleRadioButton.addActionListener(listener);
+		}
+
+		public void addGenderRandomizerActionListener(ActionListener listener) {
+			randomizeGenderButton.addActionListener(listener);
+		}
+
+		public void addRelationshipItemListener(ItemListener listener) {
+			siblingRelationshipComboBox.addItemListener(listener);
+		}
+
+		public void addRelationshipRandomizerActionListener(ActionListener listener) {
+			randomizeSiblingRelationship.addActionListener(listener);
+		}
+
+		public JTextField getSiblingNameTextField() {
+			return siblingNameTextField;
+		}
+
+		public JRadioButton getFemaleRadioButton() {
+			return femaleRadioButton;
+		}
+
+		public JRadioButton getMaleRadioButton() {
+			return maleRadioButton;
+		}
+
+		public JComboBox<String> getSiblingAgeComboBox() {
+			return siblingAgeComboBox;
+		}
+
+		public JComboBox<String> getSiblingRelationshipComboBox() {
+			return siblingRelationshipComboBox;
+		}
+
+		public void setSiblingName(String name) {
+			name = name.replace("\"", "");
+
+			siblingNameTextField.setText(name);
+		}
+
+		public void setGender(String gender) {
+			gender = gender.replace("\"", "");
+
+			if (gender.equals("Male")) {
+				maleRadioButton.setSelected(true);
+			} else if (gender.equals("Female")) {
+				femaleRadioButton.setSelected(true);
+			}
+		}
+
+		public void setAge(String age) {
+			age = age.replace("\"", "");
+
+			siblingAgeComboBox.setSelectedItem(age);
+		}
+
+		public void setRelationship(String relationship) {
+			relationship = relationship.replace("\"", "");
+
+			siblingRelationshipComboBox.setSelectedItem(relationship);
+		}
+
+		private void drawNamePanel() {
+			JPanel namePanel = new JPanel();
+			JLabel label = new JLabel("Name");
+			randomizeNameButton = new JButton("Randomize");
+
+			namePanel.add(label);
+			namePanel.add(siblingNameTextField);
+			namePanel.add(randomizeNameButton);
+
+			add(namePanel);
+		}
+
+		private void drawAgePanel() {
+			JPanel agePanel = new JPanel();
+			JLabel label = new JLabel("Age");
+			randomizeAgeButton = new JButton("Randomize");
+
+			agePanel.add(label);
+			agePanel.add(siblingAgeComboBox);
+			agePanel.add(randomizeAgeButton);
+
+			add(agePanel);
+		}
+
+		private void drawGenderPanel() {
+			JPanel genderPanel = new JPanel();
+			JLabel label = new JLabel("Gender");
+			randomizeGenderButton = new JButton("Randomize");
+
+			JPanel radioButtonPanel = new JPanel();
+			radioButtonPanel.add(maleRadioButton);
+			radioButtonPanel.add(femaleRadioButton);
+
+			ButtonGroup genderGroup = new ButtonGroup();
+			genderGroup.add(maleRadioButton);
+			genderGroup.add(femaleRadioButton);
+
+			genderPanel.add(label);
+			genderPanel.add(radioButtonPanel);
+			genderPanel.add(randomizeGenderButton);
+
+			add(genderPanel);
+		}
+
+		private void drawRelationshipPanel() {
+			JPanel relationshipPanel = new JPanel();
+			JLabel label = new JLabel("Relationship");
+			randomizeSiblingRelationship = new JButton("Randomize");
+
+			relationshipPanel.add(label);
+			relationshipPanel.add(siblingRelationshipComboBox);
+			relationshipPanel.add(randomizeSiblingRelationship);
+
+			add(relationshipPanel);
+		}
 	}
 
 	class StunGaugePanel extends JPanel {

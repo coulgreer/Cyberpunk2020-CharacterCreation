@@ -61,6 +61,20 @@ public class CharacterCreationModel {
 
 	private double injuryPoints;
 
+	private String clothing;
+	private String hairstyle;
+	private String affectations;
+	private String ethnicity;
+	private String familyRanking;
+	private String parentsFate;
+	private String parentEvent;
+	private String familyStatus;
+	private String childhoodEnvironment;
+	private String familyTragedy;
+	private String siblingCount;
+
+	private List<Sibling> siblings;
+
 	private Map<String, Map<String, Skill>> skillCatelog = new TreeMap<String, Map<String, Skill>>();
 	private Map<String, Skill> specialAbilitySkills = new TreeMap<String, Skill>();
 	private Map<String, Skill> attractivenessSkills = new TreeMap<String, Skill>();
@@ -71,9 +85,13 @@ public class CharacterCreationModel {
 	private Map<String, Skill> reflexesSkills = new TreeMap<String, Skill>();
 	private Map<String, Skill> technicalAbilitySkills = new TreeMap<String, Skill>();
 	private Map<String, Role> roles = new TreeMap<String, Role>();
+	private Map<String, Weapon> inventoryWeapons = new TreeMap<String, Weapon>();
 	private Map<String, Weapon> weapons = new TreeMap<String, Weapon>();
+	private Map<String, Gear> inventoryGear = new TreeMap<String, Gear>();
 	private Map<String, Gear> gear = new TreeMap<String, Gear>();
+	private Map<String, Armor> inventoryArmors = new TreeMap<String, Armor>();
 	private Map<String, Armor> armors = new TreeMap<String, Armor>();
+	private Map<String, Ammo> inventoryAmmos = new TreeMap<String, Ammo>();
 	private Map<String, Ammo> ammos = new TreeMap<String, Ammo>();
 
 	private Skill authority = new Skill.SkillBuilder() //
@@ -3498,6 +3516,9 @@ public class CharacterCreationModel {
 		bodyTypeModifier = calculateBodyTypeModifier();
 
 		injuryPoints = 0;
+		ethnicity = "Anglo-American";
+		siblingCount = "Only child";
+		siblings = new ArrayList<Sibling>(7);
 
 		specialAbilitySkills.put(authority.getSkillName(), authority);
 		specialAbilitySkills.put(charismaticLeadership.getSkillName(), charismaticLeadership);
@@ -3864,7 +3885,7 @@ public class CharacterCreationModel {
 	public int getIntelligenceLevel() {
 		return intelligenceLevel;
 	}
-	
+
 	public int getGeneralEncumbranceValue() {
 		return generalEncumbranceValue;
 	}
@@ -3872,23 +3893,23 @@ public class CharacterCreationModel {
 	public int getHeadEncumbranceValue() {
 		return headEncumbranceValue;
 	}
-	
+
 	public int getTorsoEncumbranceValue() {
 		return torsoEncumbranceValue;
 	}
-	
+
 	public int getRightArmEncumbranceValue() {
 		return rightArmEncumbranceValue;
 	}
-	
+
 	public int getLeftArmEncumbranceValue() {
 		return leftArmEncumbranceValue;
 	}
-	
+
 	public int getRightLegEncumbranceValue() {
 		return rightLegEncumbranceValue;
 	}
-	
+
 	public int getLeftLegEncumbranceValue() {
 		return leftLegEncumbranceValue;
 	}
@@ -3985,6 +4006,54 @@ public class CharacterCreationModel {
 		return injuryPoints;
 	}
 
+	public String getClothing() {
+		return clothing;
+	}
+
+	public String getHairstyle() {
+		return hairstyle;
+	}
+
+	public String getAffectations() {
+		return affectations;
+	}
+
+	public String getEthnicity() {
+		return ethnicity;
+	}
+
+	public String getFamilyRanking() {
+		return familyRanking;
+	}
+
+	public String getParentsFate() {
+		return parentsFate;
+	}
+
+	public String getParentEvent() {
+		return parentEvent;
+	}
+
+	public String getFamilyStatus() {
+		return familyStatus;
+	}
+
+	public String getFamilyTragedy() {
+		return familyTragedy;
+	}
+
+	public String getChildhoodEnvironment() {
+		return childhoodEnvironment;
+	}
+
+	public String getSiblingCount() {
+		return siblingCount;
+	}
+
+	public List<Sibling> getSiblings() {
+		return siblings;
+	}
+
 	public Map<String, Map<String, Skill>> getSkillCatelog() {
 		return skillCatelog;
 	}
@@ -4036,16 +4105,32 @@ public class CharacterCreationModel {
 		return weapons;
 	}
 
+	public Map<String, Weapon> getInventoryWeapons() {
+		return inventoryWeapons;
+	}
+
 	public Map<String, Gear> getGear() {
 		return gear;
+	}
+
+	public Map<String, Gear> getInventoryGear() {
+		return inventoryGear;
 	}
 
 	public Map<String, Armor> getArmors() {
 		return armors;
 	}
 
+	public Map<String, Armor> getInventoryArmors() {
+		return inventoryArmors;
+	}
+
 	public Map<String, Ammo> getAmmos() {
 		return ammos;
+	}
+
+	public Map<String, Ammo> getInventoryAmmos() {
+		return inventoryAmmos;
 	}
 
 	public void setCharacterName(String name) {
@@ -4071,27 +4156,27 @@ public class CharacterCreationModel {
 	public void setGeneralEncumbranceValue(int value) {
 		generalEncumbranceValue = value;
 	}
-	
+
 	public void setHeadEncumbranceValue(int value) {
 		headEncumbranceValue = value;
 	}
-	
+
 	public void setTorsoEncumbranceValue(int value) {
 		torsoEncumbranceValue = value;
 	}
-	
+
 	public void setRightArmEncumbranceValue(int value) {
 		rightArmEncumbranceValue = value;
 	}
-	
+
 	public void setLeftArmEncumbranceValue(int value) {
 		leftArmEncumbranceValue = value;
 	}
-	
+
 	public void setRightLegEncumbranceValue(int value) {
 		rightLegEncumbranceValue = value;
 	}
-	
+
 	public void setLeftLegEncumbranceValue(int value) {
 		leftLegEncumbranceValue = value;
 	}
@@ -4192,6 +4277,118 @@ public class CharacterCreationModel {
 
 	public void setInjuryPoints(double points) {
 		injuryPoints = points;
+	}
+
+	public void setClothing(String clothing) {
+		clothing = clothing.replace("\"", "");
+
+		if (clothing.equalsIgnoreCase("null")) {
+			this.clothing = null;
+		} else {
+			this.clothing = clothing;
+		}
+	}
+
+	public void setHairstyle(String hairstyle) {
+		hairstyle = hairstyle.replace("\"", "");
+
+		if (hairstyle.equalsIgnoreCase("null")) {
+			this.hairstyle = null;
+		} else {
+			this.hairstyle = hairstyle;
+		}
+
+	}
+
+	public void setAffectations(String affectations) {
+		affectations = affectations.replace("\"", "");
+
+		if (affectations.equalsIgnoreCase("null")) {
+			this.affectations = null;
+		} else {
+			this.affectations = affectations;
+		}
+	}
+
+	public void setEthnicity(String ethnicity) {
+		ethnicity = ethnicity.replace("\"", "");
+
+		if (ethnicity.equalsIgnoreCase("null")) {
+			this.ethnicity = null;
+		} else {
+			this.ethnicity = ethnicity;
+		}
+	}
+
+	public void setFamilyRanking(String familyRanking) {
+		familyRanking = familyRanking.replace("\"", "");
+
+		if (familyRanking.equalsIgnoreCase("null")) {
+			this.familyRanking = null;
+		} else {
+			this.familyRanking = familyRanking;
+		}
+
+	}
+
+	public void setParentsFate(String parentsFate) {
+		parentsFate = parentsFate.replace("\"", "");
+
+		if (parentsFate.equalsIgnoreCase("null")) {
+			this.parentsFate = null;
+		} else {
+			this.parentsFate = parentsFate;
+		}
+	}
+
+	public void setParentEvent(String parentEvent) {
+		parentEvent = parentEvent.replace("\"", "");
+
+		if (parentEvent.equalsIgnoreCase("null")) {
+			this.parentEvent = null;
+		} else {
+			this.parentEvent = parentEvent;
+		}
+	}
+
+	public void setFamilyStatus(String familyStatus) {
+		familyStatus = familyStatus.replace("\"", "");
+
+		if (familyStatus.equalsIgnoreCase("null")) {
+			this.familyStatus = null;
+		} else {
+			this.familyStatus = familyStatus;
+		}
+	}
+
+	public void setFamilyTragedy(String familyTragedy) {
+		familyTragedy = familyTragedy.replace("\"", "");
+
+		if (familyTragedy.equalsIgnoreCase("null")) {
+			this.familyTragedy = null;
+		} else {
+			this.familyTragedy = familyTragedy;
+		}
+	}
+
+	public void setChildhoodEnvironment(String childhoodEnvironment) {
+		childhoodEnvironment = childhoodEnvironment.replace("\"", "");
+
+		if (childhoodEnvironment.equalsIgnoreCase("null")) {
+			this.childhoodEnvironment = null;
+		} else {
+			this.childhoodEnvironment = childhoodEnvironment;
+		}
+	}
+
+	public void setSiblingCount(String siblingCount) {
+		siblingCount = siblingCount.replace("\"", "");
+
+		if (siblingCount.equalsIgnoreCase("null")) {
+			this.siblingCount = null;
+		} else {
+			this.siblingCount = siblingCount;
+		}
 	}
 
 	public static class Ammo {
@@ -4501,7 +4698,7 @@ public class CharacterCreationModel {
 
 	public static class Gear {
 		private String type;
-		private double quantity;
+		private int quantity;
 		private double weight;
 		private int cost;
 
@@ -4509,7 +4706,7 @@ public class CharacterCreationModel {
 			return type;
 		}
 
-		public double getQuantity() {
+		public int getQuantity() {
 			return quantity;
 		}
 
@@ -4521,7 +4718,7 @@ public class CharacterCreationModel {
 			return cost;
 		}
 
-		public void setQuantity(double quantity) {
+		public void setQuantity(int quantity) {
 			this.quantity = quantity;
 		}
 
@@ -4534,7 +4731,7 @@ public class CharacterCreationModel {
 
 		public static class GearBuilder {
 			private String type = "Unkown";
-			private double quantity = 0.0;
+			private int quantity = 0;
 			private double weight = 0;
 			private int cost = 0;
 
@@ -4543,7 +4740,7 @@ public class CharacterCreationModel {
 				return this;
 			}
 
-			public GearBuilder withQuantitiy(double quantity) {
+			public GearBuilder withQuantitiy(int quantity) {
 				this.quantity = quantity;
 				return this;
 			}
@@ -4627,12 +4824,89 @@ public class CharacterCreationModel {
 
 	}
 
+	public static class Sibling {
+		private String name;
+		private String gender;
+		private String age;
+		private String relationship;
+
+		private Sibling(SiblingBuilder siblingBuilder) {
+			this.name = siblingBuilder.name;
+			this.gender = siblingBuilder.gender;
+			this.age = siblingBuilder.age;
+			this.relationship = siblingBuilder.relationship;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getGender() {
+			return gender;
+		}
+
+		public String getAge() {
+			return age;
+		}
+
+		public String getRelationship() {
+			return relationship;
+		}
+
+		public void setSiblingName(String name) {
+			this.name = name;
+		}
+
+		public void setGender(String gender) {
+			this.gender = gender;
+		}
+
+		public void setAge(String age) {
+			this.age = age;
+		}
+
+		public void setRelationship(String relationship) {
+			this.relationship = relationship;
+		}
+
+		public static class SiblingBuilder {
+			private String name = "";
+			private String gender = "Female";
+			private String age = "Older";
+			private String relationship = "Sibling dislikes you";
+
+			public SiblingBuilder withName(String name) {
+				this.name = name;
+				return this;
+			}
+
+			public SiblingBuilder withGender(String gender) {
+				this.gender = gender;
+				return this;
+			}
+
+			public SiblingBuilder withAge(String age) {
+				this.age = age;
+				return this;
+			}
+
+			public SiblingBuilder withRelationship(String relationship) {
+				this.relationship = relationship;
+				return this;
+			}
+
+			public Sibling build() {
+				return new Sibling(this);
+			}
+		}
+	}
+
 	public static class Skill {
-		private String type = "N/A";
-		private String skillName = "NIL";
-		private String specifiedSkill = "";
-		private String description = "";
-		private int rank = 0;
+		private String type;
+		private String skillName;
+		private String specifiedSkill;
+		private String description;
+		private int rank;
 
 		private Skill(SkillBuilder skillBuilder) {
 			this.type = skillBuilder.type;
@@ -4662,12 +4936,14 @@ public class CharacterCreationModel {
 			return rank;
 		}
 
-		public void setSpecifiedSkill(String newSpecifiedSkill) {
-			specifiedSkill = newSpecifiedSkill;
+		public void setSpecifiedSkill(String specifiedSkill) {
+			specifiedSkill = specifiedSkill.replace("\"", "");
+
+			this.specifiedSkill = specifiedSkill;
 		}
 
-		public void setRank(int newRank) {
-			rank = newRank;
+		public void setRank(int rank) {
+			this.rank = rank;
 		}
 
 		public static class SkillBuilder {

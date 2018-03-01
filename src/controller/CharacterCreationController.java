@@ -27,12 +27,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -42,18 +44,22 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
 import org.apache.commons.codec.binary.Base64;
 
 import components.ImagePreview;
 import model.CharacterCreationModel;
-import model.CharacterCreationModel.Skill;
+import model.CharacterCreationModel.Sibling;
+import model.CharacterCreationModel.Sibling.SiblingBuilder;
 import view.CharacterCreationView;
 import view.CharacterCreationView.EquippedTableModel;
 import view.CharacterCreationView.InventoryAmmoTableModel;
 import view.CharacterCreationView.InventoryArmorTableModel;
 import view.CharacterCreationView.InventoryGearTableModel;
 import view.CharacterCreationView.InventoryWeaponTableModel;
+import view.CharacterCreationView.SiblingPanel;
 import view.CharacterCreationView.SkillTableModel;
 
 public class CharacterCreationController {
@@ -65,7 +71,7 @@ public class CharacterCreationController {
 		this.characterView = characterView;
 
 		this.characterView.addHandleDocumentListener(new HandleDocumentListener());
-		this.characterView.addRoleChangeListener(new RoleChangeListener());
+		this.characterView.addRoleChangeListener(new RoleChangeActionListener());
 		this.characterView.addLoadCharacterButtonActionListener(new LoadCharacterActionListener());
 		this.characterView.addSaveCharacterButtonActionListener(new SaveCharacterActionListener());
 		this.characterView.addIntelligenceStatChangeListener(new IntelligenceChangeListener());
@@ -87,13 +93,23 @@ public class CharacterCreationController {
 		this.characterView.addFastCharacterPointButtonActionListener(new FastCharacterPointActionListener());
 		this.characterView.addManualCharacterPointButtonActionListener(new ManualCharacterPointActionListener());
 		this.characterView.addChangePortraitButtonActionListener(new ChangeCharacterPortraitActionListener());
-		this.characterView.addInventoryChangeItemListener(new InventoryChangeListener());
-		this.characterView.addStoreChangeItemListener(new StoreChangeListener());
+		this.characterView.addInventoryItemListener(new InventoryItemListener());
+		this.characterView.addStoreItemListener(new StoreItemListener());
 		this.characterView.addAddToInventoryActionListener(new AddToInventoryActionListener());
 		this.characterView.addCalculateActionListener(new AddMoneyActionListener());
 		this.characterView.addEquipButtonActionListener(new EquipActionListener());
 		this.characterView.addEquippedTableModelListener(new EquippedTableModelListener());
 		this.characterView.addUnequipButtonActionListener(new UnequipActionListener());
+		this.characterView.addClothingRandomizerActionListener(new RandomizeClothesActionListener());
+		this.characterView.addHairstyleRandomizerActionListener(new RandomizeHairstyleActionListener());
+		this.characterView.addAffectionsRandomizerActionListener(new RandomizeAffectationsActionListener());
+		this.characterView.addEthnicityRandomizerActionListener(new RandomizeEthnicityActionListener());
+		this.characterView.addSiblingCountItemListener(new SiblingAmountItemListener());
+		this.characterView.addSiblingAmountRandomizerActionListener(new SiblingAmountRandomizerActionListener());
+		this.characterView.addClothingDocumentListener(new ClothingDocumentListener());
+		this.characterView.addHairstyleDocumentListener(new HairstyleDocumentListener());
+		this.characterView.addAffectationsDocumentListener(new AffectationsDocumentListener());
+		this.characterView.addEthnicityItemListener(new EthnicityItemListener());
 
 		this.characterView.drawLoadedInjuryPoints(this.characterModel.getInjuryPoints());
 		this.characterView.setModifiedReflexesLevel(Integer.toString(this.characterModel.getModifiedReflexesLevel()));
@@ -228,6 +244,7 @@ public class CharacterCreationController {
 				Object[] row;
 				String type = (String) storeWeaponTable.getValueAt(rowIndex, 0);
 				CharacterCreationModel.Weapon weapon = characterModel.getWeapons().get(type);
+				characterModel.getInventoryWeapons().put(type, weapon);
 
 				row = new Object[] { weapon.getName(), weapon.getCategory(), weapon.getAccuracy(),
 						weapon.getConcealability(), weapon.getDamageAndAmmo(), weapon.getNumberOfShots(),
@@ -243,6 +260,7 @@ public class CharacterCreationController {
 				CharacterCreationModel.Gear gear = characterModel.getGear().get(type);
 				gear.setQuantity(gear.getQuantity() + 1);
 				characterModel.getGear().put(type, gear);
+				characterModel.getInventoryGear().put(type, gear);
 
 				row = new Object[] { gear.getType(), gear.getQuantity(), (gear.getWeight() * gear.getQuantity()) };
 
@@ -267,6 +285,7 @@ public class CharacterCreationController {
 				Object[] row;
 				String type = (String) storeArmorTable.getValueAt(rowIndex, 0);
 				CharacterCreationModel.Armor armor = characterModel.getArmors().get(type);
+				characterModel.getInventoryArmors().put(type, armor);
 
 				row = new Object[] { armor.getType(), armor.getArmorClass(), armor.getCovers(),
 						armor.getStoppingPower(), armor.getEncumbranceValue(), armor.getWeight() };
@@ -282,6 +301,7 @@ public class CharacterCreationController {
 				CharacterCreationModel.Ammo ammo = characterModel.getAmmos().get(type);
 				ammo.setQuantity(ammo.getQuantity() + ammo.getQuantityPerBox());
 				characterModel.getAmmos().put(type, ammo);
+				characterModel.getInventoryAmmos().put(type, ammo);
 
 				row = new Object[] { ammo.getType(), ammo.getQuantity(), ammo.isCaseless(),
 						((ammo.getQuantity() / ammo.getQuantityPerBox()) * ammo.getWeight()) };
@@ -632,7 +652,347 @@ public class CharacterCreationController {
 		}
 	}
 
+	class SaveCharacterActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			int returnVal = characterView.getFileChooser().showSaveDialog(characterView);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File originalFile = characterView.getFileChooser().getSelectedFile();
+				File formattedFile = new File(originalFile.toString() + ".char");
+
+				if (originalFile.exists() || formattedFile.exists()) {
+					returnVal = JOptionPane.showConfirmDialog(
+							characterView, "Do you want to overwrite "
+									+ characterView.getFileChooser().getSelectedFile().getName() + " ?",
+							"Confirm Overwrite", JOptionPane.YES_NO_OPTION);
+					if (returnVal == JOptionPane.YES_OPTION) {
+						writeDataToFile();
+					}
+				} else {
+					writeDataToFile();
+				}
+
+			}
+		}
+
+		private void writeDataToFile() {
+			File file = characterView.getFileChooser().getSelectedFile();
+			String filename = file.toString();
+			FileWriter fw;
+
+			try {
+				if (!filename.endsWith(".char")) {
+					filename += ".char";
+					fw = new FileWriter(filename);
+				} else {
+					fw = new FileWriter(filename);
+				}
+				fw.write("  handle=" + formatStringValue(characterModel.getHandle()) + ",\n" //
+						+ "  role=" + formatStringValue(characterModel.getRole().getRoleName()) + ",\n" //
+						+ "  character_points=" + characterModel.getCharacterPoints() + ",\n" //
+						+ "  attributes={\n" //
+						+ "    intelligence=" + characterModel.getIntelligenceLevel() + ",\n" //
+						+ "    unmodified_reflexes=" + characterModel.getUnmodifiedReflexesLevel() + ",\n" //
+						+ "    modified_reflexes=" + characterModel.getModifiedReflexesLevel() + ",\n" //
+						+ "    technical_ability=" + characterModel.getTechnicalAbilityLevel() + ",\n" //
+						+ "    cool=" + characterModel.getCoolLevel() + ", \n" //
+						+ "    attractiveness=" + characterModel.getAttractivenessLevel() + ",\n" //
+						+ "    luck=" + characterModel.getLuckLevel() + ",\n" //
+						+ "    movement_allowance=" + characterModel.getMovementAllowanceLevel() + ",\n" //
+						+ "    body=" + characterModel.getBodyLevel() + ",\n" //
+						+ "    current_empathy=" + characterModel.getCurrentEmpathyLevel() + ",\n" //
+						+ "    total_empathy=" + characterModel.getTotalEmpathyLevel() + ",\n" //
+						+ "    run=" + characterModel.getRunLevel() + ",\n" //
+						+ "    leap=" + characterModel.getLeapLevel() + ",\n" //
+						+ "    lift=" + characterModel.getLiftCapacity() + ",\n" //
+						+ "    carry=" + characterModel.getCarryCapacity() + "\n" //
+						+ "  },\n" //
+						+ "  armor_stopping_power={\n" //
+						+ "    head_armor_sp=" + characterModel.getHeadArmorStoppingPower() + ",\n" //
+						+ "    torso_armor_sp=" + characterModel.getTorsoArmorStoppingPower() + ",\n" //
+						+ "    right_arm_armor_sp=" + characterModel.getRightArmArmorStoppingPower() + ",\n" //
+						+ "    left_arm_armor_sp=" + characterModel.getLeftArmArmorStoppingPower() + ",\n" //
+						+ "    right_leg_armor_sp=" + characterModel.getRightLegArmorStoppingPower() + ",\n" //
+						+ "    left_leg_armor_sp=" + characterModel.getLeftLegArmorStoppingPower() + "\n" //
+						+ "  },\n" //
+						+ "  save_modifier=" + characterModel.getSaveModifier() + ",\n" //
+						+ "  body_type_modifier=" + characterModel.getBodyTypeModifier() + ",\n" //
+						+ "  injury_points=" + characterModel.getInjuryPoints() + ",\n" //
+						+ "  skills={\n" //
+						+ convertSkillsDataToString(characterModel.getSkillCatelog()) //
+						+ "  },\n" //
+						+ "  inventory={\n" //
+						+ convertInventoryDataToString(characterModel.getInventoryWeapons(),
+								characterModel.getInventoryAmmos(), characterModel.getInventoryArmors(),
+								characterModel.getInventoryGear()) //
+						+ "  },\n" //
+						+ "  equipped_armor={\n" //
+						+ convertEquipmentDataToString(characterView.getEquippedTable()) //
+						+ "  },\n" //
+						+ "  style={\n" //
+						+ "    hairstyle=" + formatStringValue(characterModel.getHairstyle()) + ",\n" //
+						+ "    clothing=" + formatStringValue(characterModel.getClothing()) + ",\n" //
+						+ "    affectations=" + formatStringValue(characterModel.getAffectations()) + ",\n" //
+						+ "    ethnicity=" + formatStringValue(characterModel.getEthnicity()) + "\n" //
+						+ "  },\n" //
+						+ "  family={\n" //
+						+ "    family_rank=" + formatStringValue(characterModel.getFamilyRanking()) + "\n" //
+						+ "    parents_fate=" + formatStringValue(characterModel.getParentsFate()) + "\n" //
+						+ "    parents_event=" + formatStringValue(characterModel.getParentEvent()) + "\n" //
+						+ "    family_status=" + formatStringValue(characterModel.getFamilyStatus()) + "\n" //
+						+ "    family_tragedy=" + formatStringValue(characterModel.getFamilyTragedy()) + "\n" //
+						+ "    childhood_environment=" + formatStringValue(characterModel.getChildhoodEnvironment())
+						+ "\n" //
+						+ "    sibling_number=" + formatStringValue(characterModel.getSiblingCount()) + "\n" //
+						+ "    siblings={\n" //
+						+ convertSiblingDataToString(characterModel.getSiblingCount(), characterModel.getSiblings()) //
+						+ "    }\n" //
+						+ "  }\n");
+
+				String encodedData = convertImageToBase64(characterView.getCharacterPortrait());
+				fw.write("portrait\t" + encodedData + "\n");
+
+				fw.close();
+			} catch (IOException exception) {
+				System.err.println("File does not exist.");
+			}
+		}
+
+		private String convertSkillsDataToString(
+				Map<String, Map<String, CharacterCreationModel.Skill>> skillCatelogMap) {
+			String skillData = "";
+			for (Map.Entry<String, Map<String, CharacterCreationModel.Skill>> skillCategoryEntry : skillCatelogMap
+					.entrySet()) {
+				String skillCategory = skillCategoryEntry.getKey();
+				skillCategory = skillCategory.replaceAll(" ", "_").toLowerCase();
+				skillData += "    " + skillCategory + "={\n";
+
+				Map<String, CharacterCreationModel.Skill> skills = skillCategoryEntry.getValue();
+				for (Map.Entry<String, CharacterCreationModel.Skill> skillEntry : skills.entrySet()) {
+					String skillTag = skillEntry.getKey();
+					skillTag = skillTag.replaceAll(" ", "_").toLowerCase();
+
+					CharacterCreationModel.Skill skill = skillEntry.getValue();
+					String skillType = skill.getType();
+					int skillRank = skill.getRank();
+					String specifiedSkill = skill.getSpecifiedSkill();
+
+					skillData += "      " + skillTag + "={\n" //
+							+ "        skill_type=" + formatStringValue(skillType) + ",\n" //
+							+ "        specified_skill=" + formatStringValue(specifiedSkill) + ",\n" //
+							+ "        skill_rank=" + skillRank + "\n" //
+							+ "      },\n";
+				}
+				skillData += "    },\n";
+			}
+
+			skillData = skillData.substring(0, skillData.length() - 2) + "\n";
+			return skillData;
+		}
+
+		private String convertInventoryDataToString(Map<String, CharacterCreationModel.Weapon> weaponMap,
+				Map<String, CharacterCreationModel.Ammo> ammoMap, Map<String, CharacterCreationModel.Armor> armorMap,
+				Map<String, CharacterCreationModel.Gear> gearMap) {
+			String inventoryData = "";
+
+			inventoryData += "    weapons={\n";
+			for (Map.Entry<String, CharacterCreationModel.Weapon> weaponEntry : weaponMap.entrySet()) {
+				String weaponTag = weaponEntry.getKey();
+				weaponTag = weaponTag.replaceAll(" ", "_").toLowerCase();
+
+				CharacterCreationModel.Weapon weapon = weaponEntry.getValue();
+				String weaponName = weapon.getName();
+
+				inventoryData += "      " + weaponTag + "={\n" //
+						+ "        weapon_name=" + formatStringValue(weaponName) + "\n" //
+						+ "      },\n";
+			}
+			if (weaponMap.size() > 0) {
+				inventoryData = inventoryData.substring(0, inventoryData.length() - 2) + "\n";
+			}
+			inventoryData += "    },\n";
+
+			inventoryData += "    ammo={\n";
+			for (Map.Entry<String, CharacterCreationModel.Ammo> ammoEntry : ammoMap.entrySet()) {
+				String ammoTag = ammoEntry.getKey();
+				ammoTag = ammoTag.replaceAll(" ", "_").toLowerCase();
+
+				CharacterCreationModel.Ammo ammo = ammoEntry.getValue();
+				String ammoType = ammo.getType();
+				int ammoQuantity = ammo.getQuantity();
+
+				inventoryData += "      " + ammoTag + "={\n" //
+						+ "        ammo_type=" + formatStringValue(ammoType) + ",\n" //
+						+ "        quantity=" + ammoQuantity + "\n" //
+						+ "      },\n";
+			}
+			if (ammoMap.size() > 0) {
+				inventoryData = inventoryData.substring(0, inventoryData.length() - 2) + "\n";
+			}
+			inventoryData += "    },\n";
+
+			inventoryData += "    armor={\n";
+			for (Map.Entry<String, CharacterCreationModel.Armor> armorEntry : armorMap.entrySet()) {
+				String armorTag = armorEntry.getKey();
+				armorTag = armorTag.replaceAll(" ", "_").toLowerCase();
+
+				CharacterCreationModel.Armor armor = armorEntry.getValue();
+				String armorType = armor.getType();
+
+				inventoryData += "      " + armorTag + "={\n" //
+						+ "        armor_type=" + formatStringValue(armorType) + "\n" //
+						+ "      },\n";
+			}
+			if (armorMap.size() > 0) {
+				inventoryData = inventoryData.substring(0, inventoryData.length() - 2) + "\n";
+			}
+
+			inventoryData += "    },\n";
+
+			inventoryData += "    gear={\n";
+			for (Map.Entry<String, CharacterCreationModel.Gear> gearEntry : gearMap.entrySet()) {
+				String gearTag = gearEntry.getKey();
+				gearTag = gearTag.replaceAll(" ", "_").toLowerCase();
+
+				CharacterCreationModel.Gear gear = gearEntry.getValue();
+				String gearType = gear.getType();
+				int gearQuantity = gear.getQuantity();
+
+				inventoryData += "      " + gearTag + "={\n" //
+						+ "        gear_type=" + formatStringValue(gearType) + ",\n" //
+						+ "        quantity=" + gearQuantity + ",\n" //
+						+ "      },\n";
+			}
+			if (ammoMap.size() > 0) {
+				inventoryData = inventoryData.substring(0, inventoryData.length() - 2) + "\n";
+			}
+			inventoryData += "    }\n";
+
+			return inventoryData;
+		}
+
+		private String convertEquipmentDataToString(JTable table) {
+			String equipmentData = "";
+
+			equipmentData += "    head={\n" //
+					+ "      layer1=" + formatStringValue((String) table.getValueAt(0, 0)) + ",\n" //
+					+ "      layer2=" + formatStringValue((String) table.getValueAt(1, 0)) + ",\n" //
+					+ "      layer3=" + formatStringValue((String) table.getValueAt(2, 0)) + "\n" //
+					+ "    },\n" //
+					+ "    torso={\n" //
+					+ "      layer1=" + formatStringValue((String) table.getValueAt(0, 1)) + ",\n" //
+					+ "      layer2=" + formatStringValue((String) table.getValueAt(1, 1)) + ",\n" //
+					+ "      layer3=" + formatStringValue((String) table.getValueAt(2, 1)) + "\n" //
+					+ "    },\n" //
+					+ "    right_arm={\n" //
+					+ "      layer1=" + formatStringValue((String) table.getValueAt(0, 2)) + ",\n" //
+					+ "      layer2=" + formatStringValue((String) table.getValueAt(1, 2)) + ",\n" //
+					+ "      layer3=" + formatStringValue((String) table.getValueAt(2, 2)) + "\n" //
+					+ "    },\n" //
+					+ "    left_arm={\n" //
+					+ "      layer1=" + formatStringValue((String) table.getValueAt(0, 3)) + ",\n" //
+					+ "      layer2=" + formatStringValue((String) table.getValueAt(1, 3)) + ",\n" //
+					+ "      layer3=" + formatStringValue((String) table.getValueAt(2, 3)) + "\n" //
+					+ "    },\n" //
+					+ "    right_leg={\n" //
+					+ "      layer1=" + formatStringValue((String) table.getValueAt(0, 4)) + ",\n" //
+					+ "      layer2=" + formatStringValue((String) table.getValueAt(1, 4)) + ",\n" //
+					+ "      layer3=" + formatStringValue((String) table.getValueAt(2, 4)) + "\n" //
+					+ "    },\n" //
+					+ "    left_leg={\n" //
+					+ "      layer1=" + formatStringValue((String) table.getValueAt(0, 5)) + ",\n" //
+					+ "      layer2=" + formatStringValue((String) table.getValueAt(1, 5)) + ",\n" //
+					+ "      layer3=" + formatStringValue((String) table.getValueAt(2, 5)) + "\n" //
+					+ "    }\n";
+
+			return equipmentData;
+		}
+
+		private String convertSiblingDataToString(String siblingCount, List<CharacterCreationModel.Sibling> siblings) {
+			String siblingData = "";
+			try {
+				Integer count = Integer.valueOf(siblingCount);
+				for (int i = 0; i < count; i++) {
+					CharacterCreationModel.Sibling sibling = siblings.get(i);
+					if (!sibling.equals(null)) {
+						siblingData += "      sibling_" + i + "={\n" //
+								+ "        name=" + formatStringValue(sibling.getName()) + ",\n" //
+								+ "        gender=" + formatStringValue(sibling.getGender()) + ",\n" //
+								+ "        relative_age=" + formatStringValue(sibling.getAge()) + ",\n" //
+								+ "        relationship=" + formatStringValue(sibling.getRelationship()) + "\n" //
+								+ "      },\n";
+					}
+				}
+				if (siblings.size() > 0) {
+					siblingData = siblingData.substring(0, siblingData.length() - 2) + "\n";
+				}
+			} catch (NumberFormatException exception) {
+				// do nothing
+			}
+			return siblingData;
+		}
+
+		private String convertImageToBase64(BufferedImage image) {
+			String imageString = null;
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			try {
+				ImageIO.write(image, "png", bos);
+				byte[] bytes = bos.toByteArray();
+				imageString = Base64.encodeBase64String(bytes);
+				bos.close();
+			} catch (IOException exception) {
+				JOptionPane.showMessageDialog(characterView, "The file does not exist.");
+			}
+
+			return imageString;
+		}
+
+		private String formatStringValue(String value) {
+			if (value == null) {
+				return value;
+			} else {
+				return "\"" + value + "\"";
+			}
+		}
+	}
+
 	class LoadCharacterActionListener implements ActionListener {
+		private String line;
+		private String[] dataPairStrings;
+		private String key;
+		private String value;
+		private Scanner sc;
+
+		private InventoryWeaponTableModel inventoryWeaponModel;
+		private Map<String, CharacterCreationModel.Weapon> inventoryWeaponMap;
+		private Map<String, CharacterCreationModel.Weapon> weaponMap;
+		private InventoryGearTableModel inventoryGearModel;
+		private Map<String, CharacterCreationModel.Gear> inventoryGearMap;
+		private Map<String, CharacterCreationModel.Gear> gearMap;
+		private InventoryAmmoTableModel inventoryAmmoModel;
+		private Map<String, CharacterCreationModel.Ammo> inventoryAmmoMap;
+		private Map<String, CharacterCreationModel.Ammo> ammoMap;
+		private InventoryArmorTableModel inventoryArmorModel;
+		private Map<String, CharacterCreationModel.Armor> inventoryArmorMap;
+		private Map<String, CharacterCreationModel.Armor> armorMap;
+		private EquippedTableModel equippedTableModel;
+
+		public LoadCharacterActionListener() {
+			inventoryWeaponModel = (InventoryWeaponTableModel) characterView.getInventoryWeaponTable().getModel();
+			inventoryWeaponMap = characterModel.getInventoryWeapons();
+			weaponMap = characterModel.getWeapons();
+			inventoryGearModel = (InventoryGearTableModel) characterView.getInventoryGearTable().getModel();
+			inventoryGearMap = characterModel.getInventoryGear();
+			gearMap = characterModel.getGear();
+			inventoryAmmoModel = (InventoryAmmoTableModel) characterView.getInventoryAmmoTable().getModel();
+			inventoryAmmoMap = characterModel.getInventoryAmmos();
+			ammoMap = characterModel.getAmmos();
+			inventoryArmorModel = (InventoryArmorTableModel) characterView.getInventoryArmorTable().getModel();
+			inventoryArmorMap = characterModel.getInventoryArmors();
+			armorMap = characterModel.getArmors();
+			equippedTableModel = (EquippedTableModel) characterView.getEquippedTable().getModel();
+		}
+
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			int returnVal = characterView.getFileChooser().showOpenDialog(characterView);
@@ -640,7 +1000,6 @@ public class CharacterCreationController {
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File originalFile = characterView.getFileChooser().getSelectedFile();
 				File formattedFile = new File(originalFile.toString() + ".char");
-				Scanner sc;
 				try {
 					if (originalFile.toString().endsWith(".char")) {
 						sc = new Scanner(originalFile);
@@ -648,107 +1007,34 @@ public class CharacterCreationController {
 						sc = new Scanner(formattedFile);
 					}
 
+					clearInventory();
+
 					while (sc.hasNextLine()) {
 						try {
-							String[] strings = sc.nextLine().split("\t");
-							String key = strings[0];
-							String value = strings[1];
+							line = sc.nextLine();
+							dataPairStrings = line.split("=");
+							if (line.contains("=")) {
+								key = dataPairStrings[0].trim();
+								value = dataPairStrings[1].replace(",", "").trim();
+							}
 							switch (key) {
 							case "handle":
-								characterView.setHandle(value);
-								characterModel.setCharacterName(value);
+								characterView.setHandle(value.replace("\"", ""));
+								characterModel.setCharacterName(value.replace("\"", ""));
 								break;
 							case "role":
-								characterView.setRole(value);
-								characterModel.setRole(value);
+								characterView.setRole(value.replace("\"", ""));
+								characterModel.setRole(value.replace("\"", ""));
 								break;
 							case "character_points":
 								characterView.setCharacterPoints(value);
 								characterModel.setCharacterPoints(Integer.parseInt(value));
 								break;
-							case "intelligence":
-								characterView.setIntelligenceLevel(value);
-								characterModel.setIntelligenceLevel(Integer.parseInt(value));
+							case "attributes":
+								parseAttributes();
 								break;
-							case "unmodified_reflexes":
-								characterView.setUnmodifiedReflexesLevel(value);
-								characterModel.setUnmodifiedReflexesLevel(Integer.parseInt(value));
-								break;
-							case "modified_reflexes":
-								characterView.setModifiedReflexesLevel(value);
-								characterModel.setModifiedReflexesLevel(Integer.parseInt(value));
-								break;
-							case "technical_ability":
-								characterView.setTechnicalAbilityLevel(value);
-								characterModel.setTechnicalAbilityLevel(Integer.parseInt(value));
-								break;
-							case "cool":
-								characterView.setCoolLevel(value);
-								characterModel.setCoolLevel(Integer.parseInt(value));
-								break;
-							case "attractiveness":
-								characterView.setAttractivenessLevel(value);
-								characterModel.setAttractivenessLevel(Integer.parseInt(value));
-								break;
-							case "luck":
-								characterView.setLuckLevel(value);
-								characterModel.setLuckLevel(Integer.parseInt(value));
-								break;
-							case "movement_allowance":
-								characterView.setMovementAllowanceLevel(value);
-								characterModel.setMovementAllowanceLevel(Integer.parseInt(value));
-								break;
-							case "body":
-								characterView.setBodyLevel(value);
-								characterModel.setBodyLevel(Integer.parseInt(value));
-								break;
-							case "current_empathy":
-								characterView.setCurrentEmpathyLevel(value);
-								characterModel.setCurrentEmpathyLevel(Integer.parseInt(value));
-								break;
-							case "total_empathy":
-								characterView.setTotalEmpathyLevel(value);
-								characterModel.setTotalEmpathyLevel(Integer.parseInt(value));
-								break;
-							case "run":
-								characterView.setRunLevel(value);
-								characterModel.setRunDistance(Double.parseDouble(value));
-								break;
-							case "leap":
-								characterView.setLeapLevel(value);
-								characterModel.setLeapDistance(Double.parseDouble(value));
-								break;
-							case "lift":
-								characterView.setLiftCapacity(value);
-								characterModel.setLiftCapacity(Double.parseDouble(value));
-								break;
-							case "carry":
-								characterView.setCarryCapacity(value);
-								characterModel.setCarryCapacity(Double.parseDouble(value));
-								break;
-							case "head_armor_sp":
-								characterView.setHeadArmorStoppingPower(value);
-								characterModel.setHeadArmorStoppingPower(Integer.parseInt(value));
-								break;
-							case "torso_armor_sp":
-								characterView.setTorsoArmorStoppingPower(value);
-								characterModel.setTorsoArmorStoppingPower(Integer.parseInt(value));
-								break;
-							case "right_arm_armor_sp":
-								characterView.setRightArmArmorStoppingPower(value);
-								characterModel.setRightArmArmorStoppingPower(Integer.parseInt(value));
-								break;
-							case "left_arm_armor_sp":
-								characterView.setLeftArmArmorStoppingPower(value);
-								characterModel.setLeftLegArmorStoppingPower(Integer.parseInt(value));
-								break;
-							case "right_leg_armor_sp":
-								characterView.setRightLegArmorStoppingPower(value);
-								characterModel.setRightLegArmorStoppingPower(Integer.parseInt(value));
-								break;
-							case "left_leg_armor_sp":
-								characterView.setLeftLegArmorStoppingPower(value);
-								characterModel.setLeftLegArmorStoppingPower(Integer.parseInt(value));
+							case "armor_stopping_power":
+								parseArmorStoppingPower();
 								break;
 							case "save_modifier":
 								characterView.setSaveModifier(value);
@@ -762,67 +1048,599 @@ public class CharacterCreationController {
 								characterModel.setInjuryPoints(Double.parseDouble(value));
 								characterView.drawLoadedInjuryPoints(Double.parseDouble(value));
 								break;
+							case "skills":
+								parseSkillCategory();
+								break;
+							case "inventory":
+								parseInventory();
+								break;
+							case "equipped_armor":
+								parseEquippedArmor();
+								break;
+							case "style":
+								parseStyle();
+								break;
+							case "family":
+								parseFamily();
+								break;
 							case "portrait":
 								convertBase64ToImage(value);
 								break;
 							default:
-								String typeCode = key.substring(0, 3);
-								String specificSkill = (key.matches("\\w+:\\w+\\.\\w+")) ? key.split("\\.")[1] : "";
-								Map<String, CharacterCreationModel.Skill> targetCategory;
-
-								switch (typeCode) {
-								case "SPE":
-									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.SPEC);
-									break;
-								case "ATT":
-									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.ATT);
-									break;
-								case "BOD":
-									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.BOD);
-									break;
-								case "COO":
-									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.CL);
-									break;
-								case "EMP":
-									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.EMP);
-									break;
-								case "INT":
-									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.INT);
-									break;
-								case "REF":
-									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.REF);
-									break;
-								case "TEC":
-									targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.TECH);
-									break;
-								default:
-									targetCategory = null;
-									break;
-								}
-
-								String skillCode = key.substring(4).toLowerCase();
-								for (CharacterCreationModel.Skill skill : targetCategory.values()) {
-									String formattedSkillName = skill.getSkillName().replace(" ", "_").replace("*", ".")
-											.toLowerCase();
-									if (skillCode.contains(formattedSkillName)) {
-										skill.setRank(Integer.parseInt(value));
-										skill.setSpecifiedSkill(specificSkill);
-									}
-								}
 								break;
 							}
 						} catch (ArrayIndexOutOfBoundsException exception) {
+							exception.printStackTrace();
 							JOptionPane.showMessageDialog(characterView, "Error with loading from save file");
 						}
 
 					}
 					characterView.clearSkillTables();
 					populateSkillPanels();
-
 					sc.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
+		}
+
+		private void clearInventory() {
+			inventoryWeaponModel.clear();
+			inventoryWeaponMap.clear();
+			inventoryGearModel.clear();
+			inventoryGearMap.clear();
+			inventoryAmmoModel.clear();
+			inventoryAmmoMap.clear();
+			inventoryArmorModel.clear();
+			inventoryArmorMap.clear();
+			equippedTableModel.clear();
+		}
+
+		private void parseAttributes() {
+			line = sc.next();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				switch (key) {
+				case "intelligence":
+					characterView.setIntelligenceLevel(value);
+					characterModel.setIntelligenceLevel(Integer.parseInt(value));
+					break;
+				case "unmodified_reflexes":
+					characterView.setUnmodifiedReflexesLevel(value);
+					characterModel.setUnmodifiedReflexesLevel(Integer.parseInt(value));
+					break;
+				case "modified_reflexes":
+					characterView.setModifiedReflexesLevel(value);
+					characterModel.setModifiedReflexesLevel(Integer.parseInt(value));
+					break;
+				case "technical_ability":
+					characterView.setTechnicalAbilityLevel(value);
+					characterModel.setTechnicalAbilityLevel(Integer.parseInt(value));
+					break;
+				case "cool":
+					characterView.setCoolLevel(value);
+					characterModel.setCoolLevel(Integer.parseInt(value));
+					break;
+				case "attractiveness":
+					characterView.setAttractivenessLevel(value);
+					characterModel.setAttractivenessLevel(Integer.parseInt(value));
+					break;
+				case "luck":
+					characterView.setLuckLevel(value);
+					characterModel.setLuckLevel(Integer.parseInt(value));
+					break;
+				case "movement_allowance":
+					characterView.setMovementAllowanceLevel(value);
+					characterModel.setMovementAllowanceLevel(Integer.parseInt(value));
+					break;
+				case "body":
+					characterView.setBodyLevel(value);
+					characterModel.setBodyLevel(Integer.parseInt(value));
+					break;
+				case "current_empathy":
+					characterView.setCurrentEmpathyLevel(value);
+					characterModel.setCurrentEmpathyLevel(Integer.parseInt(value));
+					break;
+				case "total_empathy":
+					characterView.setTotalEmpathyLevel(value);
+					characterModel.setTotalEmpathyLevel(Integer.parseInt(value));
+					break;
+				case "run":
+					characterView.setRunLevel(value);
+					characterModel.setRunDistance(Double.parseDouble(value));
+					break;
+				case "leap":
+					characterView.setLeapLevel(value);
+					characterModel.setLeapDistance(Double.parseDouble(value));
+					break;
+				case "lift":
+					characterView.setLiftCapacity(value);
+					characterModel.setLiftCapacity(Double.parseDouble(value));
+					break;
+				case "carry":
+					characterView.setCarryCapacity(value);
+					characterModel.setCarryCapacity(Double.parseDouble(value));
+					break;
+				}
+				line = sc.next();
+			}
+		}
+
+		private void parseArmorStoppingPower() {
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				switch (key) {
+				case "head_armor_sp":
+					characterView.setHeadArmorStoppingPower(value);
+					characterModel.setHeadArmorStoppingPower(Integer.parseInt(value));
+					break;
+				case "torso_armor_sp":
+					characterView.setTorsoArmorStoppingPower(value);
+					characterModel.setTorsoArmorStoppingPower(Integer.parseInt(value));
+					break;
+				case "right_arm_armor_sp":
+					characterView.setRightArmArmorStoppingPower(value);
+					characterModel.setRightArmArmorStoppingPower(Integer.parseInt(value));
+					break;
+				case "left_arm_armor_sp":
+					characterView.setLeftArmArmorStoppingPower(value);
+					characterModel.setLeftLegArmorStoppingPower(Integer.parseInt(value));
+					break;
+				case "right_leg_armor_sp":
+					characterView.setRightLegArmorStoppingPower(value);
+					characterModel.setRightLegArmorStoppingPower(Integer.parseInt(value));
+					break;
+				case "left_leg_armor_sp":
+					characterView.setLeftLegArmorStoppingPower(value);
+					characterModel.setLeftLegArmorStoppingPower(Integer.parseInt(value));
+					break;
+				}
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseSkillCategory() {
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+
+				Map<String, CharacterCreationModel.Skill> targetCategory;
+				switch (key) {
+				case "special_abilities":
+					targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.SPEC);
+					break;
+				case "attractiveness":
+					targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.ATT);
+					break;
+				case "body":
+					targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.BOD);
+					break;
+				case "cool":
+					targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.CL);
+					break;
+				case "empathy":
+					targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.EMP);
+					break;
+				case "intelligence":
+					targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.INT);
+					break;
+				case "reflexes":
+					targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.REF);
+					break;
+				case "technical_ability":
+					targetCategory = characterModel.getSkillCatelog().get(CharacterCreationModel.TECH);
+					break;
+				default:
+					targetCategory = null;
+					break;
+				}
+				parseSkills(targetCategory);
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseSkills(Map<String, CharacterCreationModel.Skill> targetCategory) {
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				for (CharacterCreationModel.Skill skill : targetCategory.values()) {
+					String formattedSkillName = skill.getSkillName().replace(" ", "_").toLowerCase();
+					if (key.equals(formattedSkillName)) {
+						parseSkillData(skill);
+						line = sc.nextLine();
+						break;
+					}
+				}
+			}
+		}
+
+		private void parseSkillData(CharacterCreationModel.Skill skill) {
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				switch (key) {
+				case "specified_skill":
+					skill.setSpecifiedSkill(value);
+					break;
+				case "skill_rank":
+					skill.setRank(Integer.parseInt(value));
+					break;
+				default:
+					break;
+				}
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseInventory() {
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				switch (key) {
+				case "weapons":
+					parseWeapons();
+					break;
+				case "gear":
+					parseGear();
+					break;
+				case "ammo":
+					parseAmmo();
+					break;
+				case "armor":
+					parseArmor();
+					break;
+				default:
+					break;
+				}
+
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseWeapons() {
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				parseThroughWeaponData();
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseThroughWeaponData() {
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				switch (key) {
+				case "weapon_name":
+					value = value.replace("\"", "");
+					CharacterCreationModel.Weapon weapon = weaponMap.get(value.replace("\"", ""));
+					inventoryWeaponMap.put(weapon.getName(), weapon);
+
+					Object[] row = new Object[] { weapon.getName(), weapon.getCategory(), weapon.getAccuracy(),
+							weapon.getConcealability(), weapon.getDamageAndAmmo(), weapon.getNumberOfShots(),
+							weapon.getRateOfFire(), weapon.getReliability(), weapon.getRange() };
+					inventoryWeaponModel.addRow(row);
+					characterView.getInventoryWeaponTable().revalidate();
+					characterView.getInventoryWeaponTable().repaint();
+					break;
+				default:
+					break;
+				}
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseGear() {
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				parseThroughGearData();
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseThroughGearData() {
+			String gearType = "";
+			int gearQuantity = 0;
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				switch (key) {
+				case "gear_type":
+					gearType = value.replace("\"", "");
+					break;
+				case "quantity":
+					gearQuantity = Integer.parseInt(value);
+					break;
+				default:
+					break;
+				}
+				line = sc.nextLine();
+			}
+			CharacterCreationModel.Gear gear = gearMap.get(gearType);
+			gear.setQuantity(gearQuantity);
+			inventoryGearMap.put(gear.getType(), gear);
+
+			Object[] row = new Object[] { gear.getType(), gear.getQuantity(), (gear.getWeight() * gear.getQuantity()) };
+			inventoryGearModel.addRow(row);
+			characterView.getInventoryGearTable().revalidate();
+			characterView.getInventoryGearTable().repaint();
+		}
+
+		private void parseAmmo() {
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				parseThroughAmmoData();
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseThroughAmmoData() {
+			String ammoType = "";
+			int ammoQuantity = 0;
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				switch (key) {
+				case "ammo_type":
+					ammoType = value.replace("\"", "");
+					break;
+				case "quantity":
+					ammoQuantity = Integer.parseInt(value);
+					break;
+				default:
+					break;
+				}
+				line = sc.nextLine();
+			}
+			CharacterCreationModel.Ammo ammo = ammoMap.get(ammoType);
+			ammo.setQuantity(ammoQuantity);
+			inventoryAmmoMap.put(ammo.getType(), ammo);
+
+			Object[] row = new Object[] { ammo.getType(), ammo.getQuantity(), ammo.isCaseless(),
+					((ammo.getQuantity() / ammo.getQuantityPerBox()) * ammo.getWeight()) };
+			inventoryAmmoModel.addRow(row);
+
+			characterView.getInventoryAmmoTable().revalidate();
+			characterView.getInventoryAmmoTable().repaint();
+		}
+
+		private void parseArmor() {
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				parseArmorData();
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseArmorData() {
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				switch (key) {
+				case "armor_type":
+					CharacterCreationModel.Armor armor = armorMap.get(value.replace("\"", ""));
+					inventoryArmorMap.put(armor.getType(), armor);
+
+					Object[] row = new Object[] { armor.getType(), armor.getArmorClass(), armor.getCovers(),
+							armor.getStoppingPower(), armor.getEncumbranceValue(), armor.getWeight() };
+					inventoryArmorModel.addRow(row);
+					characterView.getInventoryArmorTable().revalidate();
+					characterView.getInventoryArmorTable().repaint();
+					break;
+				default:
+					break;
+				}
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseEquippedArmor() {
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				parseEquippedArmorLayers();
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseEquippedArmorLayers() {
+			int equipmentRow = -1;
+			int equipmentColumn = -1;
+			switch (key) {
+			case "head":
+				equipmentColumn = 0;
+				break;
+			case "torso":
+				equipmentColumn = 1;
+				break;
+			case "right_arm":
+				equipmentColumn = 2;
+				break;
+			case "left_arm":
+				equipmentColumn = 3;
+				break;
+			case "right_leg":
+				equipmentColumn = 4;
+				break;
+			case "left_leg":
+				equipmentColumn = 5;
+				break;
+			default:
+				break;
+			}
+
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				switch (key) {
+				case "layer1":
+					equipmentRow = 0;
+					equippedTableModel.setValueAt(value.replace("\"", ""), equipmentRow, equipmentColumn);
+					break;
+				case "layer2":
+					equipmentRow = 1;
+					equippedTableModel.setValueAt(value.replace("\"", ""), equipmentRow, equipmentColumn);
+					break;
+				case "layer3":
+					equipmentRow = 2;
+					equippedTableModel.setValueAt(value.replace("\"", ""), equipmentRow, equipmentColumn);
+					break;
+				default:
+					break;
+				}
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseStyle() {
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				switch (key) {
+				case "hairstyle":
+					characterModel.setHairstyle(value);
+					characterView.setHairstyle(value);
+					break;
+				case "clothing":
+					characterModel.setClothing(value);
+					characterView.setClothing(value);
+					break;
+				case "affectations":
+					characterModel.setAffectations(value);
+					characterView.setAffectations(value);
+					break;
+				case "ethnicity":
+					characterModel.setEthnicity(value);
+					characterView.setEthnicity(value);
+					break;
+				default:
+					break;
+				}
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseFamily() {
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				switch (key) {
+				case "family_rank":
+					characterModel.setFamilyRanking(value);
+					characterView.setFamilyRanking(value);
+					break;
+				case "parents_fate":
+					characterModel.setParentsFate(value);
+					characterView.setParentsFate(value);
+					break;
+				case "parents_event":
+					characterModel.setParentEvent(value);
+					characterView.setParentEvent(value);
+					break;
+				case "family_status":
+					characterModel.setFamilyStatus(value);
+					characterView.setFamilyStatus(value);
+					break;
+				case "family_tragedy":
+					characterModel.setFamilyTragedy(value);
+					characterView.setFamilyTragedy(value);
+					break;
+				case "childhood_environment":
+					characterModel.setChildhoodEnvironment(value);
+					characterView.setChildhoodEnvironment(value);
+					break;
+				case "sibling_number":
+					characterModel.setSiblingCount(value);
+					characterView.setSiblingCount(value);
+					break;
+				case "siblings":
+					parseSiblings();
+					break;
+				default:
+					break;
+				}
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseSiblings() {
+			line = sc.nextLine();
+			for (int i = 0; line.contains("="); i++) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				parseSiblingData(i);
+				line = sc.nextLine();
+			}
+		}
+
+		private void parseSiblingData(int siblingIndex) {
+			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(siblingIndex);
+			CharacterCreationView.SiblingPanel siblingPanel = characterView.getSiblingPanels().get(siblingIndex);
+			line = sc.nextLine();
+			while (line.contains("=")) {
+				dataPairStrings = line.split("=");
+				key = dataPairStrings[0].trim();
+				value = dataPairStrings[1].replace(",", "").trim();
+				switch (key) {
+				case "name":
+					sibling.setSiblingName(value);
+					siblingPanel.setSiblingName(value);
+					break;
+				case "gender":
+					sibling.setGender(value);
+					siblingPanel.setGender(value);
+					break;
+				case "relative_age":
+					sibling.setAge(value);
+					siblingPanel.setAge(value);
+					break;
+				case "relationship":
+					sibling.setRelationship(value);
+					siblingPanel.setRelationship(value);
+					break;
+				}
+				line = sc.nextLine();
 			}
 		}
 
@@ -926,120 +1744,459 @@ public class CharacterCreationController {
 		}
 	}
 
-	class SaveCharacterActionListener implements ActionListener {
+	class RandomizeAffectationsActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			int returnVal = characterView.getFileChooser().showSaveDialog(characterView);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				File originalFile = characterView.getFileChooser().getSelectedFile();
-				File formattedFile = new File(originalFile.toString() + ".char");
-
-				if (originalFile.exists() || formattedFile.exists()) {
-					returnVal = JOptionPane.showConfirmDialog(
-							characterView, "Do you want to overwrite "
-									+ characterView.getFileChooser().getSelectedFile().getName() + " ?",
-							"Confirm Overwrite", JOptionPane.YES_NO_OPTION);
-					if (returnVal == JOptionPane.YES_OPTION) {
-						writeDataToFile();
-					}
-				} else {
-					writeDataToFile();
-				}
-
+			Random rnd = new Random();
+			int seed = rnd.nextInt(10) + 1;
+			String affectations = "";
+			switch (seed) {
+			case 1:
+				affectations = "Tatoos";
+				break;
+			case 2:
+				affectations = "Mirrorshades";
+				break;
+			case 3:
+				affectations = "Ritual Scars";
+				break;
+			case 4:
+				affectations = "Spiked gloves";
+				break;
+			case 5:
+				affectations = "Nose Rings";
+				break;
+			case 6:
+				affectations = "Earrings";
+				break;
+			case 7:
+				affectations = "Long fingernails";
+				break;
+			case 8:
+				affectations = "Spike heeled boots";
+				break;
+			case 9:
+				affectations = "Weird Contact Lenses";
+				break;
+			case 10:
+				affectations = "Fingerless gloves";
+				break;
+			default:
+				break;
 			}
+
+			characterView.setAffectations(affectations);
+			characterModel.setAffectations(affectations);
+		}
+	}
+
+	class RandomizeClothesActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Random rnd = new Random();
+			int seed = rnd.nextInt(10) + 1;
+			String clothing = "";
+			switch (seed) {
+			case 1:
+				clothing = "Biker leathers";
+				break;
+			case 2:
+				clothing = "Blue jeans";
+				break;
+			case 3:
+				clothing = "Corporate Suits";
+				break;
+			case 4:
+				clothing = "Jumpsuits";
+				break;
+			case 5:
+				clothing = "Miniskirts";
+				break;
+			case 6:
+				clothing = "High Fashion";
+				break;
+			case 7:
+				clothing = "Cammos";
+				break;
+			case 8:
+				clothing = "Normal clothes";
+				break;
+			case 9:
+				clothing = "Nude";
+				break;
+			case 10:
+				clothing = "Bag Lady chic";
+				break;
+			default:
+				break;
+			}
+
+			characterView.setClothing(clothing);
+			characterModel.setClothing(clothing);
+		}
+	}
+
+	class RandomizeHairstyleActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Random rnd = new Random();
+			int seed = rnd.nextInt(10) + 1;
+			String hairstyle = "";
+			switch (seed) {
+			case 1:
+				hairstyle = "Mohawk";
+				break;
+			case 2:
+				hairstyle = "Long & Ratty";
+				break;
+			case 3:
+				hairstyle = "Short & Spiked";
+				break;
+			case 4:
+				hairstyle = "Wild & all over";
+				break;
+			case 5:
+				hairstyle = "Bald";
+				break;
+			case 6:
+				hairstyle = "Striped";
+				break;
+			case 7:
+				hairstyle = "Tinted";
+				break;
+			case 8:
+				hairstyle = "Neat, short";
+				break;
+			case 9:
+				hairstyle = "Short, curly";
+				break;
+			case 10:
+				hairstyle = "Long, straight";
+				break;
+			default:
+				break;
+			}
+
+			characterView.setHairstyle(hairstyle);
+			characterModel.setHairstyle(hairstyle);
+		}
+	}
+
+	class RandomizeEthnicityActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Random rnd = new Random();
+			int seed = rnd.nextInt(10);
+			String ethnicity = characterView.getEthnicityComboBox().getItemAt(seed);
+
+			characterView.setEthnicity(ethnicity);
+			characterModel.setEthnicity(ethnicity);
+		}
+	}
+
+	class RandomizeFamilyRankingActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Random rnd = new Random();
+			int seed = (rnd.nextInt(10) + 1);
+			String familyRanking = characterView.getFamilyRankingComboBox().getItemAt(seed);
+
+			characterView.setFamilyRanking(familyRanking);
+			characterModel.setFamilyRanking(familyRanking);
+		}
+	}
+
+	class RandomizeParentsFateActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Random rnd = new Random();
+			int seed = (rnd.nextInt(10) + 1);
+			String parentsFate;
+			if (0 < seed && seed <= 6) {
+				parentsFate = characterView.getParentsFateComboBox().getItemAt(1);
+			} else if (7 <= seed && seed <= 10) {
+				parentsFate = characterView.getParentsFateComboBox().getItemAt(2);
+			} else {
+				parentsFate = "";
+			}
+
+			characterView.setParentsFate(parentsFate);
+			characterModel.setParentsFate(parentsFate);
+		}
+	}
+
+	class RandomizeParentEventActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Random rnd = new Random();
+			int seed = (rnd.nextInt(10) + 1);
+			String parentEvent = characterView.getParentEventComboBox().getItemAt(seed);
+
+			characterView.setParentEvent(parentEvent);
+			characterModel.setParentEvent(parentEvent);
+		}
+	}
+
+	class RandomizeFamilyStatusActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Random rnd = new Random();
+			int seed = (rnd.nextInt(10) + 1);
+			String familyStatus;
+			if (0 < seed && seed <= 6) {
+				familyStatus = characterView.getFamilyStatusComboBox().getItemAt(1);
+			} else if (7 <= seed && seed <= 10) {
+				familyStatus = characterView.getFamilyStatusComboBox().getItemAt(2);
+			} else {
+				familyStatus = "";
+			}
+
+			characterView.setFamilyStatus(familyStatus);
+			characterModel.setFamilyStatus(familyStatus);
+		}
+	}
+
+	class RandomizeFamilyTragedyActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Random rnd = new Random();
+			int seed = (rnd.nextInt(10) + 1);
+			String familyTragedy = characterView.getFamilyTragedyComboBox().getItemAt(seed);
+
+			characterView.setFamilyTragedy(familyTragedy);
+			characterModel.setFamilyTragedy(familyTragedy);
+		}
+	}
+
+	class RandomizeChildhoodEnvironmentActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Random rnd = new Random();
+			int seed = (rnd.nextInt(10) + 1);
+			String childhoodEnvironment = characterView.getChildhoodEnvironmentComboBox().getItemAt(seed);
+
+			characterView.setChildhoodEnvironment(childhoodEnvironment);
+			characterModel.setChildhoodEnvironment(childhoodEnvironment);
+		}
+	}
+
+	class RandomizeSiblingAgeActionListener implements ActionListener {
+		private int index;
+
+		public RandomizeSiblingAgeActionListener(int index) {
+			this.index = index;
 		}
 
-		private void writeDataToFile() {
-			File file = characterView.getFileChooser().getSelectedFile();
-			String filename = file.toString();
-			FileWriter fw;
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
+			JComboBox<String> ageComboBox = characterView.getSiblingPanels().get(index).getSiblingAgeComboBox();
 
-			try {
-				if (!filename.endsWith(".char")) {
-					filename += ".char";
-					fw = new FileWriter(filename);
-				} else {
-					fw = new FileWriter(filename);
-				}
-				fw.write("handle\t" + characterModel.getHandle() + "\n" //
-						+ "role\t" + characterModel.getRole().getRoleName() + "\n" //
-						+ "character_points\t" + characterModel.getCharacterPoints() + "\n" //
-						+ "intelligence\t" + characterModel.getIntelligenceLevel() + "\n" //
-						+ "unmodified_reflexes\t" + characterModel.getUnmodifiedReflexesLevel() + "\n" //
-						+ "modified_reflexes\t" + characterModel.getModifiedReflexesLevel() + "\n" //
-						+ "technical_ability\t" + characterModel.getTechnicalAbilityLevel() + "\n" //
-						+ "cool\t" + characterModel.getCoolLevel() + "\n" //
-						+ "attractiveness\t" + characterModel.getAttractivenessLevel() + "\n" //
-						+ "luck\t" + characterModel.getLuckLevel() + "\n" //
-						+ "movement_allowance\t" + characterModel.getMovementAllowanceLevel() + "\n" //
-						+ "body\t" + characterModel.getBodyLevel() + "\n" //
-						+ "current_empathy\t" + characterModel.getCurrentEmpathyLevel() + "\n" //
-						+ "total_empathy\t" + characterModel.getTotalEmpathyLevel() + "\n" //
-						+ "run\t" + characterModel.getRunLevel() + "\n" //
-						+ "leap\t" + characterModel.getLeapLevel() + "\n" //
-						+ "lift\t" + characterModel.getLiftCapacity() + "\n" //
-						+ "carry\t" + characterModel.getCarryCapacity() + "\n" //
-						+ "head_armor_sp\t" + characterModel.getHeadArmorStoppingPower() + "\n" //
-						+ "torso_armor_sp\t" + characterModel.getTorsoArmorStoppingPower() + "\n" //
-						+ "right_arm_armor_sp\t" + characterModel.getRightArmArmorStoppingPower() + "\n" //
-						+ "left_arm_armor_sp\t" + characterModel.getLeftArmArmorStoppingPower() + "\n" //
-						+ "right_leg_armor_sp\t" + characterModel.getRightLegArmorStoppingPower() + "\n" //
-						+ "left_leg_armor_sp\t" + characterModel.getLeftLegArmorStoppingPower() + "\n" //
-						+ "save_modifier\t" + characterModel.getSaveModifier() + "\n" //
-						+ "body_type_modifier\t" + characterModel.getBodyTypeModifier() + "\n" //
-						+ "injury_points\t" + characterModel.getInjuryPoints() + "\n");
-
-				for (Map<String, CharacterCreationModel.Skill> skillCategory : characterModel.getSkillCatelog()
-						.values()) {
-					for (CharacterCreationModel.Skill skill : skillCategory.values()) {
-						String skillName = skill.getSkillName();
-						String skillType = skill.getType();
-						int skillRank = skill.getRank();
-						String specifiedSkill = skill.getSpecifiedSkill();
-						String skillCode = skillName.replaceAll(" ", "_").toLowerCase();
-						String typeCode = skillType.substring(0, 3);
-
-						String completeSkillCode = specifiedSkill.equals("")
-								? (typeCode + ":" + skillCode + "\t" + skillRank)
-								: (typeCode + ":" + skillCode.replace("*", ".") + specifiedSkill + "\t" + skillRank);
-						fw.write(completeSkillCode + "\n");
-
-					}
-				}
-				String encodedData = convertImageToBase64(characterView.getCharacterPortrait());
-				fw.write("portrait\t" + encodedData + "\n");
-
-				fw.close();
-			} catch (IOException exception) {
-				System.err.println("File does not exist.");
+			Random rnd = new Random();
+			int seed = (rnd.nextInt(10) + 1);
+			String siblingAge;
+			if (0 < seed && seed <= 5) {
+				siblingAge = (String) ageComboBox.getItemAt(1);
+			} else if (6 <= seed && seed <= 9) {
+				siblingAge = (String) ageComboBox.getItemAt(2);
+			} else if (seed == 10) {
+				siblingAge = (String) ageComboBox.getItemAt(3);
+			} else {
+				siblingAge = "";
 			}
+
+			sibling.setAge(siblingAge);
+			ageComboBox.setSelectedItem(siblingAge);
+		}
+	}
+
+	class RandomizeSiblingGenderActionListener implements ActionListener {
+		private int index;
+
+		public RandomizeSiblingGenderActionListener(int index) {
+			this.index = index;
 		}
 
-		private String convertImageToBase64(BufferedImage image) {
-			String imageString = null;
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			try {
-				ImageIO.write(image, "png", bos);
-				byte[] bytes = bos.toByteArray();
-				imageString = Base64.encodeBase64String(bytes);
-				bos.close();
-			} catch (IOException exception) {
-				JOptionPane.showMessageDialog(characterView, "The file does not exist.");
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
+			JRadioButton maleRadioButton = characterView.getSiblingPanels().get(index).getMaleRadioButton();
+			JRadioButton femaleRadioButton = characterView.getSiblingPanels().get(index).getFemaleRadioButton();
+
+			Random rnd = new Random();
+			int seed = (rnd.nextInt(10) + 1);
+			String gender;
+			if (seed % 2 == 0) {
+				gender = maleRadioButton.getActionCommand();
+				maleRadioButton.setSelected(true);
+			} else {
+				gender = femaleRadioButton.getActionCommand();
+				femaleRadioButton.setSelected(true);
 			}
 
-			return imageString;
+			sibling.setGender(gender);
+		}
+
+	}
+
+	class RandomizeSiblingRelationshipActionListener implements ActionListener {
+		private int index;
+
+		public RandomizeSiblingRelationshipActionListener(int index) {
+			this.index = index;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
+			JComboBox<String> relationshipComboBox = characterView.getSiblingPanels().get(index)
+					.getSiblingRelationshipComboBox();
+
+			Random rnd = new Random();
+			int seed = (rnd.nextInt(10) + 1);
+			String relationship;
+			if (0 < seed && seed <= 2) {
+				relationship = (String) relationshipComboBox.getItemAt(1);
+			} else if (3 <= seed && seed <= 4) {
+				relationship = (String) relationshipComboBox.getItemAt(2);
+			} else if (5 <= seed && seed <= 6) {
+				relationship = (String) relationshipComboBox.getItemAt(3);
+			} else if (7 <= seed && seed <= 8) {
+				relationship = (String) relationshipComboBox.getItemAt(4);
+			} else if (9 <= seed && seed <= 10) {
+				relationship = (String) relationshipComboBox.getItemAt(5);
+			} else {
+				relationship = "";
+			}
+
+			sibling.setRelationship(relationship);
+			relationshipComboBox.setSelectedItem(relationship);
+		}
+	}
+
+	class RoleChangeActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
+			String selectedRole = (String) comboBox.getSelectedItem();
+			characterModel.setRole(selectedRole);
+		}
+	}
+
+	class SiblingGenderActionListener implements ActionListener {
+		private int index;
+
+		public SiblingGenderActionListener(int index) {
+			this.index = index;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
+			sibling.setGender(event.getActionCommand());
+			characterModel.getSiblings().set(index, sibling);
+		}
+
+	}
+
+	class SiblingAmountItemListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
+			String siblingCount = (String) comboBox.getSelectedItem();
+
+			JPanel siblingsDetailPanel = characterView.getSiblingsDetailPanel();
+			siblingsDetailPanel.removeAll();
+			characterModel.getSiblings().clear();
+
+			try {
+				Integer count = Integer.parseInt(siblingCount);
+
+				for (int i = 0; i < count; i++) {
+					SiblingPanel siblingPanel = new SiblingPanel();
+					siblingPanel.setBorder(new TitledBorder(null, "Sibling " + (i + 1), TitledBorder.LEADING,
+							TitledBorder.TOP, null, null));
+					siblingsDetailPanel.add(siblingPanel);
+					characterView.getSiblingPanels().add(i, siblingPanel);
+					Sibling sibling = new SiblingBuilder().build();
+					characterModel.getSiblings().add(i, sibling);
+					siblingPanel.addNameDocumentListener(new SiblingNameDocumentListener(i));
+					siblingPanel.addAgeItemListener(new SiblingAgeItemListener(i));
+					siblingPanel.addAgeRandomizerActionListener(new RandomizeSiblingAgeActionListener(i));
+					siblingPanel.addMaleRadioButtonActionListener(new SiblingGenderActionListener(i));
+					siblingPanel.addFemaleRadioButtonActionListener(new SiblingGenderActionListener(i));
+					siblingPanel.addGenderRandomizerActionListener(new RandomizeSiblingGenderActionListener(i));
+					siblingPanel.addRelationshipItemListener(new SiblingRelationshipItemListener(i));
+					siblingPanel
+							.addRelationshipRandomizerActionListener(new RandomizeSiblingRelationshipActionListener(i));
+				}
+				siblingsDetailPanel.revalidate();
+			} catch (NumberFormatException exception) {
+				// do nothing
+			}
+			characterModel.setSiblingCount(siblingCount);
+
+		}
+
+	}
+
+	class SiblingAmountRandomizerActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Random rnd = new Random();
+			int seed = (rnd.nextInt(10) + 1);
+
+			JPanel siblingsDetailPanel = characterView.getSiblingsDetailPanel();
+			siblingsDetailPanel.removeAll();
+			characterModel.getSiblings().clear();
+
+			String siblingCount;
+			if (0 < seed && seed <= 7) {
+				siblingCount = (String) characterView.getSiblingAmountComboBox().getItemAt(seed);
+			} else if (8 <= seed && seed <= 10) {
+				siblingCount = (String) characterView.getSiblingAmountComboBox().getItemAt(8);
+			} else {
+				siblingCount = "";
+			}
+
+			try {
+				Integer count = Integer.parseInt(siblingCount);
+
+				for (int i = 0; i < count; i++) {
+					SiblingPanel siblingPanel = new SiblingPanel();
+					siblingPanel.setBorder(new TitledBorder(null, "Sibling " + (i + 1), TitledBorder.LEADING,
+							TitledBorder.TOP, null, null));
+					siblingsDetailPanel.add(siblingPanel);
+					characterView.getSiblingPanels().add(i, siblingPanel);
+					Sibling sibling = new SiblingBuilder().build();
+					characterModel.getSiblings().add(i, sibling);
+					siblingPanel.addNameDocumentListener(new SiblingNameDocumentListener(i));
+					siblingPanel.addAgeItemListener(new SiblingAgeItemListener(i));
+					siblingPanel.addAgeRandomizerActionListener(new RandomizeSiblingAgeActionListener(i));
+					siblingPanel.addMaleRadioButtonActionListener(new SiblingGenderActionListener(i));
+					siblingPanel.addFemaleRadioButtonActionListener(new SiblingGenderActionListener(i));
+					siblingPanel.addGenderRandomizerActionListener(new RandomizeSiblingGenderActionListener(i));
+					siblingPanel.addRelationshipItemListener(new SiblingRelationshipItemListener(i));
+					siblingPanel
+							.addRelationshipRandomizerActionListener(new RandomizeSiblingRelationshipActionListener(i));
+				}
+				siblingsDetailPanel.revalidate();
+			} catch (NumberFormatException exception) {
+				// do nothing
+			}
+
+			characterView.setSiblingCount(siblingCount);
+			characterModel.setSiblingCount(siblingCount);
 		}
 	}
 
 	class UnequipActionListener implements ActionListener {
-
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			JTable equippedTable = characterView.getEquippedTable();
 
 			String selectedCellType;
 			CharacterCreationModel.Armor selectedArmor;
-			EquippedTableModel model = (EquippedTableModel) equippedTable.getModel();
 			for (int row = 0; row < equippedTable.getRowCount(); row++) {
 				for (int column = 0; column < equippedTable.getColumnCount(); column++) {
 					if (equippedTable.isCellSelected(row, column)
@@ -1049,20 +2206,24 @@ public class CharacterCreationController {
 						characterModel.setGeneralEncumbranceValue(
 								characterModel.getGeneralEncumbranceValue() - selectedArmor.getEncumbranceValue());
 
-						for (int selectedColumn = 0; selectedColumn < equippedTable
-								.getColumnCount(); selectedColumn++) {
-							for (int selectedRow = 0; selectedRow < equippedTable.getRowCount(); selectedRow++) {
-								if (selectedCellType.equals(equippedTable.getValueAt(selectedRow, selectedColumn))) {
-									equippedTable.setValueAt("", selectedRow, selectedColumn);
-									model.fireTableDataChanged();
-									break;
-								}
-							}
-						}
+						clearDuplicateArmor(equippedTable, selectedCellType);
 					}
 				}
 			}
+		}
 
+		private void clearDuplicateArmor(JTable table, String type) {
+			for (int column = 0; column < table.getColumnCount(); column++) {
+				for (int row = 0; row < table.getRowCount(); row++) {
+					String tempArmorType = (String) table.getValueAt(row, column);
+					if (type.equals(tempArmorType)) {
+						EquippedTableModel model = (EquippedTableModel) table.getModel();
+						table.setValueAt("", row, column);
+						model.fireTableDataChanged();
+						break;
+					}
+				}
+			}
 		}
 
 	}
@@ -1177,16 +2338,6 @@ public class CharacterCreationController {
 
 	}
 
-	class InventoryChangeListener implements ItemListener {
-		@Override
-		public void itemStateChanged(ItemEvent event) {
-			JPanel cardsPanel = characterView.getInventoryCardPanel();
-			CardLayout layout = (CardLayout) cardsPanel.getLayout();
-			layout.show(cardsPanel, (String) event.getItem());
-		}
-
-	}
-
 	class LuckChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent event) {
@@ -1237,24 +2388,6 @@ public class CharacterCreationController {
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 			characterView.setRunLevel(Double.toString(characterModel.getRunLevel()));
 			characterView.setLeapLevel(Double.toString(characterModel.getLeapLevel()));
-		}
-	}
-
-	class RoleChangeListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent event) {
-			JComboBox comboBox = (JComboBox) event.getSource();
-			String selectedRole = (String) comboBox.getSelectedItem();
-			characterModel.setRole(selectedRole);
-		}
-	}
-
-	class StoreChangeListener implements ItemListener {
-		@Override
-		public void itemStateChanged(ItemEvent event) {
-			JPanel cardsPanel = characterView.getStoreCardPanel();
-			CardLayout layout = (CardLayout) cardsPanel.getLayout();
-			layout.show(cardsPanel, (String) event.getItem());
 		}
 	}
 
@@ -1343,6 +2476,65 @@ public class CharacterCreationController {
 
 	}
 
+	class ClothingDocumentListener implements DocumentListener {
+		@Override
+		public void changedUpdate(DocumentEvent event) {
+			characterModel.setClothing(characterView.getClothing());
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent event) {
+			characterModel.setClothing(characterView.getClothing());
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent event) {
+			characterModel.setClothing(characterView.getClothing());
+		}
+
+	}
+
+	class HairstyleDocumentListener implements DocumentListener {
+		@Override
+		public void changedUpdate(DocumentEvent event) {
+			characterModel.setHairstyle(characterView.getHairstyle());
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent event) {
+			characterModel.setHairstyle(characterView.getHairstyle());
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent event) {
+			characterModel.setHairstyle(characterView.getHairstyle());
+		}
+	}
+
+	class AffectationsDocumentListener implements DocumentListener {
+		@Override
+		public void changedUpdate(DocumentEvent event) {
+			characterModel.setAffectations(characterView.getAffectation());
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent event) {
+			characterModel.setAffectations(characterView.getAffectation());
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent event) {
+			characterModel.setAffectations(characterView.getAffectation());
+		}
+	}
+
+	class EthnicityItemListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			characterModel.setEthnicity(characterView.getEthnicity());
+		}
+	}
+
 	class HandleDocumentListener implements DocumentListener {
 		@Override
 		public void changedUpdate(DocumentEvent event) {
@@ -1359,6 +2551,104 @@ public class CharacterCreationController {
 			characterModel.setCharacterName(characterView.getCharacterName());
 		}
 
+	}
+
+	class SiblingNameDocumentListener implements DocumentListener {
+		public int index;
+
+		public SiblingNameDocumentListener(int index) {
+			this.index = index;
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent event) {
+			Document document = (Document) event.getDocument();
+			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
+			try {
+				sibling.setSiblingName(document.getText(0, document.getLength()));
+			} catch (BadLocationException exception) {
+				exception.printStackTrace();
+			}
+			characterModel.getSiblings().set(index, sibling);
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent event) {
+			Document document = (Document) event.getDocument();
+			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
+			try {
+				sibling.setSiblingName(document.getText(0, document.getLength()));
+			} catch (BadLocationException exception) {
+				exception.printStackTrace();
+			}
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent event) {
+			Document document = (Document) event.getDocument();
+			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
+			try {
+				sibling.setSiblingName(document.getText(0, document.getLength()));
+			} catch (BadLocationException exception) {
+				exception.printStackTrace();
+			}
+		}
+
+	}
+
+	class InventoryItemListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			JPanel cardsPanel = characterView.getInventoryCardPanel();
+			CardLayout layout = (CardLayout) cardsPanel.getLayout();
+			layout.show(cardsPanel, (String) event.getItem());
+		}
+
+	}
+
+	class SiblingAgeItemListener implements ItemListener {
+		private int index;
+
+		public SiblingAgeItemListener(int index) {
+			this.index = index;
+		}
+
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
+			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
+			String age = (String) comboBox.getSelectedItem();
+			sibling.setAge(age);
+			characterModel.getSiblings().set(index, sibling);
+		}
+
+	}
+
+	class SiblingRelationshipItemListener implements ItemListener {
+		private int index;
+
+		public SiblingRelationshipItemListener(int index) {
+			this.index = index;
+		}
+
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
+			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
+			String relationship = (String) comboBox.getSelectedItem();
+			sibling.setRelationship(relationship);
+			characterModel.getSiblings().set(index, sibling);
+		}
+
+	}
+
+	class StoreItemListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			JPanel cardsPanel = characterView.getStoreCardPanel();
+			CardLayout layout = (CardLayout) cardsPanel.getLayout();
+			layout.show(cardsPanel, (String) event.getItem());
+		}
 	}
 
 	class EquippedTableModelListener implements TableModelListener {
