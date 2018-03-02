@@ -2202,7 +2202,7 @@ public class CharacterCreationView extends JFrame {
 		return (String) siblingCountComboBox.getSelectedItem();
 	}
 
-	public JComboBox<String> getSiblingAmountComboBox() {
+	public JComboBox<String> getSiblingCountComboBox() {
 		return siblingCountComboBox;
 	}
 

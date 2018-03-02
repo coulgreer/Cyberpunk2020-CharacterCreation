@@ -104,12 +104,23 @@ public class CharacterCreationController {
 		this.characterView.addHairstyleRandomizerActionListener(new RandomizeHairstyleActionListener());
 		this.characterView.addAffectionsRandomizerActionListener(new RandomizeAffectationsActionListener());
 		this.characterView.addEthnicityRandomizerActionListener(new RandomizeEthnicityActionListener());
-		this.characterView.addSiblingCountItemListener(new SiblingAmountItemListener());
-		this.characterView.addSiblingAmountRandomizerActionListener(new SiblingAmountRandomizerActionListener());
 		this.characterView.addClothingDocumentListener(new ClothingDocumentListener());
 		this.characterView.addHairstyleDocumentListener(new HairstyleDocumentListener());
 		this.characterView.addAffectationsDocumentListener(new AffectationsDocumentListener());
 		this.characterView.addEthnicityItemListener(new EthnicityItemListener());
+
+		this.characterView.addFamilyRankingItemListener(new FamilyRankingItemListener());
+		this.characterView.addFamilyRankingRandomizerActionListener(new RandomizeFamilyRankingActionListener());
+		this.characterView.addParentsFateItemListener(new ParentsFateItemListener());
+		this.characterView.addParentsFateRandomizerActionListener(new RandomizeParentsFateActionListener());
+		this.characterView.addParentEventItemListener(new ParentEventItemListener());
+		this.characterView.addParentEventRandomizerActionListener(new RandomizeParentEventActionListener());
+		this.characterView.addFamilyStatusItemListener(new FamilyStatusItemListener());
+		this.characterView.addFamilyStatusRandomizerActionListener(new RandomizeFamilyStatusActionListener());
+		this.characterView.addFamilyTragedyItemListener(new FamilyTragedyItemListener());
+		this.characterView.addFamilyTragedyRandomizerActionListener(new RandomizeFamilyTragedyActionListener());
+		this.characterView.addSiblingCountItemListener(new SiblingCountItemListener());
+		this.characterView.addSiblingAmountRandomizerActionListener(new SiblingCountRandomizerActionListener());
 
 		this.characterView.drawLoadedInjuryPoints(this.characterModel.getInjuryPoints());
 		this.characterView.setModifiedReflexesLevel(Integer.toString(this.characterModel.getModifiedReflexesLevel()));
@@ -747,10 +758,8 @@ public class CharacterCreationController {
 						+ "    siblings={\n" //
 						+ convertSiblingDataToString(characterModel.getSiblingCount(), characterModel.getSiblings()) //
 						+ "    }\n" //
-						+ "  }\n");
-
-				String encodedData = convertImageToBase64(characterView.getCharacterPortrait());
-				fw.write("portrait\t" + encodedData + "\n");
+						+ "  },\n" //
+						+ "  portrait=" + convertImageToBase64(characterView.getCharacterPortrait()) + "\n");
 
 				fw.close();
 			} catch (IOException exception) {
@@ -790,13 +799,14 @@ public class CharacterCreationController {
 			return skillData;
 		}
 
-		private String convertInventoryDataToString(Map<String, CharacterCreationModel.Weapon> weaponMap,
-				Map<String, CharacterCreationModel.Ammo> ammoMap, Map<String, CharacterCreationModel.Armor> armorMap,
-				Map<String, CharacterCreationModel.Gear> gearMap) {
+		private String convertInventoryDataToString(Map<String, CharacterCreationModel.Weapon> inventoryWeaponMap,
+				Map<String, CharacterCreationModel.Ammo> inventoryAmmoMap,
+				Map<String, CharacterCreationModel.Armor> inventoryArmorMap,
+				Map<String, CharacterCreationModel.Gear> inventoryGearMap) {
 			String inventoryData = "";
 
 			inventoryData += "    weapons={\n";
-			for (Map.Entry<String, CharacterCreationModel.Weapon> weaponEntry : weaponMap.entrySet()) {
+			for (Map.Entry<String, CharacterCreationModel.Weapon> weaponEntry : inventoryWeaponMap.entrySet()) {
 				String weaponTag = weaponEntry.getKey();
 				weaponTag = weaponTag.replaceAll(" ", "_").toLowerCase();
 
@@ -807,13 +817,13 @@ public class CharacterCreationController {
 						+ "        weapon_name=" + formatStringValue(weaponName) + "\n" //
 						+ "      },\n";
 			}
-			if (weaponMap.size() > 0) {
+			if (inventoryWeaponMap.size() > 0) {
 				inventoryData = inventoryData.substring(0, inventoryData.length() - 2) + "\n";
 			}
 			inventoryData += "    },\n";
 
 			inventoryData += "    ammo={\n";
-			for (Map.Entry<String, CharacterCreationModel.Ammo> ammoEntry : ammoMap.entrySet()) {
+			for (Map.Entry<String, CharacterCreationModel.Ammo> ammoEntry : inventoryAmmoMap.entrySet()) {
 				String ammoTag = ammoEntry.getKey();
 				ammoTag = ammoTag.replaceAll(" ", "_").toLowerCase();
 
@@ -826,13 +836,13 @@ public class CharacterCreationController {
 						+ "        quantity=" + ammoQuantity + "\n" //
 						+ "      },\n";
 			}
-			if (ammoMap.size() > 0) {
+			if (inventoryAmmoMap.size() > 0) {
 				inventoryData = inventoryData.substring(0, inventoryData.length() - 2) + "\n";
 			}
 			inventoryData += "    },\n";
 
 			inventoryData += "    armor={\n";
-			for (Map.Entry<String, CharacterCreationModel.Armor> armorEntry : armorMap.entrySet()) {
+			for (Map.Entry<String, CharacterCreationModel.Armor> armorEntry : inventoryArmorMap.entrySet()) {
 				String armorTag = armorEntry.getKey();
 				armorTag = armorTag.replaceAll(" ", "_").toLowerCase();
 
@@ -843,14 +853,14 @@ public class CharacterCreationController {
 						+ "        armor_type=" + formatStringValue(armorType) + "\n" //
 						+ "      },\n";
 			}
-			if (armorMap.size() > 0) {
+			if (inventoryArmorMap.size() > 0) {
 				inventoryData = inventoryData.substring(0, inventoryData.length() - 2) + "\n";
 			}
 
 			inventoryData += "    },\n";
 
 			inventoryData += "    gear={\n";
-			for (Map.Entry<String, CharacterCreationModel.Gear> gearEntry : gearMap.entrySet()) {
+			for (Map.Entry<String, CharacterCreationModel.Gear> gearEntry : inventoryGearMap.entrySet()) {
 				String gearTag = gearEntry.getKey();
 				gearTag = gearTag.replaceAll(" ", "_").toLowerCase();
 
@@ -863,7 +873,7 @@ public class CharacterCreationController {
 						+ "        quantity=" + gearQuantity + ",\n" //
 						+ "      },\n";
 			}
-			if (ammoMap.size() > 0) {
+			if (inventoryGearMap.size() > 0) {
 				inventoryData = inventoryData.substring(0, inventoryData.length() - 2) + "\n";
 			}
 			inventoryData += "    }\n";
@@ -1894,6 +1904,16 @@ public class CharacterCreationController {
 		}
 	}
 
+	class FamilyRankingItemListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
+			String familyRanking = (String) comboBox.getSelectedItem();
+			characterModel.setFamilyRanking(familyRanking);
+		}
+
+	}
+
 	class RandomizeFamilyRankingActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
@@ -1904,6 +1924,16 @@ public class CharacterCreationController {
 			characterView.setFamilyRanking(familyRanking);
 			characterModel.setFamilyRanking(familyRanking);
 		}
+	}
+
+	class ParentsFateItemListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
+			String parentsFate = (String) comboBox.getSelectedItem();
+			characterModel.setParentsFate(parentsFate);
+		}
+
 	}
 
 	class RandomizeParentsFateActionListener implements ActionListener {
@@ -1925,6 +1955,16 @@ public class CharacterCreationController {
 		}
 	}
 
+	class ParentEventItemListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
+			String parentEvent = (String) comboBox.getSelectedItem();
+			characterModel.setParentEvent(parentEvent);
+		}
+
+	}
+
 	class RandomizeParentEventActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
@@ -1935,6 +1975,16 @@ public class CharacterCreationController {
 			characterView.setParentEvent(parentEvent);
 			characterModel.setParentEvent(parentEvent);
 		}
+	}
+
+	class FamilyStatusItemListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
+			String familyStatus = (String) comboBox.getSelectedItem();
+			characterModel.setFamilyStatus(familyStatus);
+		}
+
 	}
 
 	class RandomizeFamilyStatusActionListener implements ActionListener {
@@ -1954,6 +2004,16 @@ public class CharacterCreationController {
 			characterView.setFamilyStatus(familyStatus);
 			characterModel.setFamilyStatus(familyStatus);
 		}
+	}
+
+	class FamilyTragedyItemListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
+			String familyTragedy = (String) comboBox.getSelectedItem();
+			characterModel.setFamilyTragedy(familyTragedy);
+		}
+
 	}
 
 	class RandomizeFamilyTragedyActionListener implements ActionListener {
@@ -2099,7 +2159,7 @@ public class CharacterCreationController {
 
 	}
 
-	class SiblingAmountItemListener implements ItemListener {
+	class SiblingCountItemListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent event) {
 			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
@@ -2140,7 +2200,7 @@ public class CharacterCreationController {
 
 	}
 
-	class SiblingAmountRandomizerActionListener implements ActionListener {
+	class SiblingCountRandomizerActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			Random rnd = new Random();
@@ -2152,9 +2212,9 @@ public class CharacterCreationController {
 
 			String siblingCount;
 			if (0 < seed && seed <= 7) {
-				siblingCount = (String) characterView.getSiblingAmountComboBox().getItemAt(seed);
+				siblingCount = (String) characterView.getSiblingCountComboBox().getItemAt(seed);
 			} else if (8 <= seed && seed <= 10) {
-				siblingCount = (String) characterView.getSiblingAmountComboBox().getItemAt(8);
+				siblingCount = (String) characterView.getSiblingCountComboBox().getItemAt(8);
 			} else {
 				siblingCount = "";
 			}

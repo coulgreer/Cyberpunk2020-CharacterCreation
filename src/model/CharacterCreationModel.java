@@ -4854,19 +4854,43 @@ public class CharacterCreationModel {
 		}
 
 		public void setSiblingName(String name) {
-			this.name = name;
+			name = name.replace("\"", "");
+
+			if (name.equalsIgnoreCase("null")) {
+				this.name = null;
+			} else {
+				this.name = name;
+			}
 		}
 
 		public void setGender(String gender) {
-			this.gender = gender;
+			gender = gender.replace("\"", "");
+
+			if (gender.equalsIgnoreCase("null")) {
+				this.gender = null;
+			} else {
+				this.gender = gender;
+			}
 		}
 
 		public void setAge(String age) {
-			this.age = age;
+			age = age.replace("\"", "");
+
+			if (age.equalsIgnoreCase("null")) {
+				this.age = null;
+			} else {
+				this.age = age;
+			}
 		}
 
 		public void setRelationship(String relationship) {
-			this.relationship = relationship;
+			relationship = relationship.replace("\"", "");
+
+			if (relationship.equalsIgnoreCase("null")) {
+				this.relationship = null;
+			} else {
+				this.relationship = relationship;
+			}
 		}
 
 		public static class SiblingBuilder {
