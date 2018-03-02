@@ -1400,6 +1400,7 @@ public class CharacterCreationView extends JFrame {
 		familyPanel.add(somethingHappenedToParentsPanel);
 
 		parentEventComboBox = new JComboBox<String>();
+		parentEventComboBox.setEnabled(false);
 		parentEventComboBox.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		parentEventComboBox.setModel(new DefaultComboBoxModel<String>(
 				new String[] { "<Choose what happened to your parents>", "Your parent(s) died in warfare",
@@ -1411,6 +1412,7 @@ public class CharacterCreationView extends JFrame {
 		somethingHappenedToParentsPanel.add(parentEventComboBox);
 
 		randomizeParentEventButton = new JButton("Randomize");
+		randomizeParentEventButton.setEnabled(false);
 		randomizeParentEventButton.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		somethingHappenedToParentsPanel.add(randomizeParentEventButton);
 
@@ -1436,6 +1438,7 @@ public class CharacterCreationView extends JFrame {
 		familyPanel.add(familyTragedyPanel);
 
 		familyTragedyComboBox = new JComboBox<String>();
+		familyTragedyComboBox.setEnabled(false);
 		familyTragedyComboBox.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		familyTragedyComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "<Choose family tragedy>",
 				"Family lost everything through betrayal", "Family lost everything through bad management",
@@ -1449,6 +1452,7 @@ public class CharacterCreationView extends JFrame {
 		familyTragedyPanel.add(familyTragedyComboBox);
 
 		randomizeFamilyTragedyButton = new JButton("Randomize");
+		randomizeFamilyTragedyButton.setEnabled(false);
 		randomizeFamilyTragedyButton.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		familyTragedyPanel.add(randomizeFamilyTragedyButton);
 
@@ -2289,6 +2293,10 @@ public class CharacterCreationView extends JFrame {
 	public JComboBox<String> getParentsFateComboBox() {
 		return parentsFateComboBox;
 	}
+	
+	public JButton getRandomizeParentEventButton() {
+		return randomizeParentEventButton;
+	}
 
 	public JComboBox<String> getParentEventComboBox() {
 		return parentEventComboBox;
@@ -2300,6 +2308,10 @@ public class CharacterCreationView extends JFrame {
 
 	public JComboBox<String> getFamilyTragedyComboBox() {
 		return familyTragedyComboBox;
+	}
+	
+	public JButton getRandomizeFamilyTragedyButton() {
+		return randomizeFamilyTragedyButton;
 	}
 
 	public JComboBox<String> getChildhoodEnvironmentComboBox() {
@@ -2756,6 +2768,10 @@ public class CharacterCreationView extends JFrame {
 	public void addFamilyTragedyRandomizerActionListener(ActionListener listener) {
 		randomizeFamilyTragedyButton.addActionListener(listener);
 	}
+	
+	public void addChildhoodEnvironmentItemListener(ItemListener listener) {
+		childhoodEnvironmentComboBox.addItemListener(listener);
+	}
 
 	public void addChildhoodEnvironmentRandomizerActionListener(ActionListener listener) {
 		randomizeChildhoodEnvironmentButton.addActionListener(listener);
@@ -3014,7 +3030,7 @@ public class CharacterCreationView extends JFrame {
 			columnModel.getColumn(column).setPreferredWidth(width);
 		}
 	}
-
+	
 	private void fillStunGauge(int index) {
 		stunProgressPanels.get(index).increaseStunGauge();
 		stunProgressPanels.get(index).increaseStunGauge();

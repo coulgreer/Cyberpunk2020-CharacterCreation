@@ -119,6 +119,9 @@ public class CharacterCreationController {
 		this.characterView.addFamilyStatusRandomizerActionListener(new RandomizeFamilyStatusActionListener());
 		this.characterView.addFamilyTragedyItemListener(new FamilyTragedyItemListener());
 		this.characterView.addFamilyTragedyRandomizerActionListener(new RandomizeFamilyTragedyActionListener());
+		this.characterView.addChildhoodEnvironmentItemListener(new ChildhoodEnvironmentItemListener());
+		this.characterView
+				.addChildhoodEnvironmentRandomizerActionListener(new RandomizeChildhoodEnvironmentActionListener());
 		this.characterView.addSiblingCountItemListener(new SiblingCountItemListener());
 		this.characterView.addSiblingAmountRandomizerActionListener(new SiblingCountRandomizerActionListener());
 
@@ -1932,6 +1935,16 @@ public class CharacterCreationController {
 			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
 			String parentsFate = (String) comboBox.getSelectedItem();
 			characterModel.setParentsFate(parentsFate);
+
+			if (comboBox.getSelectedIndex() == 2) {
+				characterView.getParentEventComboBox().setEnabled(true);
+				characterView.getRandomizeParentEventButton().setEnabled(true);
+			} else {
+				characterView.getParentEventComboBox().setEnabled(false);
+				characterView.getParentEventComboBox().setSelectedIndex(0);
+				characterView.getRandomizeParentEventButton().setEnabled(false);
+			}
+
 		}
 
 	}
@@ -1939,19 +1952,27 @@ public class CharacterCreationController {
 	class RandomizeParentsFateActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
+			JComboBox<String> comboBox = characterView.getParentsFateComboBox();
 			Random rnd = new Random();
 			int seed = (rnd.nextInt(10) + 1);
 			String parentsFate;
 			if (0 < seed && seed <= 6) {
-				parentsFate = characterView.getParentsFateComboBox().getItemAt(1);
+				parentsFate = comboBox.getItemAt(1);
 			} else if (7 <= seed && seed <= 10) {
-				parentsFate = characterView.getParentsFateComboBox().getItemAt(2);
+				parentsFate = comboBox.getItemAt(2);
 			} else {
 				parentsFate = "";
 			}
 
 			characterView.setParentsFate(parentsFate);
 			characterModel.setParentsFate(parentsFate);
+
+			if (comboBox.getSelectedIndex() == 2) {
+				characterView.getParentEventComboBox().setEnabled(true);
+			} else {
+				characterView.getParentEventComboBox().setEnabled(false);
+				characterView.getParentEventComboBox().setSelectedIndex(0);
+			}
 		}
 	}
 
@@ -1983,6 +2004,15 @@ public class CharacterCreationController {
 			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
 			String familyStatus = (String) comboBox.getSelectedItem();
 			characterModel.setFamilyStatus(familyStatus);
+
+			if (comboBox.getSelectedIndex() == 1) {
+				characterView.getFamilyTragedyComboBox().setEnabled(true);
+				characterView.getRandomizeFamilyTragedyButton().setEnabled(true);
+			} else {
+				characterView.getFamilyTragedyComboBox().setEnabled(false);
+				characterView.getRandomizeFamilyTragedyButton().setEnabled(false);
+				characterView.getFamilyTragedyComboBox().setSelectedIndex(0);
+			}
 		}
 
 	}
@@ -1990,19 +2020,29 @@ public class CharacterCreationController {
 	class RandomizeFamilyStatusActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
+			JComboBox<String> comboBox = characterView.getFamilyStatusComboBox();
 			Random rnd = new Random();
 			int seed = (rnd.nextInt(10) + 1);
 			String familyStatus;
 			if (0 < seed && seed <= 6) {
-				familyStatus = characterView.getFamilyStatusComboBox().getItemAt(1);
+				familyStatus = comboBox.getItemAt(1);
 			} else if (7 <= seed && seed <= 10) {
-				familyStatus = characterView.getFamilyStatusComboBox().getItemAt(2);
+				familyStatus = comboBox.getItemAt(2);
 			} else {
 				familyStatus = "";
 			}
 
 			characterView.setFamilyStatus(familyStatus);
 			characterModel.setFamilyStatus(familyStatus);
+
+			if (comboBox.getSelectedIndex() == 1) {
+				characterView.getFamilyTragedyComboBox().setEnabled(true);
+				characterView.getRandomizeFamilyTragedyButton().setEnabled(true);
+			} else {
+				characterView.getFamilyTragedyComboBox().setEnabled(false);
+				characterView.getRandomizeFamilyTragedyButton().setEnabled(false);
+				characterView.getFamilyTragedyComboBox().setSelectedIndex(0);
+			}
 		}
 	}
 
@@ -2010,8 +2050,8 @@ public class CharacterCreationController {
 		@Override
 		public void itemStateChanged(ItemEvent event) {
 			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
-			String familyTragedy = (String) comboBox.getSelectedItem();
-			characterModel.setFamilyTragedy(familyTragedy);
+			String childhoodEnvironment = (String) comboBox.getSelectedItem();
+			characterModel.setChildhoodEnvironment(childhoodEnvironment);
 		}
 
 	}
@@ -2028,6 +2068,14 @@ public class CharacterCreationController {
 		}
 	}
 
+	class ChildhoodEnvironmentItemListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+
+		}
+
+	}
+
 	class RandomizeChildhoodEnvironmentActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
@@ -2038,6 +2086,24 @@ public class CharacterCreationController {
 			characterView.setChildhoodEnvironment(childhoodEnvironment);
 			characterModel.setChildhoodEnvironment(childhoodEnvironment);
 		}
+	}
+
+	class SiblingAgeItemListener implements ItemListener {
+		private int index;
+
+		public SiblingAgeItemListener(int index) {
+			this.index = index;
+		}
+
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
+			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
+			String age = (String) comboBox.getSelectedItem();
+			sibling.setAge(age);
+			characterModel.getSiblings().set(index, sibling);
+		}
+
 	}
 
 	class RandomizeSiblingAgeActionListener implements ActionListener {
@@ -2070,6 +2136,22 @@ public class CharacterCreationController {
 		}
 	}
 
+	class SiblingGenderActionListener implements ActionListener {
+		private int index;
+
+		public SiblingGenderActionListener(int index) {
+			this.index = index;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
+			sibling.setGender(event.getActionCommand());
+			characterModel.getSiblings().set(index, sibling);
+		}
+
+	}
+
 	class RandomizeSiblingGenderActionListener implements ActionListener {
 		private int index;
 
@@ -2095,6 +2177,24 @@ public class CharacterCreationController {
 			}
 
 			sibling.setGender(gender);
+		}
+
+	}
+
+	class SiblingRelationshipItemListener implements ItemListener {
+		private int index;
+
+		public SiblingRelationshipItemListener(int index) {
+			this.index = index;
+		}
+
+		@Override
+		public void itemStateChanged(ItemEvent event) {
+			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
+			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
+			String relationship = (String) comboBox.getSelectedItem();
+			sibling.setRelationship(relationship);
+			characterModel.getSiblings().set(index, sibling);
 		}
 
 	}
@@ -2141,22 +2241,6 @@ public class CharacterCreationController {
 			String selectedRole = (String) comboBox.getSelectedItem();
 			characterModel.setRole(selectedRole);
 		}
-	}
-
-	class SiblingGenderActionListener implements ActionListener {
-		private int index;
-
-		public SiblingGenderActionListener(int index) {
-			this.index = index;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent event) {
-			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
-			sibling.setGender(event.getActionCommand());
-			characterModel.getSiblings().set(index, sibling);
-		}
-
 	}
 
 	class SiblingCountItemListener implements ItemListener {
@@ -2662,42 +2746,6 @@ public class CharacterCreationController {
 			JPanel cardsPanel = characterView.getInventoryCardPanel();
 			CardLayout layout = (CardLayout) cardsPanel.getLayout();
 			layout.show(cardsPanel, (String) event.getItem());
-		}
-
-	}
-
-	class SiblingAgeItemListener implements ItemListener {
-		private int index;
-
-		public SiblingAgeItemListener(int index) {
-			this.index = index;
-		}
-
-		@Override
-		public void itemStateChanged(ItemEvent event) {
-			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
-			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
-			String age = (String) comboBox.getSelectedItem();
-			sibling.setAge(age);
-			characterModel.getSiblings().set(index, sibling);
-		}
-
-	}
-
-	class SiblingRelationshipItemListener implements ItemListener {
-		private int index;
-
-		public SiblingRelationshipItemListener(int index) {
-			this.index = index;
-		}
-
-		@Override
-		public void itemStateChanged(ItemEvent event) {
-			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
-			CharacterCreationModel.Sibling sibling = characterModel.getSiblings().get(index);
-			String relationship = (String) comboBox.getSelectedItem();
-			sibling.setRelationship(relationship);
-			characterModel.getSiblings().set(index, sibling);
 		}
 
 	}
