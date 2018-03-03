@@ -237,6 +237,7 @@ public class CharacterCreationController {
 
 			characterView.setMoneyModifier("0");
 			characterView.setMoney(String.valueOf(currentMoney + moneyModifier));
+			characterModel.setMoney(currentMoney + moneyModifier);
 
 		}
 
@@ -338,6 +339,7 @@ public class CharacterCreationController {
 			characterView.resizeColumnWidth(inventoryAmmoTable);
 
 			characterView.setMoney(String.valueOf(characterView.getMoney() + totalCost));
+			characterModel.setMoney(characterView.getMoney());
 
 			storeWeaponTable.clearSelection();
 			storeGearTable.clearSelection();
@@ -740,6 +742,7 @@ public class CharacterCreationController {
 								characterModel.getInventoryAmmos(), characterModel.getInventoryArmors(),
 								characterModel.getInventoryGear()) //
 						+ "  },\n" //
+						+ "  money=" + characterModel.getMoney() + ",\n" //
 						+ "  equipped_armor={\n" //
 						+ convertEquipmentDataToString(characterView.getEquippedTable()) //
 						+ "  },\n" //
@@ -1032,15 +1035,14 @@ public class CharacterCreationController {
 							}
 							switch (key) {
 							case "handle":
-								characterView.setHandle(value.replace("\"", ""));
-								characterModel.setCharacterName(value.replace("\"", ""));
+								characterView.setHandle(value);
+								characterModel.setCharacterName(value);
 								break;
 							case "role":
-								characterView.setRole(value.replace("\"", ""));
-								characterModel.setRole(value.replace("\"", ""));
+								characterView.setRole(value);
+								characterModel.setRole(value);
 								break;
 							case "character_points":
-								characterView.setCharacterPoints(value);
 								characterModel.setCharacterPoints(Integer.parseInt(value));
 								break;
 							case "attributes":
@@ -1063,6 +1065,10 @@ public class CharacterCreationController {
 								break;
 							case "skills":
 								parseSkillCategory();
+								break;
+							case "money":
+								characterView.setMoney(value);
+								characterModel.setMoney(Integer.parseInt(value));
 								break;
 							case "inventory":
 								parseInventory();
@@ -1088,6 +1094,14 @@ public class CharacterCreationController {
 						}
 
 					}
+
+					int totalCharacterPoints = characterModel.getCharacterPoints();
+					int spentCharacterPoints = characterModel.getAttractivenessLevel() + characterModel.getBodyLevel()
+							+ characterModel.getCoolLevel() + characterModel.getTotalEmpathyLevel()
+							+ characterModel.getIntelligenceLevel() + characterModel.getLuckLevel()
+							+ characterModel.getTechnicalAbilityLevel() + characterModel.getUnmodifiedReflexesLevel()
+							+ characterModel.getMovementAllowanceLevel();
+					characterView.setCharacterPoints(Integer.toString(totalCharacterPoints - spentCharacterPoints));
 					characterView.clearSkillTables();
 					populateSkillPanels();
 					sc.close();

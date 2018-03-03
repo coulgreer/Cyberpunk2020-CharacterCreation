@@ -72,6 +72,7 @@ public class CharacterCreationModel {
 	private String childhoodEnvironment;
 	private String familyTragedy;
 	private String siblingCount;
+	private int money;
 
 	private List<Sibling> siblings;
 
@@ -4053,6 +4054,10 @@ public class CharacterCreationModel {
 	public List<Sibling> getSiblings() {
 		return siblings;
 	}
+	
+	public int getMoney() {
+		return money;
+	}
 
 	public Map<String, Map<String, Skill>> getSkillCatelog() {
 		return skillCatelog;
@@ -4134,13 +4139,17 @@ public class CharacterCreationModel {
 	}
 
 	public void setCharacterName(String name) {
+		name = name.replace("\"", "");
+		
 		characterName = name;
 	}
 
-	public void setRole(String newRole) {
+	public void setRole(String role) {
+		role = role.replace("\"", "");
+		
 		for (String key : roles.keySet()) {
-			if (key.equals(newRole)) {
-				role = roles.get(newRole);
+			if (key.equals(role)) {
+				this.role = roles.get(role);
 			}
 		}
 	}
@@ -4389,6 +4398,10 @@ public class CharacterCreationModel {
 		} else {
 			this.siblingCount = siblingCount;
 		}
+	}
+	
+	public void setMoney(int money) {
+		this.money = money;
 	}
 
 	public static class Ammo {

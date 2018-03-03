@@ -2323,10 +2323,14 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public void setHandle(String handle) {
+		handle = handle.replace("\"", "");
+		
 		handleTextField.setText(handle);
 	}
 
 	public void setRole(String role) {
+		role = role.replace("\"", "");
+		
 		roleComboBox.setSelectedItem(role);
 	}
 
