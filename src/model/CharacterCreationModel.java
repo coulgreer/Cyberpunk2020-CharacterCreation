@@ -49,6 +49,10 @@ public class CharacterCreationModel {
 	private double carryCapacity;
 	private double liftCapacity;
 
+	private List<Skill> careerSkills;
+	private int maxCareerSkillPoints;
+	private int maxPickupSkillPoints;
+
 	private int headArmorSP;
 	private int torsoArmorSP;
 	private int rightArmArmorSP;
@@ -3479,8 +3483,8 @@ public class CharacterCreationModel {
 			.build();
 
 	public CharacterCreationModel() {
-		characterName = "Unknown";
-		role = cop;
+		characterName = null;
+		role = null;
 		characterPoints = DEFAULT_STAT_LEVEL * 9;
 
 		intelligenceLevel = DEFAULT_STAT_LEVEL;
@@ -3517,9 +3521,13 @@ public class CharacterCreationModel {
 		bodyTypeModifier = calculateBodyTypeModifier();
 
 		injuryPoints = 0;
-		ethnicity = "Anglo-American";
+		ethnicity = null;
 		siblingCount = "Only child";
 		siblings = new ArrayList<Sibling>(7);
+
+		careerSkills = new ArrayList<Skill>(10);
+		maxCareerSkillPoints = 40;
+		maxPickupSkillPoints = 0;
 
 		specialAbilitySkills.put(authority.getSkillName(), authority);
 		specialAbilitySkills.put(charismaticLeadership.getSkillName(), charismaticLeadership);
@@ -3879,6 +3887,14 @@ public class CharacterCreationModel {
 		return role;
 	}
 
+	public String getSelectedRoleName() {
+		if (role != null) {
+			return role.getRoleName();
+		} else {
+			return "null";
+		}
+	}
+
 	public int getCharacterPoints() {
 		return characterPoints;
 	}
@@ -4054,7 +4070,7 @@ public class CharacterCreationModel {
 	public List<Sibling> getSiblings() {
 		return siblings;
 	}
-	
+
 	public int getMoney() {
 		return money;
 	}
@@ -4140,16 +4156,20 @@ public class CharacterCreationModel {
 
 	public void setCharacterName(String name) {
 		name = name.replace("\"", "");
-		
+
 		characterName = name;
 	}
 
 	public void setRole(String role) {
 		role = role.replace("\"", "");
-		
-		for (String key : roles.keySet()) {
-			if (key.equals(role)) {
-				this.role = roles.get(role);
+
+		if (role.equalsIgnoreCase("null") || (role.contains("<") && role.contains(">"))) {
+			this.role = null;
+		} else {
+			for (String key : roles.keySet()) {
+				if (key.equals(role)) {
+					this.role = roles.get(role);
+				}
 			}
 		}
 	}
@@ -4159,6 +4179,7 @@ public class CharacterCreationModel {
 	}
 
 	public void setIntelligenceLevel(int level) {
+		maxPickupSkillPoints = intelligenceLevel + unmodifiedReflexesLevel;
 		intelligenceLevel = level;
 	}
 
@@ -4191,6 +4212,7 @@ public class CharacterCreationModel {
 	}
 
 	public void setUnmodifiedReflexesLevel(int level) {
+		maxPickupSkillPoints = intelligenceLevel + unmodifiedReflexesLevel;
 		unmodifiedReflexesLevel = level;
 	}
 
@@ -4321,8 +4343,7 @@ public class CharacterCreationModel {
 
 	public void setEthnicity(String ethnicity) {
 		ethnicity = ethnicity.replace("\"", "");
-
-		if (ethnicity.equalsIgnoreCase("null")) {
+		if (ethnicity.equalsIgnoreCase("null") || (ethnicity.contains("<") && ethnicity.contains(">"))) {
 			this.ethnicity = null;
 		} else {
 			this.ethnicity = ethnicity;
@@ -4332,7 +4353,7 @@ public class CharacterCreationModel {
 	public void setFamilyRanking(String familyRanking) {
 		familyRanking = familyRanking.replace("\"", "");
 
-		if (familyRanking.equalsIgnoreCase("null")) {
+		if (familyRanking.equalsIgnoreCase("null") || (familyRanking.contains("<") && familyRanking.contains(">"))) {
 			this.familyRanking = null;
 		} else {
 			this.familyRanking = familyRanking;
@@ -4343,7 +4364,7 @@ public class CharacterCreationModel {
 	public void setParentsFate(String parentsFate) {
 		parentsFate = parentsFate.replace("\"", "");
 
-		if (parentsFate.equalsIgnoreCase("null")) {
+		if (parentsFate.equalsIgnoreCase("null") || (parentsFate.contains("<") && parentsFate.contains(">"))) {
 			this.parentsFate = null;
 		} else {
 			this.parentsFate = parentsFate;
@@ -4353,7 +4374,7 @@ public class CharacterCreationModel {
 	public void setParentEvent(String parentEvent) {
 		parentEvent = parentEvent.replace("\"", "");
 
-		if (parentEvent.equalsIgnoreCase("null")) {
+		if (parentEvent.equalsIgnoreCase("null") || (parentEvent.contains("<") && parentEvent.contains(">"))) {
 			this.parentEvent = null;
 		} else {
 			this.parentEvent = parentEvent;
@@ -4363,7 +4384,7 @@ public class CharacterCreationModel {
 	public void setFamilyStatus(String familyStatus) {
 		familyStatus = familyStatus.replace("\"", "");
 
-		if (familyStatus.equalsIgnoreCase("null")) {
+		if (familyStatus.equalsIgnoreCase("null") || (familyStatus.contains("<") && familyStatus.contains(">"))) {
 			this.familyStatus = null;
 		} else {
 			this.familyStatus = familyStatus;
@@ -4373,7 +4394,7 @@ public class CharacterCreationModel {
 	public void setFamilyTragedy(String familyTragedy) {
 		familyTragedy = familyTragedy.replace("\"", "");
 
-		if (familyTragedy.equalsIgnoreCase("null")) {
+		if (familyTragedy.equalsIgnoreCase("null") || (familyTragedy.contains("<") && familyTragedy.contains(">"))) {
 			this.familyTragedy = null;
 		} else {
 			this.familyTragedy = familyTragedy;
@@ -4383,7 +4404,8 @@ public class CharacterCreationModel {
 	public void setChildhoodEnvironment(String childhoodEnvironment) {
 		childhoodEnvironment = childhoodEnvironment.replace("\"", "");
 
-		if (childhoodEnvironment.equalsIgnoreCase("null")) {
+		if (childhoodEnvironment.equalsIgnoreCase("null")
+				|| (childhoodEnvironment.contains("<") && childhoodEnvironment.contains(">"))) {
 			this.childhoodEnvironment = null;
 		} else {
 			this.childhoodEnvironment = childhoodEnvironment;
@@ -4393,13 +4415,29 @@ public class CharacterCreationModel {
 	public void setSiblingCount(String siblingCount) {
 		siblingCount = siblingCount.replace("\"", "");
 
-		if (siblingCount.equalsIgnoreCase("null")) {
+		if (siblingCount.equalsIgnoreCase("null") || (siblingCount.contains("<") && siblingCount.contains(">"))) {
 			this.siblingCount = null;
 		} else {
 			this.siblingCount = siblingCount;
 		}
 	}
-	
+
+	public boolean addCareerSkill(Skill skill) {
+		boolean isAdded = false;
+		for (int i = 0; i < 10; i++) {
+			if (careerSkills.get(i) == null) {
+				careerSkills.add(skill);
+				isAdded = true;
+				break;
+			}
+		}
+		return isAdded;
+	}
+
+	public void setCareerSkill(int index, Skill skill) {
+		careerSkills.set(index, skill);
+	}
+
 	public void setMoney(int money) {
 		this.money = money;
 	}

@@ -161,6 +161,8 @@ public class CharacterCreationView extends JFrame {
 	private JLabel[] statComboBoxLabels;
 	private JFileChooser fileChooser;
 
+	private JLabel lblCareerSkillPointsRemaining;
+	private JLabel lblPickupSkillPointsRemaining;
 	private JSpinner[] skillSpinners;
 	private Map<String, JTable> skillTables;
 	private Map<String, JTextArea> skillTextAreas;
@@ -338,8 +340,8 @@ public class CharacterCreationView extends JFrame {
 		rolePanel.add(lblRole, gbc_lblRole);
 
 		roleComboBox = new JComboBox<String>();
-		roleComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Cop", "Corporate", "Fixer", "Media",
-				"Netrunner", "Nomad", "Rockerboy", "Solo", "Techie" }));
+		roleComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "<Select a role>", "Cop", "Corporate",
+				"Fixer", "Media", "Netrunner", "Nomad", "Rockerboy", "Solo", "Techie" }));
 		GridBagConstraints gbc_roleComboBox = new GridBagConstraints();
 		gbc_roleComboBox.fill = GridBagConstraints.BOTH;
 		gbc_roleComboBox.insets = new Insets(0, 0, 0, 3);
@@ -1348,9 +1350,10 @@ public class CharacterCreationView extends JFrame {
 		stylePanel.add(ethnicityPanel);
 
 		ethnicityComboBox = new JComboBox<String>();
-		ethnicityComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Anglo-American", "African",
-				"Japanese/Korean", "Central European/Soviet", "Pacific Islander", "Chinese/Southeast Asian",
-				"Black American", "Hispanic American", "Central /South American", "Eurpean" }));
+		ethnicityComboBox.setModel(
+				new DefaultComboBoxModel<String>(new String[] { "<Select ethnicity>", "Anglo-American", "African",
+						"Japanese/Korean", "Central European/Soviet", "Pacific Islander", "Chinese/Southeast Asian",
+						"Black American", "Hispanic American", "Central /South American", "Eurpean" }));
 		ethnicityPanel.add(ethnicityComboBox);
 
 		randomizeEthnicityButton = new JButton("Randomize");
@@ -1516,7 +1519,7 @@ public class CharacterCreationView extends JFrame {
 		JScrollPane specialAbilitiesSkillScrollPane = new JScrollPane();
 		specialAbilitiesSplitPane.setLeftComponent(specialAbilitiesSkillScrollPane);
 
-		specialAbilitiesSkillTable = new JTable(new SkillTableModel());
+		specialAbilitiesSkillTable = new JTable(new SpecialSkillTableModel());
 		specialAbilitiesSkillTable.getTableHeader().setReorderingAllowed(false);
 		specialAbilitiesSkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		specialAbilitiesSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
@@ -1758,6 +1761,16 @@ public class CharacterCreationView extends JFrame {
 		technicalAbilitiesTextArea.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		technicalDescriptionScrollPane.setViewportView(technicalAbilitiesTextArea);
 		skillTextAreas.put(CharacterCreationModel.TECH, technicalAbilitiesTextArea);
+
+		JPanel remainingPointsPanel = new JPanel();
+		skillPanel.add(remainingPointsPanel, BorderLayout.NORTH);
+		remainingPointsPanel.setLayout(new BorderLayout(0, 0));
+
+		lblCareerSkillPointsRemaining = new JLabel("Career Points Remaining: ");
+		remainingPointsPanel.add(lblCareerSkillPointsRemaining, BorderLayout.WEST);
+
+		lblPickupSkillPointsRemaining = new JLabel("Pickup Skill Points Remaining: ");
+		remainingPointsPanel.add(lblPickupSkillPointsRemaining, BorderLayout.EAST);
 
 		JPanel cyberneticsPanel = new JPanel();
 		detailsTabbedPane.addTab("Cybernetics", null, cyberneticsPanel, null);
@@ -2293,7 +2306,7 @@ public class CharacterCreationView extends JFrame {
 	public JComboBox<String> getParentsFateComboBox() {
 		return parentsFateComboBox;
 	}
-	
+
 	public JButton getRandomizeParentEventButton() {
 		return randomizeParentEventButton;
 	}
@@ -2309,7 +2322,7 @@ public class CharacterCreationView extends JFrame {
 	public JComboBox<String> getFamilyTragedyComboBox() {
 		return familyTragedyComboBox;
 	}
-	
+
 	public JButton getRandomizeFamilyTragedyButton() {
 		return randomizeFamilyTragedyButton;
 	}
@@ -2324,13 +2337,13 @@ public class CharacterCreationView extends JFrame {
 
 	public void setHandle(String handle) {
 		handle = handle.replace("\"", "");
-		
+
 		handleTextField.setText(handle);
 	}
 
 	public void setRole(String role) {
 		role = role.replace("\"", "");
-		
+
 		roleComboBox.setSelectedItem(role);
 	}
 
@@ -2772,7 +2785,7 @@ public class CharacterCreationView extends JFrame {
 	public void addFamilyTragedyRandomizerActionListener(ActionListener listener) {
 		randomizeFamilyTragedyButton.addActionListener(listener);
 	}
-	
+
 	public void addChildhoodEnvironmentItemListener(ItemListener listener) {
 		childhoodEnvironmentComboBox.addItemListener(listener);
 	}
@@ -2859,6 +2872,49 @@ public class CharacterCreationView extends JFrame {
 
 	}
 
+	public void setSpecialSkillActiveRow(String selectedRole) {
+		String specialAbility;
+		int row;
+		SpecialSkillTableModel model = (SpecialSkillTableModel) specialAbilitiesSkillTable.getModel();
+		switch (selectedRole.toLowerCase()) {
+		case "cop":
+			specialAbility = "authority";
+			break;
+		case "rockerboy":
+			specialAbility = "charismatic leadership";
+			break;
+		case "solo":
+			specialAbility = "combat sense";
+			break;
+		case "media":
+			specialAbility = "credibility";
+			break;
+		case "nomad":
+			specialAbility = "family";
+			break;
+		case "netrunner":
+			specialAbility = "interface";
+			break;
+		case "techie":
+			specialAbility = "jury rig";
+			break;
+		case "medtech":
+			specialAbility = "medical tech";
+			break;
+		case "corporate":
+			specialAbility = "resources";
+			break;
+		case "fixer":
+			specialAbility = "streetdeal";
+			break;
+		default:
+			specialAbility = "";
+			break;
+		}
+		row = model.findSkillRow(specialAbility);
+		model.setActiveRow(row);
+	}
+
 	public void addBasicSkillToPanel(String skillCategory, String skill, int rank, String specificSkill,
 			TableModelListener listener) {
 		JTable targetTable;
@@ -2894,11 +2950,17 @@ public class CharacterCreationView extends JFrame {
 			break;
 		}
 
-		SkillTableModel model = (SkillTableModel) targetTable.getModel();
-		model.addTableModelListener(listener);
-		row = new Object[] { skill, specificSkill, Integer.valueOf(rank) };
-		model.addRow(row);
-
+		if ((skillCategory.toUpperCase()).equals(CharacterCreationModel.SPEC)) {
+			SpecialSkillTableModel model = (SpecialSkillTableModel) targetTable.getModel();
+			model.addTableModelListener(listener);
+			row = new Object[] { skill, specificSkill, Integer.valueOf(rank) };
+			model.addRow(row);
+		} else {
+			SkillTableModel model = (SkillTableModel) targetTable.getModel();
+			model.addTableModelListener(listener);
+			row = new Object[] { skill, specificSkill, Integer.valueOf(rank) };
+			model.addRow(row);
+		}
 	}
 
 	public void drawDecreaseInjuryPoints(double points) {
@@ -3034,7 +3096,7 @@ public class CharacterCreationView extends JFrame {
 			columnModel.getColumn(column).setPreferredWidth(width);
 		}
 	}
-	
+
 	private void fillStunGauge(int index) {
 		stunProgressPanels.get(index).increaseStunGauge();
 		stunProgressPanels.get(index).increaseStunGauge();
@@ -3448,6 +3510,78 @@ public class CharacterCreationView extends JFrame {
 			return columnNames[column];
 		}
 
+	}
+
+	public class SpecialSkillTableModel extends AbstractTableModel {
+		private String[] columnNames = { "Skill", "Specific Skill", "Rank" };
+		private List<Object[]> data = new ArrayList<Object[]>();
+		int activeRow = -1;
+
+		@Override
+		public int getColumnCount() {
+			return columnNames.length;
+		}
+
+		@Override
+		public int getRowCount() {
+			return data.size();
+		}
+
+		@Override
+		public Object getValueAt(int row, int column) {
+			return data.get(row)[column];
+		}
+
+		public void addRow(Object[] rowData) {
+			data.add(rowData);
+		}
+
+		public String getColumnName(int column) {
+			return columnNames[column];
+		}
+
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			String skillName = (String) getValueAt(row, 0);
+			if (column == 1) {
+				int rank = (Integer) getValueAt(row, 2);
+				if (rank > 0 && skillName.contains("*")) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (column == 2 && row == activeRow) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		public void setActiveRow(int activeRow) {
+			this.activeRow = activeRow;
+			if (activeRow >= 0) {
+				fireTableCellUpdated(activeRow, 2);
+			}
+		}
+
+		@Override
+		public void setValueAt(Object value, int row, int col) {
+			data.get(row)[col] = value;
+			fireTableCellUpdated(row, col);
+		}
+
+		public int findSkillRow(String skillName) {
+			int row = -1;
+			skillName = skillName.toLowerCase();
+			for (int i = 0; i < data.size(); i++) {
+				String tempSkillName = ((String) getValueAt(i, 0)).toLowerCase();
+				if (tempSkillName.equals(skillName)) {
+					row = i;
+					break;
+				}
+			}
+			return row;
+		}
 	}
 
 	public class SkillTableModel extends AbstractTableModel {

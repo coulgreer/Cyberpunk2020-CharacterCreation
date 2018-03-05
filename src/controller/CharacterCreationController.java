@@ -61,6 +61,7 @@ import view.CharacterCreationView.InventoryGearTableModel;
 import view.CharacterCreationView.InventoryWeaponTableModel;
 import view.CharacterCreationView.SiblingPanel;
 import view.CharacterCreationView.SkillTableModel;
+import view.CharacterCreationView.SpecialSkillTableModel;
 
 public class CharacterCreationController {
 	private CharacterCreationModel characterModel;
@@ -704,7 +705,7 @@ public class CharacterCreationController {
 					fw = new FileWriter(filename);
 				}
 				fw.write("  handle=" + formatStringValue(characterModel.getHandle()) + ",\n" //
-						+ "  role=" + formatStringValue(characterModel.getRole().getRoleName()) + ",\n" //
+						+ "  role=" + formatStringValue(characterModel.getSelectedRoleName()) + ",\n" //
 						+ "  character_points=" + characterModel.getCharacterPoints() + ",\n" //
 						+ "  attributes={\n" //
 						+ "    intelligence=" + characterModel.getIntelligenceLevel() + ",\n" //
@@ -1913,7 +1914,7 @@ public class CharacterCreationController {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			Random rnd = new Random();
-			int seed = rnd.nextInt(10);
+			int seed = (rnd.nextInt(10) + 1);
 			String ethnicity = characterView.getEthnicityComboBox().getItemAt(seed);
 
 			characterView.setEthnicity(ethnicity);
@@ -2254,6 +2255,8 @@ public class CharacterCreationController {
 			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
 			String selectedRole = (String) comboBox.getSelectedItem();
 			characterModel.setRole(selectedRole);
+
+			characterView.setSpecialSkillActiveRow(selectedRole);
 		}
 	}
 
@@ -2952,19 +2955,36 @@ public class CharacterCreationController {
 		@Override
 		public void tableChanged(TableModelEvent event) {
 			if (event.getType() == TableModelEvent.UPDATE) {
-				SkillTableModel model = (SkillTableModel) event.getSource();
-				String skillName = (String) model.getValueAt(event.getFirstRow(), 0);
-				String specifiedSkill = (String) model.getValueAt(event.getFirstRow(), 1);
-				int rank = (Integer) model.getValueAt(event.getFirstRow(), 2);
+				try {
+					SkillTableModel model = (SkillTableModel) event.getSource();
+					String skillName = (String) model.getValueAt(event.getFirstRow(), 0);
+					String specifiedSkill = (String) model.getValueAt(event.getFirstRow(), 1);
+					int rank = (Integer) model.getValueAt(event.getFirstRow(), 2);
 
-				for (Map<String, CharacterCreationModel.Skill> skillCategory : characterModel.getSkillCatelog()
-						.values()) {
-					if (skillCategory.containsKey(skillName)) {
-						CharacterCreationModel.Skill skill = skillCategory.get(skillName);
-						skill.setRank(rank);
-						skill.setSpecifiedSkill(specifiedSkill);
+					for (Map<String, CharacterCreationModel.Skill> skillCategory : characterModel.getSkillCatelog()
+							.values()) {
+						if (skillCategory.containsKey(skillName)) {
+							CharacterCreationModel.Skill skill = skillCategory.get(skillName);
+							skill.setRank(rank);
+							skill.setSpecifiedSkill(specifiedSkill);
+						}
+					}
+				} catch (ClassCastException exception) {
+					SpecialSkillTableModel model = (SpecialSkillTableModel) event.getSource();
+					String skillName = (String) model.getValueAt(event.getFirstRow(), 0);
+					String specifiedSkill = (String) model.getValueAt(event.getFirstRow(), 1);
+					int rank = (Integer) model.getValueAt(event.getFirstRow(), 2);
+
+					for (Map<String, CharacterCreationModel.Skill> skillCategory : characterModel.getSkillCatelog()
+							.values()) {
+						if (skillCategory.containsKey(skillName)) {
+							CharacterCreationModel.Skill skill = skillCategory.get(skillName);
+							skill.setRank(rank);
+							skill.setSpecifiedSkill(specifiedSkill);
+						}
 					}
 				}
+
 			}
 		}
 
@@ -3104,13 +3124,23 @@ public class CharacterCreationController {
 
 		private void setTextFieldText(ListSelectionModel listSelectionModel, String key) {
 			if (!listSelectionModel.isSelectionEmpty()) {
-				String categoryCode = key.substring(0, 3);
-				int index = listSelectionModel.getLeadSelectionIndex();
-				SkillTableModel tableModel = (SkillTableModel) tables.get(key).getModel();
-				String skillName = (String) tableModel.getValueAt(index, 0);
-				String skillCode = skillName.replace(" ", "_").toLowerCase();
-				CharacterCreationModel.Skill skill = characterModel.getSkill(categoryCode + ":" + skillCode);
-				textAreas.get(key).setText(skill.getDescription());
+				try {
+					SkillTableModel tableModel = (SkillTableModel) tables.get(key).getModel();
+					String categoryCode = key.substring(0, 3);
+					int index = listSelectionModel.getLeadSelectionIndex();
+					String skillName = (String) tableModel.getValueAt(index, 0);
+					String skillCode = skillName.replace(" ", "_").toLowerCase();
+					CharacterCreationModel.Skill skill = characterModel.getSkill(categoryCode + ":" + skillCode);
+					textAreas.get(key).setText(skill.getDescription());
+				} catch (ClassCastException exception) {
+					SpecialSkillTableModel tableModel = (SpecialSkillTableModel) tables.get(key).getModel();
+					String categoryCode = key.substring(0, 3);
+					int index = listSelectionModel.getLeadSelectionIndex();
+					String skillName = (String) tableModel.getValueAt(index, 0);
+					String skillCode = skillName.replace(" ", "_").toLowerCase();
+					CharacterCreationModel.Skill skill = characterModel.getSkill(categoryCode + ":" + skillCode);
+					textAreas.get(key).setText(skill.getDescription());
+				}
 
 			}
 		}
