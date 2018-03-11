@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,7 @@ import view.CharacterCreationView.InventoryArmorTableModel;
 import view.CharacterCreationView.InventoryGearTableModel;
 import view.CharacterCreationView.InventoryWeaponTableModel;
 import view.CharacterCreationView.SiblingPanel;
+import view.CharacterCreationView.SkillTableCellRenderer;
 import view.CharacterCreationView.SkillTableModel;
 import view.CharacterCreationView.SpecialSkillTableModel;
 
@@ -152,6 +154,8 @@ public class CharacterCreationController {
 				.setRightLegArmorStoppingPower(Integer.toString(this.characterModel.getRightLegArmorStoppingPower()));
 		this.characterView
 				.setLeftLegArmorStoppingPower(Integer.toString(this.characterModel.getLeftLegArmorStoppingPower()));
+		this.characterView.setRemainingCareerSkillPoints(CharacterCreationModel.MAXIMUM_CAREER_SKILL_POINTS);
+		this.characterView.setRemainingPickupSkillPoints(this.characterModel.getMaxPickupSkillPoints());
 
 		populateSkillPanels();
 		populateStoreWeaponPanels();
@@ -229,8 +233,7 @@ public class CharacterCreationController {
 		characterView.setTotalEmpathyLevel(Integer.toString(characterModel.getTotalEmpathyLevel()));
 	}
 
-	class AddMoneyActionListener implements ActionListener {
-
+	private class AddMoneyActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			int currentMoney = characterView.getMoney();
@@ -244,7 +247,7 @@ public class CharacterCreationController {
 
 	}
 
-	class AddToInventoryActionListener implements ActionListener {
+	private class AddToInventoryActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			JTable storeWeaponTable = characterView.getStoreWeaponTable();
@@ -349,7 +352,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class ChangeCharacterPortraitActionListener implements ActionListener {
+	private class ChangeCharacterPortraitActionListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
@@ -374,7 +377,7 @@ public class CharacterCreationController {
 
 	}
 
-	class DecreaseInjuryActionListener implements ActionListener {
+	private class DecreaseInjuryActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			double currentInjuryPoints = characterModel.getInjuryPoints();
@@ -389,7 +392,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class EquipActionListener implements ActionListener {
+	private class EquipActionListener implements ActionListener {
 		private static final int EQUIPPED_HEAD_INDEX = 0;
 		private static final int EQUIPPED_TORSO_INDEX = 1;
 		private static final int EQUIPPED_RIGHT_ARM_INDEX = 2;
@@ -515,7 +518,7 @@ public class CharacterCreationController {
 
 	}
 
-	class FastCharacterPointActionListener implements ActionListener {
+	private class FastCharacterPointActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			resetStats();
@@ -654,7 +657,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class IncreaseInjuryActionListener implements ActionListener {
+	private class IncreaseInjuryActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			double currentInjuryPoints = characterModel.getInjuryPoints();
@@ -669,7 +672,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class SaveCharacterActionListener implements ActionListener {
+	private class SaveCharacterActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			int returnVal = characterView.getFileChooser().showSaveDialog(characterView);
@@ -973,7 +976,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class LoadCharacterActionListener implements ActionListener {
+	private class LoadCharacterActionListener implements ActionListener {
 		private String line;
 		private String[] dataPairStrings;
 		private String key;
@@ -1687,7 +1690,7 @@ public class CharacterCreationController {
 
 	}
 
-	class ManualCharacterPointActionListener implements ActionListener {
+	private class ManualCharacterPointActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			resetStats();
@@ -1709,7 +1712,7 @@ public class CharacterCreationController {
 
 	}
 
-	class MinorlyDecreaseInjuryActionListener implements ActionListener {
+	private class MinorlyDecreaseInjuryActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			double currentInjuryPoints = characterModel.getInjuryPoints();
@@ -1724,7 +1727,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class MinorlyIncreaseInjuryActionListener implements ActionListener {
+	private class MinorlyIncreaseInjuryActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			double currentInjuryPoints = characterModel.getInjuryPoints();
@@ -1739,7 +1742,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class RandomCharacterPointActionListener implements ActionListener {
+	private class RandomCharacterPointActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			resetStats();
@@ -1772,7 +1775,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class RandomizeAffectationsActionListener implements ActionListener {
+	private class RandomizeAffectationsActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			Random rnd = new Random();
@@ -1818,7 +1821,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class RandomizeClothesActionListener implements ActionListener {
+	private class RandomizeClothesActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			Random rnd = new Random();
@@ -1864,7 +1867,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class RandomizeHairstyleActionListener implements ActionListener {
+	private class RandomizeHairstyleActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			Random rnd = new Random();
@@ -1910,7 +1913,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class RandomizeEthnicityActionListener implements ActionListener {
+	private class RandomizeEthnicityActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			Random rnd = new Random();
@@ -1922,7 +1925,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class FamilyRankingItemListener implements ItemListener {
+	private class FamilyRankingItemListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent event) {
 			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
@@ -1932,7 +1935,7 @@ public class CharacterCreationController {
 
 	}
 
-	class RandomizeFamilyRankingActionListener implements ActionListener {
+	private class RandomizeFamilyRankingActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			Random rnd = new Random();
@@ -1944,7 +1947,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class ParentsFateItemListener implements ItemListener {
+	private class ParentsFateItemListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent event) {
 			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
@@ -1964,7 +1967,7 @@ public class CharacterCreationController {
 
 	}
 
-	class RandomizeParentsFateActionListener implements ActionListener {
+	private class RandomizeParentsFateActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			JComboBox<String> comboBox = characterView.getParentsFateComboBox();
@@ -1991,7 +1994,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class ParentEventItemListener implements ItemListener {
+	private class ParentEventItemListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent event) {
 			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
@@ -2001,7 +2004,7 @@ public class CharacterCreationController {
 
 	}
 
-	class RandomizeParentEventActionListener implements ActionListener {
+	private class RandomizeParentEventActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			Random rnd = new Random();
@@ -2013,7 +2016,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class FamilyStatusItemListener implements ItemListener {
+	private class FamilyStatusItemListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent event) {
 			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
@@ -2032,7 +2035,7 @@ public class CharacterCreationController {
 
 	}
 
-	class RandomizeFamilyStatusActionListener implements ActionListener {
+	private class RandomizeFamilyStatusActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			JComboBox<String> comboBox = characterView.getFamilyStatusComboBox();
@@ -2061,7 +2064,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class FamilyTragedyItemListener implements ItemListener {
+	private class FamilyTragedyItemListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent event) {
 			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
@@ -2071,7 +2074,7 @@ public class CharacterCreationController {
 
 	}
 
-	class RandomizeFamilyTragedyActionListener implements ActionListener {
+	private class RandomizeFamilyTragedyActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			Random rnd = new Random();
@@ -2083,7 +2086,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class ChildhoodEnvironmentItemListener implements ItemListener {
+	private class ChildhoodEnvironmentItemListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent event) {
 
@@ -2091,7 +2094,7 @@ public class CharacterCreationController {
 
 	}
 
-	class RandomizeChildhoodEnvironmentActionListener implements ActionListener {
+	private class RandomizeChildhoodEnvironmentActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			Random rnd = new Random();
@@ -2103,7 +2106,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class SiblingAgeItemListener implements ItemListener {
+	private class SiblingAgeItemListener implements ItemListener {
 		private int index;
 
 		public SiblingAgeItemListener(int index) {
@@ -2121,7 +2124,7 @@ public class CharacterCreationController {
 
 	}
 
-	class RandomizeSiblingAgeActionListener implements ActionListener {
+	private class RandomizeSiblingAgeActionListener implements ActionListener {
 		private int index;
 
 		public RandomizeSiblingAgeActionListener(int index) {
@@ -2151,7 +2154,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class SiblingGenderActionListener implements ActionListener {
+	private class SiblingGenderActionListener implements ActionListener {
 		private int index;
 
 		public SiblingGenderActionListener(int index) {
@@ -2167,7 +2170,7 @@ public class CharacterCreationController {
 
 	}
 
-	class RandomizeSiblingGenderActionListener implements ActionListener {
+	private class RandomizeSiblingGenderActionListener implements ActionListener {
 		private int index;
 
 		public RandomizeSiblingGenderActionListener(int index) {
@@ -2196,7 +2199,7 @@ public class CharacterCreationController {
 
 	}
 
-	class SiblingRelationshipItemListener implements ItemListener {
+	private class SiblingRelationshipItemListener implements ItemListener {
 		private int index;
 
 		public SiblingRelationshipItemListener(int index) {
@@ -2214,7 +2217,7 @@ public class CharacterCreationController {
 
 	}
 
-	class RandomizeSiblingRelationshipActionListener implements ActionListener {
+	private class RandomizeSiblingRelationshipActionListener implements ActionListener {
 		private int index;
 
 		public RandomizeSiblingRelationshipActionListener(int index) {
@@ -2249,18 +2252,92 @@ public class CharacterCreationController {
 		}
 	}
 
-	class RoleChangeActionListener implements ActionListener {
+	private class RoleChangeActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
+			characterModel.clearCharacterCareerSkills();
+			characterModel.resetSkillRanks();
+			characterView.clearSkillTables();
+			populateSkillPanels();
+
+			int spentCareerSkillPoints = 0;
+			int maxSpentCareerSkillPoints = CharacterCreationModel.MAXIMUM_CAREER_SKILL_POINTS;
+			int spentPickupSkillPoints = 0;
+			int maxSpentPickupSkillPoints = characterModel.getMaxPickupSkillPoints();
+
+			characterModel.setSpentCareerSkillPoints(spentCareerSkillPoints);
+			characterModel.setSpentPickupSkillPoints(spentPickupSkillPoints);
+
+			characterView.setRemainingCareerSkillPoints(maxSpentCareerSkillPoints);
+			characterView.setRemainingPickupSkillPoints(maxSpentPickupSkillPoints);
+
 			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
 			String selectedRole = (String) comboBox.getSelectedItem();
 			characterModel.setRole(selectedRole);
 
 			characterView.setSpecialSkillActiveRow(selectedRole);
+
+			populateCharacterCareerSkills();
+
+			CharacterCreationModel.Skill[] characterCareerSkills = characterModel.getCharacterCareerSkills();
+			String[] characterCareerSkillNames = new String[characterCareerSkills.length];
+			for (int i = 0; i < characterCareerSkills.length; i++) {
+				String tempSkillsName = characterCareerSkills[i].getSkillName();
+				characterCareerSkillNames[i] = tempSkillsName;
+			}
+
+			for (JTable table : characterView.getSkillTables().values()) {
+				SkillTableCellRenderer cellRenderer = (SkillTableCellRenderer) table.getDefaultRenderer(String.class);
+				cellRenderer.setKeywords(Arrays.asList(characterCareerSkillNames));
+			}
+		}
+
+		private void populateCharacterCareerSkills() {
+			List<CharacterCreationModel.Skill[]> roleCareerSkills = characterModel.getRole().getRoleCareerSkills();
+			for (CharacterCreationModel.Skill[] roleSkills : roleCareerSkills) {
+				if (roleSkills.length > 1) {
+					int returnVal = selectDiseredSkillIndex(roleSkills);
+					characterModel.addCharacterCareerSkill(roleSkills[returnVal]);
+				} else {
+					characterModel.addCharacterCareerSkill(roleSkills[0]);
+				}
+			}
+		}
+
+		private int selectDiseredSkillIndex(CharacterCreationModel.Skill[] roleSkills) {
+			String[] options = new String[roleSkills.length];
+			for (int i = 0; i < roleSkills.length; i++) {
+				CharacterCreationModel.Skill roleSkill = roleSkills[i];
+				if (!hasRole(roleSkill)) {
+					options[i] = roleSkill.getSkillName();
+				}
+			}
+
+			List<String> tempSkillArray = new ArrayList<String>();
+			for (int i = 0; i < options.length; i++) {
+				if (options[i] != null) {
+					tempSkillArray.add(options[i]);
+				}
+			}
+			options = tempSkillArray.toArray(new String[tempSkillArray.size()]);
+
+			int index = JOptionPane.showOptionDialog(characterView, "Select desired skill", "Skill Select",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+			return index;
+		}
+
+		private boolean hasRole(CharacterCreationModel.Skill roleSkill) {
+			for (CharacterCreationModel.Skill characterSkill : characterModel.getCharacterCareerSkills()) {
+				if (characterSkill == roleSkill) {
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 
-	class SiblingCountItemListener implements ItemListener {
+	private class SiblingCountItemListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent event) {
 			JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
@@ -2301,7 +2378,7 @@ public class CharacterCreationController {
 
 	}
 
-	class SiblingCountRandomizerActionListener implements ActionListener {
+	private class SiblingCountRandomizerActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			Random rnd = new Random();
@@ -2351,7 +2428,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class UnequipActionListener implements ActionListener {
+	private class UnequipActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			JTable equippedTable = characterView.getEquippedTable();
@@ -2389,7 +2466,7 @@ public class CharacterCreationController {
 
 	}
 
-	class AttractivenessChangeListener implements ChangeListener {
+	private class AttractivenessChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
@@ -2404,18 +2481,18 @@ public class CharacterCreationController {
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
 			int attractivenessLevel = characterModel.getAttractivenessLevel();
 			while (remainingPoints < 0 && characterModel.getAttractivenessLevel() > 2) {
-				attractivenessLevel = characterModel.getAttractivenessLevel() - 1;
-				characterModel.setAttractivenessLevel(attractivenessLevel);
+				attractivenessLevel--;
 				remainingPoints++;
 			}
 
+			characterModel.setAttractivenessLevel(attractivenessLevel);
 			characterView.setAttractivenessLevel(String.valueOf(attractivenessLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
 	}
 
-	class BodyChangeListener implements ChangeListener {
+	private class BodyChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
@@ -2430,11 +2507,11 @@ public class CharacterCreationController {
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
 			int bodyLevel = characterModel.getBodyLevel();
 			while (remainingPoints < 0 && characterModel.getBodyLevel() > 2) {
-				bodyLevel = characterModel.getBodyLevel() - 1;
-				characterModel.setBodyLevel(bodyLevel);
+				bodyLevel--;
 				remainingPoints++;
 			}
 
+			characterModel.setBodyLevel(bodyLevel);
 			characterView.setBodyLevel(String.valueOf(bodyLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 			characterView.setLiftCapacity(Double.toString(characterModel.getLiftCapacity()));
@@ -2447,7 +2524,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class CoolChangeListener implements ChangeListener {
+	private class CoolChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
@@ -2462,18 +2539,18 @@ public class CharacterCreationController {
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
 			int coolLevel = characterModel.getCoolLevel();
 			while (remainingPoints < 0 && characterModel.getCoolLevel() > 2) {
-				coolLevel = characterModel.getCoolLevel() - 1;
-				characterModel.setCoolLevel(coolLevel);
+				coolLevel--;
 				remainingPoints++;
 			}
 
+			characterModel.setCoolLevel(coolLevel);
 			characterView.setCoolLevel(String.valueOf(coolLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
 	}
 
-	class IntelligenceChangeListener implements ChangeListener {
+	private class IntelligenceChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
@@ -2488,18 +2565,22 @@ public class CharacterCreationController {
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
 			int intelligenceLevel = characterModel.getIntelligenceLevel();
 			while (remainingPoints < 0 && characterModel.getIntelligenceLevel() > 2) {
-				intelligenceLevel = characterModel.getIntelligenceLevel() - 1;
+				intelligenceLevel--;
 				remainingPoints++;
-				characterModel.setIntelligenceLevel(intelligenceLevel);
 			}
 
+			characterModel.setIntelligenceLevel(intelligenceLevel);
 			characterView.setIntelligenceLevel(String.valueOf(intelligenceLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
+
+			characterModel.recalculateMaxPickupPoints();
+			characterView.setRemainingPickupSkillPoints(
+					characterModel.getMaxPickupSkillPoints() - characterModel.getSpentPickupSkillPoints());
 		}
 
 	}
 
-	class LuckChangeListener implements ChangeListener {
+	private class LuckChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
@@ -2514,18 +2595,18 @@ public class CharacterCreationController {
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
 			int luckLevel = characterModel.getLuckLevel();
 			while (remainingPoints < 0 && characterModel.getLuckLevel() > 2) {
-				luckLevel = characterModel.getLuckLevel() - 1;
-				characterModel.setLuckLevel(luckLevel);
+				luckLevel--;
 				remainingPoints++;
 			}
 
+			characterModel.setLuckLevel(luckLevel);
 			characterView.setLuckLevel(String.valueOf(luckLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
 	}
 
-	class MovementAllowanceChangeListener implements ChangeListener {
+	private class MovementAllowanceChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
@@ -2540,11 +2621,11 @@ public class CharacterCreationController {
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
 			int movementAllowanceLevel = characterModel.getMovementAllowanceLevel();
 			while (remainingPoints < 0 && characterModel.getMovementAllowanceLevel() > 2) {
-				movementAllowanceLevel = characterModel.getMovementAllowanceLevel() - 1;
-				characterModel.setMovementAllowanceLevel(movementAllowanceLevel);
+				movementAllowanceLevel--;
 				remainingPoints++;
 			}
 
+			characterModel.setMovementAllowanceLevel(movementAllowanceLevel);
 			characterView.setMovementAllowanceLevel(String.valueOf(movementAllowanceLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 			characterView.setRunLevel(Double.toString(characterModel.getRunLevel()));
@@ -2552,7 +2633,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class TechnicalAbilityChangeListener implements ChangeListener {
+	private class TechnicalAbilityChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
@@ -2567,18 +2648,18 @@ public class CharacterCreationController {
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
 			int technicalAbilityLevel = characterModel.getTechnicalAbilityLevel();
 			while (remainingPoints < 0 && characterModel.getTechnicalAbilityLevel() > 2) {
-				technicalAbilityLevel = characterModel.getTechnicalAbilityLevel() - 1;
-				characterModel.setTechnicalAbilityLevel(technicalAbilityLevel);
+				technicalAbilityLevel--;
 				remainingPoints++;
 			}
 
+			characterModel.setTechnicalAbilityLevel(technicalAbilityLevel);
 			characterView.setTechnicalAbilityLevel(String.valueOf(technicalAbilityLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 
 	}
 
-	class TotalEmpathyChangeListener implements ChangeListener {
+	private class TotalEmpathyChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
@@ -2593,17 +2674,17 @@ public class CharacterCreationController {
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
 			int totalEmpathyLevel = characterModel.getTotalEmpathyLevel();
 			while (remainingPoints < 0 && characterModel.getTotalEmpathyLevel() > 2) {
-				totalEmpathyLevel = characterModel.getTotalEmpathyLevel() - 1;
-				characterModel.setTotalEmpathyLevel(totalEmpathyLevel);
+				totalEmpathyLevel--;
 				remainingPoints++;
 			}
 
+			characterModel.setTotalEmpathyLevel(totalEmpathyLevel);
 			characterView.setTotalEmpathyLevel(String.valueOf(totalEmpathyLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 		}
 	}
 
-	class UnmodifiedReflexesChangeListener implements ChangeListener {
+	private class UnmodifiedReflexesChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent event) {
 			int newLevel = Integer.parseInt(((JSpinner) event.getSource()).getValue().toString());
@@ -2618,11 +2699,11 @@ public class CharacterCreationController {
 			int remainingPoints = characterModel.getCharacterPoints() - usedCharacterPoints;
 			int unmodifiedReflexesLevel = characterModel.getUnmodifiedReflexesLevel();
 			while (remainingPoints < 0 && characterModel.getUnmodifiedReflexesLevel() > 2) {
-				unmodifiedReflexesLevel = characterModel.getUnmodifiedReflexesLevel() - 1;
+				unmodifiedReflexesLevel--;
 				remainingPoints++;
-				characterModel.setUnmodifiedReflexesLevel(unmodifiedReflexesLevel);
 			}
 
+			characterModel.setUnmodifiedReflexesLevel(unmodifiedReflexesLevel);
 			characterView.setUnmodifiedReflexesLevel(String.valueOf(unmodifiedReflexesLevel));
 			characterView.setCharacterPoints(String.valueOf(remainingPoints));
 
@@ -2633,11 +2714,15 @@ public class CharacterCreationController {
 			characterModel.setModifiedReflexesLevel(characterModel.getUnmodifiedReflexesLevel() - encumbranceValue);
 			characterView.setModifiedReflexesLevel(
 					Integer.toString(characterModel.getUnmodifiedReflexesLevel() - encumbranceValue));
+
+			characterModel.recalculateMaxPickupPoints();
+			characterView.setRemainingPickupSkillPoints(
+					characterModel.getMaxPickupSkillPoints() - characterModel.getSpentPickupSkillPoints());
 		}
 
 	}
 
-	class ClothingDocumentListener implements DocumentListener {
+	private class ClothingDocumentListener implements DocumentListener {
 		@Override
 		public void changedUpdate(DocumentEvent event) {
 			characterModel.setClothing(characterView.getClothing());
@@ -2655,7 +2740,7 @@ public class CharacterCreationController {
 
 	}
 
-	class HairstyleDocumentListener implements DocumentListener {
+	private class HairstyleDocumentListener implements DocumentListener {
 		@Override
 		public void changedUpdate(DocumentEvent event) {
 			characterModel.setHairstyle(characterView.getHairstyle());
@@ -2672,7 +2757,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class AffectationsDocumentListener implements DocumentListener {
+	private class AffectationsDocumentListener implements DocumentListener {
 		@Override
 		public void changedUpdate(DocumentEvent event) {
 			characterModel.setAffectations(characterView.getAffectation());
@@ -2689,14 +2774,14 @@ public class CharacterCreationController {
 		}
 	}
 
-	class EthnicityItemListener implements ItemListener {
+	private class EthnicityItemListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent event) {
 			characterModel.setEthnicity(characterView.getEthnicity());
 		}
 	}
 
-	class HandleDocumentListener implements DocumentListener {
+	private class HandleDocumentListener implements DocumentListener {
 		@Override
 		public void changedUpdate(DocumentEvent event) {
 			characterModel.setCharacterName(characterView.getCharacterName());
@@ -2714,7 +2799,7 @@ public class CharacterCreationController {
 
 	}
 
-	class SiblingNameDocumentListener implements DocumentListener {
+	private class SiblingNameDocumentListener implements DocumentListener {
 		public int index;
 
 		public SiblingNameDocumentListener(int index) {
@@ -2757,7 +2842,7 @@ public class CharacterCreationController {
 
 	}
 
-	class InventoryItemListener implements ItemListener {
+	private class InventoryItemListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent event) {
 			JPanel cardsPanel = characterView.getInventoryCardPanel();
@@ -2767,7 +2852,7 @@ public class CharacterCreationController {
 
 	}
 
-	class StoreItemListener implements ItemListener {
+	private class StoreItemListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent event) {
 			JPanel cardsPanel = characterView.getStoreCardPanel();
@@ -2776,7 +2861,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class EquippedTableModelListener implements TableModelListener {
+	private class EquippedTableModelListener implements TableModelListener {
 		private static final int EQUIPPED_HEAD_INDEX = 0;
 		private static final int EQUIPPED_TORSO_INDEX = 1;
 		private static final int EQUIPPED_RIGHT_ARM_INDEX = 2;
@@ -2951,43 +3036,136 @@ public class CharacterCreationController {
 
 	}
 
-	class SkillTableModelListener implements TableModelListener {
+	private class SkillTableModelListener implements TableModelListener {
+		String skillName;
+		String specifiedSkill;
+		int desiredRank;
+		int currentRank;
+		CharacterCreationModel.Skill skill;
+
+		int maxCareerSkillPoints;
+		int spentCareerSkillPoints;
+		int remainingCareerSkillPoints;
+
+		int maxPickupSkillPoints;
+		int spentPickupSkillPoints;
+		int remainingPickupSkillPoints;
+
 		@Override
 		public void tableChanged(TableModelEvent event) {
 			if (event.getType() == TableModelEvent.UPDATE) {
 				try {
 					SkillTableModel model = (SkillTableModel) event.getSource();
-					String skillName = (String) model.getValueAt(event.getFirstRow(), 0);
-					String specifiedSkill = (String) model.getValueAt(event.getFirstRow(), 1);
-					int rank = (Integer) model.getValueAt(event.getFirstRow(), 2);
-
-					for (Map<String, CharacterCreationModel.Skill> skillCategory : characterModel.getSkillCatelog()
-							.values()) {
-						if (skillCategory.containsKey(skillName)) {
-							CharacterCreationModel.Skill skill = skillCategory.get(skillName);
-							skill.setRank(rank);
-							skill.setSpecifiedSkill(specifiedSkill);
-						}
-					}
+					skillName = (String) model.getValueAt(event.getFirstRow(), 0);
+					specifiedSkill = (String) model.getValueAt(event.getFirstRow(), 1);
+					desiredRank = (Integer) model.getValueAt(event.getFirstRow(), 2);
 				} catch (ClassCastException exception) {
 					SpecialSkillTableModel model = (SpecialSkillTableModel) event.getSource();
-					String skillName = (String) model.getValueAt(event.getFirstRow(), 0);
-					String specifiedSkill = (String) model.getValueAt(event.getFirstRow(), 1);
-					int rank = (Integer) model.getValueAt(event.getFirstRow(), 2);
+					skillName = (String) model.getValueAt(event.getFirstRow(), 0);
+					specifiedSkill = (String) model.getValueAt(event.getFirstRow(), 1);
+					desiredRank = (Integer) model.getValueAt(event.getFirstRow(), 2);
+				}
 
-					for (Map<String, CharacterCreationModel.Skill> skillCategory : characterModel.getSkillCatelog()
-							.values()) {
-						if (skillCategory.containsKey(skillName)) {
-							CharacterCreationModel.Skill skill = skillCategory.get(skillName);
-							skill.setRank(rank);
-							skill.setSpecifiedSkill(specifiedSkill);
-						}
+				for (Map<String, CharacterCreationModel.Skill> skillCategory : characterModel.getSkillCatelog()
+						.values()) {
+					if (skillCategory.containsKey(skillName)) {
+						skill = skillCategory.get(skillName);
+						currentRank = skill.getRank();
+						skill.setSpecifiedSkill(specifiedSkill);
 					}
 				}
 
+				boolean isExisting = false;
+				for (CharacterCreationModel.Skill careerSkill : characterModel.getCharacterCareerSkills()) {
+					if (careerSkill == skill) {
+						isExisting = true;
+						break;
+					}
+
+				}
+
+				maxCareerSkillPoints = CharacterCreationModel.MAXIMUM_CAREER_SKILL_POINTS;
+				spentCareerSkillPoints = characterModel.getSpentCareerSkillPoints();
+				remainingCareerSkillPoints = maxCareerSkillPoints - spentCareerSkillPoints;
+
+				maxPickupSkillPoints = characterModel.getMaxPickupSkillPoints();
+				spentPickupSkillPoints = characterModel.getSpentPickupSkillPoints();
+				remainingPickupSkillPoints = maxPickupSkillPoints - spentPickupSkillPoints;
+
+				if (isExisting) {
+					calculateAndUpdateCareerSkill(event);
+				} else {
+					calculateAndUpdatePickupSkill(event);
+				}
 			}
 		}
 
+		private void calculateAndUpdateCareerSkill(TableModelEvent event) {
+			// Increase Rank
+			while (currentRank < desiredRank && remainingCareerSkillPoints > 0) {
+				currentRank++;
+				spentCareerSkillPoints++;
+				remainingCareerSkillPoints = maxCareerSkillPoints - spentCareerSkillPoints;
+			}
+
+			while (currentRank < desiredRank && remainingCareerSkillPoints <= 0 && remainingPickupSkillPoints > 0) {
+				currentRank++;
+				spentPickupSkillPoints++;
+				remainingPickupSkillPoints = maxPickupSkillPoints - spentPickupSkillPoints;
+			}
+
+			// Decrease Rank
+			while (currentRank > desiredRank && maxPickupSkillPoints > remainingPickupSkillPoints
+					&& maxCareerSkillPoints > remainingCareerSkillPoints) {
+				currentRank--;
+				spentPickupSkillPoints--;
+				remainingPickupSkillPoints = maxPickupSkillPoints - spentPickupSkillPoints;
+			}
+
+			while (currentRank > desiredRank && maxCareerSkillPoints > remainingCareerSkillPoints) {
+				currentRank--;
+				spentCareerSkillPoints--;
+				remainingCareerSkillPoints = maxCareerSkillPoints - spentCareerSkillPoints;
+			}
+
+			characterModel.setSpentCareerSkillPoints(spentCareerSkillPoints);
+			characterView.setRemainingCareerSkillPoints(remainingCareerSkillPoints);
+			characterModel.setSpentPickupSkillPoints(spentPickupSkillPoints);
+			characterView.setRemainingPickupSkillPoints(remainingPickupSkillPoints);
+			skill.setRank(currentRank);
+			try {
+				SkillTableModel model = (SkillTableModel) event.getSource();
+				model.setValueAtIgnoreUpdate(currentRank, event.getFirstRow(), 2);
+			} catch (ClassCastException exception) {
+				SpecialSkillTableModel model = (SpecialSkillTableModel) event.getSource();
+				model.setValueAtIgnoreUpdate(currentRank, event.getFirstRow(), 2);
+			}
+		}
+
+		private void calculateAndUpdatePickupSkill(TableModelEvent event) {
+			while (currentRank < desiredRank && remainingPickupSkillPoints > 0) {
+				currentRank++;
+				spentPickupSkillPoints++;
+				remainingPickupSkillPoints = maxPickupSkillPoints - spentPickupSkillPoints;
+			}
+
+			while (currentRank > desiredRank && maxPickupSkillPoints > remainingPickupSkillPoints) {
+				currentRank--;
+				spentPickupSkillPoints--;
+				remainingPickupSkillPoints = maxPickupSkillPoints - spentPickupSkillPoints;
+			}
+
+			characterModel.setSpentPickupSkillPoints(spentPickupSkillPoints);
+			characterView.setRemainingPickupSkillPoints(remainingPickupSkillPoints);
+			skill.setRank(currentRank);
+			try {
+				SkillTableModel model = (SkillTableModel) event.getSource();
+				model.setValueAtIgnoreUpdate(currentRank, event.getFirstRow(), 2);
+			} catch (ClassCastException exception) {
+				SpecialSkillTableModel model = (SpecialSkillTableModel) event.getSource();
+				model.setValueAtIgnoreUpdate(currentRank, event.getFirstRow(), 2);
+			}
+		}
 	}
 
 	private static int totalCost = 0;
@@ -2996,7 +3174,7 @@ public class CharacterCreationController {
 	private static int totalArmorCost = 0;
 	private static int totalAmmoCost = 0;
 
-	class StoreWeaponListSelectionListener implements ListSelectionListener {
+	private class StoreWeaponListSelectionListener implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent event) {
 			int totalWeaponCost = 0;
@@ -3016,7 +3194,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class StoreGearListSelectionListener implements ListSelectionListener {
+	private class StoreGearListSelectionListener implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent event) {
 			int totalGearCost = 0;
@@ -3036,7 +3214,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class StoreArmorListSelectionListener implements ListSelectionListener {
+	private class StoreArmorListSelectionListener implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent event) {
 			int totalArmorCost = 0;
@@ -3056,7 +3234,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class StoreAmmoListSelectionListener implements ListSelectionListener {
+	private class StoreAmmoListSelectionListener implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent event) {
 			int totalAmmoCost = 0;
@@ -3076,7 +3254,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class SelectAllTextFocusListener extends FocusAdapter {
+	private class SelectAllTextFocusListener extends FocusAdapter {
 		@Override
 		public void focusLost(FocusEvent fe) {
 			// Do nothing
@@ -3094,7 +3272,7 @@ public class CharacterCreationController {
 		}
 	}
 
-	class TableListSelectionListener implements ListSelectionListener {
+	private class TableListSelectionListener implements ListSelectionListener {
 		Map<String, JTable> tables;
 		Map<String, JTextArea> textAreas;
 

@@ -11,6 +11,7 @@ public class CharacterCreationModel {
 	public static final int DEFAULT_STAT_LEVEL = 2;
 	public static final int MINIMUM_INJURY_POINTS = 0;
 	public static final int MAXIMUM_INJURY_POINTS = 40;
+	public static final int MAXIMUM_CAREER_SKILL_POINTS = 40;
 	public static final String INT = "INTELLIGENCE";
 	public static final String REF = "REFLEXES";
 	public static final String CL = "COOL";
@@ -49,9 +50,10 @@ public class CharacterCreationModel {
 	private double carryCapacity;
 	private double liftCapacity;
 
-	private List<Skill> careerSkills;
-	private int maxCareerSkillPoints;
+	private Skill[] characterCareerSkills;
+	private int spentCareerSkillPoints;
 	private int maxPickupSkillPoints;
+	private int spentPickupSkillPoints;
 
 	private int headArmorSP;
 	private int torsoArmorSP;
@@ -3525,9 +3527,10 @@ public class CharacterCreationModel {
 		siblingCount = "Only child";
 		siblings = new ArrayList<Sibling>(7);
 
-		careerSkills = new ArrayList<Skill>(10);
-		maxCareerSkillPoints = 40;
-		maxPickupSkillPoints = 0;
+		characterCareerSkills = new Skill[10];
+		spentCareerSkillPoints = 0;
+		maxPickupSkillPoints = 4;
+		spentPickupSkillPoints = 0;
 
 		specialAbilitySkills.put(authority.getSkillName(), authority);
 		specialAbilitySkills.put(charismaticLeadership.getSkillName(), charismaticLeadership);
@@ -4154,6 +4157,26 @@ public class CharacterCreationModel {
 		return inventoryAmmos;
 	}
 
+	public int getSpentCareerSkillPoints() {
+		return spentCareerSkillPoints;
+	}
+
+	public void setSpentCareerSkillPoints(int spentPoints) {
+		spentCareerSkillPoints = spentPoints;
+	}
+
+	public int getMaxPickupSkillPoints() {
+		return maxPickupSkillPoints;
+	}
+
+	public int getSpentPickupSkillPoints() {
+		return spentPickupSkillPoints;
+	}
+
+	public void setSpentPickupSkillPoints(int spentPoints) {
+		spentPickupSkillPoints = spentPoints;
+	}
+
 	public void setCharacterName(String name) {
 		name = name.replace("\"", "");
 
@@ -4179,7 +4202,7 @@ public class CharacterCreationModel {
 	}
 
 	public void setIntelligenceLevel(int level) {
-		maxPickupSkillPoints = intelligenceLevel + unmodifiedReflexesLevel;
+		recalculateMaxPickupPoints();
 		intelligenceLevel = level;
 	}
 
@@ -4212,7 +4235,7 @@ public class CharacterCreationModel {
 	}
 
 	public void setUnmodifiedReflexesLevel(int level) {
-		maxPickupSkillPoints = intelligenceLevel + unmodifiedReflexesLevel;
+		recalculateMaxPickupPoints();
 		unmodifiedReflexesLevel = level;
 	}
 
@@ -4422,11 +4445,11 @@ public class CharacterCreationModel {
 		}
 	}
 
-	public boolean addCareerSkill(Skill skill) {
+	public boolean addCharacterCareerSkill(Skill skill) {
 		boolean isAdded = false;
 		for (int i = 0; i < 10; i++) {
-			if (careerSkills.get(i) == null) {
-				careerSkills.add(skill);
+			if (characterCareerSkills[i] == null) {
+				characterCareerSkills[i] = skill;
 				isAdded = true;
 				break;
 			}
@@ -4434,12 +4457,30 @@ public class CharacterCreationModel {
 		return isAdded;
 	}
 
-	public void setCareerSkill(int index, Skill skill) {
-		careerSkills.set(index, skill);
+	public void clearCharacterCareerSkills() {
+		for (int i = 0; i < 10; i++) {
+			characterCareerSkills[i] = null;
+		}
+	}
+
+	public Skill[] getCharacterCareerSkills() {
+		return characterCareerSkills;
 	}
 
 	public void setMoney(int money) {
 		this.money = money;
+	}
+
+	public void recalculateMaxPickupPoints() {
+		maxPickupSkillPoints = intelligenceLevel + unmodifiedReflexesLevel;
+	}
+
+	public void resetSkillRanks() {
+		for (Map<String, Skill> skills : skillCatelog.values()) {
+			for (Skill skill : skills.values()) {
+				skill.setRank(0);
+			}
+		}
 	}
 
 	public static class Ammo {
@@ -4837,7 +4878,7 @@ public class CharacterCreationModel {
 			return description;
 		}
 
-		public List<Skill[]> getCareerSkills() {
+		public List<Skill[]> getRoleCareerSkills() {
 			return careerSkills;
 		}
 

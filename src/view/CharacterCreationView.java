@@ -68,6 +68,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -1520,11 +1521,12 @@ public class CharacterCreationView extends JFrame {
 		specialAbilitiesSplitPane.setLeftComponent(specialAbilitiesSkillScrollPane);
 
 		specialAbilitiesSkillTable = new JTable(new SpecialSkillTableModel());
+		specialAbilitiesSkillTable.setDefaultRenderer(Object.class, new SkillTableCellRenderer());
 		specialAbilitiesSkillTable.getTableHeader().setReorderingAllowed(false);
 		specialAbilitiesSkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		specialAbilitiesSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		specialAbilitiesSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		specialAbilitiesSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		specialAbilitiesSkillTable.getColumnModel().getColumn(2).setCellEditor(new SkillSpinnerEditor());
 		specialAbilitiesSkillTable.setFillsViewportHeight(true);
 		specialAbilitiesSkillScrollPane.setViewportView(specialAbilitiesSkillTable);
 		skillTables.put(CharacterCreationModel.SPEC, specialAbilitiesSkillTable);
@@ -1554,11 +1556,12 @@ public class CharacterCreationView extends JFrame {
 		attractivenessSplitPane.setLeftComponent(attractivenessSkillScrollPane);
 
 		attractivenessSkillTable = new JTable(new SkillTableModel());
+		attractivenessSkillTable.setDefaultRenderer(Object.class, new SkillTableCellRenderer());
 		attractivenessSkillTable.getTableHeader().setReorderingAllowed(false);
 		attractivenessSkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		attractivenessSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		attractivenessSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		attractivenessSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		attractivenessSkillTable.getColumnModel().getColumn(2).setCellEditor(new SkillSpinnerEditor());
 		attractivenessSkillTable.setFillsViewportHeight(true);
 		attractivenessSkillScrollPane.setViewportView(attractivenessSkillTable);
 		skillTables.put(CharacterCreationModel.ATT, attractivenessSkillTable);
@@ -1588,11 +1591,12 @@ public class CharacterCreationView extends JFrame {
 		bodySplitPane.setLeftComponent(bodySkillScrollPane);
 
 		bodySkillTable = new JTable(new SkillTableModel());
+		bodySkillTable.setDefaultRenderer(Object.class, new SkillTableCellRenderer());
 		bodySkillTable.getTableHeader().setReorderingAllowed(false);
 		bodySkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		bodySkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		bodySkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		bodySkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		bodySkillTable.getColumnModel().getColumn(2).setCellEditor(new SkillSpinnerEditor());
 		bodySkillTable.setFillsViewportHeight(true);
 		bodySkillScrollPane.setViewportView(bodySkillTable);
 		skillTables.put(CharacterCreationModel.BOD, bodySkillTable);
@@ -1619,11 +1623,12 @@ public class CharacterCreationView extends JFrame {
 		coolSplitPane.setLeftComponent(coolSkillScrollPane);
 
 		coolSkillTable = new JTable(new SkillTableModel());
+		coolSkillTable.setDefaultRenderer(Object.class, new SkillTableCellRenderer());
 		coolSkillTable.getTableHeader().setReorderingAllowed(false);
 		coolSkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		coolSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		coolSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		coolSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		coolSkillTable.getColumnModel().getColumn(2).setCellEditor(new SkillSpinnerEditor());
 		coolSkillTable.setFillsViewportHeight(true);
 		coolSkillScrollPane.setViewportView(coolSkillTable);
 		skillTables.put(CharacterCreationModel.CL, coolSkillTable);
@@ -1650,11 +1655,12 @@ public class CharacterCreationView extends JFrame {
 		empathySplitPane.setLeftComponent(empathySkillScrollPane);
 
 		empathySkillTable = new JTable(new SkillTableModel());
+		empathySkillTable.setDefaultRenderer(Object.class, new SkillTableCellRenderer());
 		empathySkillTable.getTableHeader().setReorderingAllowed(false);
 		empathySkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		empathySkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		empathySkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		empathySkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		empathySkillTable.getColumnModel().getColumn(2).setCellEditor(new SkillSpinnerEditor());
 		empathySkillTable.setFillsViewportHeight(true);
 		empathySkillScrollPane.setViewportView(empathySkillTable);
 		skillTables.put(CharacterCreationModel.EMP, empathySkillTable);
@@ -1681,11 +1687,12 @@ public class CharacterCreationView extends JFrame {
 		intelligenceSplitPane.setLeftComponent(intelligenceSkillScrollPane);
 
 		intelligenceSkillTable = new JTable(new SkillTableModel());
+		intelligenceSkillTable.setDefaultRenderer(Object.class, new SkillTableCellRenderer());
 		intelligenceSkillTable.getTableHeader().setReorderingAllowed(false);
 		intelligenceSkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		intelligenceSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		intelligenceSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		intelligenceSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		intelligenceSkillTable.getColumnModel().getColumn(2).setCellEditor(new SkillSpinnerEditor());
 		intelligenceSkillTable.setFillsViewportHeight(true);
 		intelligenceSkillScrollPane.setViewportView(intelligenceSkillTable);
 		skillTables.put(CharacterCreationModel.INT, intelligenceSkillTable);
@@ -1712,11 +1719,12 @@ public class CharacterCreationView extends JFrame {
 		reflexesSplitPane.setLeftComponent(reflexesSkillScrollPane);
 
 		reflexesSkillTable = new JTable(new SkillTableModel());
+		reflexesSkillTable.setDefaultRenderer(Object.class, new SkillTableCellRenderer());
 		reflexesSkillTable.getTableHeader().setReorderingAllowed(false);
 		reflexesSkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		reflexesSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		reflexesSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		reflexesSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		reflexesSkillTable.getColumnModel().getColumn(2).setCellEditor(new SkillSpinnerEditor());
 		reflexesSkillTable.setFillsViewportHeight(true);
 		reflexesSkillScrollPane.setViewportView(reflexesSkillTable);
 		skillTables.put(CharacterCreationModel.REF, reflexesSkillTable);
@@ -1743,11 +1751,12 @@ public class CharacterCreationView extends JFrame {
 		technicalAbilitiesSplitPane.setLeftComponent(technicalAbilitiesSkillScrollPane);
 
 		technicalAbilitiesSkillTable = new JTable(new SkillTableModel());
+		technicalAbilitiesSkillTable.setDefaultRenderer(Object.class, new SkillTableCellRenderer());
 		technicalAbilitiesSkillTable.getTableHeader().setReorderingAllowed(false);
 		technicalAbilitiesSkillTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		technicalAbilitiesSkillTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		technicalAbilitiesSkillTable.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		technicalAbilitiesSkillTable.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		technicalAbilitiesSkillTable.getColumnModel().getColumn(2).setCellEditor(new SkillSpinnerEditor());
 		technicalAbilitiesSkillTable.setFillsViewportHeight(true);
 		technicalAbilitiesSkillScrollPane.setViewportView(technicalAbilitiesSkillTable);
 		skillTables.put(CharacterCreationModel.TECH, technicalAbilitiesSkillTable);
@@ -2411,6 +2420,14 @@ public class CharacterCreationView extends JFrame {
 		carryCapacityTextField.setText(carryCapacity + "kg");
 	}
 
+	public void setRemainingCareerSkillPoints(int remainingPoints) {
+		lblCareerSkillPointsRemaining.setText("Career Points Remaining: " + remainingPoints);
+	}
+
+	public void setRemainingPickupSkillPoints(int remainingPoints) {
+		lblPickupSkillPointsRemaining.setText("Pickup Skill Points Remaining: " + remainingPoints);
+	}
+
 	public void setHeadArmorStoppingPower(String headArmor) {
 		headArmorTextField.setText(headArmor);
 	}
@@ -2863,9 +2880,15 @@ public class CharacterCreationView extends JFrame {
 		skillTables.put(CharacterCreationModel.INT, intelligenceSkillTable);
 		skillTables.put(CharacterCreationModel.REF, reflexesSkillTable);
 		skillTables.put(CharacterCreationModel.TECH, technicalAbilitiesSkillTable);
-		for (JTable table : skillTables.values()) {
-			table.setModel(new SkillTableModel());
-			table.getColumnModel().getColumn(2).setCellEditor(new SpinnerEditor());
+		for (Map.Entry<String, JTable> tableEntry : skillTables.entrySet()) {
+			String key = tableEntry.getKey();
+			JTable table = tableEntry.getValue();
+			if (key.equals(CharacterCreationModel.SPEC)) {
+				table.setModel(new SpecialSkillTableModel());
+			} else {
+				table.setModel(new SkillTableModel());
+			}
+			table.getColumnModel().getColumn(2).setCellEditor(new SkillSpinnerEditor());
 			table.revalidate();
 			table.repaint();
 		}
@@ -2950,7 +2973,7 @@ public class CharacterCreationView extends JFrame {
 			break;
 		}
 
-		if ((skillCategory.toUpperCase()).equals(CharacterCreationModel.SPEC)) {
+		if (skillCategory.equalsIgnoreCase(CharacterCreationModel.SPEC)) {
 			SpecialSkillTableModel model = (SpecialSkillTableModel) targetTable.getModel();
 			model.addTableModelListener(listener);
 			row = new Object[] { skill, specificSkill, Integer.valueOf(rank) };
@@ -3102,7 +3125,6 @@ public class CharacterCreationView extends JFrame {
 		stunProgressPanels.get(index).increaseStunGauge();
 		stunProgressPanels.get(index).increaseStunGauge();
 		stunProgressPanels.get(index).increaseStunGauge();
-
 	}
 
 	class CharFilter extends FileFilter {
@@ -3119,10 +3141,6 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class EquippedTableModel extends AbstractTableModel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 360410719203269579L;
 		private static final int MAX_LAYERS = 3;
 		private String[] columnNames = { "Head", "Torso", "R. Arm", "L. Arm", "R. Leg", "L. Leg" };
 		private List<Object[]> data = new ArrayList<Object[]>();
@@ -3176,10 +3194,6 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class InventoryWeaponTableModel extends AbstractTableModel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -1761873937398375095L;
 		private String[] columnNames = { "Name", "Category", "WA", "Conc", "Damage(Ammo)", "#Shots", "ROF", "Rel",
 				"Range" };
 		private List<Object[]> data = new ArrayList<Object[]>();
@@ -3223,10 +3237,6 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class StoreWeaponTableModel extends AbstractTableModel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -6925435176814879225L;
 		private String[] columnNames = { "Name", "Category", "WA", "Conc", "Avail", "Damage(Ammo)", "#Shots", "ROF",
 				"Rel", "Range", "Cost" };
 
@@ -3258,11 +3268,6 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class InventoryGearTableModel extends AbstractTableModel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 8900304778601188250L;
-
 		private String[] columnNames = { "Type", "Quantity", "Weight" };
 
 		private List<Object[]> data = new ArrayList<Object[]>();
@@ -3309,10 +3314,6 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class StoreGearTableModel extends AbstractTableModel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 2756858671518538753L;
 		private String[] columnNames = { "Type", "Cost", "Weight" };
 		private List<Object[]> data = new ArrayList<Object[]>();
 
@@ -3346,11 +3347,6 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class InventoryArmorTableModel extends AbstractTableModel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -7812184298635202658L;
-
 		private String[] columnNames = { "Type", "Armor Class", "Covers", "SP", "EV", "Weight" };
 
 		private List<Object[]> data = new ArrayList<Object[]>();
@@ -3393,10 +3389,6 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class StoreArmorTableModel extends AbstractTableModel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 2138564709613762552L;
 		private String[] columnNames = { "Type", "Armor Class", "Covers", "SP", "EV", "Weight", "Cost" };
 		private List<Object[]> data = new ArrayList<Object[]>();
 
@@ -3429,11 +3421,6 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class InventoryAmmoTableModel extends AbstractTableModel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 3636398298145221263L;
-
 		private String[] columnNames = { "Type", "Quantity", "Is Caseless", "Weight" };
 
 		private List<Object[]> data = new ArrayList<Object[]>();
@@ -3476,10 +3463,6 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class StoreAmmoTableModel extends AbstractTableModel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 6540785590982377396L;
 		private String[] columnNames = { "Type", "Quantity", "Is Caseless", "Cost", "Weight" };
 		private List<Object[]> data = new ArrayList<Object[]>();
 
@@ -3570,6 +3553,10 @@ public class CharacterCreationView extends JFrame {
 			fireTableCellUpdated(row, col);
 		}
 
+		public void setValueAtIgnoreUpdate(Object value, int row, int col) {
+			data.get(row)[col] = value;
+		}
+
 		public int findSkillRow(String skillName) {
 			int row = -1;
 			skillName = skillName.toLowerCase();
@@ -3585,12 +3572,12 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class SkillTableModel extends AbstractTableModel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -8313026752975772728L;
 		private String[] columnNames = { "Skill", "Specific Skill", "Rank" };
 		private List<Object[]> data = new ArrayList<Object[]>();
+		// TODO Add a variable to represent an active role. Thinking of adding a method
+		// that takes in a String[] argument and highlights the whole row that it
+		// belongs to. Look into using prepareRenderer method that needs to be
+		// overridden.
 
 		@Override
 		public int getColumnCount() {
@@ -3639,13 +3626,37 @@ public class CharacterCreationView extends JFrame {
 			data.get(row)[col] = value;
 			fireTableCellUpdated(row, col);
 		}
+
+		public void setValueAtIgnoreUpdate(Object value, int row, int col) {
+			data.get(row)[col] = value;
+		}
+	}
+
+	public class SkillTableCellRenderer extends DefaultTableCellRenderer {
+		List<String> keywords;
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int column) {
+			Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			String skillName = (String) table.getValueAt(row, 0);
+			if (!isSelected) {
+				if (keywords != null && keywords.contains(skillName)) {
+					c.setBackground(Color.CYAN);
+				} else {
+					c.setBackground(table.getBackground());
+				}
+			}
+			table.repaint();
+			return c;
+		}
+
+		public void setKeywords(List<String> keywords) {
+			this.keywords = keywords;
+		}
 	}
 
 	class EquippedRowHeaderListModel extends AbstractListModel<Object> {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -8739692268186515252L;
 		String headers[] = new String[] { "Layer 1", "Layer 2", "Layer 3" };
 
 		@Override
@@ -3661,12 +3672,6 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	class RowHeaderRenderer extends JLabel implements ListCellRenderer<Object> {
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1948975573822493932L;
-
 		RowHeaderRenderer(JTable table) {
 			JTableHeader header = table.getTableHeader();
 			setOpaque(true);
@@ -3685,15 +3690,15 @@ public class CharacterCreationView extends JFrame {
 
 	}
 
-	class SpinnerEditor extends AbstractCellEditor implements TableCellEditor {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -8013171141753281824L;
+	class SkillSpinnerEditor extends AbstractCellEditor implements TableCellEditor {
 		JSpinner spinner;
+		int remainingPickupPoints;
+		int remainingCareerPoints;
 
-		public SpinnerEditor() {
+		public SkillSpinnerEditor() {
 			spinner = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
+			remainingPickupPoints = 0;
+			remainingCareerPoints = 0;
 		}
 
 		@Override
@@ -3719,17 +3724,11 @@ public class CharacterCreationView extends JFrame {
 					});
 				}
 			});
-
 			return spinner;
 		}
-
 	}
 
 	public static class SiblingPanel extends JPanel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -1685143249981857828L;
 		private JTextField siblingNameTextField;
 		private JButton randomizeNameButton;
 		private JComboBox<String> siblingAgeComboBox;
