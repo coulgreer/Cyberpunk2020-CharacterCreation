@@ -3004,7 +3004,7 @@ public class CharacterCreationModel {
 			.build();
 	private Gear lightBoosterGoggles = new Gear.GearBuilder() //
 			.withType("Light Booster Goggles") //
-			.withQuantitiy(200) //
+			.withQuantitiy(0) //
 			.withWeight(0.5) //
 			.withCost(200) //
 			.build();
@@ -3814,7 +3814,8 @@ public class CharacterCreationModel {
 		ammos.put(armorPiercingHeavyAmmo.getType(), armorPiercingHeavyAmmo);
 		ammos.put(regularHeavyBrassAmmo.getType(), regularHeavyBrassAmmo);
 		ammos.put(armorPiercingHeavyBrassAmmo.getType(), armorPiercingHeavyBrassAmmo);
-		ammos.put(regularVeryHeavyAmmo.getType(), armorPiercingVeryHeavyAmmo);
+		ammos.put(regularVeryHeavyAmmo.getType(), regularVeryHeavyAmmo);
+		ammos.put(armorPiercingVeryHeavyAmmo.getType(), armorPiercingVeryHeavyAmmo);
 		ammos.put(regularVeryHeavyBrassAmmo.getType(), regularVeryHeavyBrassAmmo);
 		ammos.put(armorPiercingVeryHeavyBrassAmmo.getType(), armorPiercingVeryHeavyBrassAmmo);
 		ammos.put(regularAssaultRifleAmmo.getType(), regularAssaultRifleAmmo);

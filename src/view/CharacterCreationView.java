@@ -105,6 +105,7 @@ public class CharacterCreationView extends JFrame {
 	private static final int STUN_DIV_HEIGHT = WOUND_DIV_HEIGHT;
 	private static final int PORTRAIT_WIDTH = 300;
 	private static final int PORTRAIT_HEIGHT = 300;
+	private static final int DEFAULT_AMMO_QUANTITY = 0;
 	private static final Font TITLE_FONT = new Font("Tahoma", Font.BOLD, 14);
 
 	private JPanel contentPane;
@@ -2008,6 +2009,8 @@ public class CharacterCreationView extends JFrame {
 		storeGearTable = new JTable(new StoreGearTableModel());
 		storeGearTable.setFillsViewportHeight(true);
 		storeGearTable.getTableHeader().setReorderingAllowed(false);
+		storeGearTable.getColumnModel().getColumn(StoreGearTableModel.QUANTITY_INDEX)
+				.setCellEditor(new QuantitySpinnerEditor());
 		storeGearScrollPane.setViewportView(storeGearTable);
 
 		JPanel storeArmorCard = new JPanel();
@@ -2046,6 +2049,8 @@ public class CharacterCreationView extends JFrame {
 		storeAmmoTable = new JTable(new StoreAmmoTableModel());
 		storeAmmoTable.setFillsViewportHeight(true);
 		storeAmmoTable.getTableHeader().setReorderingAllowed(false);
+		storeAmmoTable.getColumnModel().getColumn(StoreAmmoTableModel.BOXES_INDEX)
+				.setCellEditor(new QuantitySpinnerEditor());
 		storeAmmoScrollPane.setViewportView(storeAmmoTable);
 
 		fileChooser = new JFileChooser();
@@ -2723,6 +2728,14 @@ public class CharacterCreationView extends JFrame {
 		equippedTable.getModel().addTableModelListener(listener);
 	}
 
+	public void addStoreAmmoTableModelListener(TableModelListener listener) {
+		storeAmmoTable.getModel().addTableModelListener(listener);
+	}
+
+	public void addStoreGearTableModelListener(TableModelListener listener) {
+		storeGearTable.getModel().addTableModelListener(listener);
+	}
+
 	public void addClothingDocumentListener(DocumentListener listener) {
 		clothingTextfield.getDocument().addDocumentListener(listener);
 	}
@@ -3004,12 +3017,13 @@ public class CharacterCreationView extends JFrame {
 		}
 	}
 
-	public void addStoreGearToTable(String type, int cost, double weight, ListSelectionListener listener) {
+	public void addStoreGearToTable(String type, double weight, int cost, int quantity,
+			ListSelectionListener listener) {
 		Object[] row;
 
 		StoreGearTableModel model = (StoreGearTableModel) storeGearTable.getModel();
 		storeGearTable.getSelectionModel().addListSelectionListener(listener);
-		row = new Object[] { type, Integer.valueOf(cost), Double.valueOf(weight) };
+		row = new Object[] { type, Integer.valueOf(cost), Double.valueOf(weight), Integer.valueOf(quantity) };
 		model.addRow(row);
 	}
 
@@ -3095,13 +3109,13 @@ public class CharacterCreationView extends JFrame {
 		model.addRow(row);
 	}
 
-	public void addAmmoToTable(String type, int quantity, boolean isCaseless, int cost, double weight,
+	public void addAmmoToTable(String type, boolean isCaseless, double weight, int perBox, int cost,
 			ListSelectionListener listener) {
 		Object[] row;
 
 		StoreAmmoTableModel model = (StoreAmmoTableModel) storeAmmoTable.getModel();
 		storeAmmoTable.getSelectionModel().addListSelectionListener(listener);
-		row = new Object[] { type, quantity, isCaseless, cost, weight };
+		row = new Object[] { type, isCaseless, weight, perBox, cost, DEFAULT_AMMO_QUANTITY };
 		model.addRow(row);
 	}
 
@@ -3173,7 +3187,7 @@ public class CharacterCreationView extends JFrame {
 
 		public void setValueAt(Object value, int row, int column) {
 			data.get(row)[column] = value;
-			fireTableCellUpdated(getRowCount(), getRowCount());
+			fireTableCellUpdated(row, column);
 		}
 
 		public void addRow(Object[] rowData) {
@@ -3194,6 +3208,16 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class InventoryWeaponTableModel extends AbstractTableModel {
+		public static final int NAME_INDEX = 0;
+		public static final int CATEGORY_INDEX = 1;
+		public static final int WEAPON_ACCURACY_INDEX = 2;
+		public static final int CONCEALABILITY_INDEX = 3;
+		public static final int DAMAGE_INDEX = 4;
+		public static final int NUMBER_OF_SHOTS_INDEX = 5;
+		public static final int RATE_OF_FIRE_INDEX = 6;
+		public static final int RELIABILITY_INDEX = 7;
+		public static final int RANGE_INDEX = 8;
+
 		private String[] columnNames = { "Name", "Category", "WA", "Conc", "Damage(Ammo)", "#Shots", "ROF", "Rel",
 				"Range" };
 		private List<Object[]> data = new ArrayList<Object[]>();
@@ -3237,9 +3261,20 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class StoreWeaponTableModel extends AbstractTableModel {
+		public static final int NAME_INDEX = 0;
+		public static final int CATEGORY_INDEX = 1;
+		public static final int WEAPON_ACCURACY_INDEX = 2;
+		public static final int CONCEALABILITY_INDEX = 3;
+		public static final int AVAILAVILITY_INDEX = 4;
+		public static final int DAMAGE_INDEX = 5;
+		public static final int NUMBER_OF_SHOTS_INDEX = 6;
+		public static final int RATE_OF_FIRE_INDEX = 7;
+		public static final int RELIABILITY_INDEX = 8;
+		public static final int RANGE_INDEX = 9;
+		public static final int COST_INDEX = 10;
+
 		private String[] columnNames = { "Name", "Category", "WA", "Conc", "Avail", "Damage(Ammo)", "#Shots", "ROF",
 				"Rel", "Range", "Cost" };
-
 		private List<Object[]> data = new ArrayList<Object[]>();
 
 		@Override
@@ -3268,8 +3303,11 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class InventoryGearTableModel extends AbstractTableModel {
-		private String[] columnNames = { "Type", "Quantity", "Weight" };
+		public static final int TYPE_INDEX = 0;
+		public static final int WEIGHT_INDEX = 1;
+		public static final int QUANTITY_INDEX = 2;
 
+		private String[] columnNames = { "Type", "Weight", "Quantity" };
 		private List<Object[]> data = new ArrayList<Object[]>();
 
 		@Override
@@ -3284,7 +3322,7 @@ public class CharacterCreationView extends JFrame {
 
 		@Override
 		public Object getValueAt(int row, int column) {
-			if (column == 2) {
+			if (column == WEIGHT_INDEX) {
 				return data.get(row)[column] + " kg";
 			} else {
 				return data.get(row)[column];
@@ -3314,7 +3352,12 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class StoreGearTableModel extends AbstractTableModel {
-		private String[] columnNames = { "Type", "Cost", "Weight" };
+		public static final int TYPE_INDEX = 0;
+		public static final int COST_INDEX = 1;
+		public static final int WEIGHT_INDEX = 2;
+		public static final int QUANTITY_INDEX = 3;
+
+		private String[] columnNames = { "Type", "Cost", "Weight", "Quantity" };
 		private List<Object[]> data = new ArrayList<Object[]>();
 
 		@Override
@@ -3329,10 +3372,24 @@ public class CharacterCreationView extends JFrame {
 
 		@Override
 		public Object getValueAt(int row, int column) {
-			if (column == 2) {
+			if (column == WEIGHT_INDEX) {
 				return data.get(row)[column] + " kg";
 			} else {
 				return data.get(row)[column];
+			}
+		}
+
+		@Override
+		public void setValueAt(Object value, int row, int col) {
+			data.get(row)[col] = value;
+		}
+
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			if (column == QUANTITY_INDEX) {
+				return true;
+			} else {
+				return false;
 			}
 		}
 
@@ -3344,11 +3401,24 @@ public class CharacterCreationView extends JFrame {
 			return columnNames[column];
 		}
 
+		public void resetBoxes() {
+			for (int i = 0; i < data.size(); i++) {
+				data.get(i)[QUANTITY_INDEX] = 0;
+				fireTableCellUpdated(i, QUANTITY_INDEX);
+			}
+		}
+
 	}
 
 	public class InventoryArmorTableModel extends AbstractTableModel {
-		private String[] columnNames = { "Type", "Armor Class", "Covers", "SP", "EV", "Weight" };
+		public static final int TYPE_INDEX = 0;
+		public static final int ARMOR_CLASS_INDEX = 1;
+		public static final int COVERS_INDEX = 2;
+		public static final int STOPPING_POWER_INDEX = 3;
+		public static final int ENCUMBRANCE_VALUE_INDEX = 4;
+		public static final int WEIGHT_INDEX = 5;
 
+		private String[] columnNames = { "Type", "Armor Class", "Covers", "SP", "EV", "Weight" };
 		private List<Object[]> data = new ArrayList<Object[]>();
 
 		@Override
@@ -3363,7 +3433,11 @@ public class CharacterCreationView extends JFrame {
 
 		@Override
 		public Object getValueAt(int row, int column) {
-			return data.get(row)[column];
+			if (column == WEIGHT_INDEX) {
+				return data.get(row)[column] + "kg";
+			} else {
+				return data.get(row)[column];
+			}
 		}
 
 		public void addRow(Object[] rowData) {
@@ -3389,6 +3463,14 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class StoreArmorTableModel extends AbstractTableModel {
+		public static final int TYPE_INDEX = 0;
+		public static final int ARMOR_CLASS_INDEX = 1;
+		public static final int COVERS_INDEX = 2;
+		public static final int STOPPING_POWER_INDEX = 3;
+		public static final int ENCUMBRANCE_VALUE_INDEX = 4;
+		public static final int WEIGHT_INDEX = 5;
+		public static final int COST_INDEX = 6;
+
 		private String[] columnNames = { "Type", "Armor Class", "Covers", "SP", "EV", "Weight", "Cost" };
 		private List<Object[]> data = new ArrayList<Object[]>();
 
@@ -3404,7 +3486,7 @@ public class CharacterCreationView extends JFrame {
 
 		@Override
 		public Object getValueAt(int row, int column) {
-			if (column == 5) {
+			if (column == WEIGHT_INDEX) {
 				return data.get(row)[column] + " kg";
 			} else {
 				return data.get(row)[column];
@@ -3421,7 +3503,12 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class InventoryAmmoTableModel extends AbstractTableModel {
-		private String[] columnNames = { "Type", "Quantity", "Is Caseless", "Weight" };
+		public static final int TYPE_INDEX = 0;
+		public static final int IS_CASELESS_INDEX = 1;
+		public static final int WEIGHT_INDEX = 2;
+		public static final int BULLETS_INDEX = 3;
+
+		private String[] columnNames = { "Type", "Is Caseless", "Weight", "Bullets" };
 
 		private List<Object[]> data = new ArrayList<Object[]>();
 
@@ -3437,7 +3524,11 @@ public class CharacterCreationView extends JFrame {
 
 		@Override
 		public Object getValueAt(int row, int column) {
-			return data.get(row)[column];
+			if (column == WEIGHT_INDEX) {
+				return data.get(row)[column] + "kg";
+			} else {
+				return data.get(row)[column];
+			}
 		}
 
 		public void addRow(Object[] rowData) {
@@ -3463,7 +3554,14 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class StoreAmmoTableModel extends AbstractTableModel {
-		private String[] columnNames = { "Type", "Quantity", "Is Caseless", "Cost", "Weight" };
+		public static final int TYPE_INDEX = 0;
+		public static final int IS_CASELESS_INDEX = 1;
+		public static final int WEIGHT_INDEX = 2;
+		public static final int BULLETS_INDEX = 3;
+		public static final int COST_INDEX = 4;
+		public static final int BOXES_INDEX = 5;
+
+		private String[] columnNames = { "Type", "Is Caseless", "Weight", "Bullets", "Cost", "Boxes" };
 		private List<Object[]> data = new ArrayList<Object[]>();
 
 		@Override
@@ -3478,10 +3576,24 @@ public class CharacterCreationView extends JFrame {
 
 		@Override
 		public Object getValueAt(int row, int column) {
-			if (column == 4) {
+			if (column == WEIGHT_INDEX) {
 				return data.get(row)[column] + " kg";
 			} else {
 				return data.get(row)[column];
+			}
+		}
+
+		@Override
+		public void setValueAt(Object value, int row, int col) {
+			data.get(row)[col] = value;
+		}
+
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			if (column == BOXES_INDEX) {
+				return true;
+			} else {
+				return false;
 			}
 		}
 
@@ -3493,12 +3605,22 @@ public class CharacterCreationView extends JFrame {
 			return columnNames[column];
 		}
 
+		public void resetBoxes() {
+			for (int i = 0; i < data.size(); i++) {
+				data.get(i)[BOXES_INDEX] = 0;
+				fireTableCellUpdated(i, BOXES_INDEX);
+			}
+		}
 	}
 
 	public class SpecialSkillTableModel extends AbstractTableModel {
+		public static final int SKILL_INDEX = 0;
+		public static final int SPECIFIC_SKILL_INDEX = 1;
+		public static final int RANK_INDEX = 2;
+
 		private String[] columnNames = { "Skill", "Specific Skill", "Rank" };
 		private List<Object[]> data = new ArrayList<Object[]>();
-		int activeRow = -1;
+		private int activeRow = -1;
 
 		@Override
 		public int getColumnCount() {
@@ -3525,15 +3647,15 @@ public class CharacterCreationView extends JFrame {
 
 		@Override
 		public boolean isCellEditable(int row, int column) {
-			String skillName = (String) getValueAt(row, 0);
-			if (column == 1) {
-				int rank = (Integer) getValueAt(row, 2);
+			String skillName = (String) getValueAt(row, SKILL_INDEX);
+			if (column == SPECIFIC_SKILL_INDEX) {
+				int rank = (Integer) getValueAt(row, RANK_INDEX);
 				if (rank > 0 && skillName.contains("*")) {
 					return true;
 				} else {
 					return false;
 				}
-			} else if (column == 2 && row == activeRow) {
+			} else if (column == RANK_INDEX && row == activeRow) {
 				return true;
 			} else {
 				return false;
@@ -3572,12 +3694,12 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public class SkillTableModel extends AbstractTableModel {
+		public static final int SKILL_INDEX = 0;
+		public static final int SPECIFIC_SKILL_INDEX = 1;
+		public static final int RANK_INDEX = 2;
+
 		private String[] columnNames = { "Skill", "Specific Skill", "Rank" };
 		private List<Object[]> data = new ArrayList<Object[]>();
-		// TODO Add a variable to represent an active role. Thinking of adding a method
-		// that takes in a String[] argument and highlights the whole row that it
-		// belongs to. Look into using prepareRenderer method that needs to be
-		// overridden.
 
 		@Override
 		public int getColumnCount() {
@@ -3604,9 +3726,9 @@ public class CharacterCreationView extends JFrame {
 
 		@Override
 		public boolean isCellEditable(int row, int column) {
-			String skillName = (String) getValueAt(row, 0);
+			String skillName = (String) getValueAt(row, SKILL_INDEX);
 			if (column == 1) {
-				int rank = (Integer) getValueAt(row, 2);
+				int rank = (Integer) getValueAt(row, RANK_INDEX);
 				if (rank > 0 && skillName.contains("*")) {
 					return true;
 				} else {
@@ -3686,6 +3808,41 @@ public class CharacterCreationView extends JFrame {
 				boolean cellHasFocus) {
 			setText((value == null) ? "" : value.toString());
 			return this;
+		}
+
+	}
+
+	class QuantitySpinnerEditor extends AbstractCellEditor implements TableCellEditor {
+		JSpinner spinner;
+
+		public QuantitySpinnerEditor() {
+			spinner = new JSpinner(new SpinnerNumberModel(0, 0, 99, 1));
+		}
+
+		@Override
+		public Object getCellEditorValue() {
+			return spinner.getValue();
+		}
+
+		@Override
+		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
+				int column) {
+			spinner.setValue(value);
+
+			JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spinner.getEditor();
+			editor.getTextField().addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent fe) {
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							JTextField txt = (JTextField) fe.getSource();
+							txt.selectAll();
+						}
+					});
+				}
+			});
+			return spinner;
 		}
 
 	}

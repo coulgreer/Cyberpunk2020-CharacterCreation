@@ -52,6 +52,8 @@ import org.apache.commons.codec.binary.Base64;
 
 import components.ImagePreview;
 import model.CharacterCreationModel;
+import model.CharacterCreationModel.Ammo;
+import model.CharacterCreationModel.Gear;
 import model.CharacterCreationModel.Sibling;
 import model.CharacterCreationModel.Sibling.SiblingBuilder;
 import view.CharacterCreationView;
@@ -64,6 +66,10 @@ import view.CharacterCreationView.SiblingPanel;
 import view.CharacterCreationView.SkillTableCellRenderer;
 import view.CharacterCreationView.SkillTableModel;
 import view.CharacterCreationView.SpecialSkillTableModel;
+import view.CharacterCreationView.StoreAmmoTableModel;
+import view.CharacterCreationView.StoreArmorTableModel;
+import view.CharacterCreationView.StoreGearTableModel;
+import view.CharacterCreationView.StoreWeaponTableModel;
 
 public class CharacterCreationController {
 	private CharacterCreationModel characterModel;
@@ -188,7 +194,7 @@ public class CharacterCreationController {
 
 	private void populateStoreGearPanel() {
 		for (CharacterCreationModel.Gear gear : characterModel.getGear().values()) {
-			characterView.addStoreGearToTable(gear.getType(), gear.getCost(), gear.getWeight(),
+			characterView.addStoreGearToTable(gear.getType(), gear.getWeight(), gear.getCost(), gear.getQuantity(),
 					new StoreGearListSelectionListener());
 		}
 		characterView.resizeColumnWidth(characterView.getStoreGearTable());
@@ -205,8 +211,8 @@ public class CharacterCreationController {
 
 	private void populateAmmoTable() {
 		for (CharacterCreationModel.Ammo ammo : characterModel.getAmmos().values()) {
-			characterView.addAmmoToTable(ammo.getType(), ammo.getQuantityPerBox(), ammo.isCaseless(), ammo.getCost(),
-					ammo.getWeight(), new StoreAmmoListSelectionListener());
+			characterView.addAmmoToTable(ammo.getType(), ammo.isCaseless(), ammo.getWeight(), ammo.getQuantityPerBox(),
+					ammo.getCost(), new StoreAmmoListSelectionListener());
 		}
 		characterView.resizeColumnWidth(characterView.getStoreAmmoTable());
 	}
@@ -247,113 +253,7 @@ public class CharacterCreationController {
 
 	}
 
-	private class AddToInventoryActionListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent event) {
-			JTable storeWeaponTable = characterView.getStoreWeaponTable();
-			JTable storeGearTable = characterView.getStoreGearTable();
-			JTable storeArmorTable = characterView.getStoreArmorTable();
-			JTable storeAmmoTable = characterView.getStoreAmmoTable();
-			JTable inventoryWeaponTable = characterView.getInventoryWeaponTable();
-			JTable inventoryGearTable = characterView.getInventoryGearTable();
-			JTable inventoryArmorTable = characterView.getInventoryArmorTable();
-			JTable inventoryAmmoTable = characterView.getInventoryAmmoTable();
-
-			for (int rowIndex : storeWeaponTable.getSelectedRows()) {
-				Object[] row;
-				String type = (String) storeWeaponTable.getValueAt(rowIndex, 0);
-				CharacterCreationModel.Weapon weapon = characterModel.getWeapons().get(type);
-				characterModel.getInventoryWeapons().put(type, weapon);
-
-				row = new Object[] { weapon.getName(), weapon.getCategory(), weapon.getAccuracy(),
-						weapon.getConcealability(), weapon.getDamageAndAmmo(), weapon.getNumberOfShots(),
-						weapon.getRateOfFire(), weapon.getReliability(), weapon.getRange() };
-
-				((InventoryWeaponTableModel) inventoryWeaponTable.getModel()).addRow(row);
-			}
-			characterView.resizeColumnWidth(inventoryWeaponTable);
-
-			for (int rowIndex : storeGearTable.getSelectedRows()) {
-				Object[] row;
-				String type = (String) storeGearTable.getValueAt(rowIndex, 0);
-				CharacterCreationModel.Gear gear = characterModel.getGear().get(type);
-				gear.setQuantity(gear.getQuantity() + 1);
-				characterModel.getGear().put(type, gear);
-				characterModel.getInventoryGear().put(type, gear);
-
-				row = new Object[] { gear.getType(), gear.getQuantity(), (gear.getWeight() * gear.getQuantity()) };
-
-				boolean entryExists = false;
-				int duplicateRowIndex = 0;
-				for (int i = 0; i < inventoryGearTable.getRowCount(); i++) {
-					String tempType = (String) inventoryGearTable.getValueAt(i, 0);
-					if (tempType.equals(type)) {
-						duplicateRowIndex = i;
-						entryExists = true;
-						break;
-					}
-				}
-				if (entryExists) {
-					((InventoryGearTableModel) inventoryGearTable.getModel()).removeRow(duplicateRowIndex);
-				}
-				((InventoryGearTableModel) inventoryGearTable.getModel()).addRow(row);
-			}
-			characterView.resizeColumnWidth(inventoryGearTable);
-
-			for (int rowIndex : storeArmorTable.getSelectedRows()) {
-				Object[] row;
-				String type = (String) storeArmorTable.getValueAt(rowIndex, 0);
-				CharacterCreationModel.Armor armor = characterModel.getArmors().get(type);
-				characterModel.getInventoryArmors().put(type, armor);
-
-				row = new Object[] { armor.getType(), armor.getArmorClass(), armor.getCovers(),
-						armor.getStoppingPower(), armor.getEncumbranceValue(), armor.getWeight() };
-
-				((InventoryArmorTableModel) inventoryArmorTable.getModel()).addRow(row);
-			}
-			characterView.resizeColumnWidth(inventoryArmorTable);
-
-			for (int rowIndex : storeAmmoTable.getSelectedRows()) {
-				Object[] row;
-
-				String type = (String) storeAmmoTable.getValueAt(rowIndex, 0);
-				CharacterCreationModel.Ammo ammo = characterModel.getAmmos().get(type);
-				ammo.setQuantity(ammo.getQuantity() + ammo.getQuantityPerBox());
-				characterModel.getAmmos().put(type, ammo);
-				characterModel.getInventoryAmmos().put(type, ammo);
-
-				row = new Object[] { ammo.getType(), ammo.getQuantity(), ammo.isCaseless(),
-						((ammo.getQuantity() / ammo.getQuantityPerBox()) * ammo.getWeight()) };
-
-				boolean entryExists = false;
-				int duplicateRowIndex = 0;
-				for (int i = 0; i < inventoryAmmoTable.getRowCount(); i++) {
-					String tempType = (String) inventoryAmmoTable.getValueAt(i, 0);
-					if (tempType.equals(type)) {
-						duplicateRowIndex = i;
-						entryExists = true;
-						break;
-					}
-				}
-				if (entryExists) {
-					((InventoryAmmoTableModel) inventoryAmmoTable.getModel()).removeRow(duplicateRowIndex);
-				}
-				((InventoryAmmoTableModel) inventoryAmmoTable.getModel()).addRow(row);
-			}
-			characterView.resizeColumnWidth(inventoryAmmoTable);
-
-			characterView.setMoney(String.valueOf(characterView.getMoney() + totalCost));
-			characterModel.setMoney(characterView.getMoney());
-
-			storeWeaponTable.clearSelection();
-			storeGearTable.clearSelection();
-			storeArmorTable.clearSelection();
-			storeAmmoTable.clearSelection();
-		}
-	}
-
 	private class ChangeCharacterPortraitActionListener implements ActionListener {
-
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			JFileChooser chooser = new JFileChooser();
@@ -370,11 +270,8 @@ public class CharacterCreationController {
 				} catch (IOException exception) {
 					JOptionPane.showMessageDialog(characterView, "That file does not exist.");
 				}
-
 			}
-
 		}
-
 	}
 
 	private class DecreaseInjuryActionListener implements ActionListener {
@@ -1413,7 +1310,7 @@ public class CharacterCreationController {
 			gear.setQuantity(gearQuantity);
 			inventoryGearMap.put(gear.getType(), gear);
 
-			Object[] row = new Object[] { gear.getType(), gear.getQuantity(), (gear.getWeight() * gear.getQuantity()) };
+			Object[] row = new Object[] { gear.getType(), (gear.getWeight() * gear.getQuantity()), gear.getQuantity() };
 			inventoryGearModel.addRow(row);
 			characterView.getInventoryGearTable().revalidate();
 			characterView.getInventoryGearTable().repaint();
@@ -1454,8 +1351,8 @@ public class CharacterCreationController {
 			ammo.setQuantity(ammoQuantity);
 			inventoryAmmoMap.put(ammo.getType(), ammo);
 
-			Object[] row = new Object[] { ammo.getType(), ammo.getQuantity(), ammo.isCaseless(),
-					((ammo.getQuantity() / ammo.getQuantityPerBox()) * ammo.getWeight()) };
+			Object[] row = new Object[] { ammo.getType(), ammo.isCaseless(),
+					((ammo.getQuantity() / ammo.getQuantityPerBox()) * ammo.getWeight()), ammo.getQuantity() };
 			inventoryAmmoModel.addRow(row);
 
 			characterView.getInventoryAmmoTable().revalidate();
@@ -3037,33 +2934,35 @@ public class CharacterCreationController {
 	}
 
 	private class SkillTableModelListener implements TableModelListener {
-		String skillName;
-		String specifiedSkill;
-		int desiredRank;
-		int currentRank;
-		CharacterCreationModel.Skill skill;
+		private String skillName;
+		private String specifiedSkill;
+		private int desiredRank;
+		private int currentRank;
+		private CharacterCreationModel.Skill skill;
 
-		int maxCareerSkillPoints;
-		int spentCareerSkillPoints;
-		int remainingCareerSkillPoints;
+		private int maxCareerSkillPoints;
+		private int spentCareerSkillPoints;
+		private int remainingCareerSkillPoints;
 
-		int maxPickupSkillPoints;
-		int spentPickupSkillPoints;
-		int remainingPickupSkillPoints;
+		private int maxPickupSkillPoints;
+		private int spentPickupSkillPoints;
+		private int remainingPickupSkillPoints;
 
 		@Override
 		public void tableChanged(TableModelEvent event) {
 			if (event.getType() == TableModelEvent.UPDATE) {
 				try {
 					SkillTableModel model = (SkillTableModel) event.getSource();
-					skillName = (String) model.getValueAt(event.getFirstRow(), 0);
-					specifiedSkill = (String) model.getValueAt(event.getFirstRow(), 1);
-					desiredRank = (Integer) model.getValueAt(event.getFirstRow(), 2);
+					skillName = (String) model.getValueAt(event.getFirstRow(), SkillTableModel.SKILL_INDEX);
+					specifiedSkill = (String) model.getValueAt(event.getFirstRow(),
+							SkillTableModel.SPECIFIC_SKILL_INDEX);
+					desiredRank = (Integer) model.getValueAt(event.getFirstRow(), SkillTableModel.RANK_INDEX);
 				} catch (ClassCastException exception) {
 					SpecialSkillTableModel model = (SpecialSkillTableModel) event.getSource();
-					skillName = (String) model.getValueAt(event.getFirstRow(), 0);
-					specifiedSkill = (String) model.getValueAt(event.getFirstRow(), 1);
-					desiredRank = (Integer) model.getValueAt(event.getFirstRow(), 2);
+					skillName = (String) model.getValueAt(event.getFirstRow(), SpecialSkillTableModel.SKILL_INDEX);
+					specifiedSkill = (String) model.getValueAt(event.getFirstRow(),
+							SpecialSkillTableModel.SPECIFIC_SKILL_INDEX);
+					desiredRank = (Integer) model.getValueAt(event.getFirstRow(), SpecialSkillTableModel.RANK_INDEX);
 				}
 
 				for (Map<String, CharacterCreationModel.Skill> skillCategory : characterModel.getSkillCatelog()
@@ -3135,10 +3034,10 @@ public class CharacterCreationController {
 			skill.setRank(currentRank);
 			try {
 				SkillTableModel model = (SkillTableModel) event.getSource();
-				model.setValueAtIgnoreUpdate(currentRank, event.getFirstRow(), 2);
+				model.setValueAtIgnoreUpdate(currentRank, event.getFirstRow(), SkillTableModel.RANK_INDEX);
 			} catch (ClassCastException exception) {
 				SpecialSkillTableModel model = (SpecialSkillTableModel) event.getSource();
-				model.setValueAtIgnoreUpdate(currentRank, event.getFirstRow(), 2);
+				model.setValueAtIgnoreUpdate(currentRank, event.getFirstRow(), SpecialSkillTableModel.RANK_INDEX);
 			}
 		}
 
@@ -3160,10 +3059,10 @@ public class CharacterCreationController {
 			skill.setRank(currentRank);
 			try {
 				SkillTableModel model = (SkillTableModel) event.getSource();
-				model.setValueAtIgnoreUpdate(currentRank, event.getFirstRow(), 2);
+				model.setValueAtIgnoreUpdate(currentRank, event.getFirstRow(), SkillTableModel.RANK_INDEX);
 			} catch (ClassCastException exception) {
 				SpecialSkillTableModel model = (SpecialSkillTableModel) event.getSource();
-				model.setValueAtIgnoreUpdate(currentRank, event.getFirstRow(), 2);
+				model.setValueAtIgnoreUpdate(currentRank, event.getFirstRow(), SpecialSkillTableModel.RANK_INDEX);
 			}
 		}
 	}
@@ -3184,7 +3083,7 @@ public class CharacterCreationController {
 				return;
 			}
 			for (int rowIndex : storeWeaponTable.getSelectedRows()) {
-				totalWeaponCost -= (Integer) storeWeaponTable.getValueAt(rowIndex, 10);
+				totalWeaponCost -= (Integer) storeWeaponTable.getValueAt(rowIndex, StoreWeaponTableModel.COST_INDEX);
 			}
 
 			CharacterCreationController.totalWeaponCost = totalWeaponCost;
@@ -3203,8 +3102,10 @@ public class CharacterCreationController {
 			if (event.getValueIsAdjusting()) {
 				return;
 			}
-			for (int rowIndex : storeGearTable.getSelectedRows()) {
-				totalGearCost -= (Integer) storeGearTable.getValueAt(rowIndex, 1);
+			for (int rowIndex = 0; rowIndex < storeGearTable.getRowCount(); rowIndex++) {
+				int cost = (Integer) storeGearTable.getValueAt(rowIndex, StoreGearTableModel.COST_INDEX);
+				int quantity = (Integer) storeGearTable.getValueAt(rowIndex, StoreGearTableModel.QUANTITY_INDEX);
+				totalGearCost -= (cost * quantity);
 			}
 
 			CharacterCreationController.totalGearCost = totalGearCost;
@@ -3224,7 +3125,7 @@ public class CharacterCreationController {
 				return;
 			}
 			for (int rowIndex : storeArmorTable.getSelectedRows()) {
-				totalArmorCost -= (Integer) storeArmorTable.getValueAt(rowIndex, 6);
+				totalArmorCost -= (Integer) storeArmorTable.getValueAt(rowIndex, StoreArmorTableModel.COST_INDEX);
 			}
 
 			CharacterCreationController.totalArmorCost = totalArmorCost;
@@ -3243,14 +3144,178 @@ public class CharacterCreationController {
 			if (event.getValueIsAdjusting()) {
 				return;
 			}
-			for (int rowIndex : storeAmmoTable.getSelectedRows()) {
-				totalAmmoCost -= (Integer) storeAmmoTable.getValueAt(rowIndex, 3);
+			for (int rowIndex = 0; rowIndex < storeAmmoTable.getRowCount(); rowIndex++) {
+				int ammoCost = (Integer) storeAmmoTable.getValueAt(rowIndex, StoreAmmoTableModel.COST_INDEX);
+				int boxesBought = (Integer) storeAmmoTable.getValueAt(rowIndex, StoreAmmoTableModel.BOXES_INDEX);
+				totalAmmoCost -= (ammoCost * boxesBought);
 			}
 
 			CharacterCreationController.totalAmmoCost = totalAmmoCost;
 			totalCost = totalWeaponCost + totalGearCost + totalArmorCost + CharacterCreationController.totalAmmoCost;
 
 			characterView.setTotalCost(totalCost);
+		}
+	}
+
+	private class AddToInventoryActionListener implements ActionListener {
+		private JTable storeWeaponTable = characterView.getStoreWeaponTable();
+		private JTable storeGearTable = characterView.getStoreGearTable();
+		private JTable storeArmorTable = characterView.getStoreArmorTable();
+		private JTable storeAmmoTable = characterView.getStoreAmmoTable();
+		private JTable inventoryWeaponTable = characterView.getInventoryWeaponTable();
+		private JTable inventoryGearTable = characterView.getInventoryGearTable();
+		private JTable inventoryArmorTable = characterView.getInventoryArmorTable();
+		private JTable inventoryAmmoTable = characterView.getInventoryAmmoTable();
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			addBoughtWeaponToInventory();
+			addBoughtArmorToInventory();
+			addBoughtGearToInventory();
+			addBoughtAmmoToInventory();
+
+			characterView.setMoney(String.valueOf(characterView.getMoney() + totalCost));
+			characterModel.setMoney(characterView.getMoney());
+
+			storeWeaponTable.clearSelection();
+			((StoreGearTableModel) storeGearTable.getModel()).resetBoxes();
+			storeGearTable.clearSelection();
+			storeArmorTable.clearSelection();
+			((StoreAmmoTableModel) storeAmmoTable.getModel()).resetBoxes();
+			storeAmmoTable.clearSelection();
+		}
+
+		private void addBoughtWeaponToInventory() {
+			for (int rowIndex : storeWeaponTable.getSelectedRows()) {
+				Object[] row;
+				String type = (String) storeWeaponTable.getValueAt(rowIndex, StoreWeaponTableModel.NAME_INDEX);
+				CharacterCreationModel.Weapon weapon = characterModel.getWeapons().get(type);
+				characterModel.getInventoryWeapons().put(type, weapon);
+
+				row = new Object[] { weapon.getName(), weapon.getCategory(), weapon.getAccuracy(),
+						weapon.getConcealability(), weapon.getDamageAndAmmo(), weapon.getNumberOfShots(),
+						weapon.getRateOfFire(), weapon.getReliability(), weapon.getRange() };
+
+				((InventoryWeaponTableModel) inventoryWeaponTable.getModel()).addRow(row);
+			}
+			characterView.resizeColumnWidth(inventoryWeaponTable);
+		}
+
+		private void addBoughtArmorToInventory() {
+			for (int rowIndex : storeArmorTable.getSelectedRows()) {
+				Object[] row;
+				String type = (String) storeArmorTable.getValueAt(rowIndex, StoreArmorTableModel.TYPE_INDEX);
+				CharacterCreationModel.Armor armor = characterModel.getArmors().get(type);
+				characterModel.getInventoryArmors().put(type, armor);
+
+				row = new Object[] { armor.getType(), armor.getArmorClass(), armor.getCovers(),
+						armor.getStoppingPower(), armor.getEncumbranceValue(), armor.getWeight() };
+
+				((InventoryArmorTableModel) inventoryArmorTable.getModel()).addRow(row);
+			}
+			characterView.resizeColumnWidth(inventoryArmorTable);
+		}
+
+		private void addBoughtGearToInventory() {
+			for (int rowIndex = 0; rowIndex < storeGearTable.getRowCount(); rowIndex++) {
+				int boughtQuantity = 0;
+				Object[] row;
+				String type = (String) storeGearTable.getValueAt(rowIndex, StoreGearTableModel.TYPE_INDEX);
+				CharacterCreationModel.Gear gear = characterModel.getGear().get(type);
+				Map<String, CharacterCreationModel.Gear> inventoryGearMap = characterModel.getInventoryGear();
+				boughtQuantity = (Integer) storeGearTable.getValueAt(rowIndex, StoreGearTableModel.QUANTITY_INDEX);
+				if (inventoryGearMap.containsKey(type)) {
+					CharacterCreationModel.Gear inventoryGear = inventoryGearMap.get(type);
+					for (int i = 0; i < inventoryGearTable.getRowCount(); i++) {
+						String tempType = (String) inventoryGearTable.getValueAt(i, InventoryGearTableModel.TYPE_INDEX);
+						if (tempType.equals(type)) {
+							int currentQuantity = (Integer) inventoryGearTable.getValueAt(i,
+									InventoryGearTableModel.QUANTITY_INDEX);
+							currentQuantity += boughtQuantity;
+							inventoryGear.setQuantity(currentQuantity);
+							break;
+						}
+					}
+					row = new Object[] { inventoryGear.getType(),
+							(inventoryGear.getWeight() * inventoryGear.getQuantity()), inventoryGear.getQuantity() };
+
+				} else {
+					gear.setQuantity(boughtQuantity);
+					row = new Object[] { gear.getType(), (gear.getWeight() * boughtQuantity), boughtQuantity };
+				}
+
+				boolean entryExists = false;
+				int duplicateRowIndex = 0;
+				for (int i = 0; i < inventoryGearTable.getRowCount(); i++) {
+					String tempType = (String) inventoryGearTable.getValueAt(i, InventoryGearTableModel.TYPE_INDEX);
+					if (tempType.equals(type)) {
+						duplicateRowIndex = i;
+						entryExists = true;
+						break;
+					}
+				}
+				if (entryExists) {
+					((InventoryGearTableModel) inventoryGearTable.getModel()).removeRow(duplicateRowIndex);
+				}
+
+				if (boughtQuantity > 0) {
+					inventoryGearMap.put(type, gear);
+					((InventoryGearTableModel) inventoryGearTable.getModel()).addRow(row);
+				}
+			}
+			characterView.resizeColumnWidth(inventoryGearTable);
+		}
+
+		private void addBoughtAmmoToInventory() {
+			for (int rowIndex = 0; rowIndex < storeAmmoTable.getRowCount(); rowIndex++) {
+				int boxesBought = 0;
+				Object[] row;
+				String type = (String) storeAmmoTable.getValueAt(rowIndex, StoreAmmoTableModel.TYPE_INDEX);
+				CharacterCreationModel.Ammo ammo = characterModel.getAmmos().get(type);
+				Map<String, CharacterCreationModel.Ammo> inventoryAmmoMap = characterModel.getInventoryAmmos();
+				boxesBought = (Integer) storeAmmoTable.getValueAt(rowIndex, StoreAmmoTableModel.BOXES_INDEX);
+				if (inventoryAmmoMap.containsKey(type)) {
+					CharacterCreationModel.Ammo inventoryAmmo = inventoryAmmoMap.get(type);
+					for (int i = 0; i < inventoryAmmoTable.getRowCount(); i++) {
+						String tempType = (String) inventoryAmmoTable.getValueAt(i, InventoryAmmoTableModel.TYPE_INDEX);
+						if (tempType.equals(type)) {
+							int currentQuantity = (Integer) inventoryAmmoTable.getValueAt(i,
+									InventoryAmmoTableModel.BULLETS_INDEX);
+							currentQuantity += (ammo.getQuantityPerBox()
+									* (Integer) storeAmmoTable.getValueAt(rowIndex, StoreAmmoTableModel.BOXES_INDEX));
+							inventoryAmmo.setQuantity(currentQuantity);
+							break;
+						}
+					}
+					row = new Object[] { inventoryAmmo.getType(), inventoryAmmo.isCaseless(),
+							((inventoryAmmo.getQuantity() / ammo.getQuantityPerBox()) * ammo.getWeight()),
+							inventoryAmmo.getQuantity() };
+				} else {
+					ammo.setQuantity(boxesBought);
+					row = new Object[] { ammo.getType(), ammo.isCaseless(), (boxesBought * ammo.getWeight()),
+							(ammo.getQuantityPerBox() * boxesBought) };
+				}
+
+				boolean entryExists = false;
+				int duplicateRowIndex = 0;
+				for (int i = 0; i < inventoryAmmoTable.getRowCount(); i++) {
+					String tempType = (String) inventoryAmmoTable.getValueAt(i, InventoryAmmoTableModel.TYPE_INDEX);
+					if (tempType.equals(type)) {
+						duplicateRowIndex = i;
+						entryExists = true;
+						break;
+					}
+				}
+				if (entryExists) {
+					((InventoryAmmoTableModel) inventoryAmmoTable.getModel()).removeRow(duplicateRowIndex);
+				}
+
+				if (boxesBought > 0) {
+					inventoryAmmoMap.put(type, ammo);
+					((InventoryAmmoTableModel) inventoryAmmoTable.getModel()).addRow(row);
+				}
+			}
+			characterView.resizeColumnWidth(inventoryAmmoTable);
 		}
 	}
 
@@ -3306,7 +3371,7 @@ public class CharacterCreationController {
 					SkillTableModel tableModel = (SkillTableModel) tables.get(key).getModel();
 					String categoryCode = key.substring(0, 3);
 					int index = listSelectionModel.getLeadSelectionIndex();
-					String skillName = (String) tableModel.getValueAt(index, 0);
+					String skillName = (String) tableModel.getValueAt(index, SpecialSkillTableModel.SKILL_INDEX);
 					String skillCode = skillName.replace(" ", "_").toLowerCase();
 					CharacterCreationModel.Skill skill = characterModel.getSkill(categoryCode + ":" + skillCode);
 					textAreas.get(key).setText(skill.getDescription());
@@ -3314,7 +3379,7 @@ public class CharacterCreationController {
 					SpecialSkillTableModel tableModel = (SpecialSkillTableModel) tables.get(key).getModel();
 					String categoryCode = key.substring(0, 3);
 					int index = listSelectionModel.getLeadSelectionIndex();
-					String skillName = (String) tableModel.getValueAt(index, 0);
+					String skillName = (String) tableModel.getValueAt(index, SpecialSkillTableModel.SKILL_INDEX);
 					String skillCode = skillName.replace(" ", "_").toLowerCase();
 					CharacterCreationModel.Skill skill = characterModel.getSkill(categoryCode + ":" + skillCode);
 					textAreas.get(key).setText(skill.getDescription());
