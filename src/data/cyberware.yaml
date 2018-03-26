@@ -1,0 +1,1905 @@
+---
+cyberware:
+  fashionware:
+    biomonitor:
+      cyberware: "Biomonitor"
+      surgery_code: "(N)"
+      id_code: "(BIO)"
+      description: "+2 to Resist Torture & Drugs"
+      cost: 100
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: null
+    skinwatch:
+      cyberware: "Skinwatch"
+      surgery_code: "(N)"
+      id_code: "(SWTC)"
+      description: "Subdermal timepiece"
+      cost: 50
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: null
+    light_tatoo:
+      cyberware: "Light Tatoo"
+      surgery_code: "(N)"
+      id_code: "(LT)"
+      description: "Decorative tatoo"
+      cost: 10
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: null
+    shift_tacts:
+      cyberware: "Shift-tacts"
+      surgery_code: "(N)"
+      id_code: "(SHF)"
+      description: "Color changing contact lenses"
+      cost: 100
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: null
+    chemskins:
+      cyberware: "Chemskins"
+      surgery_code: "(N)"
+      id_code: "(CSK)"
+      description: "Color/pattern changing skin tints"
+      cost: 200
+      min_humanity_loss: 0.5
+      max_humanity_loss: 3.0
+      prerequisites: null
+    synthskins:
+      cyberware: "Synthskins"
+      surgery_code: "(N)"
+      id_code: "(SYN)"
+      description: "Color/pattern changing artificial skin"
+      cost: 400
+      min_humanity_loss: 1.0
+      max_humanity_loss: 6.0
+      prerequisites: null
+    techhair:
+      cyberware: "Techhair"
+      surgery_code: "(M)"
+      id_code: "(TEH)"
+      description: "Color/light changing artificial hair"
+      cost: 100
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: null
+  neuralware:
+    neuralware_processor:
+      cyberware: "Chipware Socket"
+      surgery_code: "(M)"
+      id_code: null
+      description: "Basic processor. Must have for all systems"
+      cost: 1000
+      min_humanity_loss: 1.0
+      max_humanity_loss: 6.0
+      prerequisites: null
+    kerenzikov_boosterware_level_1:
+      cyberware: "Kerenzikov Boosterware Lv. 1"
+      surgery_code: "(N)"
+      id_code: "(RFB)"
+      description: "Add +1 to Initiative rolls."
+      cost: 500
+      min_humanity_loss: 1.0
+      max_humanity_loss: 6.0
+      prerequisites: "Chipware Socket"
+    kerenzikov_boosterware_level_2:
+      cyberware: "Kerenzikov Boosterware Lv. 2"
+      surgery_code: "(N)"
+      id_code: "(RFB)"
+      description: "Add +2 to Initiative rolls."
+      cost: 1000
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: "Chipware Socket"
+    speedware_sandevistan:
+      cyberware: "Speedware (Sandevistan)"
+      surgery_code: "(N)"
+      id_code: "(SW)"
+      description: "Adds +3 to Initiative rolls for 5 turns."
+      cost: 1600
+      min_humanity_loss: 0.5
+      max_humanity_loss: 3.0
+      prerequisites: "Chipware Socket"
+    tactile_boost:
+      cyberware: "Tactile Boost"
+      surgery_code: "(N)"
+      id_code: "(TB)"
+      description: "Increased sensitivity. +2 on any touch Awareness check."
+      cost: 100
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Chipware Socket"
+    olifactory_boost:
+      cyberware: "Olifactory Boost"
+      surgery_code: "(N)"
+      id_code: "(OLF)"
+      description: "Increase Awareness via smell by +2. Allows scent tracking."
+      cost: 100
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Chipware Socket"
+    pain_editor:
+      cyberware: "Pain Editor"
+      surgery_code: "(N)"
+      id_code: "(TE)"
+      description: "Tunes out hot cold pain."
+      cost: 200
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: "Chipware Socket"
+    cybermodem_link:
+      cyberware: "Cybermodem Link"
+      surgery_code: "(N)"
+      id_code: "(PE)"
+      description: "Allows direct connection to a cybermodem."
+      cost: 100
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Interface Plugs"
+    vehicle_link:
+      cyberware: "Vehicle Link"
+      surgery_code: "(N)"
+      id_code: "(VLNK)"
+      description: "For direct vehicle operation only."
+      cost: 100
+      min_humanity_loss: 3.0
+      max_humanity_loss: 3.0
+      prerequisites: "Interface Plugs"
+    smartgun_link:
+      cyberware: "Smartgun Link"
+      surgery_code: "(N)"
+      id_code: "(WLNK)"
+      description: "For direct smartweapon operation only."
+      cost: 100
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Interface Plugs"
+    machine_link:
+      cyberware: "Machine/Tech Link"
+      surgery_code: "(N)"
+      id_code: "(MLNK)"
+      description: "Allows control of autofactories large & small machines."
+      cost: 100
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Interface Plugs"
+    dataterm_link:
+      cyberware: "DataTerm Link"
+      surgery_code: "(N)"
+      id_code: "(DLNK)"
+      description: "Allows downloading from DataTerms to internal memory."
+      cost: 100
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Interface Plugs"
+    interface_plugs:
+      cyberware: "Interface Plugs"
+      surgery_code: "(M)"
+      id_code: "(PLG)"
+      description: "Allows direct connection to smart weapons vehicles."
+      cost: 200
+      min_humanity_loss: 0.5
+      max_humanity_loss: 3.0
+      prerequisites: "Chipware Socket"
+    swimming_chip:
+      cyberware: "Reflex Chip: Swimming"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 100
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    archery_chip:
+      cyberware: "Reflex Chip: Archery"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 300
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    dance_chip:
+      cyberware: "Reflex Chip: Dance"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    driving_chip:
+      cyberware: "Reflex Chip: Driving"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    fencing_chip:
+      cyberware: "Reflex Chip: Fencing"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 300
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    handgun_chip:
+      cyberware: "Reflex Chip: Handgun"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 300
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    heavy_weapons_chip:
+      cyberware: "Reflex Chip: Heavy Weapons"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 400
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    karate_chip:
+      cyberware: "Reflex Chip: Karate"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 350
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    judo_chip:
+      cyberware: "Reflex Chip: Judo"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 350
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    boxing_chip:
+      cyberware: "Reflex Chip: Boxing"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 350
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    thai_boxing_chip:
+      cyberware: "Reflex Chip: Thai Boxing"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 350
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    choi_li_fut_chip:
+      cyberware: "Reflex Chip: Choi Li Fut"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 350
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    aikido_chip:
+      cyberware: "Reflex Chip: Aikido"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 350
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    animal_kung_fu_chip:
+      cyberware: "Reflex Chip: Animal Kung Fu"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 350
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    tae_kwon_do_chip:
+      cyberware: "Reflex Chip: Tae Kwon Do"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 350
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    savate_chip:
+      cyberware: "Reflex Chip: Savate"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 350
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    wrestling_chip:
+      cyberware: "Reflex Chip: Wrestling"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 350
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    capeoira_chip:
+      cyberware: "Reflex Chip: Capoeira"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 350
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    melee_chip:
+      cyberware: "Reflex Chip: Melee"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    motorcycle_chip:
+      cyberware: "Reflex Chip: Motorcycle"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    operate_heavy_machinery_chip:
+      cyberware: "Reflex Chip: Operate Hvy Machinery"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    pilot_gyro_chip:
+      cyberware: "Reflex Chip: Pilot Gyro"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 300
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    pilot_fixed_wing_chip:
+      cyberware: "Reflex Chip: Pilot Fixed Wing"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 300
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    pilot_dirigible_chip:
+      cyberware: "Reflex Chip: Pilot Dirigible"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 300
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    pilot_vector_thrust_vehicle_chip:
+      cyberware: "Reflex Chip: Pilot Vect. Thrust Vehicle"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 350
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    rifle_chip:
+      cyberware: "Reflex Chip: Rifle"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 300
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    submachinegun_chip:
+      cyberware: "Reflex Chip: Submachinegun"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 300
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    aero_tech_chip:
+      cyberware: "Reflex Chip: Aero Tech"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 250
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    av_tech_chip:
+      cyberware: "Reflex Chip: AV Tech"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 300
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    basic_tech_chip:
+      cyberware: "Reflex Chip: Basic Tech"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    cryotank_operation_chip:
+      cyberware: "Reflex Chip: Cryotank Operation"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    cyberdeck_design_chip:
+      cyberware: "Reflex Chip: Cyberdeck Design"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    cybertech_chip:
+      cyberware: "Reflex Chip: CyberTech"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 300
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    demolitions_chip:
+      cyberware: "Reflex Chip: Demolitions"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 300
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    disguise_chip:
+      cyberware: "Reflex Chip: Disguise"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    electronics_chip:
+      cyberware: "Reflex Chip: Electronics"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    electronic_security_chip:
+      cyberware: "Reflex Chip: Electronic Security"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    first_aid_chip:
+      cyberware: "Reflex Chip: First Aid"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    forgery_chip:
+      cyberware: "Reflex Chip: Forgery"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    gyro_tech_chip:
+      cyberware: "Reflex Chip: Gyro Tech"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 300
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    pharmaceuticals_chip:
+      cyberware: "Reflex Chip: Pharmaceuticals"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    pick_lock_chip:
+      cyberware: "Reflex Chip: Pick Lock"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    pick_pocket_chip:
+      cyberware: "Reflex Chip: Pick Pocket"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    play_instrument_chip:
+      cyberware: "Reflex Chip: Play Instrument"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    weaponsmith_chip:
+      cyberware: "Reflex Chip: Weaponsmith"
+      surgery_code: null
+      id_code: "(APTR)"
+      description: "Chips reflex based skills Tech Skills requiring manipulation."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    personal_grooming_chip:
+      cyberware: "Memoryware Chip: Personal Grooming"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 100
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    wardrobe_and_style_chip:
+      cyberware: "Memoryware Chip: Wardrobe & Style"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 100
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    accounting_chip:
+      cyberware: "Memoryware Chip: Accounting"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    anthropology_chip:
+      cyberware: "Memoryware Chip: Anthropology"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    biology_chip:
+      cyberware: "Memoryware Chip: Biology"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    botany_chip:
+      cyberware: "Memoryware Chip: Botany"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    chemistry_chip:
+      cyberware: "Memoryware Chip: Chemistry"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    education_and_general_knowledge_chip:
+      cyberware: "Memoryware Chip: Education & General Knowledge"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    expert_chip:
+      cyberware: "Memoryware Chip: Expert"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    geology_chip:
+      cyberware: "Memoryware Chip: Geology"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    history_chip:
+      cyberware: "Memoryware Chip: History"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    known_language_african_chip:
+      cyberware: "Memoryware Chip: Known Language African"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    known_language_baltic_chip:
+      cyberware: "Memoryware Chip: Known Language Baltic"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    known_language_celtic_chip:
+      cyberware: "Memoryware Chip: Known Language Celtic"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    known_language_farsi_chip:
+      cyberware: "Memoryware Chip: Known Language Farsi"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    known_language_germanic_chip:
+      cyberware: "Memoryware Chip: Known Language Germanic"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    known_language_greek_chip:
+      cyberware: "Memoryware Chip: Known Language Greek"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    known_language_japanese_chip:
+      cyberware: "Memoryware Chip: Known Language Japanese"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    known_language_korean_chip:
+      cyberware: "Memoryware Chip: Known Language Korean"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    known_language_pacific_island_group_chip:
+      cyberware: "Memoryware Chip: Known Language Pacific Island Group"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    known_language_romantic_chip:
+      cyberware: "Memoryware Chip: Known Language Romantic"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    known_language_semetic_chip:
+      cyberware: "Memoryware Chip: Known Language Semetic"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    known_language_sino_tibetan_and_se_asian_chip:
+      cyberware: "Memoryware Chip: Known Language Sino-Tibetan and S.E. Asian"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    known_language_slavic_chip:
+      cyberware: "Memoryware Chip: Known Language Slavic"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    mathematics_chip:
+      cyberware: "Memoryware Chip: Mathematics"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    physics_chip:
+      cyberware: "Memoryware Chip: Physics"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    programming_chip:
+      cyberware: "Memoryware Chip: Programming"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    stock_market_chip:
+      cyberware: "Memoryware Chip: Stock Market"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    wilderness_survival_chip:
+      cyberware: "Memoryware Chip: Wilderness Survival"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    zoology_chip:
+      cyberware: "Memoryware Chip: Zoology"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    daytimer_chip:
+      cyberware: "Memoryware Chip: Daytimer"
+      surgery_code: null
+      id_code: "(MRAM)"
+      description: "Chips INT and other cognitive skills databases."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Chipware Socket"
+    chipware_socket:
+      cyberware: "Chipware Socket"
+      surgery_code: "(N)"
+      id_code: null
+      description: "Allows up to 10 chips to be loaded."
+      cost: 200
+      min_humanity_loss: 0.5
+      max_humanity_loss: 3.0
+      prerequisites: "Neuralware Processor"
+  implants:
+    nasal_filters:
+      cyberware: "Nasal Filters"
+      surgery_code: "(M)"
+      id_code: "(NF)"
+      description: "Stops toxic gases fumes. 70% effective."
+      cost: 60
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: null
+    gills:
+      cyberware: "Gills"
+      surgery_code: "(MA)"
+      id_code: "(GL)"
+      description: "Water breathing system good for 4 hours"
+      cost: 400
+      min_humanity_loss: 3.0
+      max_humanity_loss: 18.0
+      prerequisites: null
+    independent_air_supply:
+      cyberware: "Independent Air Supply"
+      surgery_code: "(MA)"
+      id_code: "(IA)"
+      description: "Good for 25 minutes."
+      cost: 300
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    mr_studd_sexual_implant:
+      cyberware: "Mr. Studd Sexual Implant"
+      surgery_code: "(MA)"
+      id_code: "(MS)"
+      description: "All night every night. And she'll never know"
+      cost: 300
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    contraceptive_implant:
+      cyberware: "Contraceptive Implant"
+      surgery_code: "(N)"
+      id_code: "(CI)"
+      description: "Good for 5 years. 98% effective."
+      cost: 100
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: null
+    subdermal_pocket:
+      cyberware: "SubDermal Pocket"
+      surgery_code: "(M)"
+      id_code: "(PKT)"
+      description: "2in x 4in space with Realskinn zipper"
+      cost: 200
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    adrenal_booseter:
+      cyberware: "Adrenal Booster"
+      surgery_code: "(M)"
+      id_code: "(ADB)"
+      description: "Boosts REF by +1 for 1D6+2 turns 3x per day."
+      cost: 400
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    subdermal_armor:
+      cyberware: "SubDermal Armor"
+      surgery_code: "(CR)"
+      id_code: "(SDA)"
+      description: "Armors torso to SP 18"
+      cost: 1200
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    motion_detector:
+      cyberware: "Motion Detector"
+      surgery_code: "(M)"
+      id_code: "(MD)"
+      description: "Detects motion in a 20sq/m area. 70% effectiveness."
+      cost: 200
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    digital_recorder:
+      cyberware: "Digital Recorder"
+      surgery_code: "(M)"
+      id_code: "(DGR)"
+      description: "2 hrs storage from any digital source."
+      cost: 200
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: null
+    audio_video_tape_recorder:
+      cyberware: "Audio/Video Tape Recorder"
+      surgery_code: "(M)"
+      id_code: "(AVR)"
+      description: "2 hrs storage from video audio links."
+      cost: 300
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: null
+    radar_sensor:
+      cyberware: "Radar Sensor"
+      surgery_code: "(M)"
+      id_code: "(RA)"
+      description: "100m range radar. Must have cyberoptic. 70% effective."
+      cost: 200
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberoptic"
+    sonar_implant:
+      cyberware: "Digital Recorder"
+      surgery_code: "(M)"
+      id_code: "(SN)"
+      description: "50m range sonar. For water only.70% effective."
+      cost: 300
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: null
+    radiation_detector:
+      cyberware: "Radiation Detector"
+      surgery_code: "(M)"
+      id_code: "(RAD)"
+      description: "10m range. 80% detection effectiveness."
+      cost: 200
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: null
+    chemical_analyser:
+      cyberware: "Chemical Analyser"
+      surgery_code: "(M)"
+      id_code: "(CH)"
+      description: "5m range. 70% effectiveness."
+      cost: 200
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: null
+    voice_synthesizer:
+      cyberware: "Voice Synthesizer"
+      surgery_code: "(M)"
+      id_code: "(VS)"
+      description: "Can mimic any recorded sound (60%) up to 10 sounds."
+      cost: 600
+      min_humanity_loss: 1.0
+      max_humanity_loss: 6.0
+      prerequisites: null
+    audiovox:
+      cyberware: "AudioVox"
+      surgery_code: "(M)"
+      id_code: "(LS)"
+      description: "Vocal synthesizer for special effects. +2 to Performance."
+      cost: 700
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+  bioware:
+    grafted_muscle:
+      cyberware: "Grafted Muscle"
+      surgery_code: "(MA)"
+      id_code: "(GR)"
+      description: "Up to +2 increase to Body Type"
+      cost: 1000
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    muscle_and_bone_lace:
+      cyberware: "Muscle and Bone Lace"
+      surgery_code: "(N)"
+      id_code: "(MBL)"
+      description: "Raises Body Type by +2"
+      cost: 1500
+      min_humanity_loss: 0.5
+      max_humanity_loss: 3.0
+      prerequisites: null
+    skin_weave:
+      cyberware: "Skin Weave"
+      surgery_code: "(N)"
+      id_code: "(SKW)"
+      description: "Armors body to SP 12"
+      cost: 2000
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    enhanced_antibodies:
+      cyberware: "Enhanced Antibodies"
+      surgery_code: "(N)"
+      id_code: "(EA)"
+      description: "Improve Healing by +1 points per day"
+      cost: 3000
+      min_humanity_loss: 0.5
+      max_humanity_loss: 3.0
+      prerequisites: null
+    toxin_binders:
+      cyberware: "Toxin Binders"
+      surgery_code: "(N)"
+      id_code: "(TBN)"
+      description: "Improve Poison Drug Saves by +4"
+      cost: 3000
+      min_humanity_loss: 0.5
+      max_humanity_loss: 3.0
+      prerequisites: null
+    nanosurgeons:
+      cyberware: "Nanosurgeons"
+      surgery_code: "(N)"
+      id_code: "(NSR)"
+      description: "Doubles healing rate"
+      cost: 6000
+      min_humanity_loss: 0.5
+      max_humanity_loss: 3.0
+      prerequisites: null
+    scratchers:
+      cyberware: "Scratchers"
+      surgery_code: "(N)"
+      id_code: "(SCR)"
+      description: "Body Weapon (hands). 1D6/2 damage."
+      cost: 100
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    implanted_fangs_vampires:
+      cyberware: "Implanted Fangs (Vampires)"
+      surgery_code: "(N)"
+      id_code: "(VAM)"
+      description: "Body Weapon (mouth). 1D6/3 damage."
+      cost: 200
+      min_humanity_loss: 3.0
+      max_humanity_loss: 18.0
+      prerequisites: null
+    rippers:
+      cyberware: "Rippers"
+      surgery_code: "(M)"
+      id_code: "(RIP)"
+      description: "Body Weapon (hands). 1D6+3 damage (AP: knife)."
+      cost: 400
+      min_humanity_loss: 3.0
+      max_humanity_loss: 18.0
+      prerequisites: null
+    wolvers:
+      cyberware: "Wolvers"
+      surgery_code: "(M)"
+      id_code: "(WLV)"
+      description: "Body Weapon (hands). 3D6 damage (AP: knife)."
+      cost: 600
+      min_humanity_loss: 4.0
+      max_humanity_loss: 19.0
+      prerequisites: null
+    big_knucks:
+      cyberware: "Big Knucks"
+      surgery_code: "(M)"
+      id_code: "(BGN)"
+      description: "Body Weapon (hands). 1D6+2 damage."
+      cost: 500
+      min_humanity_loss: 3.0
+      max_humanity_loss: 18.0
+      prerequisites: null
+    slice_n_dice:
+      cyberware: "Slice N' Dice"
+      surgery_code: "(M)"
+      id_code: "(SND)"
+      description: "Body Weapon (hands). 2D6 damage."
+      cost: 700
+      min_humanity_loss: 3.0
+      max_humanity_loss: 18.0
+      prerequisites: null
+    cybersnake:
+      cyberware: "Cybersnake"
+      surgery_code: "(MA)"
+      id_code: "(CSN)"
+      description: "Cyberweapon self controlling. 1D6 damage."
+      cost: 100
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+  cyberoptic:
+    cyberoptic_eye:
+      cyberware: "Cyberoptic Eye"
+      surgery_code: "(MA)"
+      id_code: null
+      description: "Basic eye module (add up to 4 options per eye)"
+      cost: 500
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    color_shift:
+      cyberware: "Color Shift"
+      surgery_code: "(N)"
+      id_code: "(CF)"
+      description: "Allows color changes special fashion effects."
+      cost: 300
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberoptic Eye"
+    image_enhancement:
+      cyberware: "Image Enhancement"
+      surgery_code: "(N)"
+      id_code: "(IE)"
+      description: "+2 Awareness when using visual search."
+      cost: 300
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberoptic Eye"
+    targeting_scope:
+      cyberware: "Color Shift"
+      surgery_code: "(N)"
+      id_code: "(TA)"
+      description: "+1 on all smartgun attacks."
+      cost: 400
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberoptic Eye"
+    times_square_marquee:
+      cyberware: "Times Square Marquee"
+      surgery_code: "(N)"
+      id_code: "(TS)"
+      description: "LED Screen in vision field for messages."
+      cost: 300
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberoptic Eye"
+    teleoptics:
+      cyberware: "Teleoptics"
+      surgery_code: "(N)"
+      id_code: "(TE)"
+      description: "Telescope ability to 20x."
+      cost: 150
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberoptic Eye"
+    micro_optics:
+      cyberware: "Micro-Optics"
+      surgery_code: "(N)"
+      id_code: "(ME)"
+      description: "Microscope"
+      cost: 150
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberoptic Eye"
+    anti_dazzle:
+      cyberware: "Anti Dazzle"
+      surgery_code: "(N)"
+      id_code: "(AD)"
+      description: "Immune to flash laser blinding"
+      cost: 200
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberoptic Eye"
+    low_lite:
+      cyberware: "Low Lite"
+      surgery_code: "(N)"
+      id_code: "(LL)"
+      description: "See in dim light almost total darkness."
+      cost: 200
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberoptic Eye"
+    thermograph_sensor:
+      cyberware: "Thermograph Sensor"
+      surgery_code: "(N)"
+      id_code: "(TH)"
+      description: "See heat patterns temperature readings."
+      cost: 200
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberoptic Eye"
+    infrared:
+      cyberware: "Infrared"
+      surgery_code: "(N)"
+      id_code: "(IR)"
+      description: "See in total darkness using heat emissions."
+      cost: 200
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberoptic Eye"
+    ultraviolet:
+      cyberware: "Ultraviolet"
+      surgery_code: "(N)"
+      id_code: "(UV)"
+      description: "See in darkness using UV flash."
+      cost: 200
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberoptic Eye"
+    microvideo_optic:
+      cyberware: "MicroVideo Optic"
+      surgery_code: "(N)"
+      id_code: "(MV)"
+      description: "Video record up to 20min (takes 2 option spaces)."
+      cost: 300
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberoptic Eye"
+    digitalcamera:
+      cyberware: "DigitalCamera"
+      surgery_code: "(N)"
+      id_code: "(DC)"
+      description: "Digital Camera shoots up to 20 images (as 2 options)."
+      cost: 300
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberoptic Eye"
+    dartgun:
+      cyberware: "Dartgun"
+      surgery_code: "(N)"
+      id_code: "(DE)"
+      description: "Poison weapon (takes 3 option spaces). Holds 1 dart."
+      cost: 200
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberoptic Eye"
+  cyberaudio:
+    cyberaudio_module:
+      cyberware: "Cyberaudio Module"
+      surgery_code: "(M)"
+      id_code: null
+      description: "Basic hearing module. No option limit."
+      cost: 500
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    amplified_hearing:
+      cyberware: "Amplified Hearing"
+      surgery_code: "(N)"
+      id_code: "(AH)"
+      description: "+1 Awareness when using auditory cues."
+      cost: 200
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberaudio Module"
+    radio_link:
+      cyberware: "Radio Link"
+      surgery_code: "(N)"
+      id_code: "(RL)"
+      description: "Radio communication up to 1 mile."
+      cost: 100
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberaudio Module"
+    phone_splice:
+      cyberware: "Amplified Hearing"
+      surgery_code: "(N)"
+      id_code: "(PS)"
+      description: "Full Cellular communication (large city only)."
+      cost: 150
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberaudio Module"
+    scrambler:
+      cyberware: "Scrambler"
+      surgery_code: "(N)"
+      id_code: "(SC)"
+      description: "Cannot overhear communications w/o descrambler."
+      cost: 100
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberaudio Module"
+    bug_detector:
+      cyberware: "Bug Detector"
+      surgery_code: "(N)"
+      id_code: "(BD)"
+      description: "Detect taps bugs up to 3m. 60% effective."
+      cost: 200
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberaudio Module"
+    voice_stress_analyser:
+      cyberware: "Voice Stress Analyser"
+      surgery_code: "(N)"
+      id_code: "(VSA)"
+      description: "Lie detector. +2 Human Perception Interrogation skills."
+      cost: 200
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberaudio Module"
+    sound_editing:
+      cyberware: "Sound Editing"
+      surgery_code: "(N)"
+      id_code: "(SE)"
+      description: "+2 to Awareness to overhear one specific conversation."
+      cost: 150
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberaudio Module"
+    enhanced_hearing_range:
+      cyberware: "Enhanced Hearing Range"
+      surgery_code: "(N)"
+      id_code: "(EH)"
+      description: "Ability to hear supersonic subsonic ranges."
+      cost: 150
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberaudio Module"
+    wearman:
+      cyberware: "Wearman"
+      surgery_code: "(N)"
+      id_code: "(WM)"
+      description: "Stereo music system."
+      cost: 100
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberaudio Module"
+    radar_detector:
+      cyberware: "Radar Detector"
+      surgery_code: "(N)"
+      id_code: "(RD)"
+      description: "Beeps if radar beam is encountered fixes source (40%)."
+      cost: 150
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberaudio Module"
+    homing_tracer:
+      cyberware: "Homing Tracer"
+      surgery_code: "(N)"
+      id_code: "(HT)"
+      description: "Can follow tracer up to 1km distant."
+      cost: 200
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberaudio Module"
+    tight_beam_radio_link:
+      cyberware: "Tight Beam Radio Link"
+      surgery_code: "(N)"
+      id_code: "(TBR)"
+      description: "Allows untappable radio comm. within line of sight."
+      cost: 200
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberaudio Module"
+    wide_band_radio_scanner:
+      cyberware: "Amplified Hearing"
+      surgery_code: "(N)"
+      id_code: "(WB)"
+      description: "Will pick up all transmissions on all bands. A scanner."
+      cost: 100
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberaudio Module"
+    micro_recorder_link:
+      cyberware: "Micro-Recorder Link"
+      surgery_code: "(N)"
+      id_code: "(MR)"
+      description: "Transmits to recorder in body or via plugs."
+      cost: 100
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberaudio Module"
+    digital_recording_link:
+      cyberware: "Digital Recording Link"
+      surgery_code: "(N)"
+      id_code: "(DR)"
+      description: "Transmits sounds to a digital recorder."
+      cost: 100
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberaudio Module"
+    level_damper:
+      cyberware: "Level Damper"
+      surgery_code: "(N)"
+      id_code: "(LD)"
+      description: "Automatic noise compensation."
+      cost: 300
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberaudio Module"
+  cyberlimbs:
+    cyberarm:
+      cyberware: "Cyberarm"
+      surgery_code: "(CR)"
+      id_code: null
+      description: "Standard arm replacement (4 options allowed)"
+      cost: 3000
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    cyberleg:
+      cyberware: "Cyberleg"
+      surgery_code: "(CR)"
+      id_code: null
+      description: "Standard leg replacement (3 options allowed)"
+      cost: 2000
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    quick_change_mount:
+      cyberware: "Quick Change Mount"
+      surgery_code: "(N)"
+      id_code: "(QC)"
+      description: "Allows 1 turn changing of cyberwear."
+      cost: 200
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberleg/Cyberarm"
+    hydraulic_rams:
+      cyberware: "Hydraulic Rams"
+      surgery_code: "(N)"
+      id_code: "(HRAM)"
+      description: "Increase limb SDP to 30 3x normal damages."
+      cost: 200
+      min_humanity_loss: 3.0
+      max_humanity_loss: 3.0
+      prerequisites: "Cyberleg/Cyberarm"
+    thickened_myomar:
+      cyberware: "Thickened Myomar"
+      surgery_code: "(N)"
+      id_code: "(THK)"
+      description: "Increase limb SDP to 25 2x normal damage. +50% on leaps."
+      cost: 250
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberleg/Cyberarm"
+    reinforced_joints:
+      cyberware: "Reinforced Joints"
+      surgery_code: "(N)"
+      id_code: "(RJ)"
+      description: "Increase limb SDP by +5."
+      cost: 200
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberleg/Cyberarm"
+    artificial_shoulder_mount:
+      cyberware: "Artificial Shoulder Mount"
+      surgery_code: "(CR)"
+      id_code: "(ASHO)"
+      description: "Mount extra arms (2) below first set. 1 only."
+      cost: 1500
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: "Cyberleg/Cyberarm"
+    microwave_emp_shielding:
+      cyberware: "Microwave/EMP Shielding"
+      surgery_code: "(N)"
+      id_code: "(MSR)"
+      description: "Limb is unaffected by Microwave side effects."
+      cost: 300
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberleg/Cyberarm"
+    plastic_covering:
+      cyberware: "Plastic Covering"
+      surgery_code: "(N)"
+      id_code: "(PSTK)"
+      description: "In colors transparent etc."
+      cost: 100
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberleg/Cyberarm"
+    realskinn:
+      cyberware: "RealSkinn"
+      surgery_code: "(N)"
+      id_code: "(REAL)"
+      description: "Limb looks real (DIFFICULT task) Lowers HC by 1D6/2."
+      cost: 200
+      min_humanity_loss: -0.5
+      max_humanity_loss: -3.0
+      prerequisites: "Cyberleg/Cyberarm"
+    superchrome:
+      cyberware: "Superchrome"
+      surgery_code: "(N)"
+      id_code: "(SUPR)"
+      description: "Highgloss metallic covering."
+      cost: 200
+      min_humanity_loss: 3.0
+      max_humanity_loss: 3.0
+      prerequisites: "Cyberleg/Cyberarm"
+    armor:
+      cyberware: "Armor"
+      surgery_code: "(N)"
+      id_code: "(ARM)"
+      description: "Armors cyberlimb to SP20"
+      cost: 200
+      min_humanity_loss: 1.0
+      max_humanity_loss: 6.0
+      prerequisites: "Cyberleg/Cyberarm"
+  hands_and_feet:
+    standard_hand:
+      cyberware: "Standard Hand"
+      surgery_code: "(N)"
+      id_code: "(STD)"
+      description: "Resembles normal hand"
+      cost: 150
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Cyberleg/Cyberarm"
+    ripper_hand:
+      cyberware: "Ripper Hand"
+      surgery_code: "(N)"
+      id_code: "(RPH)"
+      description: "Standard hand with rippers built in."
+      cost: 600
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: "Cyberleg/Cyberarm"
+    hammerhand:
+      cyberware: "HammerHand"
+      surgery_code: "(N)"
+      id_code: "(HAM)"
+      description: "Hydraulic Ram fist does 1D10 damage."
+      cost: 600
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: "Cyberleg/Cyberarm"
+    buzzhand:
+      cyberware: "BuzzHand"
+      surgery_code: "(N)"
+      id_code: "(BUZ)"
+      description: "Wire circular saw. 2D6+2 damage soft armor reduced."
+      cost: 600
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: "Cyberleg/Cyberarm"
+    tool_hand:
+      cyberware: "Tool Hand"
+      surgery_code: "(N)"
+      id_code: "(TOL)"
+      description: "Fingers contain screwdriver wrench small drill etc."
+      cost: 200
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberleg/Cyberarm"
+    grapple_hand:
+      cyberware: "Grapple Hand"
+      surgery_code: "(N)"
+      id_code: "(GRP)"
+      description: "Extends rocket-propelled grapple 100ft line."
+      cost: 350
+      min_humanity_loss: 3.0
+      max_humanity_loss: 3.0
+      prerequisites: "Cyberleg/Cyberarm"
+    extension_hand:
+      cyberware: "Extension Hand"
+      surgery_code: "(N)"
+      id_code: "(EXT)"
+      description: "Hand extends on collapsable sleeve up to 1m."
+      cost: 350
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberleg/Cyberarm"
+    spike_hand:
+      cyberware: "Spike Hand"
+      surgery_code: "(N)"
+      id_code: "(SPK)"
+      description: "Palm spike extends thru fingers. 1D6+3 AP damage"
+      cost: 500
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: "Cyberleg/Cyberarm"
+    modular_hand:
+      cyberware: "Spike Hand"
+      surgery_code: "(N)"
+      id_code: "(MOD)"
+      description: "Choose any 4 modular tools."
+      cost: 600
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberleg/Cyberarm"
+    standard_foot:
+      cyberware: "Standard Foot"
+      surgery_code: "(N)"
+      id_code: "(STDF)"
+      description: "Resembles normal foot."
+      cost: 200
+      min_humanity_loss: 0.0
+      max_humanity_loss: 0.0
+      prerequisites: "Cyberleg/Cyberarm"
+    talon_foot:
+      cyberware: "Standard Foot"
+      surgery_code: "(N)"
+      id_code: "(TAL)"
+      description: "Extends toe blades. 1D6 damage. (AP: knife)"
+      cost: 300
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: "Cyberleg/Cyberarm"
+    tool_foot:
+      cyberware: "Tool Foot"
+      surgery_code: "(N)"
+      id_code: "(TOLF)"
+      description: "Toes contain screwdriver wrench small drill etc."
+      cost: 300
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberleg/Cyberarm"
+    web_foot:
+      cyberware: "Web Foot"
+      surgery_code: "(N)"
+      id_code: "(WEB)"
+      description: "Double swimming speed +3 to swim skill."
+      cost: 500
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberleg/Cyberarm"
+    grip_foot:
+      cyberware: "Grip Foot"
+      surgery_code: "(N)"
+      id_code: "(GRPF)"
+      description: "Designed for better gripping strength. +2 to Climb."
+      cost: 500
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberleg/Cyberarm"
+    spike_heel_foot:
+      cyberware: "Spike Heel Foot"
+      surgery_code: "(N)"
+      id_code: "(SPKF)"
+      description: "Heel spike for climbing or lethal kicks. 2D6 AP damage."
+      cost: 500
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: "Cyberleg/Cyberarm"
+  built_ins:
+    av_tape_recorder:
+      cyberware: "AV Tape Recorder"
+      surgery_code: "(N)"
+      id_code: "(AVR2)"
+      description: "2 hour micro cassette storage needs ext. pickup"
+      cost: 250
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberleg/Cyberarm"
+    cybermodem:
+      cyberware: "Cybermodem"
+      surgery_code: "(N)"
+      id_code: "(CMD)"
+      description: "Built in \"cyberdeck\"."
+      cost: 3000
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberleg/Cyberarm"
+    cellular_cybermodem:
+      cyberware: "Cellular Cybermodem"
+      surgery_code: "(N)"
+      id_code: "(CCMD)"
+      description: "Built in \"cellular cyberdeck\". Can only be used in a major city where a cell net is present."
+      cost: 5000
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberleg/Cyberarm"
+    digital_recorder:
+      cyberware: "Digital Recorder"
+      surgery_code: "(N)"
+      id_code: "(DGRC)"
+      description: "Digital Chip recorder. Must download or erase chip."
+      cost: 300
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberleg/Cyberarm"
+    storage_space:
+      cyberware: "Standard Foot"
+      surgery_code: "(N)"
+      id_code: "(STR)"
+      description: "2x2x6 inch storage space. Can be locked."
+      cost: 50
+      min_humanity_loss: 0.5
+      max_humanity_loss: 0.5
+      prerequisites: "Cyberleg/Cyberarm"
+    minicam:
+      cyberware: "MiniCam"
+      surgery_code: "(N)"
+      id_code: "(CAM)"
+      description: "Pop up Mini Camera (20 shots)."
+      cost: 200
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberleg/Cyberarm"
+    minivid:
+      cyberware: "MiniVid"
+      surgery_code: "(N)"
+      id_code: "(MVID)"
+      description: "Pop up Mini Video (30 minutes)."
+      cost: 400
+      min_humanity_loss: 2.0
+      max_humanity_loss: 2.0
+      prerequisites: "Cyberleg/Cyberarm"
+    hidden_holster:
+      cyberware: "Hidden Holster"
+      surgery_code: "(N)"
+      id_code: "(HOL)"
+      description: "Weapon size based on Body Type."
+      cost: 100
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberleg"
+    lcd_screen_readout:
+      cyberware: "LCD Screen Readout"
+      surgery_code: "(N)"
+      id_code: "(LCD)"
+      description: "Can be linked to any output device."
+      cost: 200
+      min_humanity_loss: 1.0
+      max_humanity_loss: 1.0
+      prerequisites: "Cyberleg/Cyberarm"
+    techscanner:
+      cyberware: "Techscanner"
+      surgery_code: "(N)"
+      id_code: "(TKSN)"
+      description: "Similar to scanner on pg. 69"
+      cost: 400
+      min_humanity_loss: 3.0
+      max_humanity_loss: 3.0
+      prerequisites: "Cyberleg/Cyberarm"
+  cyberweapons:
+    grenade_launcher:
+      cyberware: "Grenade Launcher"
+      surgery_code: "(N)"
+      id_code: "(GLN)"
+      description: "Weapon. Carries 1 grenade of any type."
+      cost: 500
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: "Cyberleg/Cyberarm"
+    micro_missile_launcher:
+      cyberware: "Micro-Missile Launcher"
+      surgery_code: "(N)"
+      id_code: "(MML)"
+      description: "Weapon. Fires 4 mini-missiles 4D6 damage each."
+      cost: 900
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: "Cyberleg/Cyberarm"
+    popup_gun:
+      cyberware: "Popup Gun"
+      surgery_code: "(N)"
+      id_code: "(PUG)"
+      description: "Weapon. Size based on Body Type."
+      cost: 600
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: "Cyberarm"
+    flame_thrower:
+      cyberware: "Flame Thrower"
+      surgery_code: "(N)"
+      id_code: "(FTH)"
+      description: "Weapon. Damage 2D6 first turn 1D6/2 2 turns after."
+      cost: 600
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: "Cyberleg/Cyberarm"
+    weapon_mount_and_link:
+      cyberware: "Weapon Mount & Link"
+      surgery_code: "(N)"
+      id_code: "(WML)"
+      description: "Mounting plate plus neural link for 1 weapon."
+      cost: 100
+      min_humanity_loss: 3.0
+      max_humanity_loss: 3.0
+      prerequisites: "Cyberleg/Cyberarm"
+    2_shot_capacitor_laser:
+      cyberware: "2 Shot Capacitor Laser"
+      surgery_code: "(N)"
+      id_code: "(LSR)"
+      description: "Shoulder mounted. As a laser only smaller. 3D6 damage"
+      cost: 800
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: "Cyberleg/Cyberarm"
+  linear_frames:
+    frame_sigma:
+      cyberware: "Frame Σ"
+      surgery_code: "(MA)"
+      id_code: "SIGMA"
+      description: "Strength: 12"
+      cost: 6000
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    frame_beta:
+      cyberware: "Frame ß"
+      surgery_code: "(MA)"
+      id_code: "BETA"
+      description: "Strength: 14"
+      cost: 8000
+      min_humanity_loss: 2.0
+      max_humanity_loss: 12.0
+      prerequisites: null
+    frame_omega:
+      cyberware: "Frame Ω"
+      surgery_code: "(MA)"
+      id_code: "OMEGA"
+      description: "Strength: 16"
+      cost: 10000
+      min_humanity_loss: 3.0
+      max_humanity_loss: 18.0
+      prerequisites: null
+  body_plating:
+    cowl:
+      cyberware: "Cowl"
+      surgery_code: "(MA)"
+      id_code: "(SKUL)"
+      description: "Skullcap covers head in SP 25."
+      cost: 200
+      min_humanity_loss: 1.0
+      max_humanity_loss: 6.0
+      prerequisites: null
+    faceplate:
+      cyberware: "Faceplate"
+      surgery_code: "(CR)"
+      id_code: "(FACE)"
+      description: "Protective facemask. SP 25"
+      cost: 400
+      min_humanity_loss: 4.0
+      max_humanity_loss: 24.0
+      prerequisites: null
+    torso_plate:
+      cyberware: "Torso Plate"
+      surgery_code: "(MA)"
+      id_code: "(TORS)"
+      description: "Torso protection. SP 25"
+      cost: 2000
+      min_humanity_loss: 3.0
+      max_humanity_loss: 18.0
+      prerequisites: null
+    front_optic_mount:
+      cyberware: "Front Optic Mount"
+      surgery_code: "(MA)"
+      id_code: "(FOM)"
+      description: "Allows up to 5 optics to be mounted on face."
+      cost: 1000
+      min_humanity_loss: 4.0
+      max_humanity_loss: 24.0
+      prerequisites: null
+    sense_ext:
+      cyberware: "Sense ext. (\"Rabbit Ears\")"
+      surgery_code: "(M)"
+      id_code: "(RABB)"
+      description: "Head mounted extensors for audio optics etc."
+      cost: 500
+      min_humanity_loss: 3.0
+      max_humanity_loss: 18.0
+      prerequisites: null
+...

@@ -3154,6 +3154,46 @@ public class CharacterCreationView extends JFrame {
 		}
 	}
 
+	// TODO design table for cyberware
+	public class CyberwareTableModel extends AbstractTableModel {
+		public static final int CYBERWARE_INDEX = 0;
+		public static final int SURGERY_CODE_INDEX = 1;
+		public static final int ID_CODE_INDEX = 2;
+		public static final int DESCRIPTION_INDEX = 3;
+		public static final int COST_INDEX = 4;
+		public static final int HUMANITY_LOSS_INDEX = 5;
+		public static final int PREREQUISITE_INDEX = 6;
+		
+		private String[] columnNames = { "Cyberware", "Surgery Code", "ID Code", "Description", "Cost",
+				"Humanity Loss", "Prerequisite" };
+		private List<Object[]> data = new ArrayList<Object[]>();
+
+		@Override
+		public int getColumnCount() {
+			return columnNames.length;
+		}
+
+		@Override
+		public int getRowCount() {
+			return data.size();
+		}
+
+		@Override
+		public Object getValueAt(int row, int column) {
+			return data.get(row)[column];
+		}
+
+		@Override
+		public String getColumnName(int column) {
+			return columnNames[column];
+		}
+
+		public void addRow(Object[] rowData) {
+			data.add(rowData);
+			fireTableRowsInserted(getRowCount(), getRowCount());
+		}
+	}
+
 	public class EquippedTableModel extends AbstractTableModel {
 		private static final int MAX_LAYERS = 3;
 		private String[] columnNames = { "Head", "Torso", "R. Arm", "L. Arm", "R. Leg", "L. Leg" };
