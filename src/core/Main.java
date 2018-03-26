@@ -2,10 +2,6 @@ package core;
 
 import java.awt.EventQueue;
 
-import controller.CharacterCreationController;
-import model.CharacterCreationModel;
-import view.CharacterCreationView;
-
 public class Main {
 
 	public static void main(String[] args) {

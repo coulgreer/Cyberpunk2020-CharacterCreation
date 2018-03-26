@@ -1,4 +1,4 @@
-package controller;
+package core;
 
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
@@ -51,25 +51,21 @@ import javax.swing.text.Document;
 import org.apache.commons.codec.binary.Base64;
 
 import components.ImagePreview;
-import model.CharacterCreationModel;
-import model.CharacterCreationModel.Ammo;
-import model.CharacterCreationModel.Gear;
-import model.CharacterCreationModel.Sibling;
-import model.CharacterCreationModel.Sibling.SiblingBuilder;
-import view.CharacterCreationView;
-import view.CharacterCreationView.EquippedTableModel;
-import view.CharacterCreationView.InventoryAmmoTableModel;
-import view.CharacterCreationView.InventoryArmorTableModel;
-import view.CharacterCreationView.InventoryGearTableModel;
-import view.CharacterCreationView.InventoryWeaponTableModel;
-import view.CharacterCreationView.SiblingPanel;
-import view.CharacterCreationView.SkillTableCellRenderer;
-import view.CharacterCreationView.SkillTableModel;
-import view.CharacterCreationView.SpecialSkillTableModel;
-import view.CharacterCreationView.StoreAmmoTableModel;
-import view.CharacterCreationView.StoreArmorTableModel;
-import view.CharacterCreationView.StoreGearTableModel;
-import view.CharacterCreationView.StoreWeaponTableModel;
+import core.CharacterCreationModel.Sibling;
+import core.CharacterCreationModel.Sibling.SiblingBuilder;
+import core.CharacterCreationView.EquippedTableModel;
+import core.CharacterCreationView.InventoryAmmoTableModel;
+import core.CharacterCreationView.InventoryArmorTableModel;
+import core.CharacterCreationView.InventoryGearTableModel;
+import core.CharacterCreationView.InventoryWeaponTableModel;
+import core.CharacterCreationView.SiblingPanel;
+import core.CharacterCreationView.SkillTableCellRenderer;
+import core.CharacterCreationView.SkillTableModel;
+import core.CharacterCreationView.SpecialSkillTableModel;
+import core.CharacterCreationView.StoreAmmoTableModel;
+import core.CharacterCreationView.StoreArmorTableModel;
+import core.CharacterCreationView.StoreGearTableModel;
+import core.CharacterCreationView.StoreWeaponTableModel;
 
 public class CharacterCreationController {
 	private CharacterCreationModel characterModel;

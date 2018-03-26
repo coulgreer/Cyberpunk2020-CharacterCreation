@@ -1,11 +1,9 @@
-package model;
+package core;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import view.CharacterCreationView;
 
 public class CharacterCreationModel {
 	public static final int DEFAULT_STAT_LEVEL = 2;

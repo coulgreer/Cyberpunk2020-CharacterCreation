@@ -1,4 +1,4 @@
-package view;
+package core;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -21,12 +21,14 @@ import java.awt.event.ItemListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractCellEditor;
 import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
@@ -73,8 +75,6 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
-
-import model.CharacterCreationModel;
 
 public class CharacterCreationView extends JFrame {
 	/**
@@ -1234,8 +1234,7 @@ public class CharacterCreationView extends JFrame {
 		stunControlPanel.setLayout(gbl_stunControlPanel);
 
 		increaseInjuryButton = new JButton(
-				new ImageIcon(new ImageIcon(CharacterCreationView.class.getResource("/img/increase-arrow-64x64.png"))
-						.getImage().getScaledInstance(8, 8, Image.SCALE_SMOOTH)));
+				new ImageIcon(readImage("/increase-arrow-64x64.png").getScaledInstance(8, 8, Image.SCALE_SMOOTH)));
 		increaseInjuryButton.setPreferredSize(new Dimension(8, 8));
 		GridBagConstraints gbc_increaseInjuryButton = new GridBagConstraints();
 		gbc_increaseInjuryButton.fill = GridBagConstraints.BOTH;
@@ -1246,8 +1245,7 @@ public class CharacterCreationView extends JFrame {
 		stunControlPanel.add(increaseInjuryButton, gbc_increaseInjuryButton);
 
 		minorlyIncreaseInjuryButton = new JButton(new ImageIcon(
-				new ImageIcon(CharacterCreationView.class.getResource("/img/increase-arrow-minor-64x64.png")).getImage()
-						.getScaledInstance(8, 8, Image.SCALE_SMOOTH)));
+				readImage("/increase-arrow-minor-64x64.png").getScaledInstance(8, 8, Image.SCALE_SMOOTH)));
 		minorlyIncreaseInjuryButton.setPreferredSize(new Dimension(8, 8));
 		GridBagConstraints gbc_slightIncreaseInjuryButton = new GridBagConstraints();
 		gbc_slightIncreaseInjuryButton.fill = GridBagConstraints.BOTH;
@@ -1258,8 +1256,7 @@ public class CharacterCreationView extends JFrame {
 		stunControlPanel.add(minorlyIncreaseInjuryButton, gbc_slightIncreaseInjuryButton);
 
 		minorlyDecreaseInjuryButton = new JButton(new ImageIcon(
-				new ImageIcon(CharacterCreationView.class.getResource("/img/decrease-arrow-minor-64x64.png")).getImage()
-						.getScaledInstance(8, 8, Image.SCALE_SMOOTH)));
+				readImage("/decrease-arrow-minor-64x64.png").getScaledInstance(8, 8, Image.SCALE_SMOOTH)));
 		minorlyDecreaseInjuryButton.setPreferredSize(new Dimension(8, 8));
 		GridBagConstraints gbc_slightDecreaseInjuryButton = new GridBagConstraints();
 		gbc_slightDecreaseInjuryButton.fill = GridBagConstraints.BOTH;
@@ -1270,8 +1267,7 @@ public class CharacterCreationView extends JFrame {
 		stunControlPanel.add(minorlyDecreaseInjuryButton, gbc_slightDecreaseInjuryButton);
 
 		decreaseInjuryButton = new JButton(
-				new ImageIcon(new ImageIcon(CharacterCreationView.class.getResource("/img/decrease-arrow-64x64.png"))
-						.getImage().getScaledInstance(8, 8, Image.SCALE_SMOOTH)));
+				new ImageIcon(readImage("/decrease-arrow-64x64.png").getScaledInstance(8, 8, Image.SCALE_SMOOTH)));
 		decreaseInjuryButton.setPreferredSize(new Dimension(8, 8));
 
 		GridBagConstraints gbc_decreaseInjuryButton = new GridBagConstraints();
@@ -1291,12 +1287,10 @@ public class CharacterCreationView extends JFrame {
 		gbc_portraitPanel.gridx = 1;
 		gbc_portraitPanel.gridy = 0;
 		characterStatPanel.add(portraitPanel, gbc_portraitPanel);
-		portraitPanel.setBackground(Color.WHITE);
 		portraitPanel.setPreferredSize(new Dimension(PORTRAIT_WIDTH, PORTRAIT_HEIGHT));
 		portraitPanel.setLayout(new BorderLayout(0, 0));
 
-		lblCharacterPortrait = new JLabel(
-				new ImageIcon(CharacterCreationView.class.getResource("/img/Adam_MD_bust.png")));
+		lblCharacterPortrait = new JLabel(new ImageIcon(readImage("/default_portrait.png")));
 		lblCharacterPortrait.setPreferredSize(new Dimension(PORTRAIT_WIDTH, PORTRAIT_HEIGHT));
 		portraitPanel.add(lblCharacterPortrait);
 
@@ -2059,6 +2053,15 @@ public class CharacterCreationView extends JFrame {
 		setUpStatComboBoxes();
 	}
 
+	private Image readImage(String streamString) {
+		try {
+			return ImageIO.read(getClass().getResourceAsStream(streamString));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	public String getCharacterName() {
 		return handleTextField.getText();
 	}
@@ -2474,10 +2477,21 @@ public class CharacterCreationView extends JFrame {
 	}
 
 	public void setCharacterPortrait(BufferedImage image) {
+		int x = 0;
+		int y = 0;
+		int w = image.getWidth();
+		int h = image.getHeight();
 		try {
-			int x = (image.getWidth() / 2) - (PORTRAIT_WIDTH / 2);
-			int y = (image.getHeight() / 2) - (PORTRAIT_HEIGHT / 2);
-			image = image.getSubimage(x, y, PORTRAIT_WIDTH, PORTRAIT_HEIGHT);
+			if (image.getWidth() > PORTRAIT_WIDTH) {
+				x = (image.getWidth() / 2) - (PORTRAIT_WIDTH / 2);
+				w = PORTRAIT_WIDTH;
+			}
+
+			if (image.getHeight() > PORTRAIT_HEIGHT) {
+				y = (image.getHeight() / 2) - (PORTRAIT_HEIGHT / 2);
+				h = PORTRAIT_HEIGHT;
+			}
+			image = image.getSubimage(x, y, w, h);
 			lblCharacterPortrait.setIcon(new ImageIcon(image));
 		} catch (NullPointerException exception) {
 			JOptionPane.showMessageDialog(this, "Image file formatting error accord.");
@@ -3163,9 +3177,9 @@ public class CharacterCreationView extends JFrame {
 		public static final int COST_INDEX = 4;
 		public static final int HUMANITY_LOSS_INDEX = 5;
 		public static final int PREREQUISITE_INDEX = 6;
-		
-		private String[] columnNames = { "Cyberware", "Surgery Code", "ID Code", "Description", "Cost",
-				"Humanity Loss", "Prerequisite" };
+
+		private String[] columnNames = { "Cyberware", "Surgery Code", "ID Code", "Description", "Cost", "Humanity Loss",
+				"Prerequisite" };
 		private List<Object[]> data = new ArrayList<Object[]>();
 
 		@Override
