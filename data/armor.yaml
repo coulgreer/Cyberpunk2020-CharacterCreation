@@ -1,0 +1,132 @@
+%YAML 1.2
+
+---
+  cloth_shirt:
+    !armor
+    type: "Cloth Shirt"
+    armor_class: "Soft Armor"
+    covers:
+      - "Arms"
+      - "Torso"
+    stopping_power: 0
+    encumbrance_value: 0
+    weight: 0.5
+    cost: 15
+  door_gunners_vest:
+    !armor
+    type: "Door Gunner's Vest"
+    armor_class: "Hard Armor"
+    covers:
+      - "Torso"
+    stopping_power: 25
+    encumbrance_value: 3
+    weight: 4.0
+    cost: 250
+  flack_vest:
+    !armor
+    type: "Flack Vest"
+    armor_class: "Hard Armor"
+    covers:
+      - "Torso"
+    stopping_power: 20
+    encumbrance_value: 1
+    weight: 3.0
+    cost: 200
+  heavy_armor_jacket:
+    !armor
+    type: "Heavy Armor Jacket"
+    armor_class: "Soft Armor"
+    covers:
+      - "Arms"
+      - "Torso"
+    stopping_power: 20
+    encumbrance_value: 2
+    weight: 3.0
+    cost: 250
+  heavy_leather_jacket:
+    !armor
+    type: "Heavy Leather Jacket"
+    armor_class: "Soft Armor"
+    covers:
+      - "Arms"
+      - "Torso"
+    stopping_power: 4
+    encumbrance_value: 0
+    weight: 0.5
+    cost: 50
+  heavy_leather_pants:
+    !armor
+    type: "Heavy Leather Pants"
+    armor_class: "Soft Armor"
+    covers:
+      - "Legs"
+    stopping_power: 4
+    encumbrance_value: 0
+    weight: 0.5
+    cost: 50
+  kevlar_vest:
+    !armor
+    type: "Kevlar Vest"
+    armor_class: "Soft Armor"
+    covers:
+      - "Torso"
+    stopping_power: 10
+    encumbrance_value: 0
+    weight: 1.0
+    cost: 90
+  light_armor_jacket:
+    !armor
+    type: "Light Armor Jacket"
+    armor_class: "Soft Armor"
+    covers:
+      - "Arms"
+      - "Torso"
+    stopping_power: 14
+    encumbrance_value: 0
+    weight: 3.0
+    cost: 150
+  medium_armor_jacket:
+    !armor
+    type: "Medium Armor Jacket"
+    armor_class: "Soft Armor"
+    covers:
+      - "Arms"
+      - "Torso"
+    stopping_power: 18
+    encumbrance_value: 1
+    weight: 3.0
+    cost: 200
+  metalgear:
+    !armor
+    type: "MetalGear"
+    armor_class: "Hard Armor"
+    covers:
+      - "Arms"
+      - "Head"
+      - "Legs"
+      - "Torso"
+    stopping_power: 25
+    encumbrance_value: 2
+    weight: 3.0
+    cost: 600
+  nylon_helmet:
+    !armor
+    type: "Nylon Helmet"
+    armor_class: "Hard Armor"
+    covers:
+      - "Head"
+    stopping_power: 20
+    encumbrance_value: 0
+    weight: 0.5
+    cost: 100
+  steel_helmet:
+    !armor
+    type: "Steel Helmet"
+    armor_class: "Hard Armor"
+    covers:
+      - "Head"
+    stopping_power: 14
+    encumbrance_value: 0
+    weight: 1.0
+    cost: 20
+...

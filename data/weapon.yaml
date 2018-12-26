@@ -1,0 +1,1158 @@
+%YAML 1.2
+
+---
+pistol:
+  armalite_44:
+    !weapon
+    name: "Armalite 44"
+    category: "VHP"
+    accuracy: 0
+    concealability: "J"
+    availability: "E"
+    damage_and_ammo: "4D6+1 (12mm)"
+    number_of_shots: 8
+    rate_of_fire: 1
+    reliability: "ST"
+    range: "50m"
+    weight: 3.0
+    cost: 450
+  avante_p1135_needlegun:
+    !weapon
+    name: "Avante P-1135 Needlegun"
+    category: "Unknown"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "Drugs"
+    number_of_shots: 15
+    rate_of_fire: 2
+    reliability: "ST"
+    range: "40m"
+    weight: 0.0
+    cost: 200
+  budget_arms_auto_3:
+    !weapon
+    name: "Budget Arms Auto 3"
+    category: "HP"
+    accuracy: -1
+    concealability: "J"
+    availability: "E"
+    damage_and_ammo: "3D6 (11mm)"
+    number_of_shots: 8
+    rate_of_fire: 2
+    reliability: "UR"
+    range: "50m"
+    weight: 1.0
+    cost: 350
+  budgetarms_c13:
+    !weapon
+    name: "BudgetArms C-13"
+    category: "LP"
+    accuracy: -1
+    concealability: "P"
+    availability: "E"
+    damage_and_ammo: "1D6 (5mm)"
+    number_of_shots: 8
+    rate_of_fire: 2
+    reliability: "ST"
+    range: "50m"
+    weight: 0.5
+    cost: 75
+  cop_357_derringer:
+    !weapon
+    name: "C.O.P. .357 \"Derringer\""
+    category: "HP"
+    accuracy: 0
+    concealability: "P"
+    availability: "C"
+    damage_and_ammo: "2D6+3 (.357)"
+    number_of_shots: 4
+    rate_of_fire: 2
+    reliability: "VR"
+    range: "50m"
+    weight: 1.0
+    cost: 250
+  colt_38_detective:
+    !weapon
+    name: "Colt .38 \"Detective\""
+    category: "LP"
+    accuracy: 1
+    concealability: "J"
+    availability: "C"
+    damage_and_ammo: "1D6+2 (.38)"
+    number_of_shots: 6
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "50m"
+    weight: 0.5
+    cost: 200
+  colt_45_peacemaker:
+    !weapon
+    name: "Colt .45 \"Peacemaker\""
+    category: "VHP"
+    accuracy: 0
+    concealability: "J"
+    availability: "C"
+    damage_and_ammo: "2D6+2 (.45)"
+    number_of_shots: 6
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "50m"
+    weight: 3.0
+    cost: 100
+  colt_amt_model_2000:
+    !weapon
+    name: "Colt AMT Model 2000"
+    category: "VHP"
+    accuracy: 0
+    concealability: "J"
+    availability: "C"
+    damage_and_ammo: "4D6+1 (12mm)"
+    number_of_shots: 8
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "50m"
+    weight: 3.0
+    cost: 500
+  dai_lung_cybermag:
+    !weapon
+    name: "Dai Lung Cybermag"
+    category: "LP"
+    accuracy: -1
+    concealability: "P"
+    availability: "C"
+    damage_and_ammo: "1D6+1 (6mm)"
+    number_of_shots: 10
+    rate_of_fire: 2
+    reliability: "UR"
+    range: "50m"
+    weight: 0.5
+    cost: 50
+  dai_lung_streetmaster:
+    !weapon
+    name: "Dai Lung Streetmaster"
+    category: "MP"
+    accuracy: 0
+    concealability: "J"
+    availability: "E"
+    damage_and_ammo: "2D6+3 (10mm)"
+    number_of_shots: 12
+    rate_of_fire: 2
+    reliability: "UR"
+    range: "50m"
+    weight: 1.0
+    cost: 250
+  enertex_akm_power_squirt:
+    !weapon
+    name: "Enertex AKM Power Squirt"
+    category: "Unknown"
+    accuracy: -2
+    concealability: "J"
+    availability: "C"
+    damage_and_ammo: "Drugs"
+    number_of_shots: 50
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "10m"
+    weight: 0.0
+    cost: 15
+  federated_arms_x22:
+    !weapon
+    name: "Federated Arms X-22"
+    category: "LP"
+    accuracy: 0
+    concealability: "P"
+    availability: "E"
+    damage_and_ammo: "1D6+1 (6mm)"
+    number_of_shots: 10
+    rate_of_fire: 2
+    reliability: "ST"
+    range: "50m"
+    weight: 0.5
+    cost: 150
+  federated_arms_x9mm:
+    !weapon
+    name: "Federated Arms X-9mm"
+    category: "MP"
+    accuracy: 0
+    concealability: "J"
+    availability: "E"
+    damage_and_ammo: "2D6+1 (9mm)"
+    number_of_shots: 12
+    rate_of_fire: 2
+    reliability: "ST"
+    range: "50m"
+    weight: 1.0
+    cost: 300
+  llama_commanche:
+    !weapon
+    name: "Llama Commanche"
+    category: "HP"
+    accuracy: 0
+    concealability: "J"
+    availability: "C"
+    damage_and_ammo: "4D6 (.44)"
+    number_of_shots: 6
+    rate_of_fire: 1
+    reliability: "ST"
+    range: "50m"
+    weight: 1.0
+    cost: 400
+  militech_arms_avenger:
+    !weapon
+    name: "Militech Arms Avenger"
+    category: "MP"
+    accuracy: 0
+    concealability: "J"
+    availability: "E"
+    damage_and_ammo: "2D6+1 (9mm)"
+    number_of_shots: 10
+    rate_of_fire: 2
+    reliability: "VR"
+    range: "50m"
+    weight: 1.0
+    cost: 250
+  militech_electronics_taser:
+    !weapon
+    name: "Militech Electronics Taser"
+    category: "P"
+    accuracy: -1
+    concealability: "J"
+    availability: "C"
+    damage_and_ammo: "Stun"
+    number_of_shots: 10
+    rate_of_fire: 1
+    reliability: "ST"
+    range: "10m"
+    weight: 0.0
+    cost: 60
+  nelspot_wombat:
+    !weapon
+    name: "Nelspot \"Wombat\""
+    category: "P"
+    accuracy: -1
+    concealability: "J"
+    availability: "C"
+    damage_and_ammo: "Drugs"
+    number_of_shots: 20
+    rate_of_fire: 2
+    reliability: "UR"
+    range: "40m"
+    weight: 0.0
+    cost: 200
+  sw_combat_magnum:
+    !weapon
+    name: "S&W Combat Magnum"
+    category: "HP"
+    accuracy: 1
+    concealability: "J"
+    availability: "C"
+    damage_and_ammo: "2D6+3 (.357)"
+    number_of_shots: 6
+    rate_of_fire: 2
+    reliability: "VR"
+    range: "50m"
+    weight: 1.0
+    cost: 500
+  sternmeyer_type_35:
+    !weapon
+    name: "Sternmeyer Type 35"
+    category: "HP"
+    accuracy: 0
+    concealability: "J"
+    availability: "C"
+    damage_and_ammo: "3D6 (11mm)"
+    number_of_shots: 8
+    rate_of_fire: 2
+    reliability: "VR"
+    range: "50m"
+    weight: 1.0
+    cost: 400
+  techtronica_15_microwaver:
+    !weapon
+    name: "Techtronica 15 Microwaver"
+    category: "P"
+    accuracy: 0
+    concealability: "J"
+    availability: "P"
+    damage_and_ammo: "1D6"
+    number_of_shots: 10
+    rate_of_fire: 2
+    reliability: "VR"
+    range: "20m"
+    weight: 0.0
+    cost: 400
+smg:
+  arasaka_minami_10:
+    !weapon
+    name: "Arasaka Minami 10"
+    category: "MSMG"
+    accuracy: 0
+    concealability: "J"
+    availability: "E"
+    damage_and_ammo: "2D6+3 (10mm)"
+    number_of_shots: 40
+    rate_of_fire: 20
+    reliability: "VR"
+    range: "200m"
+    weight: 3.0
+    cost: 500
+  bushmaster:
+    !weapon
+    name: "Bushmaster"
+    category: "HSMG"
+    accuracy: 0
+    concealability: "N"
+    availability: "R"
+    damage_and_ammo: "4D6 (5.56)"
+    number_of_shots: 30
+    rate_of_fire: 20
+    reliability: "ST"
+    range: "200m"
+    weight: 3.0
+    cost: 300
+  federated_arms_tech_assault_ii:
+    !weapon
+    name: "Federated Arms Tech Assault II"
+    category: "LSMG"
+    accuracy: 1
+    concealability: "J"
+    availability: "C"
+    damage_and_ammo: "1D6+1 (6mm)"
+    number_of_shots: 50
+    rate_of_fire: 25
+    reliability: "ST"
+    range: "150m"
+    weight: 3.0
+    cost: 400
+  hk_mp2013:
+    !weapon
+    name: "H&K MP-2013"
+    category: "LSMG"
+    accuracy: 1
+    concealability: "J"
+    availability: "C"
+    damage_and_ammo: "2D6+3 (10mm)"
+    number_of_shots: 35
+    rate_of_fire: 32
+    reliability: "ST"
+    range: "150m"
+    weight: 3.0
+    cost: 450
+  hk_mp5:
+    !weapon
+    name: "H&K MP5"
+    category: "MSMG"
+    accuracy: 1
+    concealability: "L"
+    availability: "C"
+    damage_and_ammo: "2D6+1 (9mm)"
+    number_of_shots: 30
+    rate_of_fire: 20
+    reliability: "VR"
+    range: "100m"
+    weight: 3.0
+    cost: 320
+  hk_mpk11:
+    !weapon
+    name: "H&K MPK-11"
+    category: "HSMG"
+    accuracy: 0
+    concealability: "L"
+    availability: "E"
+    damage_and_ammo: "3D6 (11mm)"
+    number_of_shots: 30
+    rate_of_fire: 15
+    reliability: "ST"
+    range: "200m"
+    weight: 3.0
+    cost: 700
+  hk_mpk9:
+    !weapon
+    name: "H&K MPK-9"
+    category: "MSMG"
+    accuracy: 1
+    concealability: "J"
+    availability: "C"
+    damage_and_ammo: "2D6+1 (9mm)"
+    number_of_shots: 35
+    rate_of_fire: 25
+    reliability: "ST"
+    range: "200m"
+    weight: 3.0
+    cost: 520
+  ingram_mac_10:
+    !weapon
+    name: "Ingram MAC 10"
+    category: "MSMG"
+    accuracy: -1
+    concealability: "J"
+    availability: "C"
+    damage_and_ammo: "2D6+2 (.45)"
+    number_of_shots: 30
+    rate_of_fire: 5
+    reliability: "UR"
+    range: "200m"
+    weight: 3.0
+    cost: 225
+  ingram_mac_14:
+    !weapon
+    name: "Ingram MAC 14"
+    category: "HSMG"
+    accuracy: -2
+    concealability: "L"
+    availability: "E"
+    damage_and_ammo: "4D6+1 (12mm)"
+    number_of_shots: 20
+    rate_of_fire: 10
+    reliability: "ST"
+    range: "200m"
+    weight: 3.0
+    cost: 650
+  sternmeyer_smg_21:
+    !weapon
+    name: "Sternmeyer SMG 21"
+    category: "HSMG"
+    accuracy: -1
+    concealability: "L"
+    availability: "E"
+    damage_and_ammo: "3D6 (11mm)"
+    number_of_shots: 30
+    rate_of_fire: 15
+    reliability: "VR"
+    range: "200m"
+    weight: 3.0
+    cost: 500
+  thompson_m1:
+    !weapon
+    name: "Thompson M1"
+    category: "MSMG"
+    accuracy: 2
+    concealability: "N"
+    availability: "C"
+    damage_and_ammo: "2D6+2 (.45)"
+    number_of_shots: 30
+    rate_of_fire: 20
+    reliability: "VR"
+    range: "200m"
+    weight: 3.0
+    cost: 300
+  uzi:
+    !weapon
+    name: "UZI"
+    category: "MSMG"
+    accuracy: 2
+    concealability: "J"
+    availability: "C"
+    damage_and_ammo: "2D6+1 (9mm)"
+    number_of_shots: 30
+    rate_of_fire: 20
+    reliability: "VR"
+    range: "200m"
+    weight: 3.0
+    cost: 250
+  uzi_miniauto_9:
+    !weapon
+    name: "Uzi Miniauto 9"
+    category: "LSMG"
+    accuracy: 1
+    concealability: "J"
+    availability: "E"
+    damage_and_ammo: "2D6+1 (9mm)"
+    number_of_shots: 30
+    rate_of_fire: 35
+    reliability: "VR"
+    range: "150m"
+    weight: 3.0
+    cost: 475
+  vz61_skorpion:
+    !weapon
+    name: "Vz61 Skorpion"
+    category: "LSMG"
+    accuracy: 2
+    concealability: "J"
+    availability: "P"
+    damage_and_ammo: "1D6 (.25)"
+    number_of_shots: 20
+    rate_of_fire: 25
+    reliability: "VR"
+    range: "150m"
+    weight: 3.0
+    cost: 150
+assault_rifle:
+  ak_47:
+    !weapon
+    name: "AK 47"
+    category: "RIF"
+    accuracy: 0
+    concealability: "N"
+    availability: "E"
+    damage_and_ammo: "5D6 (7.565)"
+    number_of_shots: 30
+    rate_of_fire: 20
+    reliability: "VR"
+    range: "400m"
+    weight: 4.0
+    cost: 200
+  akr20_medium_assault:
+    !weapon
+    name: "AKR-20 Medium Assault"
+    category: "RIF"
+    accuracy: 0
+    concealability: "N"
+    availability: "C"
+    damage_and_ammo: "5D6 (5.56)"
+    number_of_shots: 30
+    rate_of_fire: 30
+    reliability: "ST"
+    range: "400m"
+    weight: 4.0
+    cost: 500
+  fnfal:
+    !weapon
+    name: "FN-FAL"
+    category: "RIF"
+    accuracy: 0
+    concealability: "N"
+    availability: "E"
+    damage_and_ammo: "6D6+2 (7.56)"
+    number_of_shots: 20
+    rate_of_fire: 21
+    reliability: "VR"
+    range: "400m"
+    weight: 4.0
+    cost: 450
+  fnral_heavy_assault_rifle:
+    !weapon
+    name: "FN-RAL Heavy Assault Rifle"
+    category: "RIF"
+    accuracy: -1
+    concealability: "N"
+    availability: "C"
+    damage_and_ammo: "6D6+2 (7.62)"
+    number_of_shots: 30
+    rate_of_fire: 30
+    reliability: "VR"
+    range: "400m"
+    weight: 4.0
+    cost: 600
+  kalishnikov_a80_heavy_rifle:
+    !weapon
+    name: "Kalishnikov A-80 Heavy Rifle"
+    category: "RIF"
+    accuracy: -1
+    concealability: "N"
+    availability: "E"
+    damage_and_ammo: "6D6+2 (7.62)"
+    number_of_shots: 35
+    rate_of_fire: 25
+    reliability: "ST"
+    range: "400m"
+    weight: 4.0
+    cost: 550
+  m16a:
+    !weapon
+    name: "M-16A"
+    category: "RIF"
+    accuracy: 2
+    concealability: "N"
+    availability: "C"
+    damage_and_ammo: "4D6 (5.56)"
+    number_of_shots: 30
+    rate_of_fire: 25
+    reliability: "UR"
+    range: "400m"
+    weight: 4.0
+    cost: 200
+  militech_electrics_laser_cannon:
+    !weapon
+    name: "Militech Electrics Laser Cannon"
+    category: "RIF"
+    accuracy: 0
+    concealability: "N"
+    availability: "R"
+    damage_and_ammo: "1-5D6"
+    number_of_shots: 10
+    rate_of_fire: 2
+    reliability: "UR"
+    range: "200m"
+    weight: 4.0
+    cost: 8000
+  militech_ronin_light_assault:
+    !weapon
+    name: "Militech Ronin Light Assault"
+    category: "RIF"
+    accuracy: 1
+    concealability: "N"
+    availability: "C"
+    damage_and_ammo: "5D6 (5.56)"
+    number_of_shots: 35
+    rate_of_fire: 30
+    reliability: "VR"
+    range: "400m"
+    weight: 4.0
+    cost: 450
+  styer_aug:
+    !weapon
+    name: "Styer AUG"
+    category: "RIF"
+    accuracy: 2
+    concealability: "N"
+    availability: "C"
+    damage_and_ammo: "4D6 (5.56)"
+    number_of_shots: 30
+    rate_of_fire: 20
+    reliability: "VR"
+    range: "400m"
+    weight: 4.0
+    cost: 400
+  winchester_m70:
+    !weapon
+    name: "Winchester M70"
+    category: "RIF"
+    accuracy: 3
+    concealability: "N"
+    availability: "C"
+    damage_and_ammo: "5D6+1 (30-06)"
+    number_of_shots: 5
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "500m"
+    weight: 4.0
+    cost: 250
+shotgun:
+  arasaka_rapid_assault_12:
+    !weapon
+    name: "Arasaka Rapid Assault 12"
+    category: "SHG"
+    accuracy: -1
+    concealability: "N"
+    availability: "C"
+    damage_and_ammo: "4D6 (00)"
+    number_of_shots: 20
+    rate_of_fire: 10
+    reliability: "ST"
+    range: "50m"
+    weight: 3.0
+    cost: 900
+  caws:
+    !weapon
+    name: "CAWS"
+    category: "SHG"
+    accuracy: 0
+    concealability: "N"
+    availability: "R"
+    damage_and_ammo: "4D6 (00)"
+    number_of_shots: 10
+    rate_of_fire: 10
+    reliability: "ST"
+    range: "50m"
+    weight: 3.0
+    cost: 500
+  sternmeyer_stakeout_10:
+    !weapon
+    name: "Sternmeyer Stakeout 10"
+    category: "SHG"
+    accuracy: -2
+    concealability: "N"
+    availability: "R"
+    damage_and_ammo: "4D6 (00)"
+    number_of_shots: 10
+    rate_of_fire: 2
+    reliability: "ST"
+    range: "50m"
+    weight: 3.0
+    cost: 450
+heavy_weapon:
+  barrettarasaka_light_20mm:
+    !weapon
+    name: "Barrett-Arasaka Light 20mm"
+    category: "HVY"
+    accuracy: 0
+    concealability: "N"
+    availability: "R"
+    damage_and_ammo: "4D10AP (20mm)"
+    number_of_shots: 10
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "450m"
+    weight: 0.0
+    cost: 2000
+  biotoxin_1_grenade:
+    !weapon
+    name: "Biotoxin 1 Grenade"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "4D6"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "Throw"
+    weight: 0.0
+    cost: 30
+  biotoxin_ii_grenade:
+    !weapon
+    name: "Biotoxin II Grenade"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "8D6"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "Throw"
+    weight: 0.0
+    cost: 30
+  c6_plastic_explosive:
+    !weapon
+    name: "C-6 Plastic Explosive"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "8D10 per kg."
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "5m"
+    weight: 0.0
+    cost: 100
+  claymore:
+    !weapon
+    name: "Claymore"
+    category: "HVY"
+    accuracy: 0
+    concealability: "J"
+    availability: "P"
+    damage_and_ammo: "4D10"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "NA"
+    weight: 0.0
+    cost: 350
+  dazzle_grenade:
+    !weapon
+    name: "Dazzle Grenade"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "Blind for 4 turns"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "Throw"
+    weight: 0.0
+    cost: 30
+  fragmentation_grenade:
+    !weapon
+    name: "Fragmentation Grenade"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "7D6"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "Throw"
+    weight: 0.0
+    cost: 30
+  incendiary_grenade:
+    !weapon
+    name: "Incendiary Grenade"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "4D6 for 3 turns"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "Throw"
+    weight: 0.0
+    cost: 30
+  ka_f253_flamethrower:
+    !weapon
+    name: "K-A F-253 Flamethrower"
+    category: "HVY"
+    accuracy: -2
+    concealability: "N"
+    availability: "R"
+    damage_and_ammo: "2D10+"
+    number_of_shots: 10
+    rate_of_fire: 1
+    reliability: "ST"
+    range: "50m"
+    weight: 0.0
+    cost: 1500
+  land_mine:
+    !weapon
+    name: "Land Mine"
+    category: "HVY"
+    accuracy: 0
+    concealability: "J"
+    availability: "P"
+    damage_and_ammo: "4D10"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "NA"
+    weight: 0.0
+    cost: 350
+  militech_arms_rpga:
+    !weapon
+    name: "Militech Arms RPG-A"
+    category: "HVY"
+    accuracy: -2
+    concealability: "N"
+    availability: "R"
+    damage_and_ammo: "6D10"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "750m"
+    weight: 0.0
+    cost: 1500
+  molotov_cocktail:
+    !weapon
+    name: "Molotov Cocktail"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "2D10"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "2m"
+    weight: 0.0
+    cost: 100
+  nausea_gas_grenade:
+    !weapon
+    name: "Nausea Gas Grenade"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "-4 REF"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "Throw"
+    weight: 0.0
+    cost: 30
+  nerve_gas_grenade:
+    !weapon
+    name: "Nerve Gas Grenade"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "8D10"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "Throw"
+    weight: 0.0
+    cost: 30
+  plastique_explosive:
+    !weapon
+    name: "Plastique Explosive"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "7D10 per kg."
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "4m"
+    weight: 0.0
+    cost: 100
+  scorpion_16_missile_launcher:
+    !weapon
+    name: "Scorpion 16 Missile Launcher"
+    category: "HVY"
+    accuracy: -1
+    concealability: "N"
+    availability: "R"
+    damage_and_ammo: "7D10"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "1000m"
+    weight: 0.0
+    cost: 3000
+  sleep_drug_grenade:
+    !weapon
+    name: "Sleep Drug Grenade"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "Sleep / -2 to all stats"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "Throw"
+    weight: 0.0
+    cost: 30
+  sonic_grenade:
+    !weapon
+    name: "Sonic Grenade"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "Deafened for 4 turns"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "Throw"
+    weight: 0.0
+    cost: 30
+  stun_grenade:
+    !weapon
+    name: "Stun Grenade"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "-5 to Stun"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "Throw"
+    weight: 0.0
+    cost: 30
+  tnt:
+    !weapon
+    name: "TNT"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "4D10 per stick"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "3m"
+    weight: 0.0
+    cost: 100
+  teargas_grenade:
+    !weapon
+    name: "Teargas Grenade"
+    category: "HVY"
+    accuracy: 0
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "-2 REF"
+    number_of_shots: 1
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "Throw"
+    weight: 0.0
+    cost: 30
+melee:
+  axe:
+    !weapon
+    name: "Axe"
+    category: "Melee"
+    accuracy: -1
+    concealability: "N"
+    availability: "C"
+    damage_and_ammo: "2D6+3"
+    number_of_shots: 0
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "1m"
+    weight: 1.0
+    cost: 20
+  brass_knuckles:
+    !weapon
+    name: "Brass Knuckles"
+    category: "Melee"
+    accuracy: 0
+    concealability: "P"
+    availability: "C"
+    damage_and_ammo: "1D6+2"
+    number_of_shots: 0
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "1m"
+    weight: 0.5
+    cost: 10
+  chainsaw:
+    !weapon
+    name: "Chainsaw"
+    category: "Melee"
+    accuracy: -3
+    concealability: "N"
+    availability: "C"
+    damage_and_ammo: "4D6"
+    number_of_shots: 0
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "2m"
+    weight: 4.0
+    cost: 80
+  club:
+    !weapon
+    name: "Club"
+    category: "Melee"
+    accuracy: 0
+    concealability: "L"
+    availability: "C"
+    damage_and_ammo: "1D6"
+    number_of_shots: 0
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "1m"
+    weight: 1.0
+    cost: 20
+  kendachi_monokatana:
+    !weapon
+    name: "Kendachi MonoKatana"
+    category: "Melee"
+    accuracy: 1
+    concealability: "N"
+    availability: "P"
+    damage_and_ammo: "4D6"
+    number_of_shots: 0
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "1m"
+    weight: 1.0
+    cost: 600
+  kendachi_monoknife:
+    !weapon
+    name: "Kendachi Monoknife"
+    category: "Melee"
+    accuracy: 1
+    concealability: "P"
+    availability: "P"
+    damage_and_ammo: "2D6"
+    number_of_shots: 0
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "1m"
+    weight: 0.5
+    cost: 200
+  knife:
+    !weapon
+    name: "Knife"
+    category: "Melee"
+    accuracy: 0
+    concealability: "P"
+    availability: "C"
+    damage_and_ammo: "1D6"
+    number_of_shots: 0
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "1m"
+    weight: 0.5
+    cost: 20
+  naginata:
+    !weapon
+    name: "Naginata"
+    category: "Melee"
+    accuracy: 0
+    concealability: "N"
+    availability: "P"
+    damage_and_ammo: "3D6"
+    number_of_shots: 0
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "2m"
+    weight: 0.5
+    cost: 100
+  nunchaku:
+    !weapon
+    name: "Nunchaku"
+    category: "Melee"
+    accuracy: 0
+    concealability: "L"
+    availability: "C"
+    damage_and_ammo: "3D6"
+    number_of_shots: 0
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "1m"
+    weight: 0.5
+    cost: 15
+  spm1_battleglove:
+    !weapon
+    name: "SPM-1 Battleglove"
+    category: "Melee"
+    accuracy: -2
+    concealability: "N"
+    availability: "P"
+    damage_and_ammo: "3D6/2D6"
+    number_of_shots: 0
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "1m"
+    weight: 2.0
+    cost: 900
+  shiriken:
+    !weapon
+    name: "Shiriken"
+    category: "Melee"
+    accuracy: 0
+    concealability: "P"
+    availability: "C"
+    damage_and_ammo: "1D6/3"
+    number_of_shots: 0
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "Throw"
+    weight: 0.5
+    cost: 3
+  sledgehammer:
+    !weapon
+    name: "Sledgehammer"
+    category: "Melee"
+    accuracy: -1
+    concealability: "N"
+    availability: "C"
+    damage_and_ammo: "4D6"
+    number_of_shots: 0
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "1m"
+    weight: 4.0
+    cost: 20
+  switchblade:
+    !weapon
+    name: "Switchblade"
+    category: "Melee"
+    accuracy: 0
+    concealability: "P"
+    availability: "C"
+    damage_and_ammo: "1D6/2"
+    number_of_shots: 0
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "1m"
+    weight: 0.5
+    cost: 15
+  sword:
+    !weapon
+    name: "Sword"
+    category: "Melee"
+    accuracy: 0
+    concealability: "N"
+    availability: "C"
+    damage_and_ammo: "2D6+2"
+    number_of_shots: 0
+    rate_of_fire: 1
+    reliability: "VR"
+    range: "1m"
+    weight: 1.0
+    cost: 200
+...
