@@ -9,7 +9,7 @@ import java.util.Map;
 import rpg.cyberpunk._2020.combat.Ammunition.AmmoType;
 import rpg.general.combat.CombatCalculator;
 import rpg.general.combat.Combatant;
-import rpg.general.combat.Modifier.ModifierType;
+import rpg.general.combat.Magazine;
 import rpg.general.combat.WeaponModifier;
 import rpg.util.Probability;
 
@@ -21,8 +21,8 @@ public class MissileWeapon extends CyberpunkWeapon {
 
 	private MissileWeapon(String weaponName, String description, String weaponType, String skillName,
 			int weaponAccuracy, Concealability concealability, Availability availability, Probability damage,
-			AmmoType ammoType, int numberOfShots, int rateOfFire, Reliability reliability, int range, double weight,
-			int cost) {
+			String ammoType, int numberOfShots, int rateOfFire, Reliability reliability, int range, double cost,
+			double weight) {
 		super(weaponName, description, weaponType, skillName, weaponAccuracy, concealability, availability, damage,
 				ammoType, rateOfFire, reliability, range, cost, weight);
 		this.magazine = new Magazine(ammoType, numberOfShots);
@@ -34,9 +34,10 @@ public class MissileWeapon extends CyberpunkWeapon {
 
 	private void initializeAcceptedModifierTypes() {
 		acceptedModifierTypes = new ArrayList<String>();
-		acceptedModifierTypes.add(CyberpunkWeaponModifier.SIGHT);
-		acceptedModifierTypes.add(CyberpunkWeaponModifier.HOLSTER);
-		acceptedModifierTypes.add(CyberpunkWeaponModifier.UNDERBARREL);
+		// TODO
+		// acceptedModifierTypes.add(CyberpunkWeaponModifier.SIGHT);
+		// acceptedModifierTypes.add(CyberpunkWeaponModifier.HOLSTER);
+		// acceptedModifierTypes.add(CyberpunkWeaponModifier.UNDERBARREL);
 	}
 
 	private void initializeStatBonuses() {
@@ -49,20 +50,20 @@ public class MissileWeapon extends CyberpunkWeapon {
 
 	public static MissileWeapon createTypeBasedWeapon(String weaponName, String description, String weaponType,
 			int weaponAccuracy, Concealability concealability, Availability availability, Probability damage,
-			AmmoType ammoType, int numberOfShots, int rateOfFire, Reliability reliability, int range, double weight,
-			int cost) {
+			String ammoType, int numberOfShots, int rateOfFire, Reliability reliability, int range, double cost,
+			double weight) {
 		return new MissileWeapon(weaponName, description, weaponType, CyberpunkWeapon.parseSkillName(weaponType),
 				weaponAccuracy, concealability, availability, damage, ammoType, numberOfShots, rateOfFire, reliability,
-				range, weight, cost);
+				range, cost, weight);
 	}
 
 	public static MissileWeapon createSkillBasedWeapon(String weaponName, String description, String skillName,
 			int weaponAccuracy, Concealability concealability, Availability availability, Probability damage,
-			AmmoType ammoType, int numberOfShots, int rateOfFire, Reliability reliability, int range, double weight,
-			int cost) {
+			String ammoType, int numberOfShots, int rateOfFire, Reliability reliability, int range, double cost,
+			double weight) {
 		return new MissileWeapon(weaponName, description, CyberpunkWeapon.EXOTIC, skillName, weaponAccuracy,
-				concealability, availability, damage, ammoType, numberOfShots, rateOfFire, reliability, range, weight,
-				cost);
+				concealability, availability, damage, ammoType, numberOfShots, rateOfFire, reliability, range, cost,
+				weight);
 	}
 
 	public boolean fire(int shotsToFire) {
@@ -145,10 +146,11 @@ public class MissileWeapon extends CyberpunkWeapon {
 	}
 
 	public WeaponModifier setModifier(WeaponModifier modifier) {
-		CyberpunkWeaponModifier type = modifier.getType();
-		if (acceptedModifierTypes.contains(type)) {
-			modifier = bonuses.replace(type, modifier);
-		}
+		// TODO
+		// CyberpunkWeaponModifier type = modifier.getType();
+		// if (acceptedModifierTypes.contains(type)) {
+		// modifier = bonuses.replace(type, modifier);
+		// }
 		return modifier;
 	}
 

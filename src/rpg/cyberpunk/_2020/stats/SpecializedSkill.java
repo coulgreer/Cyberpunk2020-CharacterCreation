@@ -1,9 +1,9 @@
 package rpg.cyberpunk._2020.stats;
 
-import rpg.general.stats.AbstractAttribute;
+import rpg.general.stats.Attribute;
 import rpg.general.stats.Levelable;
 
-public class SpecializedSkill extends CyberpunkSkill {
+public class SpecializedSkill implements CyberpunkSkill {
 	private String name;
 	private String description;
 	private int difficultyModifier;
@@ -12,7 +12,7 @@ public class SpecializedSkill extends CyberpunkSkill {
 	private int baseValue;
 	private int totalValue;
 
-	public SpecializedSkill(AbstractAttribute attribute, String name, String description, int difficultyModifier) {
+	public SpecializedSkill(Attribute attribute, String name, String description, int difficultyModifier) {
 		this.name = name;
 		this.description = description;
 		this.difficultyModifier = difficultyModifier;

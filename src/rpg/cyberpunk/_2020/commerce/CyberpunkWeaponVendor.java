@@ -9,7 +9,7 @@ import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Availability;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Concealability;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Reliability;
 import rpg.cyberpunk._2020.combat.MissileWeapon;
-import rpg.general.commerce.Buyable;
+import rpg.general.commerce.Tradeable;
 import rpg.general.commerce.Product;
 import rpg.general.commerce.Vendor;
 import rpg.util.Die;
@@ -51,7 +51,7 @@ public class CyberpunkWeaponVendor extends Vendor<CyberpunkWeapon> {
 		return inventory.containsKey(product.getName());
 	}
 
-	protected void sell(Buyable product, int quantity) {
+	protected void sell(Tradeable product, int quantity) {
 		// Do nothing because the duty of this class is just to keep track of the
 		// weapons that the Player can buy, not the amount of money the vendor has.
 	}

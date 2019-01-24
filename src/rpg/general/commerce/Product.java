@@ -1,33 +1,24 @@
 package rpg.general.commerce;
 
-import rpg.Describable;
+public interface Product extends Tradeable {
+	/**
+	 * Gets the name of this product.
+	 * 
+	 * @return a string representing the name of this product
+	 */
+	public String getName();
 
-public abstract class Product implements Buyable, Weighable, Describable {
-	private String name;
-	private String description;
-	private double cost;
-	private double weight;
+	/**
+	 * Gets the description of this product.
+	 * 
+	 * @return a string used to give a description of this product
+	 */
+	public String getDescription();
 
-	public Product(String name, String description, double cost, double weight) {
-		this.name = name;
-		this.description = description;
-		this.cost = cost;
-		this.weight = weight;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public double getCost() {
-		return cost;
-	}
-
-	public double getWeight() {
-		return weight;
-	}
+	/**
+	 * Gets the weight of this product.
+	 * 
+	 * @return the weight of this product
+	 */
+	public double getWeight();
 }

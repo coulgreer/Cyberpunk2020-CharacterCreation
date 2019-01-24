@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rpg.cyberpunk._2020.AttributeName;
-import rpg.general.stats.AbstractAttribute;
+import rpg.general.stats.Attribute;
 import rpg.general.stats.Levelable;
 import rpg.util.Observable;
 import rpg.util.Observer;
 
-public class DerivedAttribute extends AbstractAttribute implements Observer {
+public class DerivedAttribute extends Attribute implements Observer {
 	private AttributeName name;
 	private String description;
 	private int value;

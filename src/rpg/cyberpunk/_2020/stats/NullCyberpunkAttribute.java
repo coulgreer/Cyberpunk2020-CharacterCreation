@@ -1,10 +1,9 @@
 package rpg.cyberpunk._2020.stats;
 
-import rpg.cyberpunk._2020.AttributeName;
-import rpg.general.stats.AbstractAttribute;
+import rpg.general.stats.Attribute;
 import rpg.util.Observer;
 
-public class NullCyberpunkAttribute extends AbstractAttribute {
+public class NullCyberpunkAttribute implements Attribute {
 	private static NullCyberpunkAttribute uniqueInstance;
 
 	private NullCyberpunkAttribute() {
@@ -18,36 +17,46 @@ public class NullCyberpunkAttribute extends AbstractAttribute {
 		return uniqueInstance;
 	}
 
+	@Override
 	public void increaseLevel() {
 	}
 
+	@Override
 	public void decreaseLevel() {
 	}
 
+	@Override
 	public void resetLevel() {
 	}
 
+	@Override
 	public int getLevel() {
 		return 0;
 	}
 
+	@Override
 	public void registerObserver(Observer observer) {
 	}
 
+	@Override
 	public void unregisterObserver(Observer observer) {
 	}
 
+	@Override
 	public void notifyObserver() {
 	}
 
-	public AttributeName getName() {
-		return AttributeName.NOT_AVAILABLE;
+	@Override
+	public String getName() {
+		return CyberpunkAttribute.NOT_AVAILABLE;
 	}
 
+	@Override
 	public String getDescription() {
 		return "";
 	}
 
+	@Override
 	public int getModifier() {
 		return 0;
 	}

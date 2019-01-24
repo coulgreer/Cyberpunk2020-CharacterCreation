@@ -7,10 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import rpg.cyberpunk._2020.AttributeName;
-import rpg.general.stats.AbstractAttribute;
+import rpg.general.stats.Attribute;
 
 public class StatisticCalculatorTest {
-	private AbstractAttribute attribute;
+	private Attribute attribute;
 
 	@Before
 	public void setUp() {

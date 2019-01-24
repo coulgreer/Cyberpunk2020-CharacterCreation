@@ -3,17 +3,16 @@ package rpg;
 import java.util.HashMap;
 import java.util.Map;
 
-import rpg.cyberpunk.CyberpunkCombatant;
 import rpg.cyberpunk._2020.AttributeName;
-import rpg.cyberpunk._2020.combat.Cyberpunk2020Combatant;
+import rpg.cyberpunk._2020.combat.CyberpunkCombatant;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 import rpg.cyberpunk._2020.combat.FightingMove;
 import rpg.cyberpunk._2020.combat.FightingStyle;
-import rpg.cyberpunk._2020.commerce.CyberpunkCustomer;
+import rpg.cyberpunk._2020.commerce.PlayerTrader;
 import rpg.cyberpunk._2020.stats.AttributeManager;
 import rpg.cyberpunk._2020.stats.SkillManager;
 import rpg.general.commerce.Cashier;
-import rpg.general.commerce.Customer;
+import rpg.general.commerce.Trader;
 import rpg.general.commerce.Product;
 import rpg.general.commerce.QuantifiableProduct;
 import rpg.general.commerce.TradeProduct;
@@ -21,7 +20,7 @@ import rpg.general.commerce.Vendor;
 import rpg.util.Probability;
 
 public class Player {
-	private Customer customer;
+	private Trader customer;
 	private CyberpunkCombatant combatant;
 	private AttributeManager attributeManager;
 	private SkillManager skillManager;
@@ -30,8 +29,8 @@ public class Player {
 	private Map<String, QuantifiableProduct> inventory = new HashMap<String, QuantifiableProduct>();
 
 	public Player() {
-		customer = new CyberpunkCustomer(this);
-		combatant = new Cyberpunk2020Combatant(this);
+		customer = new PlayerTrader(this);
+		combatant = new CyberpunkCombatant(this);
 		attributeManager = new AttributeManager();
 		skillManager = new SkillManager(attributeManager);
 

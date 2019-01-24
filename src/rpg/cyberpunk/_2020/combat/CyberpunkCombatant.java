@@ -1,31 +1,17 @@
-package rpg.cyberpunk;
+package rpg.cyberpunk._2020.combat;
 
 import java.util.ListIterator;
 
 import rpg.Player;
-import rpg.cyberpunk._2020.combat.AbstractFightingStyleFactory;
-import rpg.cyberpunk._2020.combat.AikidoFightingStyleFactory;
-import rpg.cyberpunk._2020.combat.AnimalKungFuFightingStyleFactory;
-import rpg.cyberpunk._2020.combat.BoxingFightingStyleFactory;
-import rpg.cyberpunk._2020.combat.BrawlingFightingStyleFactory;
-import rpg.cyberpunk._2020.combat.CapoeriaFightingStyleFactory;
-import rpg.cyberpunk._2020.combat.ChoiLiFutFightingStyleFactory;
-import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
-import rpg.cyberpunk._2020.combat.FightingMove;
-import rpg.cyberpunk._2020.combat.FightingStyle;
-import rpg.cyberpunk._2020.combat.JudoFightingStyleFactory;
-import rpg.cyberpunk._2020.combat.KarateFightingStyleFactory;
-import rpg.cyberpunk._2020.combat.Magazine;
-import rpg.cyberpunk._2020.combat.TaeKwonDoFightingStyleFactory;
-import rpg.cyberpunk._2020.combat.ThaiKickBoxingFightingStyleFactory;
-import rpg.cyberpunk._2020.combat.WeaponIterator;
-import rpg.cyberpunk._2020.combat.WrestlingFightingStyleFactory;
+import rpg.cyberpunk._2020.AttributeName;
+import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Combatant;
+import rpg.general.combat.Magazine;
 import rpg.general.combat.Weapon;
 import rpg.general.commerce.QuantifiableProduct;
 import rpg.util.Probability;
 
-public abstract class CyberpunkCombatant extends Combatant {
+public class CyberpunkCombatant extends Combatant {
 	public static final int PRIMARY_SLOT = 0;
 	public static final int SECONDARY_SLOT = 1;
 	public static final int MAX_WEAPON_AMOUNT = 2;
@@ -71,14 +57,59 @@ public abstract class CyberpunkCombatant extends Combatant {
 		arm(slot, unarmedWeaponFactory.createStrike());
 	}
 
+	public int getHitModifier(Weapon weapon) {
+		return player.getSkillValue(weapon.getSkillName());
+	}
+
 	public Probability getTotalHitChance(int slot) {
 		Weapon weapon = weapons[slot];
 		return new Probability(weapon.getHitDice(), weapon.getHitScore());
 	}
 
+	public int getDamageModifier(Weapon weapon) {
+		switch (weapon.getWeaponType()) {
+		case CyberpunkWeapon.UNARMED:
+			return getMiscellaneousDamageModifier(weapon);
+		default:
+			return 0;
+		}
+	}
+
+	private int getMiscellaneousDamageModifier(Weapon weapon) {
+		switch (weapon.getSkillName()) {
+		case CyberpunkSkill.AIKIDO:
+			return player.getSkillValue(CyberpunkSkill.AIKIDO);
+		case CyberpunkSkill.ANIMAL_KUNG_FU:
+			return player.getSkillValue(CyberpunkSkill.ANIMAL_KUNG_FU);
+		case CyberpunkSkill.BOXING:
+			return player.getSkillValue(CyberpunkSkill.BOXING);
+		case CyberpunkSkill.CAPOERIA:
+			return player.getSkillValue(CyberpunkSkill.CAPOERIA);
+		case CyberpunkSkill.CHOI_LI_FUT:
+			return player.getSkillValue(CyberpunkSkill.CHOI_LI_FUT);
+		case CyberpunkSkill.JUDO:
+			return player.getSkillValue(CyberpunkSkill.JUDO);
+		case CyberpunkSkill.KARATE:
+			return player.getSkillValue(CyberpunkSkill.KARATE);
+		case CyberpunkSkill.TAE_KWON_DO:
+			return player.getSkillValue(CyberpunkSkill.TAE_KWON_DO);
+		case CyberpunkSkill.THAI_KICK_BOXING:
+			return player.getSkillValue(CyberpunkSkill.THAI_KICK_BOXING);
+		case CyberpunkSkill.WRESTLING:
+			return player.getSkillValue(CyberpunkSkill.WRESTLING);
+		default:
+			return 0;
+		}
+	}
+
 	public Probability getTotalDamageChance(int slot) {
 		Weapon weapon = weapons[slot];
 		return new Probability(weapon.getDamageDice(), weapon.getDamageScore());
+	}
+
+	public int getRangeModifier(Weapon weapon) {
+		// TODO make a case to catch non thrown.
+		return player.getAttributeValue(AttributeName.BODY_TYPE);
 	}
 
 	public int getRangeScore(int slot) {
@@ -185,6 +216,10 @@ public abstract class CyberpunkCombatant extends Combatant {
 		default:
 			return magazine;
 		}
+	}
+	
+	public CyberpunkWeapon getWeapon(int slot) {
+		return weapons[slot];
 	}
 
 	public ListIterator<CyberpunkWeapon> createIterator() {

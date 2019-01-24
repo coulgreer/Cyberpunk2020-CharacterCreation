@@ -8,11 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import rpg.cyberpunk._2020.AttributeName;
-import rpg.general.stats.AbstractAttribute;
+import rpg.general.stats.Attribute;
 
 public class DerivedStatisticTest {
 	private StatisticCalculator mockedCalculator;
-	private AbstractAttribute mockedConcreteAttribute;
+	private Attribute mockedConcreteAttribute;
 
 	@Before
 	public void setUp() {
@@ -22,7 +22,7 @@ public class DerivedStatisticTest {
 
 	@Test
 	public void testIncreasingConcreteStatIncreasesDerivedStat() {
-		AbstractAttribute parentStatistic = new CyberpunkAttribute(AttributeName.MOVEMENT_ALLOWANCE, "");
+		Attribute parentStatistic = new CyberpunkAttribute(AttributeName.MOVEMENT_ALLOWANCE, "");
 		DerivedAttribute derivedStatistic = new DerivedAttribute(AttributeName.RUN,
 				"To determine how far your character can run in a single combat round in meters.", parentStatistic,
 				mockedCalculator);
@@ -35,7 +35,7 @@ public class DerivedStatisticTest {
 	
 	@Test
 	public void testIncreasingConcreteStatIncreasesParentDerivedStatAndItsChild() {
-		AbstractAttribute parentConcreteStatistic = new CyberpunkAttribute(AttributeName.MOVEMENT_ALLOWANCE, "");
+		Attribute parentConcreteStatistic = new CyberpunkAttribute(AttributeName.MOVEMENT_ALLOWANCE, "");
 		DerivedAttribute parentDerivedStatistic = new DerivedAttribute(AttributeName.RUN,
 				"To determine how far your character can run in a single combat round in meters.", parentConcreteStatistic,
 				mockedCalculator);

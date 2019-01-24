@@ -1,9 +1,9 @@
 package rpg.cyberpunk._2020.stats;
 
-import rpg.general.stats.AbstractAttribute;
+import rpg.general.stats.Attribute;
 import rpg.general.stats.Levelable;
 
-public class RoleCyberpunkSkill extends CyberpunkSkill implements Enablable {
+public class RoleCyberpunkSkill implements CyberpunkSkill, Enablable {
 	public static final int DEFAULT_DIFFICULTY_MODIFIER = 1;
 
 	private String name;
@@ -15,7 +15,7 @@ public class RoleCyberpunkSkill extends CyberpunkSkill implements Enablable {
 	private int totalValue;
 	private boolean isEnabled;
 
-	public RoleCyberpunkSkill(AbstractAttribute attribute, String name, String description) {
+	public RoleCyberpunkSkill(Attribute attribute, String name, String description) {
 		this.name = name;
 		this.description = description;
 		baseValue = INITIAL_VALUE;

@@ -1,16 +1,16 @@
 package rpg.cyberpunk._2020.stats;
 
 import rpg.cyberpunk._2020.AttributeName;
-import rpg.general.stats.AbstractAttribute;
+import rpg.general.stats.Attribute;
 
 public class SkillManager {
-	private AbstractAttribute intelligence;
-	private AbstractAttribute reflexes;
-	private AbstractAttribute cool;
-	private AbstractAttribute technicalAbility;
-	private AbstractAttribute attractiveness;
-	private AbstractAttribute empathy;
-	private AbstractAttribute bodyType;
+	private Attribute intelligence;
+	private Attribute reflexes;
+	private Attribute cool;
+	private Attribute technicalAbility;
+	private Attribute attractiveness;
+	private Attribute empathy;
+	private Attribute bodyType;
 
 	private BroadSkill allSkills;
 	private BroadSkill specialSkills;
@@ -133,7 +133,7 @@ public class SkillManager {
 	}
 
 	private void initializeAttractivenessSkills() {
-		AbstractAttribute attribute = attractiveness;
+		Attribute attribute = attractiveness;
 		attractivenessSkills = new BroadSkill(CyberpunkSkill.ATTRACTIVENESS_SKILLS, "");
 		allSkills.add(attractivenessSkills);
 		attractivenessSkills.add(new SpecializedSkill(attribute, CyberpunkSkill.PERSONAL_GROOMING,
@@ -153,7 +153,7 @@ public class SkillManager {
 	}
 
 	private void initializeBodyTypeSkills() {
-		AbstractAttribute attribute = bodyType;
+		Attribute attribute = bodyType;
 		bodyTypeSkills = new BroadSkill(CyberpunkSkill.BODY_TYPE_SKILLS, "");
 		allSkills.add(bodyTypeSkills);
 		bodyTypeSkills.add(new SpecializedSkill(attribute, CyberpunkSkill.ENDURANCE,
@@ -171,7 +171,7 @@ public class SkillManager {
 	}
 
 	private void initializeCoolSkills() {
-		AbstractAttribute attribute = cool;
+		Attribute attribute = cool;
 		coolSkills = new BroadSkill(CyberpunkSkill.COOL_SKILLS, "");
 		allSkills.add(coolSkills);
 		coolSkills.add(new SpecializedSkill(attribute, CyberpunkSkill.INTERROGATION,
@@ -205,7 +205,7 @@ public class SkillManager {
 	}
 
 	private void initializeEmpathySkills() {
-		AbstractAttribute attribute = empathy;
+		Attribute attribute = empathy;
 		empathySkills = new BroadSkill(CyberpunkSkill.EMPATHY_SKILLS, "");
 		allSkills.add(empathySkills);
 		empathySkills.add(new SpecializedSkill(attribute, CyberpunkSkill.HUMAN_PERCEPTION,
@@ -258,7 +258,7 @@ public class SkillManager {
 	}
 
 	private void initializeIntelligenceSkills() {
-		AbstractAttribute attribute = intelligence;
+		Attribute attribute = intelligence;
 		intelligenceSkills = new BroadSkill(CyberpunkSkill.INTELLIGENCE_SKILLS, "");
 		allSkills.add(intelligenceSkills);
 		intelligenceSkills.add(new SpecializedSkill(attribute, CyberpunkSkill.ACCOUNTING,
@@ -414,7 +414,7 @@ public class SkillManager {
 				1));
 	}
 
-	private void initializeLanguageSkills(AbstractAttribute attribute) {
+	private void initializeLanguageSkills(Attribute attribute) {
 		knowLanguage = new BroadSkill(CyberpunkSkill.KNOWN_LANGUAGE, "The knowledge of a foreign tongue."
 				+ " At +2, you can \"get by\" with speaking the language." //
 				+ " At +3, you can actually read a written form of it. At +6 and above, you are fairly fluent, although no native will be fooled by your ability." //
@@ -455,7 +455,7 @@ public class SkillManager {
 		initializeSlavicLanguageFamily(attribute);
 	}
 
-	private void initializeNigerCongoLanguageFamily(AbstractAttribute attribute) {
+	private void initializeNigerCongoLanguageFamily(Attribute attribute) {
 		nigerCongoFamily = new BroadSkill(CyberpunkSkill.NIGER_CONGO,
 				"The Niger-Congo languages constitute one of the world's major language families and Africa's largest in terms of geographical area, number of speakers and number of distinct languages." //
 						+ " It is generally considered to be the world's largest language family in terms of distinct languages, ahead of Austronesian." //
@@ -489,7 +489,7 @@ public class SkillManager {
 				1));
 	}
 
-	private void initializeBalticLanguageFamily(AbstractAttribute attribute) {
+	private void initializeBalticLanguageFamily(Attribute attribute) {
 		balticFamily = new BroadSkill(CyberpunkSkill.BALTIC,
 				"The Baltic languages belong to the Balto-Slavic branch of the Indo-European language family." //
 						+ " Baltic languages are spoken by the Balts, mainly in areas extending east and southeast of the Baltic Sea in Northern Europe.");
@@ -504,7 +504,7 @@ public class SkillManager {
 				1));
 	}
 
-	private void initializeFinnicLanguageFamily(AbstractAttribute attribute) {
+	private void initializeFinnicLanguageFamily(Attribute attribute) {
 		finnicFamily = new BroadSkill(CyberpunkSkill.FINNIC,
 				"Finnic languages are a branch of the Uralic language family spoken around the Baltic Sea by Finnic peoples, mainly in Finland and Estonia, by about 7 million people.");
 		knowLanguage.add(finnicFamily);
@@ -520,7 +520,7 @@ public class SkillManager {
 				1));
 	}
 
-	private void initializeCelticLanguageFamily(AbstractAttribute attribute) {
+	private void initializeCelticLanguageFamily(Attribute attribute) {
 		celticFamily = new BroadSkill(CyberpunkSkill.CELTIC,
 				"The Celtic languages are a language family inside of Indo-European languages." //
 						+ " There are six Celtic languages still spoken in the world today, spoken in north-west Europe." //
@@ -541,7 +541,7 @@ public class SkillManager {
 				1));
 	}
 
-	private void initializeGermanicLanguageFamily(AbstractAttribute attribute) {
+	private void initializeGermanicLanguageFamily(Attribute attribute) {
 		germanicFamily = new BroadSkill(CyberpunkSkill.GERMANIC,
 				"Germanic languages, branch of the Indo-European language family." //
 						+ " Scholars often divide the Germanic languages into three groups: West Germanic, including English, German, and Netherlandic (Dutch);" //
@@ -580,7 +580,7 @@ public class SkillManager {
 				1));
 	}
 
-	private void initializePacificIslanderLanguageFamily(AbstractAttribute attribute) {
+	private void initializePacificIslanderLanguageFamily(Attribute attribute) {
 		pacificIslandGroupFamily = new BroadSkill(CyberpunkSkill.PACIFIC_ISLAND_GROUP,
 				"Melanesian Pidgin, Hawaiian, Polynesian languages, Tahitian, Maori, are all languages spoken throughout island nations in the South Pacific Ocean." //
 						+ " Aboriginal and Torres Strait Islander languages of Australia are endangered, Australia is the continent where languages are disappearing the fastest.");
@@ -627,7 +627,7 @@ public class SkillManager {
 				1));
 	}
 
-	private void initializeRomanticLanguageFamily(AbstractAttribute attribute) {
+	private void initializeRomanticLanguageFamily(Attribute attribute) {
 		romanticFamily = new BroadSkill(CyberpunkSkill.ROMANTIC,
 				"The Romance languages (also sometimes called Romanic languages) are a language family in the Indo-European languages." //
 						+ " They started from Vulgar Latin (In the Latin Language, \"vulgar\" is the word for \"common,\" so \"Vulgar Latin\" means \"Common Latin\")." //
@@ -665,7 +665,7 @@ public class SkillManager {
 				1));
 	}
 
-	private void initializeSemeticLanguageFamily(AbstractAttribute attribute) {
+	private void initializeSemeticLanguageFamily(Attribute attribute) {
 		semeticFamily = new BroadSkill(CyberpunkSkill.SEMETIC,
 				"The Semitic languages are a branch of the Afroasiatic language family originating in the Middle East." //
 						+ " Semitic languages are spoken by more than 330 million people across much of Western Asia, North Africa and the Horn of Africa," //
@@ -683,7 +683,7 @@ public class SkillManager {
 				1));
 	}
 
-	private void initializeSouthEastAsianLanguageFamily(AbstractAttribute attribute) {
+	private void initializeSouthEastAsianLanguageFamily(Attribute attribute) {
 		sinoTibetanAndSouthEastAsianFamily = new BroadSkill(CyberpunkSkill.SINO_TIBETAN_AND_SE_ASIAN,
 				"The Sino-Tibetan languages, in a few sources also known as Trans-Himalayan, are a family of more than 400 languages spoken in East Asia, Southeast Asia and South Asia." //
 						+ " The family is second only to Indo-European in terms of the number of native speakers." //
@@ -725,7 +725,7 @@ public class SkillManager {
 				1));
 	}
 
-	private void initializeSlavicLanguageFamily(AbstractAttribute attribute) {
+	private void initializeSlavicLanguageFamily(Attribute attribute) {
 		slavicFamily = new BroadSkill(CyberpunkSkill.SLAVIC,
 				"The Slavic languages (also called Slavonic languages) are the Indo-European languages spoken by the Slavic peoples." //
 						+ " They are thought to descend from a proto-language called Proto-Slavic spoken during the Early Middle Ages," //
@@ -763,7 +763,7 @@ public class SkillManager {
 	}
 
 	private void initializeReflexSkills() {
-		AbstractAttribute attribute = reflexes;
+		Attribute attribute = reflexes;
 		reflexSkills = new BroadSkill(CyberpunkSkill.REFLEX_SKILLS, "");
 		allSkills.add(reflexSkills);
 		reflexSkills.add(new SpecializedSkill(attribute, CyberpunkSkill.ARCHERY,
@@ -846,7 +846,7 @@ public class SkillManager {
 				1));
 	}
 
-	private void initializeMartialArtSkills(AbstractAttribute attribute) {
+	private void initializeMartialArtSkills(Attribute attribute) {
 		martialArt = new BroadSkill(CyberpunkSkill.MARTIAL_ART,
 				"This skill covers any type of trained fighting style using hands, feet, or specialized \"martial arts\" weapons." //
 						+ " You must elect a style of marial art and take a seperate skill for each style" //
@@ -900,7 +900,7 @@ public class SkillManager {
 				1));
 	}
 
-	private void initializePilotingSkills(AbstractAttribute attribute) {
+	private void initializePilotingSkills(Attribute attribute) {
 		piloting = new BroadSkill(CyberpunkSkill.PILOTING, "In general, this is the skill of controlling aircraft." //
 				+ " Aircraft are broken into categories: Gyro and Rotorcraft, Fixed Wing Aircraft, Dirigibles and Vectored Thrust Aerodynes (AVs)." //
 				+ " A Piloting skill of +1 allows you to take off and land safely in good weather conditions." //
@@ -922,7 +922,7 @@ public class SkillManager {
 	}
 
 	private void initializeTechnicalSkills() {
-		AbstractAttribute attribute = technicalAbility;
+		Attribute attribute = technicalAbility;
 		technicalSkills = new BroadSkill(CyberpunkSkill.TECHNICAL_ABILITY_SKILLS, "");
 		allSkills.add(technicalSkills);
 		technicalSkills.add(new SpecializedSkill(attribute, CyberpunkSkill.AERO_TECH,

@@ -8,13 +8,13 @@ import static org.mockito.Mockito.when;
 import org.junit.Test;
 
 import rpg.cyberpunk._2020.AttributeName;
-import rpg.general.stats.AbstractAttribute;
+import rpg.general.stats.Attribute;
 
 public class SkillManagerTest {
 	@Test
 	public void testSkillLevelIncreasedForLeaf() {
 		AttributeManager mockedAttributeManager = mock(AttributeManager.class);
-		AbstractAttribute mockedAttribute = mock(CyberpunkAttribute.class);
+		Attribute mockedAttribute = mock(CyberpunkAttribute.class);
 		when(mockedAttribute.getModifier()).thenReturn(2);
 		when(mockedAttributeManager.get(any(AttributeName.class))).thenReturn(mockedAttribute);
 		SkillManager skillManager = new SkillManager(mockedAttributeManager);
@@ -27,7 +27,7 @@ public class SkillManagerTest {
 	@Test
 	public void testSkillLevelIncreasedForBranchAndChildren() {
 		AttributeManager mockedAttributeManager = mock(AttributeManager.class);
-		AbstractAttribute mockedAttribute = mock(CyberpunkAttribute.class);
+		Attribute mockedAttribute = mock(CyberpunkAttribute.class);
 		when(mockedAttribute.getModifier()).thenReturn(2);
 		when(mockedAttributeManager.get(any(AttributeName.class))).thenReturn(mockedAttribute);
 		SkillManager skillManager = new SkillManager(mockedAttributeManager);

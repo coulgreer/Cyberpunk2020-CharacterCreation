@@ -3,6 +3,7 @@ package rpg.cyberpunk._2020.combat;
 import java.util.Iterator;
 
 import rpg.general.combat.Combatant;
+import rpg.general.combat.Magazine;
 import rpg.general.combat.Weapon;
 import rpg.util.NullProbability;
 import rpg.util.Probability;

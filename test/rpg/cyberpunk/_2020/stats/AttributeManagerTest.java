@@ -6,13 +6,13 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import rpg.cyberpunk._2020.AttributeName;
-import rpg.general.stats.AbstractAttribute;
+import rpg.general.stats.Attribute;
 
 public class AttributeManagerTest {
 	@Test
 	public void testExistingAttributeNameReturnsAnInstanceOfAbstractAttribute() {
 		AttributeManager manager = new AttributeManager();
-		assertTrue(manager.get(AttributeName.ATTRACTIVENESS) instanceof AbstractAttribute);
+		assertTrue(manager.get(AttributeName.ATTRACTIVENESS) instanceof Attribute);
 	}
 
 	@Test

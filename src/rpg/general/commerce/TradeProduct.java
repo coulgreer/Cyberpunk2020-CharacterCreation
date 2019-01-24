@@ -1,22 +1,31 @@
 package rpg.general.commerce;
 
 public class TradeProduct implements ShoppingCommand {
-	private Vendor<?> vendor;
-	private Customer customer;
-	private Product product;
+	private Trader vendor;
+	private Trader customer;
+	private Tradeable tradeable;
 	private int quantity;
 
-	public TradeProduct(Vendor<?> vendor, Customer customer, Product product, int quantity) {
+	public TradeProduct(Trader vendor, Trader customer, Tradeable tradeable, int quantity) {
 		this.vendor = vendor;
 		this.customer = customer;
-		this.product = product;
+		this.tradeable = tradeable;
 		this.quantity = quantity;
 	}
 
+	@Override
 	public void execute() {
-		if (vendor.isInStock(product, quantity) && customer.hasEnoughMoney(product, quantity)) {
-			vendor.performTransaction(product, quantity);
-			customer.performTransaction(product, quantity);
+		if (vendor.canSell(tradeable, quantity) && customer.canBuy(tradeable, quantity)) {
+			vendor.sell(tradeable, quantity);
+			customer.buy(tradeable, quantity);
+		}
+	}
+
+	@Override
+	public void undo() {
+		if (vendor.canBuy(tradeable, quantity) && customer.canSell(tradeable, quantity)) {
+			vendor.buy(tradeable, quantity);
+			customer.buy(tradeable, quantity);
 		}
 	}
 }

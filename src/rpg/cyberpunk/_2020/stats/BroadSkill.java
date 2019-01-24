@@ -10,8 +10,7 @@ import rpg.general.stats.Levelable;
 import rpg.util.Observable;
 import rpg.util.Observer;
 
-// TODO Take in a display container and display the values once the get methods are called.
-public class BroadSkill extends CyberpunkSkill implements Observable {
+public class BroadSkill implements CyberpunkSkill, Observable {
 	private Map<String, CyberpunkSkill> skills;
 	private String name;
 	private String description;
@@ -24,10 +23,54 @@ public class BroadSkill extends CyberpunkSkill implements Observable {
 		observers = new ArrayList<Observer>();
 	}
 
+	@Override
+	public void increaseLevel() {
+		Iterator<Map.Entry<String, CyberpunkSkill>> iterator = getIterator();
+		while (iterator.hasNext()) {
+			CyberpunkSkill skill = iterator.next().getValue();
+			skill.increaseLevel();
+		}
+	}
+
+	@Override
+	public void decreaseLevel() {
+		Iterator<Map.Entry<String, CyberpunkSkill>> iterator = getIterator();
+		while (iterator.hasNext()) {
+			CyberpunkSkill skill = iterator.next().getValue();
+			skill.decreaseLevel();
+		}
+	}
+
+	@Override
+	public void resetLevel() {
+		Iterator<Map.Entry<String, CyberpunkSkill>> iterator = getIterator();
+		while (iterator.hasNext()) {
+			CyberpunkSkill skill = iterator.next().getValue();
+			skill.resetLevel();
+		}
+	}
+
+	@Override
+	public int getLevel() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void update(Levelable statistic) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
 	public String getDescription() {
 		return description;
 	}
 
+	@Override
 	public int getTotalValue() {
 		int totalValue = 0;
 		Iterator<Map.Entry<String, CyberpunkSkill>> iterator = getIterator();
@@ -38,46 +81,17 @@ public class BroadSkill extends CyberpunkSkill implements Observable {
 		return totalValue;
 	}
 
-	public void increaseLevel() {
-		Iterator<Map.Entry<String, CyberpunkSkill>> iterator = getIterator();
-		while (iterator.hasNext()) {
-			CyberpunkSkill skill = iterator.next().getValue();
-			skill.increaseLevel();
-		}
-	}
-
-	public void decreaseLevel() {
-		Iterator<Map.Entry<String, CyberpunkSkill>> iterator = getIterator();
-		while (iterator.hasNext()) {
-			CyberpunkSkill skill = iterator.next().getValue();
-			skill.decreaseLevel();
-		}
-	}
-
-	public void resetLevel() {
-		Iterator<Map.Entry<String, CyberpunkSkill>> iterator = getIterator();
-		while (iterator.hasNext()) {
-			CyberpunkSkill skill = iterator.next().getValue();
-			skill.resetLevel();
-		}
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public int getLevel() {
-		throw new UnsupportedOperationException();
-	}
-
+	@Override
 	public void registerObserver(Observer observer) {
 		observers.add(observer);
 	}
 
+	@Override
 	public void unregisterObserver(Observer observer) {
 		observers.remove(observer);
 	}
 
+	@Override
 	public void notifyObserver() {
 		Iterator<Observer> iterator = observers.iterator();
 		while (iterator.hasNext()) {
@@ -86,10 +100,7 @@ public class BroadSkill extends CyberpunkSkill implements Observable {
 		}
 	}
 
-	public void update(Levelable statistic) {
-		throw new UnsupportedOperationException();
-	}
-
+	@Override
 	public void increaseCurrentImprovementPoints(int improvementPoints) {
 		Iterator<Map.Entry<String, CyberpunkSkill>> iterator = getIterator();
 		while (iterator.hasNext()) {
@@ -98,14 +109,17 @@ public class BroadSkill extends CyberpunkSkill implements Observable {
 		}
 	}
 
+	@Override
 	public int getCurrentImprovementPoints() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public int getNeededImprovementPoints() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public CyberpunkSkill accept(SkillVisitor visitor) {
 		return visitor.visit(this);
 	}

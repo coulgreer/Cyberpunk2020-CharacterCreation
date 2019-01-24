@@ -9,12 +9,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import rpg.Player;
-import rpg.cyberpunk.CyberpunkCombatant;
 import rpg.cyberpunk._2020.combat.Ammunition.AmmoType;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Availability;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Concealability;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Reliability;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
+import rpg.general.combat.Magazine;
 import rpg.util.Die;
 import rpg.util.Probability;
 

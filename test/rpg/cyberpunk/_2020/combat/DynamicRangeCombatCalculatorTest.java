@@ -9,7 +9,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import rpg.cyberpunk.CyberpunkCombatant;
 import rpg.general.combat.Combatant;
 
 public class DynamicRangeCombatCalculatorTest {

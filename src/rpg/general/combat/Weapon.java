@@ -1,32 +1,82 @@
 package rpg.general.combat;
 
-import rpg.cyberpunk._2020.combat.Magazine;
-import rpg.cyberpunk._2020.combat.Ammunition.AmmoType;
 import rpg.general.commerce.Product;
 
-public abstract class Weapon extends Product implements Weaponizable, Equipable {
-	private String weaponType;
-	private String skillName;
-	private int hitModifier;
-	private int damageModifier;
-	private int rangeModifier;
+public abstract class Weapon implements Weaponizable, Shootable, Product {
+	public static final String DEFAULT_WEAPON_TYPE = "None";
+	public static final String DEFAULT_SKILL_NAME = "None";
+	
+	protected String weaponName;
+	protected String description;
+	protected String weaponType;
+	protected String skillName;
+	protected int hitModifier;
+	protected int damageModifier;
+	protected int rangeModifier;
+	protected int rateOfFire;
+	protected double cost;
+	protected double weight;
 
-	public Weapon(String name, String description, String weaponType, String skillName, int hitModifier,
-			int damageModifier, int rangeModifier, double cost, double weight) {
-		super(name, description, cost, weight);
-		this.weaponType = weaponType;
-		this.skillName = skillName;
+	protected Weapon(String weaponName, String description, String weaponType, String skillName, int hitModifier,
+			int damageModifier, int rangeModifier, int rateOfFire, double cost, double weight) {
+		validateWeaponName(weaponName);
+		validateDescription(description);
+		validateWeaponType(weaponType);
+		validateSkillName(skillName);
 		this.hitModifier = hitModifier;
 		this.damageModifier = damageModifier;
 		this.rangeModifier = rangeModifier;
+		this.rateOfFire = rateOfFire;
+		this.cost = cost;
+		this.weight = weight;
+	}
+	
+	private void validateWeaponName(String weaponName) {
+		if(weaponName == null) {
+			this.weaponName = "Null Name";
+		} else {
+			this.weaponName = weaponName;
+		}
+	}
+	
+	private void validateDescription(String description) {
+		if(description == null) {
+			this.description = "";
+		} else {
+			this.description = description;
+		}
+	}
+	
+	private void validateWeaponType(String weaponType) {
+		if(weaponType == null) {
+			this.weaponType = DEFAULT_WEAPON_TYPE;
+		} else {
+			this.weaponType = weaponType;
+		}
+	}
+	
+	private void validateSkillName(String skillName) {
+		if(skillName == null) {
+			this.skillName = DEFAULT_SKILL_NAME;
+		} else {
+			this.skillName = skillName;
+		}
 	}
 
-	public String getWeaponType() {
-		return weaponType;
+	public String getName() {
+		return weaponName;
 	}
 
-	public String getSkillName() {
-		return skillName;
+	public String getDescription() {
+		return description;
+	}
+
+	public double getCost() {
+		return cost;
+	}
+
+	public double getWeight() {
+		return weight;
 	}
 
 	public int getHitModifier() {
@@ -41,19 +91,21 @@ public abstract class Weapon extends Product implements Weaponizable, Equipable 
 		return rangeModifier;
 	}
 
-	public abstract boolean fire(int shotsFired);
+	public String getWeaponType() {
+		return weaponType;
+	}
 
-	public abstract Magazine reload(Magazine magazine);
+	public String getSkillName() {
+		return skillName;
+	}
 
-	public abstract AmmoType getAmmoType();
+	public int getRateOfFire() {
+		return rateOfFire;
+	}
 
-	public abstract int getAmmoCapacity();
+	public abstract void setCombatant(Combatant combatant);
 
-	public abstract int getAmmoCount();
-
-	public abstract int getRateOfFire();
-	
 	public abstract WeaponModifier setModifier(WeaponModifier modifier);
-	
+
 	public abstract String getBonuses();
 }

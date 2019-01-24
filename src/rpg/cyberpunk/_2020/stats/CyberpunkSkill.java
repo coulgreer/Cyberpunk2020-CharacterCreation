@@ -1,8 +1,8 @@
 package rpg.cyberpunk._2020.stats;
 
-import rpg.general.stats.AbstractSkill;
+import rpg.general.stats.Skill;
 
-public abstract class CyberpunkSkill extends AbstractSkill implements SkillVisitable {
+public interface CyberpunkSkill extends Skill, SkillVisitable {
 	// Default Skill
 	public static final String NONE = "None";
 
@@ -212,9 +212,9 @@ public abstract class CyberpunkSkill extends AbstractSkill implements SkillVisit
 	public static final int INITIAL_IP = 0;
 	public static final int INITIAL_IP_GOAL = 10;
 
-	public abstract void increaseCurrentImprovementPoints(int improvementPoints);
+	public void increaseCurrentImprovementPoints(int improvementPoints);
 
-	public abstract int getCurrentImprovementPoints();
+	public int getCurrentImprovementPoints();
 
-	public abstract int getNeededImprovementPoints();
+	public int getNeededImprovementPoints();
 }

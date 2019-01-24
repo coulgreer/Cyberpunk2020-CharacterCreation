@@ -1,16 +1,16 @@
-package rpg.cyberpunk._2020.combat;
+package rpg.general.combat;
 
-import rpg.cyberpunk._2020.combat.Ammunition.AmmoType;
+import rpg.cyberpunk._2020.combat.Ammunition;
 
 public class Magazine {
 	public static final int EMPTY = 0;
 
-	private AmmoType ammoType;
+	private String ammoType;
 	private Ammunition ammunition;
 	private int ammoCount;
 	private int ammoCapacity;
 
-	public Magazine(AmmoType ammoType, int ammoCapacity) {
+	public Magazine(String ammoType, int ammoCapacity) {
 		this.ammoType = ammoType;
 		this.ammoCapacity = ammoCapacity;
 		ammoCount = EMPTY;
@@ -46,7 +46,7 @@ public class Magazine {
 		return false;
 	}
 
-	public AmmoType getAmmoType() {
+	public String getAmmoType() {
 		return ammoType;
 	}
 

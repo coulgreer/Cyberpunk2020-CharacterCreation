@@ -4,20 +4,33 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import rpg.cyberpunk._2020.AttributeName;
-import rpg.general.stats.AbstractAttribute;
+import rpg.general.stats.Attribute;
 import rpg.util.Observer;
 
-public class CyberpunkAttribute extends AbstractAttribute {
-	protected static final int MIN_LEVEL = 2;
-	protected static final int MAX_LEVEL = 10;
+public class CyberpunkAttribute implements Attribute {
+	public static final String NOT_AVAILABLE = "Not Available";
+	public static final String INTELLIGENCE = "Intelligence";
+	public static final String REFLEXES = "Reflex";
+	public static final String COOL = "Cool";
+	public static final String TECHNICAL_ABILITY = "Technical Ability";
+	public static final String LUCK = "Luck";
+	public static final String ATTRACTIVENESS = "Attractiveness";
+	public static final String MOVEMENT_ALLOWANCE = "Movement Allowance";
+	public static final String RUN = "Run";
+	public static final String LEAP = "Leap";
+	public static final String EMPATHY = "Empathy";
+	public static final String BODY_TYPE = "Body Type";
+	public static final String CARRY = "Carry";
 
-	private AttributeName name;
+	public static final int MIN_LEVEL = 2;
+	public static final int MAX_LEVEL = 10;
+
+	private String name;
 	private String description;
 	private int level;
 	private List<Observer> observers;
 
-	public CyberpunkAttribute(AttributeName name, String description) {
+	public CyberpunkAttribute(String name, String description) {
 		this.name = name;
 		this.description = description;
 		level = MIN_LEVEL;
@@ -63,7 +76,7 @@ public class CyberpunkAttribute extends AbstractAttribute {
 		}
 	}
 
-	public AttributeName getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -71,7 +84,6 @@ public class CyberpunkAttribute extends AbstractAttribute {
 		return description;
 	}
 
-	
 	public int getModifier() {
 		return level;
 	}

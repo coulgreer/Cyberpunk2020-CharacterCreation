@@ -28,7 +28,7 @@ public interface Ammunition {
 		}
 	}
 
-	public AmmoType getAmmoType();
+	public String getAmmoType();
 
 	public double getSoftArmorMultiplier();
 

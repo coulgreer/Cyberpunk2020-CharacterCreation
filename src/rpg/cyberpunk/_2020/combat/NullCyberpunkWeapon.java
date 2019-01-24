@@ -3,6 +3,7 @@ package rpg.cyberpunk._2020.combat;
 import rpg.cyberpunk._2020.combat.Ammunition.AmmoType;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Combatant;
+import rpg.general.combat.Magazine;
 import rpg.general.combat.WeaponModifier;
 import rpg.util.Die;
 import rpg.util.Probability;

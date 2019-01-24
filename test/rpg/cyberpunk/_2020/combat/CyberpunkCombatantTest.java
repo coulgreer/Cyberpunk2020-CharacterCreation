@@ -9,7 +9,6 @@ import java.util.ListIterator;
 import org.junit.Test;
 
 import rpg.Player;
-import rpg.cyberpunk.CyberpunkCombatant;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
 public class CyberpunkCombatantTest {

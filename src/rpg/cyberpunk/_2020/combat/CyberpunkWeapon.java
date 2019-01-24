@@ -2,62 +2,12 @@ package rpg.cyberpunk._2020.combat;
 
 import java.util.Objects;
 
-import rpg.cyberpunk._2020.combat.Ammunition.AmmoType;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Weapon;
 import rpg.util.Die;
 import rpg.util.Probability;
 
-public abstract class CyberpunkWeapon extends Weapon {
-	public static enum Availability {
-		UNAVAILABLE("N/A"), //
-		EXCELLENT("E"), //
-		COMMON("C"), //
-		POOR("P"), //
-		RARE("R");
-
-		private String abbreviation;
-
-		Availability(String abbreviation) {
-			this.abbreviation = abbreviation;
-		}
-
-		public String getAbbreviation() {
-			return abbreviation;
-		}
-	}
-
-	public static enum Reliability {
-		VERY_RELIABLE("VR"), STANDARD("ST"), UNRELIABLE("UR");
-
-		private String abbreviation;
-
-		Reliability(String abbreviation) {
-			this.abbreviation = abbreviation;
-		}
-
-		public String getAbbreviation() {
-			return abbreviation;
-		}
-	}
-
-	public static enum Concealability {
-		POCKET("P"), //
-		JACKET("J"), //
-		LONG_COAT("L"), //
-		CANNOT_HIDE("N");
-
-		private String abbreviation;
-
-		Concealability(String abbreviation) {
-			this.abbreviation = abbreviation;
-		}
-
-		public String getAbbreviation() {
-			return abbreviation;
-		}
-	}
-
+public abstract class CyberpunkWeapon extends Weapon implements CyberpunkWeaponizable {
 	public static final String NONE = "None";
 	public static final String LIGHT_PISTOL = "Light Pistol";
 	public static final String MEDIUM_PISTOL = "Medium Pistol";
@@ -78,22 +28,20 @@ public abstract class CyberpunkWeapon extends Weapon {
 	private Concealability concealability;
 	private Availability availability;
 	private Die damageChance;
-	private AmmoType ammoType;
-	private int rateOfFire;
+	private String ammoType;
 	private Reliability reliability;
 
 	protected CyberpunkWeapon(String weaponName, String description, String weaponType, String skillName,
 			int weaponAccuracy, Concealability concealability, Availability availability, Probability damage,
-			AmmoType ammoType, int rateOfFire, Reliability reliability, int rangeModifier, int cost, double weight) {
-		super(weaponName, description, weaponType, skillName, weaponAccuracy, damage.getModifier(), rangeModifier, cost,
-				weight);
+			String ammoType, int rateOfFire, Reliability reliability, int rangeModifier, double cost, double weight) {
+		super(weaponName, description, weaponType, skillName, weaponAccuracy, damage.getModifier(), rangeModifier,
+				rateOfFire, cost, weight);
 
 		this.hitChance = new Die(1, 10);
 		this.concealability = concealability;
 		this.availability = availability;
 		this.damageChance = damage.getDice();
 		this.ammoType = ammoType;
-		this.rateOfFire = rateOfFire;
 		this.reliability = reliability;
 	}
 
@@ -160,12 +108,8 @@ public abstract class CyberpunkWeapon extends Weapon {
 		return damageChance;
 	}
 
-	public AmmoType getAmmoType() {
+	public String getAmmoType() {
 		return ammoType;
-	}
-
-	public int getRateOfFire() {
-		return rateOfFire;
 	}
 
 	public Reliability getReliability() {

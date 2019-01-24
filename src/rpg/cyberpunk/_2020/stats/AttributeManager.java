@@ -4,25 +4,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 import rpg.cyberpunk._2020.AttributeName;
-import rpg.general.stats.AbstractAttribute;
+import rpg.general.stats.Attribute;
 
 public class AttributeManager {
-	private Map<AttributeName, AbstractAttribute> attributes;
-	private AbstractAttribute intelligence;
-	private AbstractAttribute reflexes;
-	private AbstractAttribute cool;
-	private AbstractAttribute technicalAbility;
-	private AbstractAttribute luck;
-	private AbstractAttribute attractiveness;
-	private AbstractAttribute movementAllowance;
-	private AbstractAttribute run;
-	private AbstractAttribute leap;
-	private AbstractAttribute empathy;
-	private AbstractAttribute bodyType;
-	private AbstractAttribute carry;
+	private Map<AttributeName, Attribute> attributes;
+	private Attribute intelligence;
+	private Attribute reflexes;
+	private Attribute cool;
+	private Attribute technicalAbility;
+	private Attribute luck;
+	private Attribute attractiveness;
+	private Attribute movementAllowance;
+	private Attribute run;
+	private Attribute leap;
+	private Attribute empathy;
+	private Attribute bodyType;
+	private Attribute carry;
 
 	public AttributeManager() {
-		attributes = new HashMap<AttributeName, AbstractAttribute>();
+		attributes = new HashMap<AttributeName, Attribute>();
 		intelligence = new CyberpunkAttribute(AttributeName.INTELLIGENCE,
 				"This is a measure of your problem solving ability; figuring out problems, noticing things, remembering information." //
 						+ " Almost every character type will need a high Intelligence, with Netrunners and Corporates requiring the highest of all.");
@@ -82,8 +82,8 @@ public class AttributeManager {
 		attributes.put(carry.getName(), carry);
 	}
 
-	public AbstractAttribute get(AttributeName attributeName) {
-		AbstractAttribute attribute = attributes.get(attributeName);
+	public Attribute get(AttributeName attributeName) {
+		Attribute attribute = attributes.get(attributeName);
 		if (attribute == null) {
 			return NullCyberpunkAttribute.getInstance();
 		} else {
@@ -92,7 +92,7 @@ public class AttributeManager {
 	}
 
 	public int getLevel(AttributeName attributeName) {
-		AbstractAttribute attribute = attributes.get(attributeName);
+		Attribute attribute = attributes.get(attributeName);
 		if (attribute == null) {
 			return CyberpunkAttribute.MIN_LEVEL - CyberpunkAttribute.MIN_LEVEL;
 		} else {

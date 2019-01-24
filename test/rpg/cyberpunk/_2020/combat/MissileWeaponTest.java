@@ -15,6 +15,7 @@ import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Concealability;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Reliability;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Modifier.ModifierType;
+import rpg.general.combat.Magazine;
 import rpg.general.combat.WeaponModifier;
 import rpg.util.Die;
 import rpg.util.Probability;

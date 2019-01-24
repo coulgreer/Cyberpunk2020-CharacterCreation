@@ -9,10 +9,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import rpg.general.stats.AbstractAttribute;
+import rpg.general.stats.Attribute;
 
 public class RoleCyberpunkSkillTest {
-	private static AbstractAttribute mockedAttribute;
+	private static Attribute mockedAttribute;
 
 	private RoleCyberpunkSkill skill;
 

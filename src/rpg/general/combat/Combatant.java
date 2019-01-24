@@ -1,8 +1,5 @@
 package rpg.general.combat;
 
-import java.util.Iterator;
-
-import rpg.cyberpunk._2020.combat.Magazine;
 import rpg.util.Probability;
 
 public abstract class Combatant {
@@ -21,10 +18,4 @@ public abstract class Combatant {
 	public abstract int getRangeModifier(Weapon weapon);
 
 	public abstract int getRangeScore(int slot);
-
-	public abstract int getAmmoCount(int slot);
-
-	public abstract Magazine reload(int slot, Magazine magazine);
-
-	public abstract Iterator<? extends Weapon> createIterator();
 }
