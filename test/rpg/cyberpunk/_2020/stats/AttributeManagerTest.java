@@ -11,6 +11,37 @@ import rpg.general.stats.Attribute;
 public class AttributeManagerTest {
 
 	@Test
+	public void testAttributeLevelEqualsThreeIfAttributeLevelIncreasedOnce() {
+
+		AttributeManager attributeManager = new AttributeManager();
+
+		attributeManager.increaseLevel(CyberpunkAttribute.ATTRACTIVENESS);
+
+		assertEquals(3, attributeManager.getBaseLevel(CyberpunkAttribute.ATTRACTIVENESS));
+	}
+
+	@Test
+	public void testAttributeLevelEqualsThreeIfAttributeLevelIncreasedTwiceThenDecreasedOnce() {
+		AttributeManager attributeManager = new AttributeManager();
+
+		attributeManager.increaseLevel(CyberpunkAttribute.ATTRACTIVENESS);
+		attributeManager.increaseLevel(CyberpunkAttribute.ATTRACTIVENESS);
+		attributeManager.decreaseLevel(CyberpunkAttribute.ATTRACTIVENESS);
+
+		assertEquals(3, attributeManager.getBaseLevel(CyberpunkAttribute.ATTRACTIVENESS));
+	}
+
+	@Test
+	public void testAttributeLevelEqualsMinimumLevelIfAttributeLevelIncreasedOnceThenResetLevel() {
+		AttributeManager attributeManager = new AttributeManager();
+
+		attributeManager.increaseLevel(CyberpunkAttribute.ATTRACTIVENESS);
+		attributeManager.resetLevel(CyberpunkAttribute.ATTRACTIVENESS);
+
+		assertEquals(CyberpunkAttribute.MIN_LEVEL, attributeManager.getBaseLevel(CyberpunkAttribute.ATTRACTIVENESS));
+	}
+
+	@Test
 	public void testNullIsReturnedIfNullAttributeNameIsGiven() {
 		AttributeManager manager = new AttributeManager();
 

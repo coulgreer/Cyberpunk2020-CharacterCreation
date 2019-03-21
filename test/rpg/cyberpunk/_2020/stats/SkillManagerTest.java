@@ -49,6 +49,24 @@ public class SkillManagerTest {
 	}
 
 	@Test
+	public void testSkillLevelEqualsMinimumLevelIfSkillLevelIncreasedOnceThenResetLevel() {
+		Player mockPlayer = mock(Player.class);
+
+		Attribute mockAttribute = mock(CyberpunkAttribute.class);
+		when(mockAttribute.getModifier()).thenReturn(2);
+
+		AttributeManager mockAttributeManager = mock(AttributeManager.class);
+		when(mockAttributeManager.getStatistic(any(String.class))).thenReturn(mockAttribute);
+
+		SkillManager skillManager = new SkillManager(mockAttributeManager, mockPlayer);
+
+		skillManager.increaseLevel(CyberpunkSkill.ACCOUNTING);
+		skillManager.resetLevel(CyberpunkSkill.ACCOUNTING);
+
+		assertEquals(CyberpunkSkill.MIN_LEVEL, skillManager.getBaseLevel(CyberpunkSkill.ACCOUNTING));
+	}
+
+	@Test
 	public void testSkillReturnedIfSkillIsAddedToSkillManager() {
 		Player mockPlayer = mock(Player.class);
 
