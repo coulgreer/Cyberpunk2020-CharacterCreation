@@ -14,14 +14,14 @@ public class AttributeManagerTest {
 	public void testNullIsReturnedIfNullAttributeNameIsGiven() {
 		AttributeManager manager = new AttributeManager();
 
-		assertEquals(null, manager.get(null));
+		assertEquals(null, manager.getStatistic(null));
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void testExceptionThrownIfNullNameIsGivenWhenGettingLevel() {
 		AttributeManager manager = new AttributeManager();
 
-		manager.getLevel(null);
+		manager.getBaseLevel(null);
 	}
 
 	@Test
@@ -33,7 +33,7 @@ public class AttributeManagerTest {
 
 		manager.add(mockAttribute);
 
-		assertEquals(mockAttribute, manager.get(mockAttribute.getName()));
+		assertEquals(mockAttribute, manager.getStatistic(mockAttribute.getName()));
 	}
 
 	@Test
@@ -46,7 +46,7 @@ public class AttributeManagerTest {
 		manager.add(mockAttribute);
 		manager.remove(mockAttribute.getName());
 
-		assertEquals(null, manager.get(mockAttribute.getName()));
+		assertEquals(null, manager.getStatistic(mockAttribute.getName()));
 	}
 
 }

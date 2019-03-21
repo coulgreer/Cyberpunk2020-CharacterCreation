@@ -13,39 +13,39 @@ import rpg.general.stats.Attribute;
 public class SkillManagerTest {
 
 	@Test
-	public void testSkillTotalLevelEqualsThreeIfSkillLevelIncreasedOnce() {
+	public void testSkillLevelEqualsOneIfSkillLevelIncreasedOnce() {
 		Player mockPlayer = mock(Player.class);
 
 		Attribute mockAttribute = mock(CyberpunkAttribute.class);
 		when(mockAttribute.getModifier()).thenReturn(2);
 
 		AttributeManager mockAttributeManager = mock(AttributeManager.class);
-		when(mockAttributeManager.get(any(String.class))).thenReturn(mockAttribute);
+		when(mockAttributeManager.getStatistic(any(String.class))).thenReturn(mockAttribute);
 
 		SkillManager skillManager = new SkillManager(mockAttributeManager, mockPlayer);
 
-		skillManager.increaseSkill(CyberpunkSkill.ACCOUNTING);
+		skillManager.increaseLevel(CyberpunkSkill.ACCOUNTING);
 
-		assertEquals(3, skillManager.getTotalValue(CyberpunkSkill.ACCOUNTING));
+		assertEquals(1, skillManager.getBaseLevel(CyberpunkSkill.ACCOUNTING));
 	}
 
 	@Test
-	public void testSkillTotalLevelEqualsThreeIfSkillLevelIncreasedTwiceThenDecreasedOnce() {
+	public void testSkillLevelEqualsOneIfSkillLevelIncreasedTwiceThenDecreasedOnce() {
 		Player mockPlayer = mock(Player.class);
 
 		Attribute mockAttribute = mock(CyberpunkAttribute.class);
 		when(mockAttribute.getModifier()).thenReturn(2);
 
 		AttributeManager mockAttributeManager = mock(AttributeManager.class);
-		when(mockAttributeManager.get(any(String.class))).thenReturn(mockAttribute);
+		when(mockAttributeManager.getStatistic(any(String.class))).thenReturn(mockAttribute);
 
 		SkillManager skillManager = new SkillManager(mockAttributeManager, mockPlayer);
 
-		skillManager.increaseSkill(CyberpunkSkill.ACCOUNTING);
-		skillManager.increaseSkill(CyberpunkSkill.ACCOUNTING);
-		skillManager.decreaseSkill(CyberpunkSkill.ACCOUNTING);
+		skillManager.increaseLevel(CyberpunkSkill.ACCOUNTING);
+		skillManager.increaseLevel(CyberpunkSkill.ACCOUNTING);
+		skillManager.decreaseLevel(CyberpunkSkill.ACCOUNTING);
 
-		assertEquals(3, skillManager.getTotalValue(CyberpunkSkill.ACCOUNTING));
+		assertEquals(1, skillManager.getBaseLevel(CyberpunkSkill.ACCOUNTING));
 	}
 
 	@Test
@@ -55,7 +55,7 @@ public class SkillManagerTest {
 		Attribute mockAttribute = mock(CyberpunkAttribute.class);
 
 		AttributeManager mockAttributeManager = mock(AttributeManager.class);
-		when(mockAttributeManager.get(any(String.class))).thenReturn(mockAttribute);
+		when(mockAttributeManager.getStatistic(any(String.class))).thenReturn(mockAttribute);
 
 		CyberpunkSkill mockSkill = mock(CyberpunkSkill.class);
 		when(mockSkill.getName()).thenReturn("Mock Skill");
@@ -64,7 +64,7 @@ public class SkillManagerTest {
 
 		skillManager.add(mockSkill);
 
-		assertEquals(mockSkill, skillManager.get(mockSkill.getName()));
+		assertEquals(mockSkill, skillManager.getStatistic(mockSkill.getName()));
 	}
 
 	@Test(expected = NullPointerException.class)
@@ -74,7 +74,7 @@ public class SkillManagerTest {
 		Attribute mockAttribute = mock(CyberpunkAttribute.class);
 
 		AttributeManager mockAttributeManager = mock(AttributeManager.class);
-		when(mockAttributeManager.get(any(String.class))).thenReturn(mockAttribute);
+		when(mockAttributeManager.getStatistic(any(String.class))).thenReturn(mockAttribute);
 
 		CyberpunkSkill mockSkill = mock(CyberpunkSkill.class);
 		when(mockSkill.getName()).thenReturn("Mock Skill");
@@ -82,9 +82,9 @@ public class SkillManagerTest {
 		SkillManager skillManager = new SkillManager(mockAttributeManager, mockPlayer);
 
 		skillManager.add(mockSkill);
-		skillManager.remove(mockSkill);
-		
-		skillManager.get(mockSkill.getName());
+		skillManager.remove(mockSkill.getName());
+
+		skillManager.getStatistic(mockSkill.getName());
 	}
 
 }

@@ -13,12 +13,15 @@ import rpg.cyberpunk._2020.commerce.BottomlessInventory;
 import rpg.cyberpunk._2020.commerce.Inventory;
 import rpg.cyberpunk._2020.commerce.PlayerTrader;
 import rpg.cyberpunk._2020.stats.AttributeManager;
+import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.cyberpunk._2020.stats.Role;
 import rpg.cyberpunk._2020.stats.SkillManager;
 import rpg.general.combat.Ammunition;
 import rpg.general.combat.AmmunitionContainer;
 import rpg.general.commerce.Item;
 import rpg.general.commerce.Trader;
+import rpg.general.stats.Attribute;
+import rpg.general.stats.StatisticManager;
 import rpg.util.Probability;
 
 public class Player {
@@ -30,8 +33,8 @@ public class Player {
 	private Role role;
 	private Trader trader;
 	private CyberpunkCombatant combatant;
-	private AttributeManager attributeManager;
-	private SkillManager skillManager;
+	private StatisticManager<Attribute> attributeManager;
+	private StatisticManager<CyberpunkSkill> skillManager;
 
 	public Player() {
 		changeSupport = new PropertyChangeSupport(this);
@@ -82,11 +85,12 @@ public class Player {
 	}
 
 	public int getAttributeValue(String attributeName) {
-		return attributeManager.getLevel(attributeName);
+		return attributeManager.getBaseLevel(attributeName);
 	}
 
 	public int getSkillValue(String skillName) {
-		return skillManager.getTotalValue(skillName);
+		CyberpunkSkill skill = skillManager.getStatistic(skillName);
+		return skill.getTotalValue();
 	}
 
 	public int getRangeScore(int slot) {
@@ -94,7 +98,7 @@ public class Player {
 	}
 
 	public void increaseSkillLevel(String skillName) {
-		skillManager.increaseSkill(skillName);
+		skillManager.increaseLevel(skillName);
 	}
 
 	public void attack(int slot, int shotsFired) {

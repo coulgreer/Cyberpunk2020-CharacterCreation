@@ -1,12 +1,12 @@
 package rpg.cyberpunk._2020.stats;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import rpg.general.stats.Attribute;
+import rpg.general.stats.StatisticManager;
 
-public class AttributeManager {
+public class AttributeManager implements StatisticManager<Attribute> {
 	private Map<String, Attribute> attributes;
 	private Attribute intelligence;
 	private Attribute reflexes;
@@ -21,6 +21,10 @@ public class AttributeManager {
 	private Attribute bodyType;
 	private Attribute carry;
 
+	/**
+	 * Constructs a manager with the default attributes from the Tabletop RPG
+	 * Cyberpunk 2020.
+	 */
 	public AttributeManager() {
 		attributes = new HashMap<String, Attribute>();
 		addIndependentAttributes();
@@ -91,40 +95,48 @@ public class AttributeManager {
 
 	}
 
-	/**
-	 * Puts the desired attribute in this manager.
-	 * 
-	 * @param attribute the element to put into this manager
-	 */
+	@Override
 	public void add(Attribute attribute) {
 		attributes.put(attribute.getName(), attribute);
 	}
 
-	public void remove(String attributeName) {
-		attributes.remove(attributeName);
+	@Override
+	public void remove(String name) {
+		attributes.remove(name);
 	}
 
-	public Attribute get(String attributeName) {
-		return attributes.get(attributeName);
+	public Attribute getStatistic(String name) {
+		return attributes.get(name);
 	}
 
-	public int getLevel(String attributeName) {
-		Attribute attribute = attributes.get(attributeName);
+	@Override
+	public String getDescription(String name) {
+		Attribute attribute = attributes.get(name);
+		return attribute.getDescription();
+	}
+
+	@Override
+	public int getBaseLevel(String name) {
+		Attribute attribute = attributes.get(name);
 		return attribute.getLevel();
 	}
 
-	public void increaseLevel(String attributeName) {
-		Attribute attribute = attributes.get(attributeName);
+	@Override
+	public void increaseLevel(String name) {
+		Attribute attribute = attributes.get(name);
 		attribute.increaseLevel();
 	}
 
-	public void decreaseLevel(String attributeName) {
-		Attribute attribute = attributes.get(attributeName);
+	@Override
+	public void decreaseLevel(String name) {
+		Attribute attribute = attributes.get(name);
 		attribute.decreaseLevel();
 	}
 
-	public Iterator<Attribute> createIterator() {
-		return attributes.values().iterator();
+	@Override
+	public void resetLevel(String name) {
+		Attribute attribute = attributes.get(name);
+		attribute.resetLevel();
 	}
 
 }

@@ -2,6 +2,7 @@ package rpg.cyberpunk._2020.stats;
 
 import rpg.Player;
 import rpg.general.stats.Attribute;
+import rpg.general.stats.StatisticManager;
 import rpg.util.TreeNode;
 
 /**
@@ -11,7 +12,7 @@ import rpg.util.TreeNode;
  * 
  * @author Coul Greer
  */
-public final class SkillManager {
+public final class SkillManager implements StatisticManager<CyberpunkSkill> {
 	private Attribute intelligence;
 	private Attribute reflexes;
 	private Attribute cool;
@@ -44,21 +45,22 @@ public final class SkillManager {
 	private TreeNode<CyberpunkSkill> technicalSkills;
 
 	/**
-	 * Constructs a collection of default skills.
+	 * Constructs a collection of default skills from the Tabletop RPG Cyberpunk
+	 * 2020.
 	 * 
 	 * @param attributeManager the collection of attributes used to calculate the
 	 *                         total value of skills
 	 * @param player           the object to observe for RoleSkills to be enabled or
 	 *                         disabled based on player's active role
 	 */
-	public SkillManager(AttributeManager attributeManager, Player player) {
-		this.intelligence = attributeManager.get(CyberpunkAttribute.INTELLIGENCE);
-		this.reflexes = attributeManager.get(CyberpunkAttribute.REFLEXES);
-		this.cool = attributeManager.get(CyberpunkAttribute.COOL);
-		this.technicalAbility = attributeManager.get(CyberpunkAttribute.TECHNICAL_ABILITY);
-		this.attractiveness = attributeManager.get(CyberpunkAttribute.ATTRACTIVENESS);
-		this.empathy = attributeManager.get(CyberpunkAttribute.EMPATHY);
-		this.bodyType = attributeManager.get(CyberpunkAttribute.BODY_TYPE);
+	public SkillManager(StatisticManager<Attribute> attributeManager, Player player) {
+		this.intelligence = attributeManager.getStatistic(CyberpunkAttribute.INTELLIGENCE);
+		this.reflexes = attributeManager.getStatistic(CyberpunkAttribute.REFLEXES);
+		this.cool = attributeManager.getStatistic(CyberpunkAttribute.COOL);
+		this.technicalAbility = attributeManager.getStatistic(CyberpunkAttribute.TECHNICAL_ABILITY);
+		this.attractiveness = attributeManager.getStatistic(CyberpunkAttribute.ATTRACTIVENESS);
+		this.empathy = attributeManager.getStatistic(CyberpunkAttribute.EMPATHY);
+		this.bodyType = attributeManager.getStatistic(CyberpunkAttribute.BODY_TYPE);
 
 		allSkills = new TreeNode<CyberpunkSkill>(CyberpunkSkill.NONE, null);
 		initializeRoleSkills(player);
@@ -1131,74 +1133,49 @@ public final class SkillManager {
 						2, new SkillSkillRestriction(chemistry, 4)));
 	}
 
-	/**
-	 * Puts the given skill into this manager.
-	 * 
-	 * @param skill the element to put in this manager
-	 */
+	@Override
 	public void add(CyberpunkSkill skill) {
 		TreeNode<CyberpunkSkill> newNode = new TreeNode<CyberpunkSkill>(skill.getName(), skill);
 		allSkills.appendChild(newNode);
 	}
 
-	/**
-	 * Deletes the given skill from this manager if it exists.
-	 * 
-	 * @param skill the element to be removed
-	 */
-	public void remove(CyberpunkSkill skill) {
-		allSkills.removeChild(skill.getName());
+	@Override
+	public void remove(String name) {
+		allSkills.removeChild(name);
 	}
 
-	/**
-	 * Exposes a skill that is contained in this manager
-	 * 
-	 * @param skillName the tag of the target skill
-	 * @return a skill object
-	 */
-	public CyberpunkSkill get(String skillName) {
-		return allSkills.getChild(skillName).getData();
+	@Override
+	public CyberpunkSkill getStatistic(String name) {
+		return allSkills.getChild(name).getData();
 	}
 
-	/**
-	 * Returns a blurb that gives an idea what the returned skill does.
-	 * 
-	 * @param skillName the tag of the target skill
-	 * @return a blurb representing the target skill
-	 */
-	public String getDescription(String skillName) {
-		CyberpunkSkill skill = allSkills.getChild(skillName).getData();
+	@Override
+	public String getDescription(String name) {
+		CyberpunkSkill skill = allSkills.getChild(name).getData();
 		return skill.getDescription();
 	}
 
-	/**
-	 * Returns the total score a skill.
-	 * 
-	 * @param skillName the tag of the target skill
-	 * @return the total score of a target skill
-	 */
-	public int getTotalValue(String skillName) {
-		CyberpunkSkill skill = allSkills.getChild(skillName).getData();
-		return skill.getTotalValue();
+	@Override
+	public int getBaseLevel(String name) {
+		CyberpunkSkill skill = allSkills.getChild(name).getData();
+		return skill.getLevel();
 	}
 
-	/**
-	 * Increment the current level of the skill with the given skillName.
-	 * 
-	 * @param skillName the tag of the target skill
-	 */
-	public void increaseSkill(String skillName) {
-		CyberpunkSkill skill = allSkills.getChild(skillName).getData();
+	@Override
+	public void increaseLevel(String name) {
+		CyberpunkSkill skill = allSkills.getChild(name).getData();
 		skill.increaseLevel();
 	}
 
-	/**
-	 * Decrement the current level of the skill with the given skillName.
-	 * 
-	 * @param skillName the tag of the target skill
-	 */
-	public void decreaseSkill(String skillName) {
-		CyberpunkSkill skill = allSkills.getChild(skillName).getData();
+	@Override
+	public void decreaseLevel(String name) {
+		CyberpunkSkill skill = allSkills.getChild(name).getData();
 		skill.decreaseLevel();
+	}
+
+	@Override
+	public void resetLevel(String name) {
+		CyberpunkSkill skill = allSkills.getChild(name).getData();
+		skill.resetLevel();
 	}
 }
