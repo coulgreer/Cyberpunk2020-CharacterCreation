@@ -1,9 +1,11 @@
 package rpg.cyberpunk._2020.combat;
 
+import java.util.Collections;
+
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
 public class ChoiLiFutFightingStyleFactory implements AbstractFightingStyleFactory {
-	public static final String DESCRIPTION = "Descended directly from the ancient Shaolin temples, this form combines powerful roundhouse blows and sweeping kicks into a dynamic fighting style.";
+	protected static final String DESCRIPTION = "Descended directly from the ancient Shaolin temples, this form combines powerful roundhouse blows and sweeping kicks into a dynamic fighting style.";
 
 	private static ChoiLiFutFightingStyleFactory uniqueInstance;
 
@@ -17,59 +19,81 @@ public class ChoiLiFutFightingStyleFactory implements AbstractFightingStyleFacto
 		return uniqueInstance;
 	}
 
+	@Override
 	public CyberpunkWeapon createStrike() {
-		return new MartialWeapon("Choi Li Fut Strike", DESCRIPTION, CyberpunkSkill.CHOI_LI_FUT, 2, CONCEALABILITY,
-				AVAILABILITY, STRIKE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Choi Li Fut Strike", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.CHOI_LI_FUT, 2, CONCEALABILITY, AVAILABILITY, STRIKE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createKick() {
-		return new MartialWeapon("Choi Li Fut Kick", DESCRIPTION, CyberpunkSkill.CHOI_LI_FUT, 2, CONCEALABILITY,
-				AVAILABILITY, KICK_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Choi Li Fut Kick", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.CHOI_LI_FUT, 2, CONCEALABILITY, AVAILABILITY, KICK_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createBlock() {
-		return new MartialWeapon("Choi Li Fut Block", DESCRIPTION, CyberpunkSkill.CHOI_LI_FUT, 2, CONCEALABILITY,
-				AVAILABILITY, BLOCK_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Choi Li Fut Block", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.CHOI_LI_FUT, 2, CONCEALABILITY, AVAILABILITY, BLOCK_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createDodge() {
-		return new MartialWeapon("Choi Li Fut Dodge", DESCRIPTION, CyberpunkSkill.CHOI_LI_FUT, 1, CONCEALABILITY,
-				AVAILABILITY, DODGE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Choi Li Fut Dodge", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.CHOI_LI_FUT, 1, CONCEALABILITY, AVAILABILITY, DODGE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createDisarm() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MeleeWeapon("Choi Li Fut Disarm", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.CHOI_LI_FUT, 0, CONCEALABILITY, AVAILABILITY, DISARM_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createThrow() {
-		return new MartialWeapon("Choi Li Fut Throw", DESCRIPTION, CyberpunkSkill.CHOI_LI_FUT, 1, CONCEALABILITY,
-				AVAILABILITY, THROW_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Choi Li Fut Throw", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.CHOI_LI_FUT, 1, CONCEALABILITY, AVAILABILITY, THROW_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createHold() {
-		return new MartialWeapon("Choi Li Fut Hold", DESCRIPTION, CyberpunkSkill.CHOI_LI_FUT, 0, CONCEALABILITY,
-				AVAILABILITY, HOLD_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Choi Li Fut Hold", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.CHOI_LI_FUT, 0, CONCEALABILITY, AVAILABILITY, HOLD_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createEscape() {
-		return new MartialWeapon("Choi Li Fut Escape", DESCRIPTION, CyberpunkSkill.CHOI_LI_FUT, 0, CONCEALABILITY,
-				AVAILABILITY, ESCAPE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Choi Li Fut Escape", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.CHOI_LI_FUT, 0, CONCEALABILITY, AVAILABILITY, ESCAPE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createChoke() {
-		return new MartialWeapon("Choi Li Fut Choke", DESCRIPTION, CyberpunkSkill.CHOI_LI_FUT, 0, CONCEALABILITY,
-				AVAILABILITY, CHOKE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Choi Li Fut Choke", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.CHOI_LI_FUT, 0, CONCEALABILITY, AVAILABILITY, CHOKE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createSweep() {
-		return new MartialWeapon("Choi Li Fut Sweep", DESCRIPTION, CyberpunkSkill.CHOI_LI_FUT, 2, CONCEALABILITY,
-				AVAILABILITY, SWEEP_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Choi Li Fut Sweep", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.CHOI_LI_FUT, 2, CONCEALABILITY, AVAILABILITY, SWEEP_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createGrapple() {
-		return new MartialWeapon("Choi Li Fut Grapple", DESCRIPTION, CyberpunkSkill.CHOI_LI_FUT, 0, CONCEALABILITY,
-				AVAILABILITY, GRAPPLE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Choi Li Fut Grapple", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.CHOI_LI_FUT, 0, CONCEALABILITY, AVAILABILITY, GRAPPLE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
 }

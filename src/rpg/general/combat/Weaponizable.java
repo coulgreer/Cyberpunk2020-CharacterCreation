@@ -1,21 +1,24 @@
 package rpg.general.combat;
 
-import rpg.util.Die;
-
 public interface Weaponizable {
-	public Die getHitDice();
-
+	/**
+	 * Gets the modifier number for the ability to hit another thing.
+	 * 
+	 * @return a number used to boost base hit probability
+	 */
 	public int getHitModifier();
 
-	public int getHitScore();
-
-	public Die getDamageDice();
-
+	/**
+	 * Gets the modifier number for the ability to deal damage to another thing.
+	 * 
+	 * @return a number used to boost base damage probability
+	 */
 	public int getDamageModifier();
 
-	public int getDamageScore();
-
+	/**
+	 * Gets the modifier number that increases overall range.
+	 * 
+	 * @return a number used to boost base range
+	 */
 	public int getRangeModifier();
-
-	public int getRangeScore();
 }

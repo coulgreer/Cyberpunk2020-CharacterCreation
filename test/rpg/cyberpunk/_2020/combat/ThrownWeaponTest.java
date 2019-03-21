@@ -1,20 +1,22 @@
 package rpg.cyberpunk._2020.combat;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import rpg.Player;
-import rpg.cyberpunk._2020.combat.Ammunition.AmmoType;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Availability;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Concealability;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Reliability;
-import rpg.cyberpunk._2020.stats.CyberpunkSkill;
-import rpg.general.combat.Magazine;
+import rpg.general.combat.Ammunition;
+import rpg.general.combat.AmmunitionContainer;
 import rpg.util.Die;
 import rpg.util.Probability;
 
@@ -25,11 +27,10 @@ public class ThrownWeaponTest {
 	private static Concealability concealability;
 	private static Availability availability;
 	private static Probability damage;
-	private static AmmoType ammoType;
-	private static int rateOfFire;
+	private static String ammoType;
 	private static Reliability reliability;
+	private static double cost;
 	private static double weight;
-	private static int cost;
 
 	@BeforeClass
 	public static void setupBeforeClass() {
@@ -39,127 +40,31 @@ public class ThrownWeaponTest {
 		concealability = Concealability.LONG_COAT;
 		availability = Availability.COMMON;
 		damage = new Probability(new Die(1, 10), 1);
-		ammoType = AmmoType.NONE;
-		rateOfFire = 1;
+		ammoType = CyberpunkWeapon.DEFAULT_WEAPON_TYPE;
 		reliability = Reliability.VERY_RELIABLE;
 		weight = 0.5;
-		cost = 999;
-	}
-
-	@Test
-	public void testLightPistolWeaponTypeSetsSkillToHandgun() {
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.LIGHT_PISTOL, weaponAccuracy,
-				concealability, availability, damage, rateOfFire, reliability, weight, cost);
-
-		assertEquals(CyberpunkSkill.HANDGUN, weapon.getSkillName());
-	}
-
-	@Test
-	public void testMediumPistolWeaponTypeSetsSkillToHandgun() {
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.MEDIUM_PISTOL, weaponAccuracy,
-				concealability, availability, damage, rateOfFire, reliability, weight, cost);
-
-		assertEquals(CyberpunkSkill.HANDGUN, weapon.getSkillName());
-	}
-
-	@Test
-	public void testHeavyPistolWeaponTypeSetsSkillToHandgun() {
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.HEAVY_PISTOL, weaponAccuracy,
-				concealability, availability, damage, rateOfFire, reliability, weight, cost);
-
-		assertEquals(CyberpunkSkill.HANDGUN, weapon.getSkillName());
-	}
-
-	@Test
-	public void testVeryHeavyPistolWeaponTypeSetsSkillToHandgun() {
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.VERY_HEAVY_PISTOL,
-				weaponAccuracy, concealability, availability, damage, rateOfFire, reliability, weight, cost);
-
-		assertEquals(CyberpunkSkill.HANDGUN, weapon.getSkillName());
-	}
-
-	@Test
-	public void testLightSubmachinegunWeaponTypeSetsSkillToSubmachinegun() {
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.LIGHT_SUBMACHINEGUN,
-				weaponAccuracy, concealability, availability, damage, rateOfFire, reliability, weight, cost);
-
-		assertEquals(CyberpunkSkill.SUBMACHINEGUN, weapon.getSkillName());
-	}
-
-	@Test
-	public void testMediumSubmachinegunWeaponTypeSetsSkillToSubmachinegun() {
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.MEDIUM_SUBMACHINEGUN,
-				weaponAccuracy, concealability, availability, damage, rateOfFire, reliability, weight, cost);
-
-		assertEquals(CyberpunkSkill.SUBMACHINEGUN, weapon.getSkillName());
-	}
-
-	@Test
-	public void testHeavySubmachinegunWeaponTypeSetsSkillToSubmachinegun() {
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.HEAVY_SUBMACHINEGUN,
-				weaponAccuracy, concealability, availability, damage, rateOfFire, reliability, weight, cost);
-
-		assertEquals(CyberpunkSkill.SUBMACHINEGUN, weapon.getSkillName());
-	}
-
-	@Test
-	public void testRifleWeaponTypeSetsSkillToRifle() {
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.RIFLE, weaponAccuracy,
-				concealability, availability, damage, rateOfFire, reliability, weight, cost);
-
-		assertEquals(CyberpunkSkill.RIFLE, weapon.getSkillName());
-	}
-
-	@Test
-	public void testShotgunWeaponTypeSetsSkillToRifle() {
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.SHOTGUN, weaponAccuracy,
-				concealability, availability, damage, rateOfFire, reliability, weight, cost);
-
-		assertEquals(CyberpunkSkill.RIFLE, weapon.getSkillName());
-	}
-
-	@Test
-	public void testHeavyWeaponTypeSetsSkillToHeavyWeapons() {
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.HEAVY_WEAPON, weaponAccuracy,
-				concealability, availability, damage, rateOfFire, reliability, weight, cost);
-
-		assertEquals(CyberpunkSkill.HEAVY_WEAPONS, weapon.getSkillName());
-	}
-
-	@Test
-	public void testEdgedWeaponTypeSetsSkillToMelee() {
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.EDGED_WEAPON, weaponAccuracy,
-				concealability, availability, damage, rateOfFire, reliability, weight, cost);
-
-		assertEquals(CyberpunkSkill.MELEE, weapon.getSkillName());
-	}
-
-	@Test
-	public void testBluntWeaponTypeSetsSkillToMelee() {
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.BLUNT_WEAPON, weaponAccuracy,
-				concealability, availability, damage, rateOfFire, reliability, weight, cost);
-
-		assertEquals(CyberpunkSkill.MELEE, weapon.getSkillName());
-	}
-
-	@Test
-	public void testUnknownWeaponTypeSetsSkillToNotAvailable() {
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.NONE, weaponAccuracy,
-				concealability, availability, damage, rateOfFire, reliability, weight, cost);
-
-		assertEquals(CyberpunkSkill.NONE, weapon.getSkillName());
+		cost = 999.0;
 	}
 
 	@Test
 	public void testThrownWeaponCannotStoreAmmo() {
 		Ammunition mockedAmmunition = mock(Ammunition.class);
-		when(mockedAmmunition.getAmmoType()).thenReturn(ammoType);
-		Magazine magazine = new Magazine(ammoType, 2);
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.LIGHT_PISTOL, weaponAccuracy,
-				concealability, availability, damage, rateOfFire, reliability, weight, cost);
+		when(mockedAmmunition.getAmmunitionType()).thenReturn(ammoType);
 
-		assertEquals(magazine, weapon.reload(magazine));
-		assertEquals(0, weapon.getAmmoCount());
+		int containerCapacity = 2;
+		AmmunitionContainer ammunitionContainer = new HomogeneousMagazine(ammoType, containerCapacity);
+		for (int i = 0; i < containerCapacity; i++) {
+			ammunitionContainer.depositAmmunition(mockedAmmunition);
+		}
+
+		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.WEAPON_TYPE_LIGHT_PISTOL,
+				weaponAccuracy, concealability, availability, damage, reliability, cost, weight);
+
+		List<Ammunition> remainingAmmunition = weapon.reload(ammunitionContainer);
+
+		assertTrue(remainingAmmunition.contains(mockedAmmunition));
+		assertEquals(containerCapacity, remainingAmmunition.size());
+		assertEquals(ThrownWeapon.AMMUNITION_CAPACITY, weapon.getAmmunitionCount());
 	}
 
 	@Test
@@ -167,13 +72,15 @@ public class ThrownWeaponTest {
 		Player player = new Player();
 		Player spyPlayer = spy(player);
 
-		// TODO
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.LIGHT_PISTOL, weaponAccuracy,
-				concealability, availability, damage, rateOfFire, reliability, weight, cost);
+		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.WEAPON_TYPE_LIGHT_PISTOL,
+				weaponAccuracy, concealability, availability, damage, reliability, cost, weight);
 		spyPlayer.arm(CyberpunkCombatant.PRIMARY_SLOT, weapon);
 
 		weapon.fire(1);
 
-		assertEquals(0, weapon.getAmmoCount());
+		// TODO Make the test check for what weapon type is help in each slot, not the
+		// ammo capacity. The ammo capacity can be very misleading.
+		assertEquals(0, player.getAmmoCount(CyberpunkCombatant.PRIMARY_SLOT));
+		assertEquals(0, player.getAmmoCount(CyberpunkCombatant.SECONDARY_SLOT));
 	}
 }

@@ -1,38 +1,52 @@
 package rpg.cyberpunk._2020.stats;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 
-import rpg.cyberpunk._2020.AttributeName;
 import rpg.general.stats.Attribute;
 
 public class AttributeManagerTest {
+
 	@Test
-	public void testExistingAttributeNameReturnsAnInstanceOfAbstractAttribute() {
+	public void testNullIsReturnedIfNullAttributeNameIsGiven() {
 		AttributeManager manager = new AttributeManager();
-		assertTrue(manager.get(AttributeName.ATTRACTIVENESS) instanceof Attribute);
+
+		assertEquals(null, manager.get(null));
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testExceptionThrownIfNullNameIsGivenWhenGettingLevel() {
+		AttributeManager manager = new AttributeManager();
+
+		manager.getLevel(null);
 	}
 
 	@Test
-	public void testNonexistantAttributeNameReturnsNullCyberpunkAttribute() {
+	public void testMockAttributeReturnedIfAddedToAttributeManager() {
+		Attribute mockAttribute = mock(Attribute.class);
+		when(mockAttribute.getName()).thenReturn("Mock Attribute");
+
 		AttributeManager manager = new AttributeManager();
 
-		assertEquals(NullCyberpunkAttribute.getInstance(), manager.get(null));
+		manager.add(mockAttribute);
+
+		assertEquals(mockAttribute, manager.get(mockAttribute.getName()));
 	}
 
 	@Test
-	public void testExistingAttributeNameReturnsLevel() {
+	public void testNullReturnedIfMockAttributeAddedThenRemoved() {
+		Attribute mockAttribute = mock(Attribute.class);
+		when(mockAttribute.getName()).thenReturn("Mock Attribute");
+
 		AttributeManager manager = new AttributeManager();
 
-		assertEquals(CyberpunkAttribute.MIN_LEVEL, manager.getLevel(AttributeName.ATTRACTIVENESS));
+		manager.add(mockAttribute);
+		manager.remove(mockAttribute.getName());
+
+		assertEquals(null, manager.get(mockAttribute.getName()));
 	}
 
-	@Test
-	public void testNonexistingAttributeNameReturnsLevelLessThanMinLevel() {
-		AttributeManager manager = new AttributeManager();
-
-		assertTrue(CyberpunkAttribute.MIN_LEVEL > manager.getLevel(null));
-	}
 }

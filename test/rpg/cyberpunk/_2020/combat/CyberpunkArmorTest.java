@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import rpg.cyberpunk._2020.combat.CyberpunkArmor.ArmorType;
 import rpg.general.combat.BodyLocation;
 
 public class CyberpunkArmorTest {
@@ -19,7 +18,7 @@ public class CyberpunkArmorTest {
 	private double weight;
 	private List<BodyLocation> areCovered;
 	private Iterator<BodyLocation> iterator;
-	private ArmorType armorType;
+	private String armorType;
 	private int stoppingPower;
 	private int encumbranceValue;
 
@@ -34,7 +33,7 @@ public class CyberpunkArmorTest {
 		areCovered.add(BodyLocation.LEFT_ARM);
 		areCovered.add(BodyLocation.RIGHT_ARM);
 		iterator = areCovered.iterator();
-		armorType = ArmorType.SOFT;
+		armorType = CyberpunkArmor.ARMOR_TYPE_SOFT;
 		stoppingPower = 18;
 		encumbranceValue = 1;
 	}
@@ -48,42 +47,28 @@ public class CyberpunkArmorTest {
 		armor.damage(BodyLocation.LEFT_ARM, 5);
 		armor.damage(BodyLocation.RIGHT_ARM, 3);
 
-		assertEquals(0, armor.getDurability(BodyLocation.HEAD));
-		assertEquals(17, armor.getDurability(BodyLocation.TORSO));
-		assertEquals(13, armor.getDurability(BodyLocation.LEFT_ARM));
-		assertEquals(15, armor.getDurability(BodyLocation.RIGHT_ARM));
-		assertEquals(0, armor.getDurability(BodyLocation.LEFT_LEG));
-		assertEquals(0, armor.getDurability(BodyLocation.RIGHT_LEG));
+		assertEquals(0, armor.getDurabilityAt(BodyLocation.HEAD));
+		assertEquals(17, armor.getDurabilityAt(BodyLocation.TORSO));
+		assertEquals(13, armor.getDurabilityAt(BodyLocation.LEFT_ARM));
+		assertEquals(15, armor.getDurabilityAt(BodyLocation.RIGHT_ARM));
+		assertEquals(0, armor.getDurabilityAt(BodyLocation.LEFT_LEG));
+		assertEquals(0, armor.getDurabilityAt(BodyLocation.RIGHT_LEG));
 	}
 
 	@Test
-	public void testArmorDoesNotGoBelowZeroDurability() {
+	public void testDamagingThenRepairingAllArmorToMaxDurability() {
 		CyberpunkArmor armor = new CyberpunkArmor(name, description, cost, weight, iterator, armorType, stoppingPower,
 				encumbranceValue);
-		armor.damage(BodyLocation.TORSO, stoppingPower + 1);
 
-		assertEquals(0, armor.getDurability(BodyLocation.HEAD));
-		assertEquals(0, armor.getDurability(BodyLocation.TORSO));
-		assertEquals(18, armor.getDurability(BodyLocation.LEFT_ARM));
-		assertEquals(18, armor.getDurability(BodyLocation.RIGHT_ARM));
-		assertEquals(0, armor.getDurability(BodyLocation.LEFT_LEG));
-		assertEquals(0, armor.getDurability(BodyLocation.RIGHT_LEG));
-	}
+		int points = 9;
+		armor.damageAll(points);
+		armor.repairAll(points);
 
-	@Test
-	public void testArmorGetsDamagedThenRepairedToMaxDurability() {
-		CyberpunkArmor armor = new CyberpunkArmor(name, description, cost, weight, iterator, armorType, stoppingPower,
-				encumbranceValue);
-		armor.damage(BodyLocation.TORSO, 1);
-		armor.damage(BodyLocation.LEFT_ARM, 5);
-		armor.damage(BodyLocation.RIGHT_ARM, 3);
-		armor.repair();
-
-		assertEquals(0, armor.getDurability(BodyLocation.HEAD));
-		assertEquals(18, armor.getDurability(BodyLocation.TORSO));
-		assertEquals(18, armor.getDurability(BodyLocation.LEFT_ARM));
-		assertEquals(18, armor.getDurability(BodyLocation.RIGHT_ARM));
-		assertEquals(0, armor.getDurability(BodyLocation.LEFT_LEG));
-		assertEquals(0, armor.getDurability(BodyLocation.RIGHT_LEG));
+		assertEquals(0, armor.getDurabilityAt(BodyLocation.HEAD));
+		assertEquals(18, armor.getDurabilityAt(BodyLocation.TORSO));
+		assertEquals(18, armor.getDurabilityAt(BodyLocation.LEFT_ARM));
+		assertEquals(18, armor.getDurabilityAt(BodyLocation.RIGHT_ARM));
+		assertEquals(0, armor.getDurabilityAt(BodyLocation.LEFT_LEG));
+		assertEquals(0, armor.getDurabilityAt(BodyLocation.RIGHT_LEG));
 	}
 }

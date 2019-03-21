@@ -1,5 +1,7 @@
 package rpg.cyberpunk._2020.combat;
 
+import java.util.Collections;
+
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
 public class TaeKwonDoFightingStyleFactory implements AbstractFightingStyleFactory {
@@ -17,59 +19,81 @@ public class TaeKwonDoFightingStyleFactory implements AbstractFightingStyleFacto
 		return uniqueInstance;
 	}
 
+	@Override
 	public CyberpunkWeapon createStrike() {
-		return new MartialWeapon("Tae Kwon Do Strike", DESCRIPTION, CyberpunkSkill.TAE_KWON_DO, 3, CONCEALABILITY,
-				AVAILABILITY, STRIKE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Tae Kwon Do Strike", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.TAE_KWON_DO, 3, CONCEALABILITY, AVAILABILITY, STRIKE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createKick() {
-		return new MartialWeapon("Tae Kwon Do Kick", DESCRIPTION, CyberpunkSkill.TAE_KWON_DO, 3, CONCEALABILITY,
-				AVAILABILITY, KICK_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Tae Kwon Do Kick", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.TAE_KWON_DO, 3, CONCEALABILITY, AVAILABILITY, KICK_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createBlock() {
-		return new MartialWeapon("Tae Kwon Do Block", DESCRIPTION, CyberpunkSkill.TAE_KWON_DO, 2, CONCEALABILITY,
-				AVAILABILITY, BLOCK_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Tae Kwon Do Block", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.TAE_KWON_DO, 2, CONCEALABILITY, AVAILABILITY, BLOCK_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createDodge() {
-		return new MartialWeapon("Tae Kwon Do Dodge", DESCRIPTION, CyberpunkSkill.TAE_KWON_DO, 1, CONCEALABILITY,
-				AVAILABILITY, DODGE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Tae Kwon Do Dodge", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.TAE_KWON_DO, 1, CONCEALABILITY, AVAILABILITY, DODGE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createDisarm() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MeleeWeapon("Tae Kwon Do Disarm", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.TAE_KWON_DO, 0, CONCEALABILITY, AVAILABILITY, DISARM_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createThrow() {
-		return new MartialWeapon("Tae Kwon Do Throw", DESCRIPTION, CyberpunkSkill.TAE_KWON_DO, 0, CONCEALABILITY,
-				AVAILABILITY, THROW_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Tae Kwon Do Throw", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.TAE_KWON_DO, 0, CONCEALABILITY, AVAILABILITY, THROW_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createHold() {
-		return new MartialWeapon("Tae Kwon Do Hold", DESCRIPTION, CyberpunkSkill.TAE_KWON_DO, 0, CONCEALABILITY,
-				AVAILABILITY, HOLD_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Tae Kwon Do Hold", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.TAE_KWON_DO, 0, CONCEALABILITY, AVAILABILITY, HOLD_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createEscape() {
-		return new MartialWeapon("Tae Kwon Do Escape", DESCRIPTION, CyberpunkSkill.TAE_KWON_DO, 0, CONCEALABILITY,
-				AVAILABILITY, ESCAPE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Tae Kwon Do Escape", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.TAE_KWON_DO, 0, CONCEALABILITY, AVAILABILITY, ESCAPE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createChoke() {
-		return new MartialWeapon("Tae Kwon Do Choke", DESCRIPTION, CyberpunkSkill.TAE_KWON_DO, 0, CONCEALABILITY,
-				AVAILABILITY, CHOKE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Tae Kwon Do Choke", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.TAE_KWON_DO, 0, CONCEALABILITY, AVAILABILITY, CHOKE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createSweep() {
-		return new MartialWeapon("Tae Kwon Do Sweep", DESCRIPTION, CyberpunkSkill.TAE_KWON_DO, 2, CONCEALABILITY,
-				AVAILABILITY, SWEEP_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Tae Kwon Do Sweep", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.TAE_KWON_DO, 2, CONCEALABILITY, AVAILABILITY, SWEEP_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createGrapple() {
-		return new MartialWeapon("Tae Kwon Do Grapple", DESCRIPTION, CyberpunkSkill.TAE_KWON_DO, 0, CONCEALABILITY,
-				AVAILABILITY, GRAPPLE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Tae Kwon Do Grapple", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.TAE_KWON_DO, 0, CONCEALABILITY, AVAILABILITY, GRAPPLE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
 }

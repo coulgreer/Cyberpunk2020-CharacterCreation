@@ -7,7 +7,7 @@ public interface ShoppingCommand {
 	public void execute();
 
 	/**
-	 * Undoes <code>execute()</code> action.
+	 * Undoes <code>execute()</code> action. Does nothing if no action to undo.
 	 */
 	public void undo();
 }

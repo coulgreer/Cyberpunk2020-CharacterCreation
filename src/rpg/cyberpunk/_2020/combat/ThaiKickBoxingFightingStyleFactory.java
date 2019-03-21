@@ -1,5 +1,7 @@
 package rpg.cyberpunk._2020.combat;
 
+import java.util.Collections;
+
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
 public class ThaiKickBoxingFightingStyleFactory implements AbstractFightingStyleFactory {
@@ -17,59 +19,81 @@ public class ThaiKickBoxingFightingStyleFactory implements AbstractFightingStyle
 		return uniqueInstance;
 	}
 
+	@Override
 	public CyberpunkWeapon createStrike() {
-		return new MartialWeapon("Thai Boxing Strike", DESCRIPTION, CyberpunkSkill.THAI_KICK_BOXING, 3,
-				CONCEALABILITY, AVAILABILITY, STRIKE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Thai Boxing Strike", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.THAI_KICK_BOXING, 3, CONCEALABILITY, AVAILABILITY, STRIKE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createKick() {
-		return new MartialWeapon("Thai Boxing Kick", DESCRIPTION, CyberpunkSkill.THAI_KICK_BOXING, 3,
-				CONCEALABILITY, AVAILABILITY, KICK_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Thai Boxing Kick", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.THAI_KICK_BOXING, 3, CONCEALABILITY, AVAILABILITY, KICK_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createBlock() {
-		return new MartialWeapon("Thai Boxing Block", DESCRIPTION, CyberpunkSkill.THAI_KICK_BOXING, 2,
-				CONCEALABILITY, AVAILABILITY, BLOCK_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Thai Boxing Block", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.THAI_KICK_BOXING, 2, CONCEALABILITY, AVAILABILITY, BLOCK_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createDodge() {
-		return new MartialWeapon("Thai Boxing Dodge", DESCRIPTION, CyberpunkSkill.THAI_KICK_BOXING, 0,
-				CONCEALABILITY, AVAILABILITY, DODGE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Thai Boxing Dodge", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.THAI_KICK_BOXING, 0, CONCEALABILITY, AVAILABILITY, DODGE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createDisarm() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MeleeWeapon("Thai Boxing Disarm", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.THAI_KICK_BOXING, 0, CONCEALABILITY, AVAILABILITY, DISARM_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createThrow() {
-		return new MartialWeapon("Thai Boxing Throw", DESCRIPTION, CyberpunkSkill.THAI_KICK_BOXING, 0,
-				CONCEALABILITY, AVAILABILITY, THROW_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Thai Boxing Throw", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.THAI_KICK_BOXING, 0, CONCEALABILITY, AVAILABILITY, THROW_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createHold() {
-		return new MartialWeapon("Thai Boxing Hold", DESCRIPTION, CyberpunkSkill.THAI_KICK_BOXING, 0,
-				CONCEALABILITY, AVAILABILITY, HOLD_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Thai Boxing Hold", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.THAI_KICK_BOXING, 0, CONCEALABILITY, AVAILABILITY, HOLD_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createEscape() {
-		return new MartialWeapon("Thai Boxing Escape", DESCRIPTION, CyberpunkSkill.THAI_KICK_BOXING, 0,
-				CONCEALABILITY, AVAILABILITY, ESCAPE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Thai Boxing Escape", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.THAI_KICK_BOXING, 0, CONCEALABILITY, AVAILABILITY, ESCAPE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createChoke() {
-		return new MartialWeapon("Thai Boxing Choke", DESCRIPTION, CyberpunkSkill.THAI_KICK_BOXING, 0,
-				CONCEALABILITY, AVAILABILITY, CHOKE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Thai Boxing Choke", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.THAI_KICK_BOXING, 0, CONCEALABILITY, AVAILABILITY, CHOKE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createSweep() {
-		return new MartialWeapon("Thai Boxing Sweep", DESCRIPTION, CyberpunkSkill.THAI_KICK_BOXING, 0,
-				CONCEALABILITY, AVAILABILITY, SWEEP_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Thai Boxing Sweep", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.THAI_KICK_BOXING, 0, CONCEALABILITY, AVAILABILITY, SWEEP_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createGrapple() {
-		return new MartialWeapon("Thai Boxing Grapple", DESCRIPTION, CyberpunkSkill.THAI_KICK_BOXING, 1,
-				CONCEALABILITY, AVAILABILITY, GRAPPLE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Thai Boxing Grapple", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.THAI_KICK_BOXING, 1, CONCEALABILITY, AVAILABILITY, GRAPPLE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
 }

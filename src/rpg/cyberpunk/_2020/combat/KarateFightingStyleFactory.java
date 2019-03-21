@@ -1,9 +1,11 @@
 package rpg.cyberpunk._2020.combat;
 
+import java.util.Collections;
+
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
 public class KarateFightingStyleFactory implements AbstractFightingStyleFactory {
-	public static final String DESCRIPTION = "The Japanese version of kung fu, this style uses straight line movements and powerful blows." //
+	protected static final String DESCRIPTION = "The Japanese version of kung fu, this style uses straight line movements and powerful blows." //
 			+ " Variations include shotokan and kenpo, each with their own special moves.";
 
 	private static KarateFightingStyleFactory uniqueInstance;
@@ -18,58 +20,80 @@ public class KarateFightingStyleFactory implements AbstractFightingStyleFactory 
 		return uniqueInstance;
 	}
 
+	@Override
 	public CyberpunkWeapon createStrike() {
-		return new MartialWeapon("Karate Strike", DESCRIPTION, CyberpunkSkill.KARATE, 2, CONCEALABILITY,
-				AVAILABILITY, STRIKE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Karate Strike", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.KARATE,
+				2, CONCEALABILITY, AVAILABILITY, STRIKE_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createKick() {
-		return new MartialWeapon("Karate Kick", DESCRIPTION, CyberpunkSkill.KARATE, 2, CONCEALABILITY, AVAILABILITY,
-				KICK_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Karate Kick", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.KARATE,
+				2, CONCEALABILITY, AVAILABILITY, KICK_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createBlock() {
-		return new MartialWeapon("Karate Block", DESCRIPTION, CyberpunkSkill.KARATE, 2, CONCEALABILITY,
-				AVAILABILITY, BLOCK_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Karate Block", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.KARATE,
+				2, CONCEALABILITY, AVAILABILITY, BLOCK_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createDodge() {
-		return new MartialWeapon("Karate Dodge", DESCRIPTION, CyberpunkSkill.KARATE, 0, CONCEALABILITY,
-				AVAILABILITY, DODGE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Karate Dodge", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.KARATE,
+				0, CONCEALABILITY, AVAILABILITY, DODGE_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createDisarm() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MeleeWeapon("Karate Disarm", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.KARATE,
+				0, CONCEALABILITY, AVAILABILITY, DISARM_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createThrow() {
-		return new MartialWeapon("Karate Throw", DESCRIPTION, CyberpunkSkill.KARATE, 0, CONCEALABILITY,
-				AVAILABILITY, THROW_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Karate Throw", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.KARATE,
+				0, CONCEALABILITY, AVAILABILITY, THROW_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createHold() {
-		return new MartialWeapon("Karate Hold", DESCRIPTION, CyberpunkSkill.KARATE, 0, CONCEALABILITY, AVAILABILITY,
-				HOLD_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Karate Hold", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.KARATE,
+				0, CONCEALABILITY, AVAILABILITY, HOLD_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createEscape() {
-		return new MartialWeapon("Karate Escape", DESCRIPTION, CyberpunkSkill.KARATE, 0, CONCEALABILITY,
-				AVAILABILITY, ESCAPE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Karate Escape", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.KARATE,
+				0, CONCEALABILITY, AVAILABILITY, ESCAPE_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createChoke() {
-		return new MartialWeapon("Karate Choke", DESCRIPTION, CyberpunkSkill.KARATE, 0, CONCEALABILITY,
-				AVAILABILITY, CHOKE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Karate Choke", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.KARATE,
+				0, CONCEALABILITY, AVAILABILITY, CHOKE_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createSweep() {
-		return new MartialWeapon("Karate Sweep", DESCRIPTION, CyberpunkSkill.KARATE, 0, CONCEALABILITY,
-				AVAILABILITY, SWEEP_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Karate Sweep", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.KARATE,
+				0, CONCEALABILITY, AVAILABILITY, SWEEP_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createGrapple() {
-		return new MartialWeapon("Karate Grapple", DESCRIPTION, CyberpunkSkill.KARATE, 0, CONCEALABILITY,
-				AVAILABILITY, GRAPPLE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Karate Grapple", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.KARATE, 0, CONCEALABILITY, AVAILABILITY, GRAPPLE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 }

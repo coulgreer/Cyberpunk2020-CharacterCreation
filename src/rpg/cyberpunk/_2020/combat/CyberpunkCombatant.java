@@ -1,77 +1,86 @@
 package rpg.cyberpunk._2020.combat;
 
-import java.util.ListIterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import rpg.Player;
-import rpg.cyberpunk._2020.AttributeName;
+import rpg.cyberpunk._2020.stats.CyberpunkAttribute;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
+import rpg.general.combat.Ammunition;
+import rpg.general.combat.AmmunitionContainer;
 import rpg.general.combat.Combatant;
-import rpg.general.combat.Magazine;
 import rpg.general.combat.Weapon;
-import rpg.general.commerce.QuantifiableProduct;
 import rpg.util.Probability;
 
-public class CyberpunkCombatant extends Combatant {
+public class CyberpunkCombatant implements Combatant {
 	public static final int PRIMARY_SLOT = 0;
 	public static final int SECONDARY_SLOT = 1;
 	public static final int MAX_WEAPON_AMOUNT = 2;
+	public static final int DEFAULT_RANGE_MODIFIER = 0;
+	public static final int DEFAULT_DAMAGE_MODIFIER = 0;
 
 	private AbstractFightingStyleFactory unarmedWeaponFactory;
 	private final Player player;
-	private final CyberpunkWeapon[] weapons;
+	private final Weapon[] weapons;
 
 	public CyberpunkCombatant(Player player) {
 		this.player = player;
 
 		unarmedWeaponFactory = BrawlingFightingStyleFactory.getInstance();
-		weapons = new CyberpunkWeapon[MAX_WEAPON_AMOUNT];
-
-		ListIterator<CyberpunkWeapon> iterator = createIterator();
-		while (iterator.hasNext()) {
-			iterator.set(unarmedWeaponFactory.createStrike());
-			iterator.next();
-		}
+		weapons = new Weapon[] { unarmedWeaponFactory.createStrike(), unarmedWeaponFactory.createStrike() };
 	}
 
+	@Override
 	public void arm(int slot, Weapon weapon) {
-		if (weapon instanceof CyberpunkWeapon) {
-			switch (slot) {
-			case PRIMARY_SLOT:
-				player.removeFromInventory(weapon, 1);
-				weapons[PRIMARY_SLOT] = (CyberpunkWeapon) weapon;
-				weapon.setCombatant(this);
-				break;
-			case SECONDARY_SLOT:
-				player.removeFromInventory(weapon, 1);
-				weapons[SECONDARY_SLOT] = (CyberpunkWeapon) weapon;
-				weapon.setCombatant(this);
-				break;
-			default:
-				break;
-			}
+		switch (slot) {
+		case PRIMARY_SLOT:
+			weapons[PRIMARY_SLOT] = weapon;
+			weapon.setCombatant(this);
+			break;
+		case SECONDARY_SLOT:
+			weapons[SECONDARY_SLOT] = weapon;
+			weapon.setCombatant(this);
+			break;
+		default:
+			break;
 		}
 	}
 
+	@Override
 	public void disarm(int slot) {
-		player.addToInventory(new QuantifiableProduct(weapons[slot], 1));
 		arm(slot, unarmedWeaponFactory.createStrike());
 	}
 
-	public int getHitModifier(Weapon weapon) {
-		return player.getSkillValue(weapon.getSkillName());
+	@Override
+	public int getRangeScore(int slot) {
+		Weapon weapon = weapons[slot];
+		return weapon.getRangeScore();
 	}
 
+	@Override
+	public Probability getTotalDamageChance(int slot) {
+		Weapon weapon = weapons[slot];
+		return new Probability(weapon.getDamageDice(), weapon.getDamageScore());
+	}
+
+	@Override
 	public Probability getTotalHitChance(int slot) {
 		Weapon weapon = weapons[slot];
 		return new Probability(weapon.getHitDice(), weapon.getHitScore());
 	}
 
+	@Override
+	public int getHitModifier(Weapon weapon) {
+		return player.getSkillValue(weapon.getSkillName());
+	}
+
+	@Override
 	public int getDamageModifier(Weapon weapon) {
 		switch (weapon.getWeaponType()) {
-		case CyberpunkWeapon.UNARMED:
+		case CyberpunkWeapon.WEAPON_TYPE_UNARMED:
 			return getMiscellaneousDamageModifier(weapon);
 		default:
-			return 0;
+			return DEFAULT_DAMAGE_MODIFIER;
 		}
 	}
 
@@ -98,25 +107,20 @@ public class CyberpunkCombatant extends Combatant {
 		case CyberpunkSkill.WRESTLING:
 			return player.getSkillValue(CyberpunkSkill.WRESTLING);
 		default:
-			return 0;
+			return DEFAULT_DAMAGE_MODIFIER;
 		}
 	}
 
-	public Probability getTotalDamageChance(int slot) {
-		Weapon weapon = weapons[slot];
-		return new Probability(weapon.getDamageDice(), weapon.getDamageScore());
+	@Override
+	public int getRangeModifier(boolean isThrown) {
+		if (isThrown) {
+			return player.getAttributeValue(CyberpunkAttribute.BODY_TYPE) * 10;
+		} else {
+			return DEFAULT_RANGE_MODIFIER;
+		}
 	}
 
-	public int getRangeModifier(Weapon weapon) {
-		// TODO make a case to catch non thrown.
-		return player.getAttributeValue(AttributeName.BODY_TYPE);
-	}
-
-	public int getRangeScore(int slot) {
-		Weapon weapon = weapons[slot];
-		return weapon.getRangeScore();
-	}
-
+	@Override
 	public void attack(int slot, int shotsFired) {
 		switch (slot) {
 		case PRIMARY_SLOT:
@@ -196,33 +200,38 @@ public class CyberpunkCombatant extends Combatant {
 		}
 	}
 
+	@Override
 	public int getAmmoCount(int slot) {
 		switch (slot) {
 		case PRIMARY_SLOT:
-			return weapons[PRIMARY_SLOT].getAmmoCount();
+			return weapons[PRIMARY_SLOT].getAmmunitionCount();
 		case SECONDARY_SLOT:
-			return weapons[SECONDARY_SLOT].getAmmoCount();
+			return weapons[SECONDARY_SLOT].getAmmunitionCount();
 		default:
-			return Magazine.EMPTY;
+			return AmmunitionContainer.EMPTY;
 		}
 	}
 
-	public Magazine reload(int slot, Magazine magazine) {
+	@Override
+	public List<Ammunition> reload(int slot, AmmunitionContainer storageUnit) {
 		switch (slot) {
 		case PRIMARY_SLOT:
-			return weapons[PRIMARY_SLOT].reload(magazine);
+			return weapons[PRIMARY_SLOT].reload(storageUnit);
 		case SECONDARY_SLOT:
-			return weapons[SECONDARY_SLOT].reload(magazine);
+			return weapons[SECONDARY_SLOT].reload(storageUnit);
 		default:
-			return magazine;
+			ArrayList<Ammunition> remainingAmmunition = new ArrayList<>();
+
+			while (!storageUnit.isEmpty()) {
+				remainingAmmunition.add(storageUnit.withdrawAmmunition());
+			}
+
+			return remainingAmmunition;
 		}
 	}
-	
-	public CyberpunkWeapon getWeapon(int slot) {
-		return weapons[slot];
-	}
 
-	public ListIterator<CyberpunkWeapon> createIterator() {
-		return new WeaponIterator(weapons);
+	@Override
+	public Weapon getWeapon(int slot) {
+		return weapons[slot];
 	}
 }

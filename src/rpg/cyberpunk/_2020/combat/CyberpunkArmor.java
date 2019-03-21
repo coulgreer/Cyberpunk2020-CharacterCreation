@@ -1,75 +1,137 @@
 package rpg.cyberpunk._2020.combat;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import rpg.general.combat.BodyLocation;
-import rpg.general.combat.Wearable;
-import rpg.general.commerce.Product;
+import rpg.general.combat.Protective;
+import rpg.general.commerce.Item;
 
-public class CyberpunkArmor extends Product implements Wearable {
-	public enum ArmorType {
-		HARD, SOFT;
-	}
-
+public class CyberpunkArmor implements Protective, Item, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1511256497126217581L;
+	
+	public static final String ARMOR_TYPE_SOFT = "Soft Armor";
+	public static final String ARMOR_TYPE_HARD = "Hard Armor";
 	public static final int DEFAULT_STOPPING_POWER = 0;
-	public static final Durability DEFAULT_DURABILITY = new Durability(DEFAULT_STOPPING_POWER);
 
-	private Map<BodyLocation, Boolean> areCovered;
+	private String name;
+	private String description;
+	private double cost;
+	private double weight;
 	private Map<BodyLocation, Durability> localizedDurabilities;
-	private ArmorType armorType;
+	private String armorType;
 	private int stoppingPower;
 	private int encumbranceValue;
 
 	public CyberpunkArmor(String name, String description, double cost, double weight,
-			Iterator<BodyLocation> locationIterator, ArmorType armorType, int stoppingPower, int encumbrance) {
-		super(name, description, cost, weight);
+			Iterator<BodyLocation> coveredLocationIterator, String armorType, int stoppingPower, int encumbrance) {
+		this.name = name;
+		this.description = description;
+		this.cost = cost;
+		this.weight = weight;
 		this.armorType = armorType;
 		this.stoppingPower = stoppingPower;
 		this.encumbranceValue = encumbrance;
-		initializeAreCovered();
-		initializeArmorDurability();
-		setUpBodyLocationValues(locationIterator, stoppingPower);
+		initializeArmorDurability(coveredLocationIterator, stoppingPower);
 	}
 
-	private void initializeAreCovered() {
-		areCovered = new HashMap<BodyLocation, Boolean>();
-		Iterator<BodyLocation> setIterator = BodyLocation.createIterator();
-		while (setIterator.hasNext()) {
-			areCovered.put(setIterator.next(), false);
-		}
-	}
-
-	private void initializeArmorDurability() {
+	private void initializeArmorDurability(Iterator<BodyLocation> coveredLocationIterator, int stoppingPower) {
 		localizedDurabilities = new HashMap<BodyLocation, Durability>();
-		Iterator<BodyLocation> setIterator = BodyLocation.createIterator();
-		while (setIterator.hasNext()) {
-			localizedDurabilities.put(setIterator.next(), DEFAULT_DURABILITY);
+		while (coveredLocationIterator.hasNext()) {
+			BodyLocation tempLocation = coveredLocationIterator.next();
+			localizedDurabilities.put(tempLocation, new Durability(stoppingPower));
 		}
 	}
 
-	private void setUpBodyLocationValues(Iterator<BodyLocation> locationIterator, int stoppingPower) {
-		while (locationIterator.hasNext()) {
-			BodyLocation tempLocation = locationIterator.next();
-			areCovered.replace(tempLocation, true);
-			localizedDurabilities.replace(tempLocation, new Durability(stoppingPower));
-		}
+	@Override
+	public double getCost() {
+		return cost;
 	}
 
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public double getWeight() {
+		return weight;
+	}
+
+	@Override
+	public String getArmorType() {
+		return armorType;
+	}
+
+	@Override
 	public boolean isCovering(BodyLocation location) {
-		return areCovered.get(location);
+		return localizedDurabilities.containsKey(location);
 	}
 
-	public int getProtectionScore() {
-		return stoppingPower;
-	}
-
+	@Override
 	public int getEncumbranceValue() {
 		return encumbranceValue;
 	}
 
+	@Override
+	public int getProtectionScore() {
+		return stoppingPower;
+	}
+
+	@Override
+	public int getDurabilityAt(BodyLocation location) {
+		if (isCovering(location)) {
+			Durability durability = localizedDurabilities.get(location);
+			return durability.getCurrentDurability();
+		} else {
+			return DEFAULT_STOPPING_POWER;
+		}
+	}
+
+	@Override
+	public void damage(BodyLocation location, int damagePoints) {
+		Durability durability = localizedDurabilities.get(location);
+		int currentDurabilityPoints = durability.getCurrentDurability() - damagePoints;
+		durability.setCurrentDurability(currentDurabilityPoints);
+	}
+
+	@Override
+	public void repair(BodyLocation location, int repairPoints) {
+		Durability durability = localizedDurabilities.get(location);
+		int currentDurabilityPoints = durability.getCurrentDurability() + repairPoints;
+		durability.setCurrentDurability(currentDurabilityPoints);
+	}
+
+	@Override
+	public void damageAll(int damagePoints) {
+		for (Map.Entry<BodyLocation, Durability> entry : localizedDurabilities.entrySet()) {
+			int currentDurabilityPoints = entry.getValue().getCurrentDurability() - damagePoints;
+			entry.getValue().setCurrentDurability(currentDurabilityPoints);
+		}
+	}
+
+	@Override
+	public void repairAll(int repairPoints) {
+		for (Map.Entry<BodyLocation, Durability> entry : localizedDurabilities.entrySet()) {
+			int currentDurabilityPoints = repairPoints + entry.getValue().getCurrentDurability();
+			entry.getValue().setCurrentDurability(currentDurabilityPoints);
+		}
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
@@ -80,50 +142,48 @@ public class CyberpunkArmor extends Product implements Wearable {
 		}
 
 		CyberpunkArmor armor = (CyberpunkArmor) o;
-		return (isCovering(BodyLocation.HEAD) == armor.isCovering(BodyLocation.HEAD))
-				&& (isCovering(BodyLocation.TORSO) == armor.isCovering(BodyLocation.TORSO))
-				&& (isCovering(BodyLocation.RIGHT_ARM) == armor.isCovering(BodyLocation.RIGHT_ARM))
-				&& (isCovering(BodyLocation.LEFT_ARM) == armor.isCovering(BodyLocation.LEFT_ARM))
-				&& (isCovering(BodyLocation.RIGHT_LEG) == armor.isCovering(BodyLocation.RIGHT_LEG))
-				&& (isCovering(BodyLocation.LEFT_LEG) == armor.isCovering(BodyLocation.LEFT_LEG))
-				&& (getDurability(BodyLocation.HEAD) == armor.getDurability(BodyLocation.HEAD))
-				&& (getDurability(BodyLocation.TORSO) == armor.getDurability(BodyLocation.TORSO))
-				&& (getDurability(BodyLocation.RIGHT_ARM) == armor.getDurability(BodyLocation.RIGHT_ARM))
-				&& (getDurability(BodyLocation.LEFT_ARM) == armor.getDurability(BodyLocation.LEFT_ARM))
-				&& (getDurability(BodyLocation.RIGHT_LEG) == armor.getDurability(BodyLocation.RIGHT_LEG))
-				&& (getDurability(BodyLocation.LEFT_LEG) == armor.getDurability(BodyLocation.LEFT_LEG))
-				&& (getProtectionScore() == armor.getProtectionScore())
+		return isArmorEqual(armor);
+	}
+
+	private boolean isArmorEqual(CyberpunkArmor armor) {
+		Iterator<BodyLocation> iterator = BodyLocation.createIterator();
+		while (iterator.hasNext()) {
+			BodyLocation location = iterator.next();
+			if (isCovering(location) != armor.isCovering(location)
+					|| getDurabilityAt(location) != armor.getDurabilityAt(location)) {
+				return false;
+			}
+		}
+
+		return (getProtectionScore() == armor.getProtectionScore())
 				&& (getEncumbranceValue() == armor.getEncumbranceValue());
 	}
 
+	@Override
 	public int hashCode() {
-		return Objects.hash(isCovering(BodyLocation.HEAD), isCovering(BodyLocation.TORSO),
-				isCovering(BodyLocation.RIGHT_ARM), isCovering(BodyLocation.LEFT_ARM),
-				isCovering(BodyLocation.RIGHT_LEG), isCovering(BodyLocation.LEFT_LEG), getDurability(BodyLocation.HEAD),
-				getDurability(BodyLocation.TORSO), getDurability(BodyLocation.RIGHT_ARM),
-				getDurability(BodyLocation.LEFT_ARM), getDurability(BodyLocation.RIGHT_LEG),
-				getDurability(BodyLocation.LEFT_LEG), getProtectionScore(), getEncumbranceValue());
+		ArrayList<Object> objectsToHash = new ArrayList<>();
+		addIsCoveringTo(objectsToHash);
+		addGetDurabilityTo(objectsToHash);
+		objectsToHash.add(getProtectionScore());
+		objectsToHash.add(getEncumbranceValue());
+
+		return Arrays.hashCode(objectsToHash.toArray());
 	}
 
-	public void damage(BodyLocation location, int damagePoints) {
-		Durability durability = localizedDurabilities.get(location);
-		durability.damage(damagePoints);
-	}
-
-	public void repair() {
-		Iterator<Durability> iterator = localizedDurabilities.values().iterator();
+	private void addIsCoveringTo(List<Object> list) {
+		Iterator<BodyLocation> iterator = BodyLocation.createIterator();
 		while (iterator.hasNext()) {
-			Durability durability = iterator.next();
-			durability.repair(durability.getMaxDurability());
+			BodyLocation location = iterator.next();
+			list.add(isCovering(location));
 		}
 	}
 
-	public ArmorType getArmorType() {
-		return armorType;
+	private void addGetDurabilityTo(List<Object> list) {
+		Iterator<BodyLocation> iterator = BodyLocation.createIterator();
+		while (iterator.hasNext()) {
+			BodyLocation location = iterator.next();
+			list.add(getDurabilityAt(location));
+		}
 	}
 
-	public int getDurability(BodyLocation location) {
-		Durability durability = localizedDurabilities.get(location);
-		return durability.getCurrentDurability();
-	}
 }

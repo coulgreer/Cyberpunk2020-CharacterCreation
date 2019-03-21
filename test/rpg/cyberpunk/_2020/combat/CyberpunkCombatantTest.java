@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.ListIterator;
-
 import org.junit.Test;
 
 import rpg.Player;
@@ -15,7 +13,7 @@ public class CyberpunkCombatantTest {
 	@Test
 	public void testEquippingTwoWeaponsThenUnequipAllWeapons() {
 		Player mockedPlayer = mock(Player.class);
-		Cyberpunk2020Combatant combatant = new Cyberpunk2020Combatant(mockedPlayer);
+		CyberpunkCombatant combatant = new CyberpunkCombatant(mockedPlayer);
 		CyberpunkWeapon mockedPrimaryCyberpunkWeapon = mock(CyberpunkWeapon.class);
 		when(mockedPrimaryCyberpunkWeapon.getName()).thenReturn("Primary Cyberpunk Weapon");
 		CyberpunkWeapon mockedSecondaryCyberpunkWeapon = mock(CyberpunkWeapon.class);
@@ -23,17 +21,15 @@ public class CyberpunkCombatantTest {
 
 		combatant.arm(CyberpunkCombatant.PRIMARY_SLOT, mockedPrimaryCyberpunkWeapon);
 		combatant.arm(CyberpunkCombatant.SECONDARY_SLOT, mockedSecondaryCyberpunkWeapon);
-		ListIterator<CyberpunkWeapon> iterator = combatant.createIterator();
 
-		assertEquals("Primary Cyberpunk Weapon", iterator.next().getName());
-		assertEquals("Secondary Cyberpunk Weapon", iterator.next().getName());
+		assertEquals("Primary Cyberpunk Weapon", combatant.getWeapon(CyberpunkCombatant.PRIMARY_SLOT).getName());
+		assertEquals("Secondary Cyberpunk Weapon", combatant.getWeapon(CyberpunkCombatant.SECONDARY_SLOT).getName());
 
 		combatant.disarm(CyberpunkCombatant.PRIMARY_SLOT);
 		combatant.disarm(CyberpunkCombatant.SECONDARY_SLOT);
-		iterator = combatant.createIterator();
 
-		assertEquals("Brawling Strike", iterator.next().getName());
-		assertEquals("Brawling Strike", iterator.next().getName());
+		assertEquals("Brawling Strike", combatant.getWeapon(CyberpunkCombatant.PRIMARY_SLOT).getName());
+		assertEquals("Brawling Strike", combatant.getWeapon(CyberpunkCombatant.SECONDARY_SLOT).getName());
 	}
 
 	@Test
@@ -41,9 +37,9 @@ public class CyberpunkCombatantTest {
 		Player mockedPlayer = mock(Player.class);
 		when(mockedPlayer.getSkillValue(CyberpunkSkill.AIKIDO)).thenReturn(3);
 		CyberpunkWeapon mockedCyberpunkWeapon = mock(CyberpunkWeapon.class);
-		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.UNARMED);
+		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.WEAPON_TYPE_UNARMED);
 		when(mockedCyberpunkWeapon.getSkillName()).thenReturn(CyberpunkSkill.AIKIDO);
-		Cyberpunk2020Combatant combatant = new Cyberpunk2020Combatant(mockedPlayer);
+		CyberpunkCombatant combatant = new CyberpunkCombatant(mockedPlayer);
 
 		assertEquals(3, combatant.getDamageModifier(mockedCyberpunkWeapon));
 	}
@@ -53,9 +49,9 @@ public class CyberpunkCombatantTest {
 		Player mockedPlayer = mock(Player.class);
 		when(mockedPlayer.getSkillValue(CyberpunkSkill.ANIMAL_KUNG_FU)).thenReturn(3);
 		CyberpunkWeapon mockedCyberpunkWeapon = mock(CyberpunkWeapon.class);
-		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.UNARMED);
+		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.WEAPON_TYPE_UNARMED);
 		when(mockedCyberpunkWeapon.getSkillName()).thenReturn(CyberpunkSkill.ANIMAL_KUNG_FU);
-		Cyberpunk2020Combatant combatant = new Cyberpunk2020Combatant(mockedPlayer);
+		CyberpunkCombatant combatant = new CyberpunkCombatant(mockedPlayer);
 
 		assertEquals(3, combatant.getDamageModifier(mockedCyberpunkWeapon));
 	}
@@ -65,9 +61,9 @@ public class CyberpunkCombatantTest {
 		Player mockedPlayer = mock(Player.class);
 		when(mockedPlayer.getSkillValue(CyberpunkSkill.BOXING)).thenReturn(3);
 		CyberpunkWeapon mockedCyberpunkWeapon = mock(CyberpunkWeapon.class);
-		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.UNARMED);
+		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.WEAPON_TYPE_UNARMED);
 		when(mockedCyberpunkWeapon.getSkillName()).thenReturn(CyberpunkSkill.BOXING);
-		Cyberpunk2020Combatant combatant = new Cyberpunk2020Combatant(mockedPlayer);
+		CyberpunkCombatant combatant = new CyberpunkCombatant(mockedPlayer);
 
 		assertEquals(3, combatant.getDamageModifier(mockedCyberpunkWeapon));
 	}
@@ -77,9 +73,9 @@ public class CyberpunkCombatantTest {
 		Player mockedPlayer = mock(Player.class);
 		when(mockedPlayer.getSkillValue(CyberpunkSkill.CAPOERIA)).thenReturn(3);
 		CyberpunkWeapon mockedCyberpunkWeapon = mock(CyberpunkWeapon.class);
-		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.UNARMED);
+		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.WEAPON_TYPE_UNARMED);
 		when(mockedCyberpunkWeapon.getSkillName()).thenReturn(CyberpunkSkill.CAPOERIA);
-		Cyberpunk2020Combatant combatant = new Cyberpunk2020Combatant(mockedPlayer);
+		CyberpunkCombatant combatant = new CyberpunkCombatant(mockedPlayer);
 
 		assertEquals(3, combatant.getDamageModifier(mockedCyberpunkWeapon));
 	}
@@ -89,9 +85,9 @@ public class CyberpunkCombatantTest {
 		Player mockedPlayer = mock(Player.class);
 		when(mockedPlayer.getSkillValue(CyberpunkSkill.CHOI_LI_FUT)).thenReturn(3);
 		CyberpunkWeapon mockedCyberpunkWeapon = mock(CyberpunkWeapon.class);
-		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.UNARMED);
+		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.WEAPON_TYPE_UNARMED);
 		when(mockedCyberpunkWeapon.getSkillName()).thenReturn(CyberpunkSkill.CHOI_LI_FUT);
-		Cyberpunk2020Combatant combatant = new Cyberpunk2020Combatant(mockedPlayer);
+		CyberpunkCombatant combatant = new CyberpunkCombatant(mockedPlayer);
 
 		assertEquals(3, combatant.getDamageModifier(mockedCyberpunkWeapon));
 	}
@@ -101,9 +97,9 @@ public class CyberpunkCombatantTest {
 		Player mockedPlayer = mock(Player.class);
 		when(mockedPlayer.getSkillValue(CyberpunkSkill.JUDO)).thenReturn(3);
 		CyberpunkWeapon mockedCyberpunkWeapon = mock(CyberpunkWeapon.class);
-		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.UNARMED);
+		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.WEAPON_TYPE_UNARMED);
 		when(mockedCyberpunkWeapon.getSkillName()).thenReturn(CyberpunkSkill.JUDO);
-		Cyberpunk2020Combatant combatant = new Cyberpunk2020Combatant(mockedPlayer);
+		CyberpunkCombatant combatant = new CyberpunkCombatant(mockedPlayer);
 
 		assertEquals(3, combatant.getDamageModifier(mockedCyberpunkWeapon));
 	}
@@ -113,9 +109,9 @@ public class CyberpunkCombatantTest {
 		Player mockedPlayer = mock(Player.class);
 		when(mockedPlayer.getSkillValue(CyberpunkSkill.KARATE)).thenReturn(3);
 		CyberpunkWeapon mockedCyberpunkWeapon = mock(CyberpunkWeapon.class);
-		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.UNARMED);
+		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.WEAPON_TYPE_UNARMED);
 		when(mockedCyberpunkWeapon.getSkillName()).thenReturn(CyberpunkSkill.KARATE);
-		Cyberpunk2020Combatant combatant = new Cyberpunk2020Combatant(mockedPlayer);
+		CyberpunkCombatant combatant = new CyberpunkCombatant(mockedPlayer);
 
 		assertEquals(3, combatant.getDamageModifier(mockedCyberpunkWeapon));
 	}
@@ -125,9 +121,9 @@ public class CyberpunkCombatantTest {
 		Player mockedPlayer = mock(Player.class);
 		when(mockedPlayer.getSkillValue(CyberpunkSkill.TAE_KWON_DO)).thenReturn(3);
 		CyberpunkWeapon mockedCyberpunkWeapon = mock(CyberpunkWeapon.class);
-		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.UNARMED);
+		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.WEAPON_TYPE_UNARMED);
 		when(mockedCyberpunkWeapon.getSkillName()).thenReturn(CyberpunkSkill.TAE_KWON_DO);
-		Cyberpunk2020Combatant combatant = new Cyberpunk2020Combatant(mockedPlayer);
+		CyberpunkCombatant combatant = new CyberpunkCombatant(mockedPlayer);
 
 		assertEquals(3, combatant.getDamageModifier(mockedCyberpunkWeapon));
 	}
@@ -137,9 +133,9 @@ public class CyberpunkCombatantTest {
 		Player mockedPlayer = mock(Player.class);
 		when(mockedPlayer.getSkillValue(CyberpunkSkill.THAI_KICK_BOXING)).thenReturn(3);
 		CyberpunkWeapon mockedCyberpunkWeapon = mock(CyberpunkWeapon.class);
-		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.UNARMED);
+		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.WEAPON_TYPE_UNARMED);
 		when(mockedCyberpunkWeapon.getSkillName()).thenReturn(CyberpunkSkill.THAI_KICK_BOXING);
-		Cyberpunk2020Combatant combatant = new Cyberpunk2020Combatant(mockedPlayer);
+		CyberpunkCombatant combatant = new CyberpunkCombatant(mockedPlayer);
 
 		assertEquals(3, combatant.getDamageModifier(mockedCyberpunkWeapon));
 	}
@@ -149,9 +145,9 @@ public class CyberpunkCombatantTest {
 		Player mockedPlayer = mock(Player.class);
 		when(mockedPlayer.getSkillValue(CyberpunkSkill.WRESTLING)).thenReturn(3);
 		CyberpunkWeapon mockedCyberpunkWeapon = mock(CyberpunkWeapon.class);
-		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.UNARMED);
+		when(mockedCyberpunkWeapon.getWeaponType()).thenReturn(CyberpunkWeapon.WEAPON_TYPE_UNARMED);
 		when(mockedCyberpunkWeapon.getSkillName()).thenReturn(CyberpunkSkill.WRESTLING);
-		Cyberpunk2020Combatant combatant = new Cyberpunk2020Combatant(mockedPlayer);
+		CyberpunkCombatant combatant = new CyberpunkCombatant(mockedPlayer);
 
 		assertEquals(3, combatant.getDamageModifier(mockedCyberpunkWeapon));
 	}

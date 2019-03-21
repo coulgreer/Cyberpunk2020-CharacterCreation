@@ -1,11 +1,9 @@
 package rpg.cyberpunk._2020.stats;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 import rpg.general.stats.Attribute;
-import rpg.util.Observer;
 
 public class CyberpunkAttribute implements Attribute {
 	public static final String NOT_AVAILABLE = "Not Available";
@@ -28,64 +26,77 @@ public class CyberpunkAttribute implements Attribute {
 	private String name;
 	private String description;
 	private int level;
-	private List<Observer> observers;
+	private PropertyChangeSupport changeSupport;
 
 	public CyberpunkAttribute(String name, String description) {
 		this.name = name;
 		this.description = description;
 		level = MIN_LEVEL;
-		observers = new ArrayList<Observer>();
+		changeSupport = new PropertyChangeSupport(this);
 	}
 
+	@Override
 	public void increaseLevel() {
 		if (level < MAX_LEVEL) {
+			int oldLevel = level;
 			level++;
-			notifyObserver();
+			changeSupport.firePropertyChange(PROPERTY_NAME_LEVEL, oldLevel, level);
 		}
 	}
 
+	@Override
 	public void decreaseLevel() {
 		if (level > MIN_LEVEL) {
+			int oldLevel = level;
 			level--;
-			notifyObserver();
+			changeSupport.firePropertyChange(PROPERTY_NAME_LEVEL, oldLevel, level);
 		}
 	}
 
+	@Override
 	public void resetLevel() {
+		int oldLevel = level;
 		level = MIN_LEVEL;
-		notifyObserver();
+		changeSupport.firePropertyChange(PROPERTY_NAME_LEVEL, oldLevel, level);
 	}
 
+	@Override
 	public int getLevel() {
 		return level;
 	}
 
-	public void registerObserver(Observer observer) {
-		observers.add(observer);
+	@Override
+	public int getModifier() {
+		return getLevel();
 	}
 
-	public void unregisterObserver(Observer observer) {
-		observers.remove(observer);
-	}
-
-	public void notifyObserver() {
-		Iterator<Observer> iterator = observers.iterator();
-		while (iterator.hasNext()) {
-			Observer observer = iterator.next();
-			observer.update(this);
-		}
-	}
-
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public String getDescription() {
 		return description;
 	}
 
-	public int getModifier() {
-		return level;
+	@Override
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(listener);
 	}
 
+	@Override
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.removePropertyChangeListener(listener);
+	}
+
+	@Override
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(propertyName, listener);
+	}
+
+	@Override
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(propertyName, listener);
+	}
 }

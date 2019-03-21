@@ -5,5 +5,5 @@ public interface SkillVisitor {
 	
 	public CyberpunkSkill visit(BroadSkill skill);
 	
-	public CyberpunkSkill visit(RoleCyberpunkSkill skill);
+	public CyberpunkSkill visit(RoleSkill skill);
 }

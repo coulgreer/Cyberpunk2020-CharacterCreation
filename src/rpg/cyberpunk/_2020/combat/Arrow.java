@@ -2,27 +2,34 @@ package rpg.cyberpunk._2020.combat;
 
 import java.util.Objects;
 
-import rpg.general.commerce.Product;
+import rpg.general.combat.Ammunition;
 
-public class Arrow extends Product implements Ammunition {
-	public static enum ArrowHead {
+public class Arrow implements Ammunition {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8916026780282546741L;
+
+	public static final String AMMUNITION_TYPE_ARROW = "Arrow";
+	public static final int AMMO_PER_BOX = 12;
+
+	public static enum ArrowTip {
 		TARGET_POINT("Target point",
-				"Made to penetrate archery targets easily, but it is just as easy to pull them out.", 1.0, 0.5, 0.5) {
-			public double calculateCost(double cost) {
-				return cost * 1.0;
-			}
-		};
+				"Made to penetrate archery targets easily, but it is just as easy to pull them out.", 1.0, 1.0, 0.5,
+				0.5);
 
 		private String name;
 		private String description;
+		private double costMultiplier;
 		private double damageMultiplier;
 		private double hardArmorMultiplier;
 		private double softArmorMultiplier;
 
-		ArrowHead(String name, String description, double damageMultiplier, double hardArmorMultiplier,
-				double softArmorMultiplier) {
+		ArrowTip(String name, String description, double costMultiplier, double damageMultiplier,
+				double hardArmorMultiplier, double softArmorMultiplier) {
 			this.name = name;
 			this.description = description;
+			this.costMultiplier = costMultiplier;
 			this.damageMultiplier = damageMultiplier;
 			this.hardArmorMultiplier = hardArmorMultiplier;
 			this.softArmorMultiplier = softArmorMultiplier;
@@ -48,42 +55,78 @@ public class Arrow extends Product implements Ammunition {
 			return softArmorMultiplier;
 		}
 
-		public abstract double calculateCost(double cost);
+		public double costMultiplier() {
+			return costMultiplier;
+		}
 	}
 
-	public static final int AMMO_PER_BOX = 12;
+	private ArrowTip arrowTip;
+	private double cost;
 
-	private ArrowHead arrowHead;
-
-	public Arrow(String name, String description, ArrowHead arrowHead, double cost, double weight) {
-		super(name, description, cost, weight);
-		this.arrowHead = arrowHead;
+	public Arrow(ArrowTip arrowTip, double cost) {
+		setArrowTip(arrowTip);
+		setCost(cost);
 	}
 
+	private void setArrowTip(ArrowTip arrowTip) {
+		if (arrowTip != null) {
+			this.arrowTip = arrowTip;
+		} else {
+			throw new NullPointerException();
+		}
+	}
+
+	private void setCost(double cost) {
+		if (cost >= 0.0) {
+			this.cost = cost;
+		} else {
+			throw new IllegalArgumentException();
+		}
+	}
+
+	@Override
 	public String getName() {
-		return super.getName() + " " + arrowHead.getName();
+		return AMMUNITION_TYPE_ARROW + " with " + arrowTip.getName();
 	}
 
+	@Override
 	public String getDescription() {
-		return super.getDescription() + " " + arrowHead.getDescription();
+		return "An arrow with a " + arrowTip.getName() + " tip./n/n   " //
+				+ arrowTip.getName() + ": " + arrowTip.getDescription();
 	}
 
+	@Override
 	public double getCost() {
-		return arrowHead.calculateCost(super.getCost());
+		return (cost * arrowTip.costMultiplier()) / AMMO_PER_BOX;
 	}
 
-	public double getSoftArmorMultiplier() {
-		return arrowHead.getSoftArmorMultiplier();
+	@Override
+	public String getAmmunitionType() {
+		return AMMUNITION_TYPE_ARROW;
 	}
 
-	public double getHardArmorMultiplier() {
-		return arrowHead.getHardArmorMultiplier();
+	protected ArrowTip getArrowTip() {
+		return arrowTip;
 	}
 
-	public double getDamageMultiplier() {
-		return arrowHead.getDamageMultiplier();
+	@Override
+	public double getWeight() {
+		return WEIGHT_OF_BOX / AMMO_PER_BOX;
 	}
 
+	@Override
+	public int getAmmunitionPerBox() {
+		return AMMO_PER_BOX;
+	}
+
+	@Override
+	public String printBonuses() {
+		return "Damage multiplier: " + arrowTip.getDamageMultiplier() + "/n" //
+				+ "Soft Armor multiplier: " + arrowTip.getSoftArmorMultiplier() + "/n"//
+				+ "Hard Armor multiplier: " + arrowTip.getHardArmorMultiplier();
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (o == this) {
 			return true;
@@ -93,23 +136,16 @@ public class Arrow extends Product implements Ammunition {
 			return false;
 		}
 
-		if (!(o instanceof Cartridge)) {
+		if (!(o instanceof Arrow)) {
 			return false;
 		}
 
 		Arrow arrow = (Arrow) o;
-		return arrow.getAmmoType() == getAmmoType() && arrow.getArrowHead() == getArrowHead();
+		return arrow.getAmmunitionType().equals(getAmmunitionType()) && arrow.getArrowTip().equals(getArrowTip());
 	}
 
+	@Override
 	public int hashCode() {
-		return Objects.hash(getAmmoType(), arrowHead);
-	}
-
-	public AmmoType getAmmoType() {
-		return AmmoType.ARROW;
-	}
-
-	protected ArrowHead getArrowHead() {
-		return arrowHead;
+		return Objects.hash(getAmmunitionType(), arrowTip);
 	}
 }

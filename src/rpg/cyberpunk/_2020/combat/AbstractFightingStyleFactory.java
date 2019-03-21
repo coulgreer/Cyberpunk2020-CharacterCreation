@@ -10,16 +10,22 @@ public interface AbstractFightingStyleFactory {
 	public static final Concealability CONCEALABILITY = Concealability.POCKET;
 	public static final Availability AVAILABILITY = Availability.EXCELLENT;
 	public static final Reliability RELIABILITY = Reliability.VERY_RELIABLE;
+
 	public static final Probability STRIKE_DAMAGE = new Probability(new Die(1, 6, 2), 0);
 	public static final Probability KICK_DAMAGE = new Probability(new Die(1, 6), 0);
 	public static final Probability BLOCK_DAMAGE = new Probability(new Die(0, 0), 0);
 	public static final Probability DODGE_DAMAGE = new Probability(new Die(0, 0), 0);
+	public static final Probability DISARM_DAMAGE = new Probability(new Die(0, 0), 0);
 	public static final Probability THROW_DAMAGE = new Probability(new Die(1, 6), 0);
 	public static final Probability HOLD_DAMAGE = new Probability(new Die(0, 0), 0);
 	public static final Probability ESCAPE_DAMAGE = new Probability(new Die(0, 0), 0);
 	public static final Probability CHOKE_DAMAGE = new Probability(new Die(1, 6), 0);
 	public static final Probability SWEEP_DAMAGE = new Probability(new Die(0, 0), 0);
 	public static final Probability GRAPPLE_DAMAGE = new Probability(new Die(0, 0), 0);
+
+	public static final int RANGE_MODIFIER = 1;
+	public static final double COST = 0.0;
+	public static final double WEIGHT = 0.0;
 
 	public CyberpunkWeapon createStrike();
 

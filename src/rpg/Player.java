@@ -1,62 +1,94 @@
 package rpg;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.Set;
 
-import rpg.cyberpunk._2020.AttributeName;
+import rpg.cyberpunk._2020.combat.CyberpunkArmor;
 import rpg.cyberpunk._2020.combat.CyberpunkCombatant;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 import rpg.cyberpunk._2020.combat.FightingMove;
 import rpg.cyberpunk._2020.combat.FightingStyle;
+import rpg.cyberpunk._2020.commerce.BottomlessInventory;
+import rpg.cyberpunk._2020.commerce.Inventory;
 import rpg.cyberpunk._2020.commerce.PlayerTrader;
 import rpg.cyberpunk._2020.stats.AttributeManager;
+import rpg.cyberpunk._2020.stats.Role;
 import rpg.cyberpunk._2020.stats.SkillManager;
-import rpg.general.commerce.Cashier;
+import rpg.general.combat.Ammunition;
+import rpg.general.combat.AmmunitionContainer;
+import rpg.general.commerce.Item;
 import rpg.general.commerce.Trader;
-import rpg.general.commerce.Product;
-import rpg.general.commerce.QuantifiableProduct;
-import rpg.general.commerce.TradeProduct;
-import rpg.general.commerce.Vendor;
 import rpg.util.Probability;
 
 public class Player {
-	private Trader customer;
+	public static final String PROPERTY_NAME_ROLE = "Role";
+
+	private PropertyChangeSupport changeSupport;
+	private Inventory pocketInventory = new BottomlessInventory();
+	private Inventory equippedInventory = new BottomlessInventory();
+	private Role role;
+	private Trader trader;
 	private CyberpunkCombatant combatant;
 	private AttributeManager attributeManager;
 	private SkillManager skillManager;
 
-	private double money;
-	private Map<String, QuantifiableProduct> inventory = new HashMap<String, QuantifiableProduct>();
-
 	public Player() {
-		customer = new PlayerTrader(this);
+		changeSupport = new PropertyChangeSupport(this);
+		trader = new PlayerTrader(0.0);
 		combatant = new CyberpunkCombatant(this);
 		attributeManager = new AttributeManager();
-		skillManager = new SkillManager(attributeManager);
+		skillManager = new SkillManager(attributeManager, this);
+	}
 
-		money = 0.0;
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.removePropertyChangeListener(listener);
+	}
+
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(propertyName, listener);
+	}
+
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(propertyName, listener);
 	}
 
 	public void arm(int slot, CyberpunkWeapon weapon) {
-		combatant.arm(slot, weapon);
+		if (pocketInventory.contains(weapon)) {
+			pocketInventory.remove(weapon);
+			equippedInventory.add(weapon);
+			combatant.arm(slot, weapon);
+		}
 	}
-	
+
 	public void disarm(int slot) {
-		combatant.disarm(slot);
+		// TODO Think of a solution that does not require casting. Casting is not
+		// polymorphic however Combatant hinders our polymorphism by returning Weapon
+		// instead of CyberpunkWeapon.
+		CyberpunkWeapon weapon = (CyberpunkWeapon) combatant.getWeapon(slot);
+		if (equippedInventory.contains(weapon)) {
+			pocketInventory.add(weapon);
+			equippedInventory.remove(weapon);
+			combatant.disarm(slot);
+		}
 	}
-	
+
 	public Probability getTotalHitChance(int slot) {
 		return combatant.getTotalHitChance(slot);
 	}
 
-	public int getAttributeValue(AttributeName attributeName) {
+	public int getAttributeValue(String attributeName) {
 		return attributeManager.getLevel(attributeName);
 	}
 
 	public int getSkillValue(String skillName) {
 		return skillManager.getTotalValue(skillName);
 	}
-	
+
 	public int getRangeScore(int slot) {
 		return combatant.getRangeScore(slot);
 	}
@@ -69,9 +101,9 @@ public class Player {
 		combatant.attack(slot, shotsFired);
 	}
 
-	// TODO Implement this method once Inventory is implemented.
-	public void reload(int slot) {
-		// combatant.reload(slot);
+	// TODO Find a clean way to transfer ammunition from inventory to weapon.
+	public void reload(int slot, AmmunitionContainer ammunitionStorage) {
+		combatant.reload(slot, ammunitionStorage);
 	}
 
 	public void setFightingStance(FightingStyle style, FightingMove move) {
@@ -82,50 +114,94 @@ public class Player {
 		return combatant.getAmmoCount(slot);
 	}
 
-	public void trade(Cashier cashier, Vendor<?> vendor, Product product, int quantity) {
-		cashier.setCommand(new TradeProduct(vendor, customer, product, quantity));
-		cashier.checkout();
+	public boolean hasItem(Object o) {
+		return pocketInventory.contains(o);
 	}
 
-	public void addToInventory(QuantifiableProduct item) {
-		if (inventory.containsValue(item)) {
-			QuantifiableProduct existingItem = inventory.get(item.getName());
-			existingItem.increaseQuantity(item.getQuantity());
-			inventory.put(existingItem.getName(), existingItem);
-		} else {
-			inventory.put(item.getName(), item);
-		}
+	public void addToInventory(CyberpunkWeapon weapon) {
+		pocketInventory.add(weapon);
 	}
 
-	public void removeFromInventory(Product item, int quantity) {
-		if (inventory.containsValue(item)) {
-			QuantifiableProduct existingItem = inventory.get(item.getName());
-			existingItem.decreaseQuantity(quantity);
-			if (existingItem.getQuantity() > 0) {
-				inventory.put(existingItem.getName(), existingItem);
-			} else {
-				inventory.remove(existingItem.getName());
-			}
-		}
+	public void addToInventory(CyberpunkArmor armor) {
+		pocketInventory.add(armor);
 	}
 
-	public QuantifiableProduct getProduct(String productName) {
-		return inventory.get(productName);
+	public void addToInventory(Ammunition ammunition) {
+		pocketInventory.add(ammunition);
 	}
 
-	public void increaseMoney(double money) {
-		this.money += money;
+	public void removeFromInventory(CyberpunkWeapon weapon, int quantity) {
+		pocketInventory.remove(weapon);
 	}
 
-	public void decreaseMoney(double money) {
-		this.money -= money;
+	public void removeFromInventory(CyberpunkArmor armor, int quantity) {
+		pocketInventory.remove(armor);
+	}
+
+	public void removeFromInventory(Ammunition ammunition, int quantity) {
+		pocketInventory.remove(ammunition);
+	}
+
+	public Set<CyberpunkWeapon> getCarriedWeapons() {
+		return pocketInventory.createWeaponSet();
+	}
+
+	public Set<CyberpunkArmor> getCarriedArmors() {
+		return pocketInventory.createArmorSet();
+	}
+
+	public Set<Ammunition> getCarriedAmmunition() {
+		return pocketInventory.createAmmunitionSet();
+	}
+
+	public Set<Item> getCarriedItems() {
+		return pocketInventory.createItemSet();
+	}
+
+	public boolean canBuy(double price) {
+		return trader.canBuy(price);
+	}
+
+	public boolean canSell(Item item, int quantity) {
+		boolean hasQuantity = pocketInventory.getQuantity(item) >= quantity;
+		return pocketInventory.contains(item) && hasQuantity;
+	}
+
+	public void buy(CyberpunkWeapon weapon, double price) {
+		trader.buy(price);
+		pocketInventory.add(weapon);
+	}
+
+	public void buy(CyberpunkArmor armor, double price) {
+		trader.buy(price);
+		pocketInventory.add(armor);
+	}
+
+	public void buy(Ammunition ammunition, double price) {
+		trader.buy(price);
+		pocketInventory.add(ammunition);
+	}
+
+	public void sell(CyberpunkWeapon weapon, double price) {
+		trader.sell(price);
+		pocketInventory.remove(weapon);
+	}
+
+	public void sell(CyberpunkArmor armor, double price) {
+		trader.sell(price);
+		pocketInventory.remove(armor);
+	}
+
+	public void sell(Ammunition ammunition, double price) {
+		trader.sell(price);
+		pocketInventory.remove(ammunition);
 	}
 
 	public double getMoney() {
-		return money;
+		return trader.getMoney();
 	}
 
-	public void setMoney(double money) {
-		this.money = money;
+	public Role getRole() {
+		return role;
 	}
 }

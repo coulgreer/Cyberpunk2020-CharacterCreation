@@ -1,47 +1,70 @@
 package rpg.cyberpunk._2020.commerce;
 
-import rpg.Player;
 import rpg.general.commerce.Tradeable;
 import rpg.general.commerce.Trader;
-import rpg.general.commerce.Product;
-import rpg.general.commerce.QuantifiableProduct;
 
+/**
+ * A Trader that can buy or sell goods. The can buy has a floor so that the
+ * PlayerTrader can prevent money from reaching a negative value, and
+ * PlayerTrader can always sell. There is also no markup or markdown on the cost
+ * of an item when getting ask and bid price.
+ * 
+ * @author Coul Greer
+ */
 public class PlayerTrader implements Trader {
-	private Player player;
+	/**
+	 * Ease-of-use constant. Starts money at zero for if no initial value is given
+	 * for the money.
+	 */
+	public static final double STARTING_MONEY = 0.0;
+
 	private double money;
 
-	public PlayerTrader(Player p, double m) {
-		if(p != null) {
-			player = p;
-		} else {
-			throw new NullPointerException("The Player argument for type PlayerTrader is not allowed to be null.");
-		}
+	/**
+	 * Construct a PlayerTrader with a default money starting value of
+	 * {@value #STARTING_MONEY}.
+	 */
+	public PlayerTrader() {
+		this(STARTING_MONEY);
+	}
 
+	/**
+	 * Construct a PlayerTrader with a starting amount of <code>m</code> money.
+	 * 
+	 * @param m the initial amount of money
+	 */
+	public PlayerTrader(double m) {
 		money = m;
 	}
 
 	@Override
-	public void buy(Tradeable t, int quantity) {
-		if(canBuy(t, quantity)) {
-			money = money - t.getCost() * quantity;
-		}
+	public void buy(double price) {
+		money = money - price;
 	}
 
 	@Override
-	public boolean canBuy(Tradeable t, int quantity) {
-		return money >= t.getCost() * quantity;
+	public void sell(double price) {
+		money += price;
 	}
 
 	@Override
-	public void sell(Tradeable t, int quantity) {
-		if(canSell(t, quantity)) {
-			money = money + t.getCost() * quantity;
-		}
+	public boolean canBuy(double price) {
+		return money >= price;
 	}
 
 	@Override
-	public boolean canSell(Tradeable t, int quantity) {
-		return player.hasProducts(t, quantity);
+	public boolean canSell(double price) {
+		return true;
+	}
+
+	@Override
+	public double getBidPrice(Tradeable t) {
+		return t.getCost();
+	}
+
+	@Override
+	public double getAskPrice(Tradeable t) {
+		return t.getCost();
 	}
 
 	@Override

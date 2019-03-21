@@ -1,9 +1,11 @@
 package rpg.cyberpunk._2020.combat;
 
+import java.util.Collections;
+
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
 public class JudoFightingStyleFactory implements AbstractFightingStyleFactory {
-	public static final String DESCRIPTION = "This system was designed as a sport form, but is very effective in combat as well." //
+	protected static final String DESCRIPTION = "This system was designed as a sport form, but is very effective in combat as well." //
 			+ " It uses throws and sweeps to knock down the opponent.";
 
 	private static JudoFightingStyleFactory uniqueInstance;
@@ -18,58 +20,80 @@ public class JudoFightingStyleFactory implements AbstractFightingStyleFactory {
 		return uniqueInstance;
 	}
 
+	@Override
 	public CyberpunkWeapon createStrike() {
-		return new MartialWeapon("Judo Strike", DESCRIPTION, CyberpunkSkill.JUDO, 0, CONCEALABILITY, AVAILABILITY,
-				STRIKE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Judo Strike", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.JUDO, 0,
+				CONCEALABILITY, AVAILABILITY, STRIKE_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createKick() {
-		return new MartialWeapon("Judo Kick", DESCRIPTION, CyberpunkSkill.JUDO, 0, CONCEALABILITY, AVAILABILITY,
-				KICK_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Judo Kick", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.JUDO, 0,
+				CONCEALABILITY, AVAILABILITY, KICK_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createBlock() {
-		return new MartialWeapon("Judo Block", DESCRIPTION, CyberpunkSkill.JUDO, 0, CONCEALABILITY, AVAILABILITY,
-				BLOCK_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Judo Block", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.JUDO, 0,
+				CONCEALABILITY, AVAILABILITY, BLOCK_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createDodge() {
-		return new MartialWeapon("Judo Dodge", DESCRIPTION, CyberpunkSkill.JUDO, 1, CONCEALABILITY, AVAILABILITY,
-				DODGE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Judo Dodge", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.JUDO, 1,
+				CONCEALABILITY, AVAILABILITY, DODGE_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createDisarm() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MeleeWeapon("Judo Disarm", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.JUDO, 0,
+				CONCEALABILITY, AVAILABILITY, DISARM_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createThrow() {
-		return new MartialWeapon("Judo Throw", DESCRIPTION, CyberpunkSkill.JUDO, 3, CONCEALABILITY, AVAILABILITY,
-				THROW_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Judo Throw", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.JUDO, 3,
+				CONCEALABILITY, AVAILABILITY, THROW_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createHold() {
-		return new MartialWeapon("Judo Hold", DESCRIPTION, CyberpunkSkill.JUDO, 2, CONCEALABILITY, AVAILABILITY,
-				HOLD_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Judo Hold", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.JUDO, 2,
+				CONCEALABILITY, AVAILABILITY, HOLD_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createEscape() {
-		return new MartialWeapon("Judo Escape", DESCRIPTION, CyberpunkSkill.JUDO, 2, CONCEALABILITY, AVAILABILITY,
-				ESCAPE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Judo Escape", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.JUDO, 2,
+				CONCEALABILITY, AVAILABILITY, ESCAPE_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createChoke() {
-		return new MartialWeapon("Judo Choke", DESCRIPTION, CyberpunkSkill.JUDO, 0, CONCEALABILITY, AVAILABILITY,
-				CHOKE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Judo Choke", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.JUDO, 0,
+				CONCEALABILITY, AVAILABILITY, CHOKE_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createSweep() {
-		return new MartialWeapon("Judo Sweep", DESCRIPTION, CyberpunkSkill.JUDO, 2, CONCEALABILITY, AVAILABILITY,
-				SWEEP_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Judo Sweep", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.JUDO, 2,
+				CONCEALABILITY, AVAILABILITY, SWEEP_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createGrapple() {
-		return new MartialWeapon("Judo Grapple", DESCRIPTION, CyberpunkSkill.JUDO, 2, CONCEALABILITY, AVAILABILITY,
-				GRAPPLE_DAMAGE, RELIABILITY);
+		return new MeleeWeapon("Judo Grapple", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.JUDO, 2,
+				CONCEALABILITY, AVAILABILITY, GRAPPLE_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
+				Collections.emptySet());
 	}
 }

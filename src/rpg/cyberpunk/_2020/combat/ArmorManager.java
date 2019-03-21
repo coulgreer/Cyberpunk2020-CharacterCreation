@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import rpg.Player;
-import rpg.cyberpunk._2020.combat.CyberpunkArmor.ArmorType;
 import rpg.general.combat.BodyLocation;
-import rpg.general.commerce.QuantifiableProduct;
 
 public class ArmorManager {
 	public static final int MAX_HARD_ARMOR_LAYERS = 1;
@@ -70,11 +68,11 @@ public class ArmorManager {
 	}
 
 	private boolean hasHardArmor(CyberpunkArmor armor) {
-		if (armor.getArmorType() == ArmorType.HARD) {
+		if ((CyberpunkArmor.ARMOR_TYPE_HARD).equals(armor.getArmorType())) {
 			Iterator<CyberpunkArmor> iterator = armors.iterator();
 			while (iterator.hasNext()) {
 				CyberpunkArmor tempArmor = iterator.next();
-				if (tempArmor.getArmorType() == ArmorType.HARD) {
+				if ((CyberpunkArmor.ARMOR_TYPE_HARD).equals(tempArmor.getArmorType())) {
 					return true;
 				}
 			}
@@ -104,14 +102,14 @@ public class ArmorManager {
 	}
 
 	private int calculateStoppingPower(CyberpunkArmor armor, BodyLocation location) {
-		int newArmorStoppingPower = armor.getDurability(location);
+		int newArmorStoppingPower = armor.getDurabilityAt(location);
 		if (armors.size() < 1) {
 			return newArmorStoppingPower;
 		} else {
 			Iterator<CyberpunkArmor> iterator = armors.iterator();
-			int stoppingPower1 = iterator.next().getDurability(location);
+			int stoppingPower1 = iterator.next().getDurabilityAt(location);
 			while (iterator.hasNext()) {
-				int stoppingPower2 = iterator.next().getDurability(location);
+				int stoppingPower2 = iterator.next().getDurabilityAt(location);
 				stoppingPower1 = increaseStoppingPower(stoppingPower1, stoppingPower2);
 			}
 			return increaseStoppingPower(stoppingPower1, newArmorStoppingPower);
@@ -157,7 +155,7 @@ public class ArmorManager {
 	public boolean remove(CyberpunkArmor armor) {
 		boolean hasRemoved = false;
 		if (armors.contains(armor)) {
-			player.addToInventory(new QuantifiableProduct(armor, 1));
+			player.addToInventory(armor);
 			armors.remove(armor);
 			hasRemoved = true;
 		}

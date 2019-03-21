@@ -1,12 +1,11 @@
 package rpg.cyberpunk._2020.combat;
 
+import java.util.Collections;
+
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
 public class BrawlingFightingStyleFactory implements AbstractFightingStyleFactory {
-	public static final String DESCRIPTION = "The skill of fighting man to man with fist, feet and other parts of the body.";
-	public static final int DEFAULT_RANGE = 1;
-	public static final double DEFAULT_WEIGHT = 0.0;
-	public static final int DEFAULT_COST = 0;
+	protected static final String DESCRIPTION = "The skill of fighting man to man with fist, feet and other parts of the body.";
 
 	private static BrawlingFightingStyleFactory uniqueInstance;
 
@@ -20,59 +19,81 @@ public class BrawlingFightingStyleFactory implements AbstractFightingStyleFactor
 		return uniqueInstance;
 	}
 
+	@Override
 	public CyberpunkWeapon createStrike() {
-		return SimpleWeapon.createSkillBasedWeapon("Brawling Strike", DESCRIPTION, CyberpunkSkill.BRAWLING, 0,
-				CONCEALABILITY, AVAILABILITY, STRIKE_DAMAGE, RELIABILITY, DEFAULT_RANGE, DEFAULT_WEIGHT, DEFAULT_COST);
+		return new MeleeWeapon("Brawling Strike", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.BRAWLING, 0, CONCEALABILITY, AVAILABILITY, STRIKE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createKick() {
-		return SimpleWeapon.createSkillBasedWeapon("Brawling Kick", DESCRIPTION, CyberpunkSkill.BRAWLING, 0,
-				CONCEALABILITY, AVAILABILITY, KICK_DAMAGE, RELIABILITY, DEFAULT_RANGE, DEFAULT_WEIGHT, DEFAULT_COST);
+		return new MeleeWeapon("Brawling Kick", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.BRAWLING, 0, CONCEALABILITY, AVAILABILITY, KICK_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createBlock() {
-		return SimpleWeapon.createSkillBasedWeapon("Brawling Block", DESCRIPTION, CyberpunkSkill.BRAWLING, 0,
-				CONCEALABILITY, AVAILABILITY, BLOCK_DAMAGE, RELIABILITY, DEFAULT_RANGE, DEFAULT_WEIGHT, DEFAULT_COST);
+		return new MeleeWeapon("Brawling Block", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.BRAWLING, 0, CONCEALABILITY, AVAILABILITY, BLOCK_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createDodge() {
-		return SimpleWeapon.createSkillBasedWeapon("Brawling Dodge", DESCRIPTION, CyberpunkSkill.BRAWLING, 0,
-				CONCEALABILITY, AVAILABILITY, DODGE_DAMAGE, RELIABILITY, DEFAULT_RANGE, DEFAULT_WEIGHT, DEFAULT_COST);
+		return new MeleeWeapon("Brawling Dodge", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.BRAWLING, 0, CONCEALABILITY, AVAILABILITY, DODGE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createDisarm() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MeleeWeapon("Brawling Disarm", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.BRAWLING, 0, CONCEALABILITY, AVAILABILITY, DISARM_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createThrow() {
-		return SimpleWeapon.createSkillBasedWeapon("Brawling Throw", DESCRIPTION, CyberpunkSkill.BRAWLING, 0,
-				CONCEALABILITY, AVAILABILITY, THROW_DAMAGE, RELIABILITY, DEFAULT_RANGE, DEFAULT_WEIGHT, DEFAULT_COST);
+		return new MeleeWeapon("Brawling Throw", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.BRAWLING, 0, CONCEALABILITY, AVAILABILITY, THROW_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createHold() {
-		return SimpleWeapon.createSkillBasedWeapon("Brawling Hold", DESCRIPTION, CyberpunkSkill.BRAWLING, 0,
-				CONCEALABILITY, AVAILABILITY, HOLD_DAMAGE, RELIABILITY, DEFAULT_RANGE, DEFAULT_WEIGHT, DEFAULT_COST);
+		return new MeleeWeapon("Brawling Hold", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.BRAWLING, 0, CONCEALABILITY, AVAILABILITY, HOLD_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createEscape() {
-		return SimpleWeapon.createSkillBasedWeapon("Brawling Escape", DESCRIPTION, CyberpunkSkill.BRAWLING, 0,
-				CONCEALABILITY, AVAILABILITY, ESCAPE_DAMAGE, RELIABILITY, DEFAULT_RANGE, DEFAULT_WEIGHT, DEFAULT_COST);
+		return new MeleeWeapon("Brawling Escape", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.BRAWLING, 0, CONCEALABILITY, AVAILABILITY, ESCAPE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createChoke() {
-		return SimpleWeapon.createSkillBasedWeapon("Brawling Choke", DESCRIPTION, CyberpunkSkill.BRAWLING, 0,
-				CONCEALABILITY, AVAILABILITY, CHOKE_DAMAGE, RELIABILITY, DEFAULT_RANGE, DEFAULT_WEIGHT, DEFAULT_COST);
+		return new MeleeWeapon("Brawling Choke", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.BRAWLING, 0, CONCEALABILITY, AVAILABILITY, CHOKE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createSweep() {
-		return SimpleWeapon.createSkillBasedWeapon("Brawling Sweep", DESCRIPTION, CyberpunkSkill.BRAWLING, 0,
-				CONCEALABILITY, AVAILABILITY, SWEEP_DAMAGE, RELIABILITY, DEFAULT_RANGE, DEFAULT_WEIGHT, DEFAULT_COST);
+		return new MeleeWeapon("Brawling Sweep", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.BRAWLING, 0, CONCEALABILITY, AVAILABILITY, SWEEP_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
+	@Override
 	public CyberpunkWeapon createGrapple() {
-		return SimpleWeapon.createSkillBasedWeapon("Brawling Grapple", DESCRIPTION, CyberpunkSkill.BRAWLING, 0,
-				CONCEALABILITY, AVAILABILITY, GRAPPLE_DAMAGE, RELIABILITY, DEFAULT_RANGE, DEFAULT_WEIGHT, DEFAULT_COST);
+		return new MeleeWeapon("Brawling Grapple", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
+				CyberpunkSkill.BRAWLING, 0, CONCEALABILITY, AVAILABILITY, GRAPPLE_DAMAGE, false, RELIABILITY,
+				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 
 }

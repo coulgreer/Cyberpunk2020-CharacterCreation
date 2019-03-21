@@ -1,54 +1,73 @@
 package rpg.general.commerce;
 
+/**
+ * Keeps track of money by updating cash whenever a sell or buy action happens.
+ * Also, allows a pre-check if Trader can buy or sell an item and gets a bidding
+ * or asking price for Tradables.
+ * <p>
+ * Bid Price - the maximum price that a buyer is willing to pay for a security.
+ * <p>
+ * Ask Price - the minimum price that a seller is willing to receive for a
+ * security.
+ * 
+ * @author Coul Greer
+ */
 public interface Trader {
 	/**
-	 * Allows a <code>Tradeable</code> to be bought. Usually used in tandem with
-	 * <code>sell(Tradeable t)</code> to represent a transaction.
+	 * Allows a <code>Tradeable</code> to be bought.
 	 * 
-	 * @param t
-	 *            a tradeable that can be acquired through a transaction
-	 * @param quantity
-	 *            the amount of tradeables to buy
+	 * @param price the amount needed to be paid for, for the exchange to succeed
 	 */
-	public void buy(Tradeable t, int quantity);
+	public void buy(double price);
 
 	/**
-	 * Returns whether or not <code>Tradeable</code> can be bought by a trader.
-	 * 
-	 * @param t
-	 *            the tradeable to test for
-	 * @param quantity
-	 *            the desired amount of tradeables to test for
-	 * @return <code>true</code>, if this trader can buy t
+	 * Allows a <code>Tradeable</code> to be sold.
+	 *
+	 * @param price the amount at which a <code>Tradeable</code> is sold at
 	 */
-	public boolean canBuy(Tradeable t, int quantity);
+	public void sell(double price);
 
 	/**
-	 * Allows a <code>Tradeable</code> to be sold. Usually used in tandem with
-	 * <code>buy(Tradeable t)</code> to represent the transaction.
+	 * Returns whether or not a <code>Tradeable</code> can be bought by a trader
+	 * given the price for sell.
 	 * 
-	 * @param t
-	 *            an object that can be given through a transaction
-	 * @param quantity
-	 *            the amount of tradeables to sell
+	 * @param price the amount needed to be paid for the transaction to succeed
+	 * @return <code>true</code>, if this trader can spend <code>price</code>
 	 */
-	public void sell(Tradeable t, int quantity);
+	public boolean canBuy(double price);
 
 	/**
-	 * Returns whether or not <code>Tradeable</code> can be sold by a trader.
+	 * Returns whether or not a <code>Tradeable</code> can be sold by a trader given
+	 * the price.
 	 * 
-	 * @param t
-	 *            the tradeable to test for
-	 * @param quantity
-	 *            the desired amount of tradeables to test for
-	 * @return <code>true</code>, if this trader can sell t
+	 * @param price the amount at which a <code>Tradeable</code> is sold at
+	 * @return <code>true</code>, if this trader will sell at <code>price</code>
 	 */
-	public boolean canSell(Tradeable t, int quantity);
+	public boolean canSell(double price);
 
 	/**
-	 * Returns the total amount of money of this object.
+	 * Returns the highest price at which a <code>Tradeable</code> is bought at by
+	 * this <code>Trader</code>.
 	 * 
-	 * @return the total amount of money this object has for transactions
+	 * @param t the <code>Tradeable</code> used to derive the buying price
+	 * @return the highest desired price when buying a <code>Tradeable</code>
+	 */
+	public double getBidPrice(Tradeable t);
+
+	/**
+	 * Returns the lowest price at which a <code>Tradeable</code> is sold by this
+	 * <code>Trader</code>.
+	 * 
+	 * @param t the <code>Tradeable</code> used to derive the selling price
+	 * @return the lowest desired price when selling a <code>Tradeable</code>
+	 */
+	public double getAskPrice(Tradeable t);
+
+	/**
+	 * Returns the total amount of money of this <code>Trader</code>.
+	 * 
+	 * @return the total amount of money this <code>Trader</code> has for
+	 *         transactions
 	 */
 	public double getMoney();
 }

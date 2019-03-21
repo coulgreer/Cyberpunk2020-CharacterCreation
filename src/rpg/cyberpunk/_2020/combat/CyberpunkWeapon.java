@@ -1,74 +1,88 @@
 package rpg.cyberpunk._2020.combat;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Weapon;
 import rpg.util.Die;
-import rpg.util.Probability;
 
-public abstract class CyberpunkWeapon extends Weapon implements CyberpunkWeaponizable {
-	public static final String NONE = "None";
-	public static final String LIGHT_PISTOL = "Light Pistol";
-	public static final String MEDIUM_PISTOL = "Medium Pistol";
-	public static final String HEAVY_PISTOL = "Heavy Pistol";
-	public static final String VERY_HEAVY_PISTOL = "Very Heavy Pistol";
-	public static final String LIGHT_SUBMACHINEGUN = "Light Submachinegun";
-	public static final String MEDIUM_SUBMACHINEGUN = "Medium Submachinegun";
-	public static final String HEAVY_SUBMACHINEGUN = "Heavy Submachinegun";
-	public static final String RIFLE = "Rifle";
-	public static final String SHOTGUN = "Shotgun";
-	public static final String HEAVY_WEAPON = "Heavy Weapon";
-	public static final String EDGED_WEAPON = "Edged Weapon";
-	public static final String BLUNT_WEAPON = "Blunt Weapon";
-	public static final String EXOTIC = "Exotic Weapon";
-	public static final String UNARMED = "Unarmed";
+public abstract class CyberpunkWeapon implements Weapon, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6029022101698122763L;
 
-	private Die hitChance;
-	private Concealability concealability;
-	private Availability availability;
-	private Die damageChance;
-	private String ammoType;
-	private Reliability reliability;
+	public enum Availability {
+		UNAVAILABLE("N/A"), //
+		EXCELLENT("E"), //
+		COMMON("C"), //
+		POOR("P"), //
+		RARE("R");
 
-	protected CyberpunkWeapon(String weaponName, String description, String weaponType, String skillName,
-			int weaponAccuracy, Concealability concealability, Availability availability, Probability damage,
-			String ammoType, int rateOfFire, Reliability reliability, int rangeModifier, double cost, double weight) {
-		super(weaponName, description, weaponType, skillName, weaponAccuracy, damage.getModifier(), rangeModifier,
-				rateOfFire, cost, weight);
+		private String abbreviation;
 
-		this.hitChance = new Die(1, 10);
-		this.concealability = concealability;
-		this.availability = availability;
-		this.damageChance = damage.getDice();
-		this.ammoType = ammoType;
-		this.reliability = reliability;
-	}
+		Availability(String abbreviation) {
+			this.abbreviation = abbreviation;
+		}
 
-	protected static String parseSkillName(String weaponType) {
-		switch (weaponType) {
-		case LIGHT_PISTOL:
-		case MEDIUM_PISTOL:
-		case HEAVY_PISTOL:
-		case VERY_HEAVY_PISTOL:
-			return CyberpunkSkill.HANDGUN;
-		case LIGHT_SUBMACHINEGUN:
-		case MEDIUM_SUBMACHINEGUN:
-		case HEAVY_SUBMACHINEGUN:
-			return CyberpunkSkill.SUBMACHINEGUN;
-		case RIFLE:
-		case SHOTGUN:
-			return CyberpunkSkill.RIFLE;
-		case HEAVY_WEAPON:
-			return CyberpunkSkill.HEAVY_WEAPONS;
-		case EDGED_WEAPON:
-		case BLUNT_WEAPON:
-			return CyberpunkSkill.MELEE;
-		default:
-			return CyberpunkSkill.NONE;
+		public String getAbbreviation() {
+			return abbreviation;
 		}
 	}
 
+	public enum Reliability {
+		VERY_RELIABLE("VR"), STANDARD("ST"), UNRELIABLE("UR");
+
+		private String abbreviation;
+
+		Reliability(String abbreviation) {
+			this.abbreviation = abbreviation;
+		}
+
+		public String getAbbreviation() {
+			return abbreviation;
+		}
+	}
+
+	public enum Concealability {
+		POCKET("P"), //
+		JACKET("J"), //
+		LONG_COAT("L"), //
+		CANNOT_HIDE("N");
+
+		private String abbreviation;
+
+		Concealability(String abbreviation) {
+			this.abbreviation = abbreviation;
+		}
+
+		public String getAbbreviation() {
+			return abbreviation;
+		}
+	}
+
+	public static final String DEFAULT_WEAPON_TYPE = "None";
+	public static final String WEAPON_TYPE_LIGHT_PISTOL = "Light Pistol";
+	public static final String WEAPON_TYPE_MEDIUM_PISTOL = "Medium Pistol";
+	public static final String WEAPON_TYPE_HEAVY_PISTOL = "Heavy Pistol";
+	public static final String WEAPON_TYPE_VERY_HEAVY_PISTOL = "Very Heavy Pistol";
+	public static final String WEAPON_TYPE_LIGHT_SUBMACHINEGUN = "Light Submachinegun";
+	public static final String WEAPON_TYPE_MEDIUM_SUBMACHINEGUN = "Medium Submachinegun";
+	public static final String WEAPON_TYPE_HEAVY_SUBMACHINEGUN = "Heavy Submachinegun";
+	public static final String WEAPON_TYPE_RIFLE = "Rifle";
+	public static final String WEAPON_TYPE_SHOTGUN = "Shotgun";
+	public static final String WEAPON_TYPE_HEAVY_WEAPON = "Heavy Weapon";
+	public static final String WEAPON_TYPE_MELEE_WEAPON = "Melee Weapon";
+	public static final String WEAPON_TYPE_EXOTIC = "Exotic Weapon";
+	public static final String WEAPON_TYPE_UNARMED = "Unarmed";
+
+	private final Die hitChance;
+
+	protected CyberpunkWeapon() {
+		this.hitChance = new Die(1, 10);
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (o == this) {
 			return true;
@@ -80,62 +94,29 @@ public abstract class CyberpunkWeapon extends Weapon implements CyberpunkWeaponi
 
 		CyberpunkWeapon weapon = (CyberpunkWeapon) o;
 		return ((weapon.getName()).equals(getName())) && (weapon.getWeaponType() == getWeaponType())
-				&& (weapon.getAmmoCount() == getAmmoCount()) && (weapon.getAmmoCapacity() == getAmmoCapacity());
+				&& (weapon.getAmmunitionCount() == getAmmunitionCount())
+				&& (weapon.getAmmunitionCapacity() == getAmmunitionCapacity());
 	}
 
+	@Override
 	public int hashCode() {
-		return Objects.hash(getName(), getWeaponType(), getAmmoCount(), getAmmoCapacity());
+		return Objects.hash(getName(), getWeaponType(), getAmmunitionCount(), getAmmunitionCapacity());
 	}
 
+	@Override
 	public String toString() {
 		return getName() + ": << <" + hitChance + "+" + getHitScore() + "> <" + getDamageDice() + "+"
 				+ getDamageModifier() + "> >>";
 	}
 
+	@Override
 	public Die getHitDice() {
 		return hitChance;
 	}
 
-	public Concealability getConcealability() {
-		return concealability;
-	}
+	public abstract Concealability getConcealability();
 
-	public Availability getAvailability() {
-		return availability;
-	}
+	public abstract Availability getAvailability();
 
-	public Die getDamageDice() {
-		return damageChance;
-	}
-
-	public String getAmmoType() {
-		return ammoType;
-	}
-
-	public Reliability getReliability() {
-		return reliability;
-	}
-
-	public double getSoftArmorMultiplier() {
-		switch (getWeaponType()) {
-		case "Edged Weapon":
-			return 0.5;
-		default:
-			return 1.0;
-		}
-	}
-
-	public double getHardArmorMultiplier() {
-		switch (getWeaponType()) {
-		default:
-			return 1.0;
-		}
-	}
-
-	public double getDamageMultiplier() {
-		switch (getWeaponType()) {
-		default:
-			return 1.0;
-		}
-	}
+	public abstract Reliability getReliability();
 }

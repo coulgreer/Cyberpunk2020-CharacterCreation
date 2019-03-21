@@ -11,7 +11,7 @@ public class GetSkillVisitor implements SkillVisitor {
 		if (targetSkillName == skill.getName()) {
 			return skill;
 		} else {
-			return NullCyberpunkSkill.getInstance();
+			return NullSkill.getInstance();
 		}
 	}
 
@@ -23,11 +23,11 @@ public class GetSkillVisitor implements SkillVisitor {
 		}
 	}
 
-	public CyberpunkSkill visit(RoleCyberpunkSkill skill) {
+	public CyberpunkSkill visit(RoleSkill skill) {
 		if (targetSkillName == skill.getName()) {
 			return skill;
 		} else {
-			return NullCyberpunkSkill.getInstance();
+			return NullSkill.getInstance();
 		}
 	}
 }

@@ -1,26 +1,20 @@
 package rpg.cyberpunk._2020.combat;
 
-public class Durability implements Maintainable {
+import java.io.Serializable;
+
+public class Durability implements Serializable {
+	public static final int MIN_DURABILITY = 0;
+
 	private int maxDurability;
 	private int currentDurability;
+
+	public Durability() {
+		this(MIN_DURABILITY);
+	}
 
 	public Durability(int maxDurability) {
 		this.maxDurability = maxDurability;
 		this.currentDurability = maxDurability;
-	}
-
-	public void damage(int damagePoints) {
-		currentDurability -= damagePoints;
-		if (currentDurability < 0) {
-			currentDurability = 0;
-		}
-	}
-
-	public void repair(int repairPoints) {
-		currentDurability += repairPoints;
-		if (currentDurability > maxDurability) {
-			currentDurability = maxDurability;
-		}
 	}
 
 	public int getCurrentDurability() {
@@ -29,5 +23,13 @@ public class Durability implements Maintainable {
 
 	public int getMaxDurability() {
 		return maxDurability;
+	}
+
+	public void setCurrentDurability(int currentDurability) {
+		this.currentDurability = currentDurability;
+	}
+
+	public void setMaxDurability(int maxDurability) {
+		this.maxDurability = maxDurability;
 	}
 }

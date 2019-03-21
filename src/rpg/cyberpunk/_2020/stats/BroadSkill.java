@@ -1,73 +1,59 @@
 package rpg.cyberpunk._2020.stats;
 
-import java.util.ArrayList;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import rpg.general.stats.Levelable;
-import rpg.util.Observable;
-import rpg.util.Observer;
-
-public class BroadSkill implements CyberpunkSkill, Observable {
+public class BroadSkill implements CyberpunkSkill {
 	private Map<String, CyberpunkSkill> skills;
 	private String name;
 	private String description;
-	private List<Observer> observers;
+	private PropertyChangeSupport changeSupport;
 
 	public BroadSkill(String name, String description) {
+		setName(name);
+		setDescription(description);
 		skills = new HashMap<String, CyberpunkSkill>();
-		this.name = name;
-		this.description = description;
-		observers = new ArrayList<Observer>();
+		changeSupport = new PropertyChangeSupport(this);
+	}
+
+	private void setName(String name) {
+		if (name == null) {
+			throw new IllegalArgumentException("The field 'name' is cannot be null.");
+		} else {
+			this.name = name;
+		}
+	}
+
+	private void setDescription(String description) {
+		if (description == null) {
+			throw new IllegalArgumentException("The field 'description' is cannot be null.");
+		} else {
+			this.description = description;
+		}
 	}
 
 	@Override
 	public void increaseLevel() {
-		Iterator<Map.Entry<String, CyberpunkSkill>> iterator = getIterator();
-		while (iterator.hasNext()) {
-			CyberpunkSkill skill = iterator.next().getValue();
-			skill.increaseLevel();
-		}
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void decreaseLevel() {
-		Iterator<Map.Entry<String, CyberpunkSkill>> iterator = getIterator();
-		while (iterator.hasNext()) {
-			CyberpunkSkill skill = iterator.next().getValue();
-			skill.decreaseLevel();
-		}
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void resetLevel() {
-		Iterator<Map.Entry<String, CyberpunkSkill>> iterator = getIterator();
-		while (iterator.hasNext()) {
-			CyberpunkSkill skill = iterator.next().getValue();
-			skill.resetLevel();
-		}
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public int getLevel() {
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void update(Levelable statistic) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String getDescription() {
-		return description;
 	}
 
 	@Override
@@ -82,31 +68,18 @@ public class BroadSkill implements CyberpunkSkill, Observable {
 	}
 
 	@Override
-	public void registerObserver(Observer observer) {
-		observers.add(observer);
+	public String getName() {
+		return name;
 	}
 
 	@Override
-	public void unregisterObserver(Observer observer) {
-		observers.remove(observer);
-	}
-
-	@Override
-	public void notifyObserver() {
-		Iterator<Observer> iterator = observers.iterator();
-		while (iterator.hasNext()) {
-			Observer observer = iterator.next();
-			observer.update(this);
-		}
+	public String getDescription() {
+		return description;
 	}
 
 	@Override
 	public void increaseCurrentImprovementPoints(int improvementPoints) {
-		Iterator<Map.Entry<String, CyberpunkSkill>> iterator = getIterator();
-		while (iterator.hasNext()) {
-			CyberpunkSkill skill = iterator.next().getValue();
-			skill.increaseCurrentImprovementPoints(improvementPoints);
-		}
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -124,6 +97,7 @@ public class BroadSkill implements CyberpunkSkill, Observable {
 		return visitor.visit(this);
 	}
 
+	// TODO Remove composite pattern methods due to the creation of TreeNode<T>
 	public void add(CyberpunkSkill skill) {
 		skills.put(skill.getName(), skill);
 	}
@@ -134,18 +108,46 @@ public class BroadSkill implements CyberpunkSkill, Observable {
 
 	public CyberpunkSkill getChild(String skillName) {
 		SkillVisitor visitor = new GetSkillVisitor(skillName);
-		Iterator<Map.Entry<String, CyberpunkSkill>> iterator = getIterator();
-		while (iterator.hasNext()) {
-			Map.Entry<String, CyberpunkSkill> child = iterator.next();
-			CyberpunkSkill childValue = child.getValue().accept(visitor);
-			if (!(childValue.equals(NullCyberpunkSkill.getInstance()))) {
-				return childValue;
+		for (CyberpunkSkill skill : skills.values()) {
+			CyberpunkSkill child = skill.accept(visitor);
+			if (!(child.equals(NullSkill.getInstance()))) {
+				return child;
 			}
 		}
-		return NullCyberpunkSkill.getInstance();
+		return NullSkill.getInstance();
 	}
 
 	public Iterator<Map.Entry<String, CyberpunkSkill>> getIterator() {
 		return skills.entrySet().iterator();
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return false;
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(listener);
+	}
+
+	@Override
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.removePropertyChangeListener(listener);
+	}
+
+	@Override
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(propertyName, listener);
+	}
+
+	@Override
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(propertyName, listener);
 	}
 }

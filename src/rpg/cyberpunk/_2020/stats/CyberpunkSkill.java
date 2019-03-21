@@ -2,6 +2,13 @@ package rpg.cyberpunk._2020.stats;
 
 import rpg.general.stats.Skill;
 
+/**
+ * A specialized type of skill that uses Improvement Points to level up skills
+ * automatically. This skill also has the ability to enable or disable the skill
+ * as defined by the implementing classes.
+ * 
+ * @author Coul Greer
+ */
 public interface CyberpunkSkill extends Skill, SkillVisitable {
 	// Default Skill
 	public static final String NONE = "None";
@@ -206,15 +213,63 @@ public interface CyberpunkSkill extends Skill, SkillVisitable {
 	public static final String PLAY_INSTRUMENT = "Play Instrument";
 	public static final String WEAPONSMITH = "Weaponsmith";
 
+	/**
+	 * A constant used to identify when the improvementPoints state change.
+	 */
+	public static final String PROPERTY_NAME_IMPROVEMENT_POINTS = "Improvement Points";
+
+	/**
+	 * A constant used to identify when the isEnabled state changes.
+	 */
+	public static final String PROPERTY_NAME_IS_ENABLED = "Is Enabled";
+
+	/**
+	 * The lowest level that a skill is allowed to be at.
+	 */
 	public static final int MIN_LEVEL = 0;
+
+	/**
+	 * The highest level that a skill is allowed to be at.
+	 */
 	public static final int MAX_LEVEL = 10;
-	public static final int INITIAL_VALUE = 0;
+
+	/**
+	 * The starting amount of improvement points for a skill.
+	 */
 	public static final int INITIAL_IP = 0;
+
+	/**
+	 * The starting amount of improvement points needed for a skill to automatically
+	 * level up.
+	 */
 	public static final int INITIAL_IP_GOAL = 10;
 
+	/**
+	 * Returns <code>true</code> if this <code>CyberpunkSkill</code> is modifiable.
+	 * 
+	 * @return <code>true</code> if this <code>CyberpunkSkill</code> is modifiable
+	 */
+	public boolean isEnabled();
+
+	/**
+	 * Adds a given amount of points to the current improvement point amount.
+	 * 
+	 * @param improvementPoints the amount of points to be added to the current
+	 *                          improvement point amount
+	 */
 	public void increaseCurrentImprovementPoints(int improvementPoints);
 
+	/**
+	 * Returns the points tracked for leveling up this <code>Skill</code>.
+	 * 
+	 * @return the current amount of improvement points
+	 */
 	public int getCurrentImprovementPoints();
 
+	/**
+	 * Return the needed amount of improvement points for an automatic level up.
+	 * 
+	 * @return the improvement points needed for an automatic level up
+	 */
 	public int getNeededImprovementPoints();
 }

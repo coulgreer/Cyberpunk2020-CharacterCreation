@@ -6,14 +6,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import rpg.cyberpunk._2020.AttributeName;
-
 public class CyberpunkAttributeTest {
 	private CyberpunkAttribute attribute;
 
 	@Before
 	public void setUp() {
-		attribute = new CyberpunkAttribute(AttributeName.ATTRACTIVENESS, "This is how good-looking you are.");
+		attribute = new CyberpunkAttribute(CyberpunkAttribute.ATTRACTIVENESS, "This is how good-looking you are.");
 	}
 
 	@After

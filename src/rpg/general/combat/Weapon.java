@@ -1,111 +1,86 @@
 package rpg.general.combat;
 
-import rpg.general.commerce.Product;
+import java.util.Iterator;
 
-public abstract class Weapon implements Weaponizable, Shootable, Product {
+import rpg.general.commerce.Item;
+import rpg.util.Die;
+
+public interface Weapon extends Shootable, Item {
 	public static final String DEFAULT_WEAPON_TYPE = "None";
 	public static final String DEFAULT_SKILL_NAME = "None";
-	
-	protected String weaponName;
-	protected String description;
-	protected String weaponType;
-	protected String skillName;
-	protected int hitModifier;
-	protected int damageModifier;
-	protected int rangeModifier;
-	protected int rateOfFire;
-	protected double cost;
-	protected double weight;
+	public static final String DEFAULT_AMMUNITION_TYPE = "None";
 
-	protected Weapon(String weaponName, String description, String weaponType, String skillName, int hitModifier,
-			int damageModifier, int rangeModifier, int rateOfFire, double cost, double weight) {
-		validateWeaponName(weaponName);
-		validateDescription(description);
-		validateWeaponType(weaponType);
-		validateSkillName(skillName);
-		this.hitModifier = hitModifier;
-		this.damageModifier = damageModifier;
-		this.rangeModifier = rangeModifier;
-		this.rateOfFire = rateOfFire;
-		this.cost = cost;
-		this.weight = weight;
-	}
-	
-	private void validateWeaponName(String weaponName) {
-		if(weaponName == null) {
-			this.weaponName = "Null Name";
-		} else {
-			this.weaponName = weaponName;
-		}
-	}
-	
-	private void validateDescription(String description) {
-		if(description == null) {
-			this.description = "";
-		} else {
-			this.description = description;
-		}
-	}
-	
-	private void validateWeaponType(String weaponType) {
-		if(weaponType == null) {
-			this.weaponType = DEFAULT_WEAPON_TYPE;
-		} else {
-			this.weaponType = weaponType;
-		}
-	}
-	
-	private void validateSkillName(String skillName) {
-		if(skillName == null) {
-			this.skillName = DEFAULT_SKILL_NAME;
-		} else {
-			this.skillName = skillName;
-		}
-	}
+	/**
+	 * Registers a <code>Combatant</code> to be used in modifying the <i>scores</i>
+	 * of various fields.
+	 * 
+	 * @param c the <code>Combatant</code> used to derive scores from
+	 */
+	public void setCombatant(Combatant c);
 
-	public String getName() {
-		return weaponName;
-	}
+	/**
+	 * Gets the category that this <code>Weapon</code> belongs to.
+	 * 
+	 * @return a string representation of this <code>Weapon</code>'s category
+	 */
+	public String getWeaponType();
 
-	public String getDescription() {
-		return description;
-	}
+	/**
+	 * Returns the skill name that this <code>Weapon</code> uses for range, damage,
+	 * and hit modifications.
+	 * 
+	 * @return the skill name used to modify this <code>Weapon</code>'s parameters
+	 */
+	public String getSkillName();
 
-	public double getCost() {
-		return cost;
-	}
+	/**
+	 * Returns the derived value that uses the base and modifier value for the
+	 * range.
+	 * 
+	 * @return the calculated value using the base and modifier value of the range
+	 */
+	public int getRangeScore();
 
-	public double getWeight() {
-		return weight;
-	}
+	/**
+	 * Returns the derived value that uses the base and modifier value for the
+	 * damage.
+	 * 
+	 * @return the calculated value using the base and modifier value of the damage
+	 */
+	public int getDamageScore();
 
-	public int getHitModifier() {
-		return hitModifier;
-	}
+	/**
+	 * Returns the derived value that uses the base and modifier value for the hit.
+	 * 
+	 * @return the calculated value using the base and modifier value of the hit
+	 */
+	public int getHitScore();
 
-	public int getDamageModifier() {
-		return damageModifier;
-	}
+	/**
+	 * Return a <code>Die</code> to represent the probability of damage.
+	 * 
+	 * @return the probability of damage
+	 */
+	public Die getDamageDice();
 
-	public int getRangeModifier() {
-		return rangeModifier;
-	}
+	/**
+	 * Return a <code>Die</code> to represent the probability of hitting a target.
+	 * 
+	 * @return the probability of hitting a target
+	 */
+	public Die getHitDice();
 
-	public String getWeaponType() {
-		return weaponType;
-	}
+	/**
+	 * Returns the conditional bonuses. This excludes any flat bonuses that are
+	 * applied in general to the scores of range, damage, and hit. For example,
+	 * modifying values in a specific situation like "when crouched" or "in certain
+	 * lighting".
+	 * 
+	 * @return any bonuses that are not modifiers to range, damage, and hit in a
+	 *         general case. Such as, modifying values in a specific situation like
+	 *         "when crouched" or "in certain lighting".
+	 */
+	public Iterator<WeaponAttachment> getAttachments();
 
-	public String getSkillName() {
-		return skillName;
-	}
-
-	public int getRateOfFire() {
-		return rateOfFire;
-	}
-
-	public abstract void setCombatant(Combatant combatant);
-
-	public abstract WeaponModifier setModifier(WeaponModifier modifier);
-
-	public abstract String getBonuses();
+	public WeaponAttachment addAttachment(WeaponAttachment attachment);
 }
