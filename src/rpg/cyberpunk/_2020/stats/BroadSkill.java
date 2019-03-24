@@ -2,7 +2,6 @@ package rpg.cyberpunk._2020.stats;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -11,13 +10,11 @@ public class BroadSkill implements CyberpunkSkill {
 	private Map<String, CyberpunkSkill> skills;
 	private String name;
 	private String description;
-	private PropertyChangeSupport changeSupport;
 
 	public BroadSkill(String name, String description) {
 		setName(name);
 		setDescription(description);
 		skills = new HashMap<String, CyberpunkSkill>();
-		changeSupport = new PropertyChangeSupport(this);
 	}
 
 	private void setName(String name) {
@@ -131,23 +128,25 @@ public class BroadSkill implements CyberpunkSkill {
 		throw new UnsupportedOperationException();
 	}
 
+	// TODO Think about throwing an exception for all propertyChange methods.
 	@Override
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		changeSupport.addPropertyChangeListener(listener);
+		// Do nothing. This class is immutable so properties never change
 	}
 
 	@Override
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		changeSupport.removePropertyChangeListener(listener);
+		// Do nothing. This class is immutable so properties never change
 	}
 
 	@Override
 	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-		changeSupport.addPropertyChangeListener(propertyName, listener);
+		// Do nothing. This class is immutable so properties never change
 	}
 
 	@Override
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-		changeSupport.addPropertyChangeListener(propertyName, listener);
+		// Do nothing. This class is immutable so properties never change
 	}
+
 }

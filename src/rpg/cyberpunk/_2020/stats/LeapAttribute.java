@@ -17,7 +17,7 @@ public class LeapAttribute implements Attribute, PropertyChangeListener {
 		setName(name);
 		setDescription(description);
 		this.parentAttribute = parentAttribute;
-		parentAttribute.addPropertyChangeListener(Attribute.PROPERTY_NAME_LEVEL, this);
+		parentAttribute.addPropertyChangeListener(Attribute.PROPERTY_NAME_ATTRIBUTE_LEVEL, this);
 		value = calculateLevel();
 		changeSupport = new PropertyChangeSupport(this);
 	}

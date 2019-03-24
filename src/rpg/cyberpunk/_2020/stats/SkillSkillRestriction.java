@@ -3,7 +3,6 @@ package rpg.cyberpunk._2020.stats;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import rpg.general.stats.Skill;
 import rpg.general.stats.SkillRestriction;
 
 public class SkillSkillRestriction implements SkillRestriction, PropertyChangeListener {
@@ -22,7 +21,7 @@ public class SkillSkillRestriction implements SkillRestriction, PropertyChangeLi
 			throw new IllegalArgumentException("The field 'skill' must not be null.");
 		} else {
 			this.skill = skill;
-			skill.addPropertyChangeListener(Skill.PROPERTY_NAME_LEVEL, this);
+			skill.addPropertyChangeListener(CyberpunkSkill.PROPERTY_NAME_SKILL_LEVEL, this);
 		}
 	}
 

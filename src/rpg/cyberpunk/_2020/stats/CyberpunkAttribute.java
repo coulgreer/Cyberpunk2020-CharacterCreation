@@ -6,6 +6,8 @@ import java.beans.PropertyChangeSupport;
 import rpg.general.stats.Attribute;
 
 public class CyberpunkAttribute implements Attribute {
+
+	// Attribute names
 	public static final String NOT_AVAILABLE = "Not Available";
 	public static final String INTELLIGENCE = "Intelligence";
 	public static final String REFLEXES = "Reflex";
@@ -20,6 +22,7 @@ public class CyberpunkAttribute implements Attribute {
 	public static final String BODY_TYPE = "Body Type";
 	public static final String CARRY = "Carry";
 
+	// TODO Write JavaDoc for entire class
 	public static final int MIN_LEVEL = 2;
 	public static final int MAX_LEVEL = 10;
 
@@ -40,7 +43,8 @@ public class CyberpunkAttribute implements Attribute {
 		if (level < MAX_LEVEL) {
 			int oldLevel = level;
 			level++;
-			changeSupport.firePropertyChange(PROPERTY_NAME_LEVEL, oldLevel, level);
+			changeSupport.firePropertyChange(PROPERTY_NAME_ATTRIBUTE_LEVEL, oldLevel, level);
+			changeSupport.firePropertyChange(PROPERTY_NAME_ATTRIBUTE_MODIFIER, oldLevel, level);
 		}
 	}
 
@@ -49,7 +53,8 @@ public class CyberpunkAttribute implements Attribute {
 		if (level > MIN_LEVEL) {
 			int oldLevel = level;
 			level--;
-			changeSupport.firePropertyChange(PROPERTY_NAME_LEVEL, oldLevel, level);
+			changeSupport.firePropertyChange(PROPERTY_NAME_ATTRIBUTE_LEVEL, oldLevel, level);
+			changeSupport.firePropertyChange(PROPERTY_NAME_ATTRIBUTE_MODIFIER, oldLevel, level);
 		}
 	}
 
@@ -57,7 +62,8 @@ public class CyberpunkAttribute implements Attribute {
 	public void resetLevel() {
 		int oldLevel = level;
 		level = MIN_LEVEL;
-		changeSupport.firePropertyChange(PROPERTY_NAME_LEVEL, oldLevel, level);
+		changeSupport.firePropertyChange(PROPERTY_NAME_ATTRIBUTE_LEVEL, oldLevel, level);
+		changeSupport.firePropertyChange(PROPERTY_NAME_ATTRIBUTE_MODIFIER, oldLevel, level);
 	}
 
 	@Override

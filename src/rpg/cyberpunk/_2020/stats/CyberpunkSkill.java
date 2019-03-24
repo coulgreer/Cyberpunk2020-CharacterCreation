@@ -1,5 +1,7 @@
 package rpg.cyberpunk._2020.stats;
 
+import java.beans.PropertyChangeListener;
+
 import rpg.general.stats.Skill;
 
 /**
@@ -214,14 +216,19 @@ public interface CyberpunkSkill extends Skill, SkillVisitable {
 	public static final String WEAPONSMITH = "Weaponsmith";
 
 	/**
+	 * A constant used to identify when the level state changes.
+	 */
+	public static final String PROPERTY_NAME_SKILL_LEVEL = "Skill Level";
+
+	/**
 	 * A constant used to identify when the improvementPoints state change.
 	 */
-	public static final String PROPERTY_NAME_IMPROVEMENT_POINTS = "Improvement Points";
+	public static final String PROPERTY_NAME_SKILL_IMPROVEMENT_POINTS = "Skill Improvement Points";
 
 	/**
 	 * A constant used to identify when the isEnabled state changes.
 	 */
-	public static final String PROPERTY_NAME_IS_ENABLED = "Is Enabled";
+	public static final String PROPERTY_NAME_SKILL_IS_ENABLED = "Skill Is Enabled";
 
 	/**
 	 * The lowest level that a skill is allowed to be at.
@@ -232,6 +239,12 @@ public interface CyberpunkSkill extends Skill, SkillVisitable {
 	 * The highest level that a skill is allowed to be at.
 	 */
 	public static final int MAX_LEVEL = 10;
+
+	/**
+	 * The default multiplier used for the needed improvement points to reach the
+	 * next level.
+	 */
+	public static final int MINIMUM_DIFFICULTY_MODIFIER = 1;
 
 	/**
 	 * The starting amount of improvement points for a skill.
@@ -272,4 +285,35 @@ public interface CyberpunkSkill extends Skill, SkillVisitable {
 	 * @return the improvement points needed for an automatic level up
 	 */
 	public int getNeededImprovementPoints();
+
+	/**
+	 * Adds a PropertyChangeListener to the listener list.
+	 * 
+	 * @param listener the PropertyChangeListener to be added
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener);
+
+	/**
+	 * Removes a PropertyChangeListener from the listener list.
+	 * 
+	 * @param listener the PropertyChangeListener to be removed
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener listener);
+
+	/**
+	 * Adds a PropertyChangeListener for a specific property.
+	 * 
+	 * @param propertyName the name of the property to listen on
+	 * @param listener     the PropertyChangeListener to be added
+	 */
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener);
+
+	/**
+	 * Removes a PropertyChangeListener for a specific property.
+	 * 
+	 * @param propertyName the name of the property that was listened on
+	 * @param listener     the PropertyChangeListener to be removed
+	 */
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener);
+
 }

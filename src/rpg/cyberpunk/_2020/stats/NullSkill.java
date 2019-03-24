@@ -18,22 +18,6 @@ public class NullSkill implements CyberpunkSkill {
 	}
 
 	@Override
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-	}
-
-	@Override
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-	}
-
-	@Override
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-	}
-
-	@Override
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-	}
-
-	@Override
 	public String getName() {
 		return CyberpunkSkill.NONE;
 	}
@@ -91,5 +75,21 @@ public class NullSkill implements CyberpunkSkill {
 	@Override
 	public int getNeededImprovementPoints() {
 		return 0;
+	}
+
+	@Override
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+	}
+
+	@Override
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+	}
+
+	@Override
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+	}
+
+	@Override
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 	}
 }

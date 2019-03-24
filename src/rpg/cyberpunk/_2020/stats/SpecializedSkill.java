@@ -8,8 +8,6 @@ import rpg.general.stats.Attribute;
 import rpg.general.stats.SkillRestriction;
 
 public class SpecializedSkill implements CyberpunkSkill {
-	public static final int MINIMUM_DIFFICULTY_MODIFIER = 1;
-
 	private Attribute attribute;
 	private String name;
 	private String description;
@@ -76,7 +74,7 @@ public class SpecializedSkill implements CyberpunkSkill {
 			throw new IllegalArgumentException("The field 'attribute' is not allowed to be null.");
 		} else {
 			this.attribute = attribute;
-			attribute.addPropertyChangeListener(Attribute.PROPERTY_NAME_LEVEL, this);
+			attribute.addPropertyChangeListener(Attribute.PROPERTY_NAME_ATTRIBUTE_MODIFIER, this);
 			calculateTotalValue();
 		}
 	}
@@ -91,7 +89,7 @@ public class SpecializedSkill implements CyberpunkSkill {
 			int oldValue = baseValue;
 			baseValue++;
 			calculateTotalValue();
-			changeSupport.firePropertyChange(PROPERTY_NAME_LEVEL, oldValue, baseValue);
+			changeSupport.firePropertyChange(CyberpunkSkill.PROPERTY_NAME_SKILL_LEVEL, oldValue, baseValue);
 		}
 	}
 
@@ -101,7 +99,7 @@ public class SpecializedSkill implements CyberpunkSkill {
 			int oldValue = baseValue;
 			baseValue--;
 			calculateTotalValue();
-			changeSupport.firePropertyChange(PROPERTY_NAME_LEVEL, oldValue, baseValue);
+			changeSupport.firePropertyChange(CyberpunkSkill.PROPERTY_NAME_SKILL_LEVEL, oldValue, baseValue);
 		}
 	}
 
@@ -111,7 +109,7 @@ public class SpecializedSkill implements CyberpunkSkill {
 			int oldValue = baseValue;
 			baseValue = MIN_LEVEL;
 			calculateTotalValue();
-			changeSupport.firePropertyChange(PROPERTY_NAME_LEVEL, oldValue, baseValue);
+			changeSupport.firePropertyChange(CyberpunkSkill.PROPERTY_NAME_SKILL_LEVEL, oldValue, baseValue);
 		}
 	}
 
@@ -141,7 +139,8 @@ public class SpecializedSkill implements CyberpunkSkill {
 			int oldValue = currentImprovementPoints;
 			currentImprovementPoints += improvementPoints;
 			checkForLevelUp();
-			changeSupport.firePropertyChange(PROPERTY_NAME_IMPROVEMENT_POINTS, oldValue, currentImprovementPoints);
+			changeSupport.firePropertyChange(CyberpunkSkill.PROPERTY_NAME_SKILL_IMPROVEMENT_POINTS, oldValue,
+					currentImprovementPoints);
 		}
 	}
 
@@ -201,6 +200,7 @@ public class SpecializedSkill implements CyberpunkSkill {
 
 	@Override
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-		changeSupport.addPropertyChangeListener(propertyName, listener);
+		changeSupport.removePropertyChangeListener(propertyName, listener);
 	}
+
 }

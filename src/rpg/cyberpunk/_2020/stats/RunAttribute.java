@@ -17,7 +17,7 @@ public class RunAttribute implements Attribute, PropertyChangeListener {
 		setName(name);
 		setDescription(description);
 		this.parentAttribute = parentStatistic;
-		parentStatistic.addPropertyChangeListener(Attribute.PROPERTY_NAME_LEVEL, this);
+		parentStatistic.addPropertyChangeListener(Attribute.PROPERTY_NAME_ATTRIBUTE_LEVEL, this);
 		value = calculateLevel();
 		changeSupport = new PropertyChangeSupport(this);
 	}
