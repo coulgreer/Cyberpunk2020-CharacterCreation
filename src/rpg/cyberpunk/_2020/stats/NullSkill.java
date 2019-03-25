@@ -54,11 +54,6 @@ public class NullSkill implements CyberpunkSkill {
 	}
 
 	@Override
-	public CyberpunkSkill accept(SkillVisitor visitor) {
-		return this;
-	}
-
-	@Override
 	public boolean isEnabled() {
 		return false;
 	}

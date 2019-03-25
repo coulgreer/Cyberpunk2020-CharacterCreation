@@ -5,8 +5,14 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 import rpg.general.stats.Attribute;
-import rpg.general.stats.SkillRestriction;
+import rpg.general.stats.Restriction;
 
+/**
+ * A generic skill to be represented. This skill may have restrictions and will
+ * always depend on an attribute.
+ * 
+ * @author Coul Greer
+ */
 public class SpecializedSkill implements CyberpunkSkill {
 	private Attribute attribute;
 	private String name;
@@ -16,15 +22,41 @@ public class SpecializedSkill implements CyberpunkSkill {
 	private int difficultyModifier;
 	private int currentImprovementPoints;
 	private int neededImprovementPoints;
-	private SkillRestriction restriction;
+	private Restriction restriction;
 	private PropertyChangeSupport changeSupport;
 
+	/**
+	 * Constructs a skill that depends on an attribute.
+	 * 
+	 * @param attribute          the statistic used for calculating total skill
+	 *                           level
+	 * @param name               the identifier for this skill
+	 * @param description        a blurb giving an overview of what this skill
+	 *                           does/is
+	 * @param difficultyModifier a modifier used to multiply how many improvement
+	 *                           points are needed to level
+	 * @see rpg.cyberpunk._2020.stats.SpecializedSkill#SpecializedSkill(Attribute,
+	 *      String, String, int, Restriction)
+	 */
 	public SpecializedSkill(Attribute attribute, String name, String description, int difficultyModifier) {
-		this(attribute, name, description, difficultyModifier, NullSkillRestriction.getInstance());
+		this(attribute, name, description, difficultyModifier, NullRestriction.getInstance());
 	}
 
+	/**
+	 * Constructs a skill that depends on an attribute and has a restriction.
+	 * 
+	 * @param attribute          the statistic used for calculating total skill
+	 *                           level
+	 * @param name               the identifier for this skill
+	 * @param description        a blurb giving an overview of what this skill
+	 *                           does/is
+	 * @param difficultyModifier a modifier used to multiply how many improvement
+	 *                           points are needed to level
+	 * @param restriction        a constraint used to prevent modification of a
+	 *                           skill
+	 */
 	public SpecializedSkill(Attribute attribute, String name, String description, int difficultyModifier,
-			SkillRestriction restriction) {
+			Restriction restriction) {
 		setName(name);
 		setDescription(description);
 		setRestriction(restriction);
@@ -52,7 +84,7 @@ public class SpecializedSkill implements CyberpunkSkill {
 		}
 	}
 
-	private void setRestriction(SkillRestriction restriction) {
+	private void setRestriction(Restriction restriction) {
 		if (restriction == null) {
 			throw new IllegalArgumentException("The field 'restriction' is not allowed to be null.");
 		} else {
@@ -164,11 +196,6 @@ public class SpecializedSkill implements CyberpunkSkill {
 	@Override
 	public int getNeededImprovementPoints() {
 		return neededImprovementPoints;
-	}
-
-	@Override
-	public CyberpunkSkill accept(SkillVisitor visitor) {
-		return visitor.visit(this);
 	}
 
 	@Override

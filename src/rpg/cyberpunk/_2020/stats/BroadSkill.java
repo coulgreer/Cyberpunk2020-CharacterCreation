@@ -2,19 +2,26 @@ package rpg.cyberpunk._2020.stats;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
+/**
+ * A skill used to label other skills. Simply, a placeholder used to categorize
+ * other skills used in a TreeNode structure.
+ * 
+ * @author Coul Greer
+ */
 public class BroadSkill implements CyberpunkSkill {
-	private Map<String, CyberpunkSkill> skills;
 	private String name;
 	private String description;
 
+	/**
+	 * Constructs a placeholder skill for categorization.
+	 * 
+	 * @param name        the identifier for this skill
+	 * @param description a blurb giving an overview of what this skill does/is
+	 */
 	public BroadSkill(String name, String description) {
 		setName(name);
 		setDescription(description);
-		skills = new HashMap<String, CyberpunkSkill>();
 	}
 
 	private void setName(String name) {
@@ -55,13 +62,7 @@ public class BroadSkill implements CyberpunkSkill {
 
 	@Override
 	public int getTotalValue() {
-		int totalValue = 0;
-		Iterator<Map.Entry<String, CyberpunkSkill>> iterator = getIterator();
-		while (iterator.hasNext()) {
-			CyberpunkSkill skill = iterator.next().getValue();
-			totalValue += skill.getTotalValue();
-		}
-		return totalValue;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -87,35 +88,6 @@ public class BroadSkill implements CyberpunkSkill {
 	@Override
 	public int getNeededImprovementPoints() {
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public CyberpunkSkill accept(SkillVisitor visitor) {
-		return visitor.visit(this);
-	}
-
-	// TODO Remove composite pattern methods due to the creation of TreeNode<T>
-	public void add(CyberpunkSkill skill) {
-		skills.put(skill.getName(), skill);
-	}
-
-	public void remove(CyberpunkSkill skill) {
-		skills.remove(skill.getName());
-	}
-
-	public CyberpunkSkill getChild(String skillName) {
-		SkillVisitor visitor = new GetSkillVisitor(skillName);
-		for (CyberpunkSkill skill : skills.values()) {
-			CyberpunkSkill child = skill.accept(visitor);
-			if (!(child.equals(NullSkill.getInstance()))) {
-				return child;
-			}
-		}
-		return NullSkill.getInstance();
-	}
-
-	public Iterator<Map.Entry<String, CyberpunkSkill>> getIterator() {
-		return skills.entrySet().iterator();
 	}
 
 	@Override

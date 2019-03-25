@@ -85,7 +85,7 @@ public final class SkillManager implements StatisticManager<CyberpunkSkill> {
 						+ " However, quthority is only as good as the guy holding the badge--if the cop appears uncertain of his Authority, there's a good chance he'll get nailed by the peoiple he's trying to confront." //
 						+ " The higher your Authority, the more able you are to face down criminals, particularly high level mobsters and officials." //
 						+ " Authority is applied to your Cool stat.",
-				new RoleSkillRestriction(Role.COP, player)));
+				new RoleRestriction(Role.COP, player)));
 		roleSkills.appendChild(CyberpunkSkill.CHARISMATIC_LEADERSHIP, new RoleSkill(cool,
 				CyberpunkSkill.CHARISMATIC_LEADERSHIP,
 				"This skill allows the Rocker to sway crowds equal to his level squared time 200." //
@@ -98,12 +98,12 @@ public final class SkillManager implements StatisticManager<CyberpunkSkill> {
 						+ " A Level +5 or +6 could provoke a concert crowd of thousands to trash a neighborhood, if the area wasn't too far from hall." //
 						+ " At Level +9, and higher, you have the same sort of mesmeric ability as an Adolph Hitler - you can raise armies, start movements." //
 						+ " And destroy nations.",
-				new RoleSkillRestriction(Role.ROCKERBOY, player)));
+				new RoleRestriction(Role.ROCKERBOY, player)));
 		roleSkills.appendChild(CyberpunkSkill.COMBAT_SENSE, new RoleSkill(CyberpunkSkill.COMBAT_SENSE,
 				"This ability is based on Solo's constant training and professionalism." //
 						+ " Combat Sense allows the Solo to perceive danger, notice traps, and have an almost unearthly ability to avoid harm." //
 						+ " Your Combat Sense gives you a bonus on both your Awareness skill and your Initiative equal to your level in the Combat Sense skill.",
-				new RoleSkillRestriction(Role.SOLO, player)));
+				new RoleRestriction(Role.SOLO, player)));
 		roleSkills.appendChild(CyberpunkSkill.CREDIBILITY, new RoleSkill(intelligence, CyberpunkSkill.CREDIBILITY,
 				"This is the ability to be believed: by your viewers, by the police, by important and powerful people." //
 						+ " This is critical to getting your story heard and acted upon, as well as convincing people to tell you things, give you information, or get you into where the story is really happening." //
@@ -112,7 +112,7 @@ public final class SkillManager implements StatisticManager<CyberpunkSkill> {
 						+ " With a level +5 or +6, you can convince local officials of military atrocities, undercover dealings and other front page stuff." //
 						+ " At level +9, you can successfully expose a scandal of Watergate proportions, or convince the President of the EuroMarket Finance Board that aliens are secretly influencing world leaders." //
 						+ " Credibility applies to your INT stat.",
-				new RoleSkillRestriction(Role.MEDIA, player)));
+				new RoleRestriction(Role.MEDIA, player)));
 		roleSkills.appendChild(CyberpunkSkill.FAMILY, new RoleSkill(intelligence, CyberpunkSkill.FAMILY,
 				"This is the ability to call upon the resources and help of any of the members of the Nomad's large, extended tribal family." //
 						+ " This can be in the form of weapons, cash, information, or a small army of relatives." //
@@ -122,24 +122,24 @@ public final class SkillManager implements StatisticManager<CyberpunkSkill> {
 						+ " With a status of +7 or +8, you are able to make major Pack decisions and lead troops." //
 						+ " At +10, you may be the Leader of your Pack." //
 						+ " Family is applied to your INT stat.",
-				new RoleSkillRestriction(Role.NOMAD, player)));
+				new RoleRestriction(Role.NOMAD, player)));
 		roleSkills.appendChild(CyberpunkSkill.INTERFACE, new RoleSkill(intelligence, CyberpunkSkill.INTERFACE,
 				"This skill reflects the Netrunner's ability to manipulate Interface programs," //
 						+ " and is the Skill used when operating Menu functions such as Locate Remote, Run Software, Control Remote, Downlink, Load, Create and Delete." //
 						+ " Other player can enter the Net, but cannot use the Menu." //
 						+ " Interface is based on the INT Stat." //
 						+ " Note for Cyberpunk 1 players--you may elect to swap your original INT and REF stats for characters generated with the old rule.",
-				new RoleSkillRestriction(Role.NETRUNNER, player)));
+				new RoleRestriction(Role.NETRUNNER, player)));
 		roleSkills.appendChild(CyberpunkSkill.JURY_RIG, new RoleSkill(CyberpunkSkill.JURY_RIG,
 				"This general repair skill allows the Techie to temporarily repair or alter anything for 1D6 turns per level of skill." //
 						+ " This is not a permanent repair; after the elapsed time, the jury rig will break down.",
-				new RoleSkillRestriction(Role.TECHIE, player)));
+				new RoleRestriction(Role.TECHIE, player)));
 		roleSkills.appendChild(CyberpunkSkill.MEDICAL_TECH, new RoleSkill(CyberpunkSkill.MEDICAL_TECH,
 				"This skill assumes that the character has studied medicine in a professional setting." //
 						+ " This gives him the ability to perform surgery, prescribe drugs, and know the proper treatment of injuries." //
 						+ " They can replace damaged organs with vatgrown pieces, graft on new limbs, or install cyberlimbs." //
 						+ " You cannot perform Medical Tech skills on yourself.",
-				new RoleSkillRestriction(Role.MEDTECH, player)));
+				new RoleRestriction(Role.MEDTECH, player)));
 		roleSkills.appendChild(CyberpunkSkill.RESOURCES, new RoleSkill(intelligence, CyberpunkSkill.RESOURCES,
 				"This represents the Corporate's ability to command corporation resources." //
 						+ " It is used as a persuasion skill, based on the scale of resources requested." //
@@ -150,7 +150,7 @@ public final class SkillManager implements StatisticManager<CyberpunkSkill> {
 						+ " An ability of +6 might allow you to use a Company jet or hire a Solo team from the Corporate Security Division." //
 						+ " A Resource of +9 would allow you access to almost all levels of the Corporation, as well as the ability to requisition almost any Company resource." //
 						+ " Your Resource ability is applied to your INT stat.",
-				new RoleSkillRestriction(Role.CORPORATE, player)));
+				new RoleRestriction(Role.CORPORATE, player)));
 		roleSkills.appendChild(CyberpunkSkill.STREETDEAL, new RoleSkill(cool, CyberpunkSkill.STREETDEAL,
 				"This is the ability to deal with the underground information network." //
 						+ " With Streetdeal, a Fixer can uncover rumors and information, locate missing persons or things, put gossip out on the Street, pick up clues and score big deals." //
@@ -159,7 +159,7 @@ public final class SkillManager implements StatisticManager<CyberpunkSkill> {
 						+ " At level +5, you can penetrate the secrets of all but the most powerful crime families." //
 						+ " At level +9, you are the equivalent of a Mafia crimelord yourself, privy to every secret that's on the Street." //
 						+ " Apply Streetdeal to your Cool stat.",
-				new RoleSkillRestriction(Role.FIXER, player)));
+				new RoleRestriction(Role.FIXER, player)));
 	}
 
 	private void initializeAttractivenessSkills() {
@@ -1120,7 +1120,7 @@ public final class SkillManager implements StatisticManager<CyberpunkSkill> {
 				new SpecializedSkill(intelligence, CyberpunkSkill.PHYSICS,
 						"The ability to calculate physical principles, such as gas pressure, mechanical energies, etc." //
 								+ " This skill requires a basic Mathematics Skill of +4.",
-						1, new SkillSkillRestriction(mathematics, 4)));
+						1, new SkillRestriction(mathematics, 4)));
 
 		/* Requires Chemistry >= 4 */
 		CyberpunkSkill chemistry = allSkills.getChild(CyberpunkSkill.CHEMISTRY).getData();
@@ -1130,7 +1130,7 @@ public final class SkillManager implements StatisticManager<CyberpunkSkill> {
 								+ " A minimum Chemistry skill of +4 is required." //
 								+ " At +4 you can make asprin. At +6, you can make hallucinogenics or antibiotics." //
 								+ " At level +9 you can build designer drugs tailored to individual body chemistries.",
-						2, new SkillSkillRestriction(chemistry, 4)));
+						2, new SkillRestriction(chemistry, 4)));
 	}
 
 	@Override

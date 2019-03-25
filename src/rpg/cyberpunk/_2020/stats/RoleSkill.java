@@ -5,8 +5,15 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 import rpg.general.stats.Attribute;
-import rpg.general.stats.SkillRestriction;
+import rpg.general.stats.Restriction;
 
+/**
+ * A skill that has no difficulty modifier and is enabled only when a specific
+ * requirement is met. The requirement usually points to a role that player has
+ * selected.
+ * 
+ * @author Coul Greer
+ */
 public class RoleSkill implements CyberpunkSkill {
 	private Attribute attribute;
 	private String name;
@@ -16,14 +23,35 @@ public class RoleSkill implements CyberpunkSkill {
 	private int difficultyModifier;
 	private int currentImprovementPoints;
 	private int neededImprovementPoints;
-	private SkillRestriction restriction;
+	private Restriction restriction;
 	private PropertyChangeSupport changeSupport;
 
-	public RoleSkill(String name, String description, SkillRestriction restriction) {
+	/**
+	 * Constructs a skill that does not require an attribute to get the total score.
+	 * 
+	 * @param name        the identifier for this skill
+	 * @param description a blurb giving an overview of what this skill does/is
+	 * @param restriction a constraint used to stop leveling until requirements are
+	 *                    met
+	 * @see rpg.cyberpunk._2020.stats.RoleSkill#RoleSkill(Attribute, String, String,
+	 *      Restriction)
+	 */
+	public RoleSkill(String name, String description, Restriction restriction) {
 		this(NullAttribute.getInstance(), name, description, restriction);
 	}
 
-	public RoleSkill(Attribute attribute, String name, String description, SkillRestriction restriction) {
+	/**
+	 * Constructs a skill that does not require an attribute to get the total score.
+	 * 
+	 * @param attribute   the statistic observed to calculate total value
+	 * @param name        the identifier for this skill
+	 * @param description a blurb giving an overview of what this skill does/is
+	 * @param restriction a constraint used to stop leveling until requirements are
+	 *                    met
+	 * @see rpg.cyberpunk._2020.stats.RoleSkill#RoleSkill(Attribute, String, String,
+	 *      Restriction)
+	 */
+	public RoleSkill(Attribute attribute, String name, String description, Restriction restriction) {
 		setName(name);
 		setDescription(description);
 		setRestriction(restriction);
@@ -52,7 +80,7 @@ public class RoleSkill implements CyberpunkSkill {
 		}
 	}
 
-	private void setRestriction(SkillRestriction restriction) {
+	private void setRestriction(Restriction restriction) {
 		if (restriction == null) {
 			throw new IllegalArgumentException("The field 'restriction' is not allowed to be null.");
 		} else {
@@ -158,11 +186,6 @@ public class RoleSkill implements CyberpunkSkill {
 	@Override
 	public int getNeededImprovementPoints() {
 		return neededImprovementPoints;
-	}
-
-	@Override
-	public CyberpunkSkill accept(SkillVisitor visitor) {
-		return visitor.visit(this);
 	}
 
 	@Override

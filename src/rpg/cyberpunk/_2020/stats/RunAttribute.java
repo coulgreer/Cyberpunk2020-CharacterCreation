@@ -6,6 +6,13 @@ import java.beans.PropertyChangeSupport;
 
 import rpg.general.stats.Attribute;
 
+/**
+ * A derived attribute representing the distance a character can run in a combat
+ * turn. Differs from the other derived attributes by the way it calculates its
+ * level/value.
+ *
+ * @author Coul Greer
+ */
 public class RunAttribute implements Attribute, PropertyChangeListener {
 	private String name;
 	private String description;
@@ -13,6 +20,14 @@ public class RunAttribute implements Attribute, PropertyChangeListener {
 	private int value;
 	private PropertyChangeSupport changeSupport;
 
+	/**
+	 * Constructs an attribute dependent on another attribute.
+	 * 
+	 * @param name            the identifier for this attribute
+	 * @param description     a blurb giving an overview of what this skill does/is
+	 * @param parentAttribute the attribute used to derive the distance that a
+	 *                        person can run in one turn
+	 */
 	public RunAttribute(String name, String description, Attribute parentStatistic) {
 		setName(name);
 		setDescription(description);

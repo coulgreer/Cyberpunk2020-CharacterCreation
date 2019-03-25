@@ -6,6 +6,15 @@ import java.beans.PropertyChangeSupport;
 
 import rpg.general.stats.Attribute;
 
+/**
+ * A derived attribute representing the amount of weight that can be carried.
+ * Differs from the other derived attributes by the way it calculates its
+ * level/value.
+ * 
+ * @author Coul Greer
+ * @see rpg.cyberpunk._2020.LeapAttribute
+ * @see rpg.cyberpunk._2020.RunAttribute
+ */
 public class CarryAttribute implements Attribute, PropertyChangeListener {
 	private String name;
 	private String description;
@@ -13,6 +22,14 @@ public class CarryAttribute implements Attribute, PropertyChangeListener {
 	private int value;
 	private PropertyChangeSupport changeSupport;
 
+	/**
+	 * Constructs an attribute dependent on another attribute.
+	 * 
+	 * @param name            the identifier for this attribute
+	 * @param description     a blurb giving an overview of what this skill does/is
+	 * @param parentAttribute the attribute used to derive the weight that a person
+	 *                        can carry
+	 */
 	public CarryAttribute(String name, String description, Attribute parentAttribute) {
 		setName(name);
 		setDescription(description);

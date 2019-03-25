@@ -1,6 +1,5 @@
 package rpg.cyberpunk._2020.stats;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -24,21 +23,11 @@ public class BroadSkillTest {
 	@Before
 	public void setUp() {
 		broadSkill = new BroadSkill(CyberpunkSkill.MARTIAL_ART, "A parent skill.");
-		broadSkill.add(new SpecializedSkill(mockAttribute, CyberpunkSkill.AIKIDO, "", 1));
-		broadSkill.add(new SpecializedSkill(mockAttribute, CyberpunkSkill.ANIMAL_KUNG_FU, "", 1));
-		broadSkill.add(new SpecializedSkill(mockAttribute, CyberpunkSkill.CAPOERIA, "", 1));
-		broadSkill.add(new SpecializedSkill(mockAttribute, CyberpunkSkill.JUDO, "", 1));
-		broadSkill.add(new SpecializedSkill(mockAttribute, CyberpunkSkill.KARATE, "", 1));
 	}
 
 	@After
 	public void tearDown() {
 		broadSkill = null;
-	}
-
-	@Test
-	public void testGettingNonexistantChildReturnsNullCyberpunkSkill() {
-		assertEquals(NullSkill.getInstance(), broadSkill.getChild(null));
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

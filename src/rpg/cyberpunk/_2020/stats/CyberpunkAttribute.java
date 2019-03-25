@@ -5,6 +5,11 @@ import java.beans.PropertyChangeSupport;
 
 import rpg.general.stats.Attribute;
 
+/**
+ * An attribute that represents a basic character statistic from Cyberpunk 2020.
+ * 
+ * @author Coul Greer
+ */
 public class CyberpunkAttribute implements Attribute {
 
 	// Attribute names
@@ -22,8 +27,14 @@ public class CyberpunkAttribute implements Attribute {
 	public static final String BODY_TYPE = "Body Type";
 	public static final String CARRY = "Carry";
 
-	// TODO Write JavaDoc for entire class
+	/**
+	 * The lowest level that this attribute can be at.
+	 */
 	public static final int MIN_LEVEL = 2;
+
+	/**
+	 * The highest level that this attribute can reach.
+	 */
 	public static final int MAX_LEVEL = 10;
 
 	private String name;
@@ -31,6 +42,13 @@ public class CyberpunkAttribute implements Attribute {
 	private int level;
 	private PropertyChangeSupport changeSupport;
 
+	/**
+	 * Constructs a statistic with a name and description that starts at the minimum
+	 * level.
+	 * 
+	 * @param name        the identifier for this attribute
+	 * @param description a blurb giving an overview of what this skill does/is
+	 */
 	public CyberpunkAttribute(String name, String description) {
 		this.name = name;
 		this.description = description;

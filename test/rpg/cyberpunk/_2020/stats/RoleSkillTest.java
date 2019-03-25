@@ -8,18 +8,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import rpg.general.stats.Attribute;
-import rpg.general.stats.SkillRestriction;
+import rpg.general.stats.Restriction;
 
 public class RoleSkillTest {
 	private static Attribute mockAttribute;
-	private static SkillRestriction mockSkillRestriction;
+	private static Restriction mockSkillRestriction;
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		mockAttribute = mock(Attribute.class);
 		when(mockAttribute.getModifier()).thenReturn(2);
 
-		mockSkillRestriction = mock(SkillRestriction.class);
+		mockSkillRestriction = mock(Restriction.class);
 		when(mockSkillRestriction.isRestricted()).thenReturn(false);
 	}
 

@@ -3,14 +3,26 @@ package rpg.cyberpunk._2020.stats;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import rpg.general.stats.SkillRestriction;
+import rpg.general.stats.Restriction;
 
-public class SkillSkillRestriction implements SkillRestriction, PropertyChangeListener {
+/**
+ * A restriction that uses a skill to dictate if another object is or is not
+ * limited in its abilities.
+ * 
+ * @author Coul Greer
+ */
+public class SkillRestriction implements Restriction, PropertyChangeListener {
 	private CyberpunkSkill skill;
 	private int minimumLevel;
 	private boolean isRestricted;
 
-	public SkillSkillRestriction(CyberpunkSkill skill, int minimumLevel) {
+	/**
+	 * Constructs a limit that uses a skill and a minimum level.
+	 * 
+	 * @param skill        the object to watch and get level from
+	 * @param minimumLevel the lowest score that a level can be for the given skill
+	 */
+	public SkillRestriction(CyberpunkSkill skill, int minimumLevel) {
 		setSkill(skill);
 		setMinimumLevel(minimumLevel);
 		setRestricted(!hasMetMinimumLevel());

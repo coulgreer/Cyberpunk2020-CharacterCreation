@@ -4,14 +4,26 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import rpg.Player;
-import rpg.general.stats.SkillRestriction;
+import rpg.general.stats.Restriction;
 
-public class RoleSkillRestriction implements SkillRestriction, PropertyChangeListener {
+/**
+ * A restriction that uses a role to dictate if another object is or is not
+ * limited in its abilities.
+ * 
+ * @author Coul Greer
+ */
+public class RoleRestriction implements Restriction, PropertyChangeListener {
 	private Role role;
 	private Player player;
 	private boolean isRestricted;
 
-	public RoleSkillRestriction(Role role, Player player) {
+	/**
+	 * Constructs a limit that observers a player to see if it has the given role.
+	 * 
+	 * @param role   the duty that a player needs in order to lift the restriction
+	 * @param player the object to observe for the given role
+	 */
+	public RoleRestriction(Role role, Player player) {
 		setRole(role);
 		setPlayer(player);
 		setRestricted(!hasRole());

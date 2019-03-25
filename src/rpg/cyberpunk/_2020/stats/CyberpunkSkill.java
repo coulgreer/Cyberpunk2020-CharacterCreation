@@ -11,7 +11,7 @@ import rpg.general.stats.Skill;
  * 
  * @author Coul Greer
  */
-public interface CyberpunkSkill extends Skill, SkillVisitable {
+public interface CyberpunkSkill extends Skill {
 	// Default Skill
 	public static final String NONE = "None";
 
