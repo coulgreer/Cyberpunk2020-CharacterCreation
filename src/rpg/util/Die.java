@@ -1,6 +1,8 @@
 package rpg.util;
 
-public class Die implements Comparable<Die> {
+import java.io.Serializable;
+
+public class Die implements Comparable<Die>, Serializable {
 	protected static final int MIN_NUMBER_OF_DICE = 0;
 	protected static final int MIN_NUMBER_OF_FACES = 1;
 	protected static final int MIN_DIVIDEND = 1;

@@ -1,8 +1,14 @@
 package rpg.util;
 
-public class Probability {
+import java.io.Serializable;
+
+public class Probability implements Serializable {
 	private Die die;
 	private int modifier;
+
+	public Probability() {
+		this(new Die(0, 0), 0);
+	}
 
 	public Probability(Die die, int modifier) {
 		this.die = die;
@@ -11,6 +17,10 @@ public class Probability {
 
 	public Die getDice() {
 		return die;
+	}
+
+	public void setDice(Die die) {
+		this.die = die;
 	}
 
 	public int getModifier() {

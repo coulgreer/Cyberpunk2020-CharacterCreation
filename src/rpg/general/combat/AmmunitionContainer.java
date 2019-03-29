@@ -1,9 +1,10 @@
 package rpg.general.combat;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface AmmunitionContainer {
+public interface AmmunitionContainer extends Serializable {
 	public static final int EMPTY = 0;
 
 	/**

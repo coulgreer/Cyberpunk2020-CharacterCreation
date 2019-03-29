@@ -1,5 +1,15 @@
 package rpg.general.stats;
 
+/**
+ * A data structure outline for using a collection of statistics from a table
+ * top rpg. Examples of statistics are attributes and skills which are allowed
+ * to have levels changed and get their name and description.
+ * 
+ * @author Coul Greer
+ *
+ * @param <T> an object that implements statistic and has a level value to be
+ *        manipulated
+ */
 public interface StatisticManager<T extends Statistic> {
 
 	/**

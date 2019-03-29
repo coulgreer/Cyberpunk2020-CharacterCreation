@@ -6,6 +6,13 @@ import java.util.Map;
 import rpg.general.stats.Attribute;
 import rpg.general.stats.StatisticManager;
 
+/**
+ * A data structure that contains attributes. This structure delegates all basic
+ * tasks to the underlying collection and also allows access to the underlying
+ * elements directly for complex operations.
+ * 
+ * @author Coul Greer
+ */
 public class AttributeManager implements StatisticManager<Attribute> {
 	private Map<String, Attribute> attributes;
 	private Attribute intelligence;
@@ -105,6 +112,7 @@ public class AttributeManager implements StatisticManager<Attribute> {
 		attributes.remove(name);
 	}
 
+	@Override
 	public Attribute getStatistic(String name) {
 		return attributes.get(name);
 	}

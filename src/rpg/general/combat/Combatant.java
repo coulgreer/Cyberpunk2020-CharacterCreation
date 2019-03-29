@@ -1,10 +1,11 @@
 package rpg.general.combat;
 
+import java.io.Serializable;
 import java.util.List;
 
 import rpg.util.Probability;
 
-public interface Combatant {
+public interface Combatant extends Serializable {
 	/**
 	 * Equips a weapon to a combatants slot while returning the old weapon.
 	 * 

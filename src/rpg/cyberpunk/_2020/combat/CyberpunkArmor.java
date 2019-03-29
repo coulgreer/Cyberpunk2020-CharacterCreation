@@ -1,6 +1,5 @@
 package rpg.cyberpunk._2020.combat;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,11 +11,7 @@ import rpg.general.combat.BodyLocation;
 import rpg.general.combat.Protective;
 import rpg.general.commerce.Item;
 
-public class CyberpunkArmor implements Protective, Item, Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1511256497126217581L;
+public class CyberpunkArmor implements Protective, Item {
 	
 	public static final String ARMOR_TYPE_SOFT = "Soft Armor";
 	public static final String ARMOR_TYPE_HARD = "Hard Armor";

@@ -1,10 +1,8 @@
 package rpg.general.combat;
 
-import java.io.Serializable;
-
 import rpg.general.commerce.Item;
 
-public interface Ammunition extends Item, Serializable {
+public interface Ammunition extends Item {
 	public static final String DEFAULT_AMMUNITION_TYPE = "None";
 	public static final double WEIGHT_OF_BOX = 0.5;
 

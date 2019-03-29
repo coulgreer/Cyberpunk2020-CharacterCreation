@@ -1,6 +1,8 @@
 package rpg.general.commerce;
 
-public interface Item extends Tradeable {
+import java.io.Serializable;
+
+public interface Item extends Tradeable, Serializable {
 	/**
 	 * Gets the name of this product.
 	 * 

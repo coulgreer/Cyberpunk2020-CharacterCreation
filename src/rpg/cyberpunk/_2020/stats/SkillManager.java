@@ -8,7 +8,7 @@ import rpg.util.TreeNode;
 /**
  * A data structure that contains skills. This structure delegates all basic
  * skill tasks to underlying collection and also allows access to the underlying
- * elements directly.
+ * elements directly for complex operations.
  * 
  * @author Coul Greer
  */

@@ -1,16 +1,12 @@
 package rpg.cyberpunk._2020.combat;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import rpg.general.combat.Weapon;
 import rpg.util.Die;
 
-public abstract class CyberpunkWeapon implements Weapon, Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6029022101698122763L;
+public abstract class CyberpunkWeapon implements Weapon {
+	// TODO Document class.
 
 	public enum Availability {
 		UNAVAILABLE("N/A"), //
