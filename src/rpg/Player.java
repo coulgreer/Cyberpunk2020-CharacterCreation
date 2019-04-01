@@ -25,6 +25,9 @@ import rpg.general.stats.StatisticManager;
 import rpg.util.Probability;
 
 public class Player {
+	public static final String PROPERTY_NAME_MONEY = "Money";
+	public static final String PROPERTY_NAME_INVENTORY_WEIGHT = "Inventory";
+	public static final String PROPERTY_NAME_INVENTORY_WEAPON_ADDED = "Inventory: Weapon Added";
 	public static final String PROPERTY_NAME_ROLE = "Role";
 
 	private PropertyChangeSupport changeSupport;
@@ -123,7 +126,12 @@ public class Player {
 	}
 
 	public void addToInventory(CyberpunkWeapon weapon) {
+		double oldWeight = getTotalWeight();
+
 		pocketInventory.add(weapon);
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_ADDED, null, weapon);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
 	}
 
 	public void addToInventory(CyberpunkArmor armor) {
@@ -162,6 +170,10 @@ public class Player {
 		return pocketInventory.createItemSet();
 	}
 
+	public double getTotalWeight() {
+		return pocketInventory.getTotalWeight() + equippedInventory.getTotalWeight();
+	}
+
 	public boolean canBuy(double price) {
 		return trader.canBuy(price);
 	}
@@ -172,18 +184,22 @@ public class Player {
 	}
 
 	public void buy(CyberpunkWeapon weapon, double price) {
+		double oldMoney = trader.getMoney();
+
 		trader.buy(price);
-		pocketInventory.add(weapon);
+		addToInventory(weapon);
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
 	}
 
 	public void buy(CyberpunkArmor armor, double price) {
 		trader.buy(price);
-		pocketInventory.add(armor);
+		addToInventory(armor);
 	}
 
 	public void buy(Ammunition ammunition, double price) {
 		trader.buy(price);
-		pocketInventory.add(ammunition);
+		addToInventory(ammunition);
 	}
 
 	public void sell(CyberpunkWeapon weapon, double price) {

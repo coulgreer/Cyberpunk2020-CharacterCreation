@@ -6,9 +6,18 @@ import java.util.Map;
 
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 
+/**
+ * Compares weapon types provided by CyberpunkWeapon.
+ * 
+ * @author Coul Greer
+ */
 public class WeaponTypeComparator implements Comparator<String> {
 	private Map<String, Integer> orderedDictionary;
 
+	/**
+	 * Constructs a comparator that has an ordered dictionary giving numerical
+	 * values to all weapon types that is then used to compare one type to another.
+	 */
 	public WeaponTypeComparator() {
 		orderedDictionary = new HashMap<>();
 		orderedDictionary.put(CyberpunkWeapon.DEFAULT_WEAPON_TYPE, 0);

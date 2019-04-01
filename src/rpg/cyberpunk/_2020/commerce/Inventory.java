@@ -1,6 +1,7 @@
 package rpg.cyberpunk._2020.commerce;
 
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.util.Set;
 
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
@@ -19,7 +20,7 @@ import rpg.general.commerce.Item;
  * 
  * @author Coul Greer
  */
-public interface Inventory {
+public interface Inventory extends Serializable {
 	/**
 	 * Name of the property to listen to that represents total weight. Used for
 	 * PropertyChangeEvent.
@@ -148,6 +149,13 @@ public interface Inventory {
 	 * @return the sum of all the weight from the held items
 	 */
 	public double getTotalWeight();
+
+	/**
+	 * Returns the total count of items stored.
+	 * 
+	 * @return the total count of items stored
+	 */
+	public int size();
 
 	/**
 	 * Add a PropertyChangeListener to the listener list. The listener is registered

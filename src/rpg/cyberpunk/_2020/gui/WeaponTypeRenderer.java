@@ -11,11 +11,21 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 
+/**
+ * A renderer that converts a String into an icon.
+ * 
+ * @author Coul Greer
+ */
 public class WeaponTypeRenderer extends DefaultTableCellRenderer {
 	public static final int ICON_HEIGHT = 28;
 
+	/**
+	 * Constructs a renderer that centers its data elements.
+	 */
 	public WeaponTypeRenderer() {
 		super();
+
+		setHorizontalAlignment(CENTER);
 	}
 
 	@Override
@@ -44,6 +54,9 @@ public class WeaponTypeRenderer extends DefaultTableCellRenderer {
 		case CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON:
 			imgAddress = "img/ICONS/melee-512.png";
 			break;
+		case CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON:
+			imgAddress = "img/ICONS/explosive-512.png";
+			break;
 		case CyberpunkWeapon.WEAPON_TYPE_UNARMED:
 			imgAddress = "img/ICONS/fist-512.png";
 			break;
@@ -61,7 +74,6 @@ public class WeaponTypeRenderer extends DefaultTableCellRenderer {
 
 		Image img = bufferedImg.getScaledInstance(ICON_HEIGHT, ICON_HEIGHT, Image.SCALE_SMOOTH);
 
-		setHorizontalAlignment(CENTER);
 		setIcon(new ImageIcon(img));
 	}
 

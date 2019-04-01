@@ -34,8 +34,6 @@ public class CyberpunkVendor {
 	}
 
 	private void addWeaponsToVendor() {
-		// TODO Add inventory from Playerbook.
-
 		// Light Pistols
 		Set<String> lightPistolAttachmentPoints = new HashSet<String>();
 		lightPistolAttachmentPoints.add(CyberpunkWeaponModifier.ATTACHMENT_POINT_BARREL);
@@ -106,7 +104,8 @@ public class CyberpunkVendor {
 		lightSMGAttachmentPoints.add(CyberpunkWeaponModifier.ATTACHMENT_POINT_GRIP);
 
 		startingInventory.add(new MissileWeapon("Uzi Miniauto 9",
-				"Uzi's entry into the 21st century, all plastic, with a rotarty electric clip and adjustable trigger. The choice for many security Solos.",
+				"Uzi's entry into the 21st century, all plastic, with a rotarty electric clip and adjustable trigger. "
+						+ "The choice for many security Solos.",
 				CyberpunkWeapon.WEAPON_TYPE_LIGHT_SUBMACHINEGUN, 1, Concealability.JACKET, Availability.EXCELLENT,
 				new Probability(new Die(2, 6), 1), new HomogeneousMagazine(Cartridge.AMMUNITION_TYPE_9MM, 30), 35,
 				Reliability.VERY_RELIABLE, 150, 475.0, 3.0, lightSMGAttachmentPoints));
@@ -140,7 +139,8 @@ public class CyberpunkVendor {
 				new Probability(new Die(3, 6), 0), new HomogeneousMagazine(Cartridge.AMMUNITION_TYPE_11MM, 30), 15,
 				Reliability.VERY_RELIABLE, 200, 500.0, 3.0, lightSMGAttachmentPoints));
 		startingInventory.add(new MissileWeapon("H&K MPK-11",
-				"Possibly the most used Solo's gun in existence, the MPK-11 can be modified into four different designs, including a bullpup configuration, standard SMG, an assault carbine, and a grenade launcher mount.",
+				"Possibly the most used Solo's gun in existence, the MPK-11 can be modified into four different designs, "
+						+ "including a bullpup configuration, standard SMG, an assault carbine, and a grenade launcher mount.",
 				CyberpunkWeapon.WEAPON_TYPE_HEAVY_SUBMACHINEGUN, 0, Concealability.LONG_COAT, Availability.COMMON,
 				new Probability(new Die(4, 6), 1), new HomogeneousMagazine(Cartridge.AMMUNITION_TYPE_12MM, 30), 20,
 				Reliability.STANDARD, 200, 700.0, 3.0, lightSMGAttachmentPoints));
@@ -184,7 +184,8 @@ public class CyberpunkVendor {
 		shotgunAttachmentPoints.add(CyberpunkWeaponModifier.ATTACHMENT_POINT_GRIP);
 
 		startingInventory.add(new MissileWeapon("Araska Rapid Assault 12",
-				"A high powered auto-shotgun with lethal firepower. Used by Arasaka worldwide. Another good reason to avoid the Boys in Black.",
+				"A high powered auto-shotgun with lethal firepower. Used by Arasaka worldwide. Another good reason to "
+						+ "avoid the Boys in Black.",
 				CyberpunkWeapon.WEAPON_TYPE_SHOTGUN, -1, Concealability.CANNOT_HIDE, Availability.COMMON,
 				new Probability(new Die(4, 6), 0), new HomogeneousMagazine(Cartridge.AMMUNITION_TYPE_12_GAUGE, 20), 10,
 				Reliability.STANDARD, 50, 900.0, 3.0, shotgunAttachmentPoints));
@@ -196,7 +197,8 @@ public class CyberpunkVendor {
 
 		// Heavy Weapons
 		startingInventory.add(new MissileWeapon("Barrett-Arasaka Light 20mm",
-				"The cyberpsycho hunter's favorite. Almost 2 meters long, this \"cannon\" fires a depleted uranium shell at supersonic speeds. Heavy AP sub-caliber penetrator damages armor 2pts/hit.",
+				"The cyberpsycho hunter's favorite. Almost 2 meters long, this \"cannon\" fires a depleted uranium shell "
+						+ "at supersonic speeds. Heavy AP sub-caliber penetrator damages armor 2pts/hit.",
 				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.CANNOT_HIDE, Availability.RARE,
 				new Probability(new Die(4, 10), 0), new HomogeneousMagazine(Cartridge.AMMUNITION_TYPE_20MM, 10), 1,
 				Reliability.VERY_RELIABLE, 450, 2000.0, 15.0, shotgunAttachmentPoints));
@@ -206,27 +208,67 @@ public class CyberpunkVendor {
 				new Probability(new Die(7, 10), 0), new HomogeneousMagazine(Cartridge.DEFAULT_AMMUNITION_TYPE, 1), 1,
 				Reliability.VERY_RELIABLE, 1000, 3000.0, 15.0, shotgunAttachmentPoints));
 		startingInventory.add(new MissileWeapon("Militech Arms RPG-A",
-				"Shoulder-mounted, rocket-powered grenade launcher. Heavily used in the Central American conflicts under the name RPG-A.",
+				"Shoulder-mounted, rocket-powered grenade launcher. Heavily used in the Central American conflicts under "
+						+ "the name RPG-A.",
 				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, -2, Concealability.CANNOT_HIDE, Availability.RARE,
 				new Probability(new Die(6, 10), 0), new HomogeneousMagazine(Cartridge.DEFAULT_AMMUNITION_TYPE, 1), 1,
 				Reliability.VERY_RELIABLE, 750, 1500.0, 10.0, shotgunAttachmentPoints));
-		// TODO Add descriptions to grenades
-		startingInventory
-		.add(new ThrownWeapon("Fragmentation Grenade", "", CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET,
-				Availability.POOR, new Probability(new Die(7, 6), 0), Reliability.VERY_RELIABLE, 0.5, 30.0));
-		startingInventory
-		.add(new ThrownWeapon("Incendiary Grenade", "", CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET,
-				Availability.POOR, new Probability(new Die(4, 6), 0), Reliability.VERY_RELIABLE, 0.5, 30.0));
-		// TODO Update the proceeding thrown weapons to be unique grenades
-		startingInventory
-		.add(new ThrownWeapon("Grenade", "", CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET,
-				Availability.POOR, new Probability(new Die(0, 0), 0), Reliability.VERY_RELIABLE, 0.5, 30.0));
-		startingInventory
-		.add(new ThrownWeapon("Grenade", "", CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET,
-				Availability.POOR, new Probability(new Die(0, 0), 0), Reliability.VERY_RELIABLE, 0.5, 30.0));
-		startingInventory
-		.add(new ThrownWeapon("Grenade", "", CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET,
-				Availability.POOR, new Probability(new Die(0, 0), 0), Reliability.VERY_RELIABLE, 0.5, 30.0));
+		startingInventory.add(new ThrownWeapon("Fragmentation Grenade",
+				"A grenade that launches shrapnel on detonation dealing damage in an area.",
+				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
+				new Probability(new Die(7, 6), 0), Reliability.VERY_RELIABLE, 0.5, 30.0));
+		startingInventory.add(new ThrownWeapon("Incendiary Grenade",
+				"This grenade does 4D6 damage for 3 turns to all targets within 5 meters, and sets fires very well. "
+						+ "Damage is done by fragments of white phosphorous. Any soft armor attacked is reduced 2SP per round.",
+				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
+				new Probability(new Die(4, 6), 0), Reliability.VERY_RELIABLE, 0.5, 30.0));
+		startingInventory.add(new ThrownWeapon("Stun Grenade",
+				"A grenade that, when detonated, causes temporary vision and hearing loss as well as loss of balance.",
+				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
+				new Probability(new Die(0, 0), 0), Reliability.VERY_RELIABLE, 0.5, 30.0));
+		startingInventory.add(new ThrownWeapon("Dazzle Grenade",
+				"A grenade that emits infrared and visual lights to cause temporary vision loss for organic and "
+						+ "mechanical targets.",
+				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
+				new Probability(new Die(0, 0), 0), Reliability.VERY_RELIABLE, 0.5, 30.0));
+		startingInventory.add(new ThrownWeapon("Sonic Grenade",
+				"An experimental type, popular in the EuroThater. Essentially, a mini-voder box, with a 1-second play "
+						+ "time and a one-use power source that fuses the unit into a lump. The burst of high decibels mixed with"
+						+ " super- or sub-sonics causes all within a 6m radius to make a Stun Save at +1; if the save is made, "
+						+ "make a Difficult BOD check or suffer deafness and disorientation (-2 all skill rolls) for 40 seconds. "
+						+ "Noise-resistant headphones and various editing cyberaudio options allow you to resist the effects.",
+				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
+				new Probability(new Die(0, 0), 0), Reliability.VERY_RELIABLE, 0.5, 30.0));
+		// TODO A description to proceeding grenades
+		startingInventory.add(new ThrownWeapon("Nausea Grenade",
+				"Causes Illness in a 3m radius resulting in -4 REF. On a successful Save, take half the effects.",
+				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
+				new Probability(new Die(0, 0), 0), Reliability.VERY_RELIABLE, 0.5, 30.0));
+		startingInventory.add(new ThrownWeapon("Teargas Grenade",
+				"Tear gas causes tearing & -2 REF in a 10m radius. On a successful Save, take half the effects.",
+				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
+				new Probability(new Die(0, 0), 0), Reliability.VERY_RELIABLE, 0.5, 30.0));
+		startingInventory.add(new ThrownWeapon("Sleep Grenade",
+				"Causes sleep. On a successful Save, causes drowsiness (-2 to all stats).",
+				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
+				new Probability(new Die(0, 0), 0), Reliability.VERY_RELIABLE, 0.5, 30.0));
+		startingInventory.add(new ThrownWeapon("Biotoxin I Grenade", "", CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0,
+				Concealability.POCKET, Availability.POOR, new Probability(new Die(0, 0), 0), Reliability.VERY_RELIABLE,
+				0.5, 30.0));
+		startingInventory.add(new ThrownWeapon("Biotoxin II Grenade", "", CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0,
+				Concealability.POCKET, Availability.POOR, new Probability(new Die(0, 0), 0), Reliability.VERY_RELIABLE,
+				0.5, 30.0));
+		startingInventory.add(new ThrownWeapon("Nerve Gas Grenade", "", CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0,
+				Concealability.POCKET, Availability.POOR, new Probability(new Die(0, 0), 0), Reliability.VERY_RELIABLE,
+				0.5, 30.0));
+		// TODO end of todo
+		startingInventory.add(new MissileWeapon("Grenade Launchers",
+				"These come from manufacturers worldwide, and may be attached to any assault rifle (under the barrel). "
+						+ "Some can be given a simple shoulder stock for separate use.",
+				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.LONG_COAT, Availability.RARE,
+				new Probability(new Die(0, 0), 0), new HomogeneousMagazine(Cartridge.AMMUNITION_TYPE_GRENADE, 1), 1,
+				Reliability.STANDARD, 225, 150.0, 3, shotgunAttachmentPoints));
+		// TODO Add mines to the vendor inventory.
 	}
 
 	public CyberpunkWeapon sellWeapon(CyberpunkWeapon weapon) {

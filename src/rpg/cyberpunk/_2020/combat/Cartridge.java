@@ -20,6 +20,7 @@ public class Cartridge implements Ammunition {
 	public static final String AMMUNITION_TYPE_762 = "7.62";
 	public static final String AMMUNITION_TYPE_12_GAUGE = "12ga";
 	public static final String AMMUNITION_TYPE_20MM = "20mm";
+	public static final String AMMUNITION_TYPE_GRENADE = "Grenade";
 	public static final int AMMO_PER_BOX = 10;
 
 	public static enum CaseMaterial {

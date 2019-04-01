@@ -143,6 +143,11 @@ public class BottomlessInventory implements Inventory {
 	}
 
 	@Override
+	public int size() {
+		return items.size();
+	}
+
+	@Override
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		changeSupport.addPropertyChangeListener(listener);
 	}
