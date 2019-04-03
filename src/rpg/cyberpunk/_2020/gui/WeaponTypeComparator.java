@@ -20,7 +20,7 @@ public class WeaponTypeComparator implements Comparator<String> {
 	 */
 	public WeaponTypeComparator() {
 		orderedDictionary = new HashMap<>();
-		orderedDictionary.put(CyberpunkWeapon.DEFAULT_WEAPON_TYPE, 0);
+		orderedDictionary.put(CyberpunkWeapon.NO_WEAPON_TYPE, 0);
 		orderedDictionary.put(CyberpunkWeapon.WEAPON_TYPE_LIGHT_PISTOL, 1);
 		orderedDictionary.put(CyberpunkWeapon.WEAPON_TYPE_MEDIUM_PISTOL, 2);
 		orderedDictionary.put(CyberpunkWeapon.WEAPON_TYPE_HEAVY_PISTOL, 3);

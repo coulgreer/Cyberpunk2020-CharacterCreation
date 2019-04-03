@@ -14,12 +14,8 @@ import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
 import rpg.util.Probability;
 
-public class MissileWeapon extends CyberpunkWeapon {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8061754554621958209L;
-	
+public class Bow extends CyberpunkWeapon {
+
 	private String weaponName;
 	private String description;
 	private String weaponType;
@@ -38,46 +34,13 @@ public class MissileWeapon extends CyberpunkWeapon {
 	private Map<String, WeaponAttachment> attachments;
 	private Combatant combatant;
 
-	public MissileWeapon(String weaponName, String description, String weaponType, int weaponAccuracy,
-			Concealability concealability, Availability availability, Probability damage,
-			AmmunitionContainer ammunitionContainer, int rateOfFire, Reliability reliability, int rangeModifier,
-			double cost, double weight, Set<String> attachmentPoints) {
-		this(weaponName, description, weaponType, parseSkillFromWeaponType(weaponType), weaponAccuracy, concealability,
-				availability, damage, ammunitionContainer, rateOfFire, reliability, rangeModifier, cost, weight,
-				attachmentPoints);
-	}
-
-	private static String parseSkillFromWeaponType(String weaponType) {
-		switch (weaponType) {
-		case WEAPON_TYPE_LIGHT_PISTOL:
-		case WEAPON_TYPE_MEDIUM_PISTOL:
-		case WEAPON_TYPE_HEAVY_PISTOL:
-		case WEAPON_TYPE_VERY_HEAVY_PISTOL:
-			return CyberpunkSkill.HANDGUN;
-		case WEAPON_TYPE_LIGHT_SUBMACHINEGUN:
-		case WEAPON_TYPE_MEDIUM_SUBMACHINEGUN:
-		case WEAPON_TYPE_HEAVY_SUBMACHINEGUN:
-			return CyberpunkSkill.SUBMACHINEGUN;
-		case WEAPON_TYPE_RIFLE:
-		case WEAPON_TYPE_SHOTGUN:
-			return CyberpunkSkill.RIFLE;
-		case WEAPON_TYPE_HEAVY_WEAPON:
-			return CyberpunkSkill.HEAVY_WEAPONS;
-		case WEAPON_TYPE_MELEE_WEAPON:
-			return CyberpunkSkill.MELEE;
-		default:
-			return CyberpunkSkill.NONE;
-		}
-	}
-
-	public MissileWeapon(String weaponName, String description, String weaponType, String skillName, int weaponAccuracy,
-			Concealability concealability, Availability availability, Probability damage,
-			AmmunitionContainer ammunitionContainer, int rateOfFire, Reliability reliability, int rangeModifier,
-			double cost, double weight, Set<String> attachmentPoints) {
+	public Bow(String weaponName, String description, int weaponAccuracy, Concealability concealability,
+			Availability availability, Probability damage, AmmunitionContainer ammunitionContainer, int rateOfFire,
+			Reliability reliability, int rangeModifier, double cost, double weight, Set<String> attachmentPoints) {
 		setWeaponName(weaponName);
 		setDescription(description);
-		setWeaponType(weaponType);
-		setSkillName(skillName);
+		this.weaponType = CyberpunkWeapon.WEAPON_TYPE_BOW;
+		this.skillName = CyberpunkSkill.ARCHERY;
 		this.weaponAccuracy = weaponAccuracy;
 		setConcealability(concealability);
 		setAvailability(availability);
@@ -86,10 +49,10 @@ public class MissileWeapon extends CyberpunkWeapon {
 		setRateOfFire(rateOfFire);
 		setReliability(reliability);
 		setRangeModifier(rangeModifier);
-		setCost(cost);
 		setWeight(weight);
+		setCost(cost);
 		setAttachmentsAndAttachmentPoints(attachmentPoints);
-		combatant = NullCombatant.getInstance();
+		this.combatant = NullCombatant.getInstance();
 	}
 
 	private void setWeaponName(String weaponName) {
@@ -103,22 +66,6 @@ public class MissileWeapon extends CyberpunkWeapon {
 	private void setDescription(String description) {
 		if (description != null) {
 			this.description = description;
-		} else {
-			throw new IllegalArgumentException();
-		}
-	}
-
-	private void setWeaponType(String weaponType) {
-		if (weaponType != null) {
-			this.weaponType = weaponType;
-		} else {
-			throw new IllegalArgumentException();
-		}
-	}
-
-	private void setSkillName(String skillName) {
-		if (skillName != null) {
-			this.skillName = skillName;
 		} else {
 			throw new IllegalArgumentException();
 		}
@@ -140,17 +87,17 @@ public class MissileWeapon extends CyberpunkWeapon {
 		}
 	}
 
-	private void setDamage(Probability damage) {
-		if (damage != null) {
-			this.damage = damage;
+	private void setAmmunitionContainer(AmmunitionContainer ammunitionContainer) {
+		if (ammunitionContainer != null) {
+			this.ammunitionContainer = ammunitionContainer;
 		} else {
 			throw new IllegalArgumentException();
 		}
 	}
 
-	private void setAmmunitionContainer(AmmunitionContainer ammunitionContainer) {
-		if (ammunitionContainer != null) {
-			this.ammunitionContainer = ammunitionContainer;
+	private void setDamage(Probability damage) {
+		if (damage != null) {
+			this.damage = damage;
 		} else {
 			throw new IllegalArgumentException();
 		}
@@ -180,14 +127,6 @@ public class MissileWeapon extends CyberpunkWeapon {
 		}
 	}
 
-	private void setCost(double cost) {
-		if (cost >= 0.0) {
-			this.cost = cost;
-		} else {
-			throw new IllegalArgumentException();
-		}
-	}
-
 	private void setWeight(double weight) {
 		if (weight >= 0.0) {
 			this.weight = weight;
@@ -205,14 +144,17 @@ public class MissileWeapon extends CyberpunkWeapon {
 		}
 	}
 
-	@Override
-	public void setCombatant(Combatant c) {
-		if (c != null) {
-			combatant = c;
+	private void setCost(double cost) {
+		if (cost >= 0.0) {
+			this.cost = cost;
 		} else {
 			throw new IllegalArgumentException();
 		}
+	}
 
+	@Override
+	public void setCombatant(Combatant c) {
+		this.combatant = c;
 	}
 
 	@Override
@@ -227,7 +169,7 @@ public class MissileWeapon extends CyberpunkWeapon {
 
 	@Override
 	public int getRangeScore() {
-		return getRangeModifier() + combatant.getRangeModifier(false);
+		return getRangeModifier() + combatant.getRangeModifier(true);
 	}
 
 	@Override
@@ -246,6 +188,11 @@ public class MissileWeapon extends CyberpunkWeapon {
 	}
 
 	@Override
+	public Iterator<WeaponAttachment> getAttachments() {
+		return attachments.values().iterator();
+	}
+
+	@Override
 	public WeaponAttachment addAttachment(WeaponAttachment attachment) {
 		String targetAttachmentPoint = attachment.getAttachmentPoint();
 		if (attachmentPoints.contains(targetAttachmentPoint)) {
@@ -256,15 +203,10 @@ public class MissileWeapon extends CyberpunkWeapon {
 	}
 
 	@Override
-	public Iterator<WeaponAttachment> getAttachments() {
-		return attachments.values().iterator();
-	}
-
-	@Override
-	public boolean fire(int shotsToFire) {
+	public boolean fire(int numberOfShots) {
 		boolean hasFired = false;
 
-		for (int shotsFired = 0; shotsFired < shotsToFire && !ammunitionContainer.isEmpty(); shotsFired++) {
+		for (int shotsFired = 0; shotsFired < numberOfShots && !ammunitionContainer.isEmpty(); shotsFired++) {
 			ammunitionContainer.withdrawAmmunition();
 			hasFired = true;
 		}

@@ -2,13 +2,12 @@ package rpg.cyberpunk._2020.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-
-import rpg.Player;
 
 /**
  * A panel used to organize elements related to a player's weapon cache.
@@ -17,7 +16,7 @@ import rpg.Player;
  * 
  * @author Coul Greer
  */
-public class InventoryWeaponCategoryPanel extends JPanel {
+public class InventoryCategoryPanel extends JPanel {
 
 	/**
 	 * Constructs a panel that uses a given player to display data of what is stored
@@ -25,16 +24,18 @@ public class InventoryWeaponCategoryPanel extends JPanel {
 	 * 
 	 * @param player the provider of the set of weapons needed to be display
 	 */
-	public InventoryWeaponCategoryPanel(Player player) {
+	public InventoryCategoryPanel(JTable table, ActionListener listener) {
 		setLayout(new BorderLayout());
 
-		JTable table = new InventoryWeaponCategoryTable(player);
 		table.setFillsViewportHeight(true);
 		table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 16));
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JScrollPane scrollPane = new JScrollPane(table);
 		add(scrollPane, BorderLayout.CENTER);
+		
+		JPanel buttonPanel = new SellButtonPanel(listener);
+		add(buttonPanel, BorderLayout.SOUTH);
 	}
 
 }

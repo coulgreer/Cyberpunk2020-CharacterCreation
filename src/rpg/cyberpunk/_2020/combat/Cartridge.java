@@ -3,6 +3,8 @@ package rpg.cyberpunk._2020.combat;
 import java.util.Objects;
 
 import rpg.general.combat.Ammunition;
+import rpg.util.Die;
+import rpg.util.Probability;
 
 public class Cartridge implements Ammunition {
 	/**
@@ -18,14 +20,12 @@ public class Cartridge implements Ammunition {
 	public static final String AMMUNITION_TYPE_12MM = "12mm";
 	public static final String AMMUNITION_TYPE_556 = "5.56";
 	public static final String AMMUNITION_TYPE_762 = "7.62";
-	public static final String AMMUNITION_TYPE_12_GAUGE = "12ga";
 	public static final String AMMUNITION_TYPE_20MM = "20mm";
 	public static final String AMMUNITION_TYPE_GRENADE = "Grenade";
-	public static final int AMMO_PER_BOX = 10;
+	public static final int AMMO_PER_BOX = 100;
 
 	public static enum CaseMaterial {
 		CASELESS("Caseless", "The powder is the casing of the projectile.", 1.0), //
-		PLASTIC("Plastic", "A basic case made of plastic.", 1.0), //
 		COPPER("Copper", "A basic copper case.", 2.0);
 
 		private String name;
@@ -52,14 +52,17 @@ public class Cartridge implements Ammunition {
 	}
 
 	public static enum BulletType {
-		SOFT_POINT("Soft Point", "These are the standard bullets that all guns fire.", 1.0, 1.0, 1.0, 1.0), //
+		SOFT_POINT("Soft Point", "These are the standard bullets that all guns fire.", 1.0, 1.0, 1.0, 1.0),
 		ARMOR_PIERCING("Armor Piercing",
-				"These bullets have steel cores under a copper or gilding metal jacket, counting armor SP as half and damage as half.",
-				3.0, 0.5, 0.5, 0.5), //
-		BUCKSHOT("Buckshot", " Small balls or pellets, often made of lead.", 1.0, 1.0, 1.0, 1.0), //
-		SHOTGUN_SLUG("Shotgun slug",
-				"A heavy projectile made of lead, copper, or other material and fired from a shotgun.", 1.0, 1.0, 0.5,
-				1.0);
+				"AP bullets have a steel jacket or core meant to penetrate various forms of armor." //
+						+ " The effects are armor SP x1/2 and penetrating damage x1/2 as well." //
+						+ " This is because such bullets have little or no expansion, and therefore reduce true damage.",
+				3.0, 0.5, 0.5, 0.5),
+		HOLLOW_POINT("Hollow Point", "Special hollow-nosed ammo made of soft, quickly mushrooming lead." //
+				+ " When these rounds hit armor, the lead flattens bluntly and does mostly bruising damage." //
+				+ " However, when these rounds hit flesh, the lead squashes out to cause a massive wound cavity." //
+				+ " In effect, these rounds treat all armor as having 2x normal SP, but damage that penetrates is x1.5.",
+				1.125, 1.5, 2.0, 2.0);
 
 		private String name;
 		private String description;
@@ -103,13 +106,13 @@ public class Cartridge implements Ammunition {
 		}
 	}
 
-	private String ammoType;
+	private String caliber;
 	private BulletType bulletType;
 	private CaseMaterial caseMaterial;
 	private double cost;
 
-	public Cartridge(String ammoType, BulletType bulletType, CaseMaterial caseMaterial, double cost) {
-		this.ammoType = ammoType;
+	public Cartridge(String caliber, BulletType bulletType, CaseMaterial caseMaterial, double cost) {
+		this.caliber = caliber;
 		this.bulletType = bulletType;
 		this.caseMaterial = caseMaterial;
 		this.cost = cost;
@@ -117,7 +120,7 @@ public class Cartridge implements Ammunition {
 
 	@Override
 	public String getName() {
-		return ammoType + " " + bulletType.getName() + " " + caseMaterial.getName();
+		return caliber + " " + bulletType.getName() + " " + caseMaterial.getName();
 	}
 
 	@Override
@@ -129,7 +132,7 @@ public class Cartridge implements Ammunition {
 
 	@Override
 	public double getCost() {
-		return cost * bulletType.getCostMultiplier() * caseMaterial.getCostMultiplier();
+		return (cost * bulletType.getCostMultiplier() * caseMaterial.getCostMultiplier()) / AMMO_PER_BOX;
 	}
 
 	@Override
@@ -144,7 +147,7 @@ public class Cartridge implements Ammunition {
 
 	@Override
 	public String getAmmunitionType() {
-		return ammoType;
+		return caliber;
 	}
 
 	protected BulletType getBullet() {
@@ -153,6 +156,52 @@ public class Cartridge implements Ammunition {
 
 	protected CaseMaterial getCaseMaterial() {
 		return caseMaterial;
+	}
+
+	@Override
+	public Probability getDamage() {
+		Die die = null;
+		int modifier = 0;
+
+		switch (caliber) {
+		case AMMUNITION_TYPE_5MM:
+			die = new Die(1, 6);
+			break;
+		case AMMUNITION_TYPE_6MM:
+			die = new Die(1, 6);
+			modifier = 1;
+			break;
+		case AMMUNITION_TYPE_9MM:
+			die = new Die(2, 6);
+			modifier = 1;
+			break;
+		case AMMUNITION_TYPE_10MM:
+			die = new Die(2, 6);
+			modifier = 3;
+			break;
+		case AMMUNITION_TYPE_11MM:
+			die = new Die(3, 6);
+			break;
+		case AMMUNITION_TYPE_12MM:
+			die = new Die(4, 6);
+			modifier = 1;
+			break;
+		case AMMUNITION_TYPE_556:
+			die = new Die(5, 6);
+			break;
+		case AMMUNITION_TYPE_762:
+			die = new Die(6, 6);
+			modifier = 2;
+			break;
+		case AMMUNITION_TYPE_20MM:
+			die = new Die(4, 10);
+			break;
+		default:
+			die = new Die(0, 0);
+			break;
+		}
+
+		return new Probability(die, modifier);
 	}
 
 	@Override

@@ -13,14 +13,33 @@ import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
 import rpg.util.Probability;
 
+/**
+ * A Cyberpunk weapon that determines its range based on the weight of the
+ * weapon and the combatant wielding it. Uses the athletics skill to determine
+ * the bonus for accuracy from the wielding combatant
+ * 
+ * @author Coul Greer
+ */
 public class ThrownWeapon extends CyberpunkWeapon {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3604411589693594584L;
 
+	/**
+	 * The default rate of fire of any thrown weapon.
+	 */
 	public static final int RATE_OF_FIRE = 1;
+
+	/**
+	 * The default ammunition of a thrown weapon. Once this weapon is thrown it must
+	 * be \"reloaded\" by picking it back up unless it is a grenade.
+	 */
 	public static final int AMMUNITION_CAPACITY = 1;
+
+	/**
+	 * The minimum weight amount allowed without suffering a range penalty.
+	 */
 	private static final int WEIGHT_THRESHOLD = 1;
 
 	private String weaponName;
@@ -38,9 +57,28 @@ public class ThrownWeapon extends CyberpunkWeapon {
 	private double weight;
 	private Combatant combatant;
 
+	/**
+	 * Constructs a thrown weapon that does not allow null values or non-negative
+	 * values excluding weaponAccuracy.
+	 * 
+	 * @param weaponName     the name used to identify this weapon
+	 * @param description    a blurb used to give an idea of what this weapon is/can
+	 *                       do
+	 * @param weaponType     the category of weapon that this weapon belongs to
+	 * @param weaponAccuracy the flat modifier to accuracy based solely on the
+	 *                       weapon
+	 * @param concealability the rating representing the ability to hide this weapon
+	 * @param availability   the rating representing how easy this weapon is to
+	 *                       obtain
+	 * @param damage         the probability of dealing damage represented as die
+	 * @param reliability    the rating representing the probability of a weapon
+	 *                       jamming or malfunctioning
+	 * @param cost           the amount of money this weapon is worth
+	 * @param weight         the heaviness of this weapon
+	 */
 	public ThrownWeapon(String weaponName, String description, String weaponType, int weaponAccuracy,
 			Concealability concealability, Availability availability, Probability damage, Reliability reliability,
-			double weight, double cost) {
+			double cost, double weight) {
 		setWeaponName(weaponName);
 		setDescription(description);
 		setWeaponType(weaponType);
@@ -126,11 +164,11 @@ public class ThrownWeapon extends CyberpunkWeapon {
 
 		if (weight > WEIGHT_THRESHOLD) {
 			modifier = ((int) Math.round(weight) - WEIGHT_THRESHOLD) * (-10);
-			return modifier;
 		} else {
 			modifier = 0;
-			return modifier;
 		}
+
+		return modifier;
 	}
 
 	private void setCost(double cost) {
@@ -217,7 +255,7 @@ public class ThrownWeapon extends CyberpunkWeapon {
 
 	@Override
 	public String getAmmunitionType() {
-		return CyberpunkWeapon.DEFAULT_AMMUNITION_TYPE;
+		return CyberpunkWeapon.NO_AMMUNITION_TYPE;
 	}
 
 	@Override

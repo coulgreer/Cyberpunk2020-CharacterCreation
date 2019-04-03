@@ -2,6 +2,14 @@ package rpg.general.commerce;
 
 import java.io.Serializable;
 
+/**
+ * An object that is allowed to be bought or sold because of the ability to
+ * obtain the cost associated. There is also a name and description to help
+ * identify this item. Also, a weight is associated for use when storing and
+ * carrying this object.
+ * 
+ * @author Coul Greer
+ */
 public interface Item extends Tradeable, Serializable {
 	/**
 	 * Gets the name of this product.

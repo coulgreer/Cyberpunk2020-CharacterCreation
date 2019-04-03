@@ -39,7 +39,7 @@ public class NullCyberpunkWeapon extends CyberpunkWeapon {
 
 	@Override
 	public String getWeaponType() {
-		return DEFAULT_WEAPON_TYPE;
+		return NO_WEAPON_TYPE;
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class NullCyberpunkWeapon extends CyberpunkWeapon {
 
 	@Override
 	public String getAmmunitionType() {
-		return CyberpunkWeapon.DEFAULT_AMMUNITION_TYPE;
+		return CyberpunkWeapon.NO_AMMUNITION_TYPE;
 	}
 
 	@Override

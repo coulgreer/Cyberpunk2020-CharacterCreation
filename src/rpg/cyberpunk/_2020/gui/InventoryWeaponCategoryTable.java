@@ -44,11 +44,11 @@ public class InventoryWeaponCategoryTable extends JTable implements PropertyChan
 
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(getModel());
 		setRowSorter(sorter);
-		sorter.setComparator(InventoryWeaponTableModel.TYPE_COLUMN_INDEX, new WeaponTypeComparator());
+		sorter.setComparator(InventoryWeaponTableModel.TYPE_INDEX, new WeaponTypeComparator());
 
 		setRowHeight(WeaponTypeRenderer.ICON_HEIGHT);
 		getColumnModel().removeColumn(getColumnModel().getColumn(InventoryWeaponTableModel.OBJECT_INDEX));
-		getColumnModel().getColumn(InventoryWeaponTableModel.TYPE_COLUMN_INDEX)
+		getColumnModel().getColumn(InventoryWeaponTableModel.TYPE_INDEX)
 				.setPreferredWidth(WeaponTypeRenderer.ICON_HEIGHT);
 
 		this.player = player;
@@ -57,10 +57,11 @@ public class InventoryWeaponCategoryTable extends JTable implements PropertyChan
 
 	private void setupRenderers() {
 		TableColumnModel columnModel = getColumnModel();
-		columnModel.getColumn(InventoryWeaponTableModel.TYPE_COLUMN_INDEX).setCellRenderer(new WeaponTypeRenderer());
-		columnModel.getColumn(InventoryWeaponTableModel.WEIGHT_COLUMN_INDEX).setCellRenderer(new WeightRenderer());
-		columnModel.getColumn(InventoryWeaponTableModel.RANGE_COLUMN_INDEX).setCellRenderer(new DistanceRenderer());
-		columnModel.getColumn(InventoryWeaponTableModel.COST_COLUMN_INDEX).setCellRenderer(new CurrencyRenderer());
+		columnModel.getColumn(InventoryWeaponTableModel.TYPE_INDEX).setCellRenderer(new WeaponTypeRenderer());
+		columnModel.getColumn(InventoryWeaponTableModel.WEIGHT_INDEX).setCellRenderer(new WeightRenderer());
+		columnModel.getColumn(InventoryWeaponTableModel.RANGE_INDEX).setCellRenderer(new DistanceRenderer());
+		columnModel.getColumn(InventoryWeaponTableModel.COST_INDEX).setCellRenderer(new CurrencyRenderer());
+		columnModel.getColumn(InventoryWeaponTableModel.DAMAGE_INDEX).setCellRenderer(new DamageRenderer());
 	}
 
 	@Override
@@ -103,23 +104,23 @@ public class InventoryWeaponCategoryTable extends JTable implements PropertyChan
 		}
 	}
 
-	private Object[] createRow(CyberpunkWeapon weapon) {
+	private static Object[] createRow(CyberpunkWeapon weapon) {
 		Object[] row = new Object[InventoryWeaponTableModel.COLUMN_NAMES.length];
 
-		row[InventoryWeaponTableModel.NAME_COLUMN_INDEX] = weapon.getName();
-		row[InventoryWeaponTableModel.TYPE_COLUMN_INDEX] = weapon.getWeaponType();
-		row[InventoryWeaponTableModel.WEAPON_ACCURACY_COLUMN_INDEX] = weapon.getHitModifier();
-		row[InventoryWeaponTableModel.CONCEALABILITY_COLUMN_INDEX] = weapon.getConcealability();
-		row[InventoryWeaponTableModel.AVAILABILITY_COLUMN_INDEX] = weapon.getAvailability();
-		row[InventoryWeaponTableModel.DAMAGE_COLUMN_INDEX] = weapon.getHitDice() + "+" + weapon.getDamageScore();
-		row[InventoryWeaponTableModel.AMMO_COLUMN_INDEX] = weapon.getAmmunitionType();
-		row[InventoryWeaponTableModel.CURRENT_SHOTS_COLUMN_INDEX] = weapon.getAmmunitionCount();
-		row[InventoryWeaponTableModel.MAX_SHOTS_COLUMN_INDEX] = weapon.getAmmunitionCapacity();
-		row[InventoryWeaponTableModel.RATE_OF_FIRE_COLUMN_INDEX] = weapon.getRateOfFire();
-		row[InventoryWeaponTableModel.RELIABILITY_COLUMN_INDEX] = weapon.getReliability();
-		row[InventoryWeaponTableModel.RANGE_COLUMN_INDEX] = weapon.getRangeModifier();
-		row[InventoryWeaponTableModel.COST_COLUMN_INDEX] = weapon.getCost();
-		row[InventoryWeaponTableModel.WEIGHT_COLUMN_INDEX] = weapon.getWeight();
+		row[InventoryWeaponTableModel.NAME_INDEX] = weapon.getName();
+		row[InventoryWeaponTableModel.TYPE_INDEX] = weapon.getWeaponType();
+		row[InventoryWeaponTableModel.WEAPON_ACCURACY_INDEX] = weapon.getHitModifier();
+		row[InventoryWeaponTableModel.CONCEALABILITY_INDEX] = weapon.getConcealability();
+		row[InventoryWeaponTableModel.AVAILABILITY_INDEX] = weapon.getAvailability();
+		row[InventoryWeaponTableModel.DAMAGE_INDEX] = new Probability(weapon.getHitDice(), weapon.getDamageScore());
+		row[InventoryWeaponTableModel.AMMO_INDEX] = weapon.getAmmunitionType();
+		row[InventoryWeaponTableModel.CURRENT_SHOTS_INDEX] = weapon.getAmmunitionCount();
+		row[InventoryWeaponTableModel.MAX_SHOTS_INDEX] = weapon.getAmmunitionCapacity();
+		row[InventoryWeaponTableModel.RATE_OF_FIRE_INDEX] = weapon.getRateOfFire();
+		row[InventoryWeaponTableModel.RELIABILITY_INDEX] = weapon.getReliability();
+		row[InventoryWeaponTableModel.RANGE_INDEX] = weapon.getRangeModifier();
+		row[InventoryWeaponTableModel.COST_INDEX] = weapon.getCost();
+		row[InventoryWeaponTableModel.WEIGHT_INDEX] = weapon.getWeight();
 		row[InventoryWeaponTableModel.OBJECT_INDEX] = weapon;
 
 		return row;
@@ -135,76 +136,76 @@ public class InventoryWeaponCategoryTable extends JTable implements PropertyChan
 		/**
 		 * The index of the column used to hold the type of a weapon.
 		 */
-		public static final int TYPE_COLUMN_INDEX = 0;
+		public static final int TYPE_INDEX = 0;
 
 		/**
 		 * The index of the column used to hold the name of a weapon.
 		 */
-		public static final int NAME_COLUMN_INDEX = 1;
+		public static final int NAME_INDEX = 1;
 
 		/**
 		 * The index of the column used to hold the flat bonus to accuracy of a weapon.
 		 */
-		public static final int WEAPON_ACCURACY_COLUMN_INDEX = 2;
+		public static final int WEAPON_ACCURACY_INDEX = 2;
 
 		/**
 		 * The index of the column used to hold the concealability rating of a weapon.
 		 */
-		public static final int CONCEALABILITY_COLUMN_INDEX = 3;
+		public static final int CONCEALABILITY_INDEX = 3;
 
 		/**
 		 * The index of the column used to hold the availability rating of a weapon.
 		 */
-		public static final int AVAILABILITY_COLUMN_INDEX = 4;
+		public static final int AVAILABILITY_INDEX = 4;
 
 		/**
 		 * The index of the column used to hold the damage of a weapon.
 		 */
-		public static final int DAMAGE_COLUMN_INDEX = 5;
+		public static final int DAMAGE_INDEX = 5;
 
 		/**
 		 * The index of the column used to hold the type of ammunition that a weapon
 		 * uses.
 		 */
-		public static final int AMMO_COLUMN_INDEX = 6;
+		public static final int AMMO_INDEX = 6;
 
 		/**
 		 * The index of the column used to hold the current amount of ammunition a
 		 * weapon has stored inside itself.
 		 */
-		public static final int CURRENT_SHOTS_COLUMN_INDEX = 7;
+		public static final int CURRENT_SHOTS_INDEX = 7;
 
 		/**
 		 * The index of the column used to hold the maximum amount of ammunition a
 		 * weapon can store inside itself.
 		 */
-		public static final int MAX_SHOTS_COLUMN_INDEX = 8;
+		public static final int MAX_SHOTS_INDEX = 8;
 
 		/**
 		 * The index of the column used to hold the amount of shots a weapon can make
 		 * per turn.
 		 */
-		public static final int RATE_OF_FIRE_COLUMN_INDEX = 9;
+		public static final int RATE_OF_FIRE_INDEX = 9;
 
 		/**
 		 * The index of the column used to hold the reliability rating of a weapon.
 		 */
-		public static final int RELIABILITY_COLUMN_INDEX = 10;
+		public static final int RELIABILITY_INDEX = 10;
 
 		/**
 		 * The index of the column used to hold the range of attack of a weapon.
 		 */
-		public static final int RANGE_COLUMN_INDEX = 11;
+		public static final int RANGE_INDEX = 11;
 
 		/**
 		 * The index of the column used to hold the cost of a weapon.
 		 */
-		public static final int COST_COLUMN_INDEX = 12;
+		public static final int COST_INDEX = 12;
 
 		/**
 		 * The index of the column used to hold the weight of a weapon.
 		 */
-		public static final int WEIGHT_COLUMN_INDEX = 13;
+		public static final int WEIGHT_INDEX = 13;
 
 		/**
 		 * The index of the column used to hold the object representing a weapon.
@@ -229,6 +230,7 @@ public class InventoryWeaponCategoryTable extends JTable implements PropertyChan
 				"Range", //
 				"Cost", //
 				"Wt.", //
+				// TODO Implement quantaty handling
 				"Object" };
 
 		private Set<CyberpunkWeapon> weaponSet;
@@ -243,30 +245,8 @@ public class InventoryWeaponCategoryTable extends JTable implements PropertyChan
 			Iterator<CyberpunkWeapon> iterator = weaponSet.iterator();
 
 			while (iterator.hasNext()) {
-				addRow(buildRow(iterator.next()));
+				addRow(createRow(iterator.next()));
 			}
-		}
-
-		private Object[] buildRow(CyberpunkWeapon weapon) {
-			Object[] row = new Object[COLUMN_NAMES.length];
-
-			row[NAME_COLUMN_INDEX] = weapon.getName();
-			row[TYPE_COLUMN_INDEX] = weapon.getWeaponType();
-			row[WEAPON_ACCURACY_COLUMN_INDEX] = weapon.getHitModifier();
-			row[CONCEALABILITY_COLUMN_INDEX] = weapon.getConcealability();
-			row[AVAILABILITY_COLUMN_INDEX] = weapon.getAvailability();
-			row[DAMAGE_COLUMN_INDEX] = weapon.getHitDice() + "+" + weapon.getDamageScore();
-			row[AMMO_COLUMN_INDEX] = weapon.getAmmunitionType();
-			row[CURRENT_SHOTS_COLUMN_INDEX] = weapon.getAmmunitionCount();
-			row[MAX_SHOTS_COLUMN_INDEX] = weapon.getAmmunitionCapacity();
-			row[RATE_OF_FIRE_COLUMN_INDEX] = weapon.getRateOfFire();
-			row[RELIABILITY_COLUMN_INDEX] = weapon.getReliability();
-			row[RANGE_COLUMN_INDEX] = weapon.getRangeModifier();
-			row[COST_COLUMN_INDEX] = weapon.getCost();
-			row[WEIGHT_COLUMN_INDEX] = weapon.getWeight();
-			row[OBJECT_INDEX] = weapon;
-
-			return row;
 		}
 
 		@Override
@@ -287,33 +267,33 @@ public class InventoryWeaponCategoryTable extends JTable implements PropertyChan
 		@Override
 		public Class<?> getColumnClass(int col) {
 			switch (col) {
-			case TYPE_COLUMN_INDEX:
+			case TYPE_INDEX:
 				return String.class;
-			case NAME_COLUMN_INDEX:
+			case NAME_INDEX:
 				return String.class;
-			case WEAPON_ACCURACY_COLUMN_INDEX:
+			case WEAPON_ACCURACY_INDEX:
 				return Integer.class;
-			case CONCEALABILITY_COLUMN_INDEX:
+			case CONCEALABILITY_INDEX:
 				return Concealability.class;
-			case AVAILABILITY_COLUMN_INDEX:
+			case AVAILABILITY_INDEX:
 				return Availability.class;
-			case DAMAGE_COLUMN_INDEX:
+			case DAMAGE_INDEX:
 				return Probability.class;
-			case AMMO_COLUMN_INDEX:
+			case AMMO_INDEX:
 				return String.class;
-			case CURRENT_SHOTS_COLUMN_INDEX:
+			case CURRENT_SHOTS_INDEX:
 				return Integer.class;
-			case MAX_SHOTS_COLUMN_INDEX:
+			case MAX_SHOTS_INDEX:
 				return Integer.class;
-			case RATE_OF_FIRE_COLUMN_INDEX:
+			case RATE_OF_FIRE_INDEX:
 				return Integer.class;
-			case RELIABILITY_COLUMN_INDEX:
+			case RELIABILITY_INDEX:
 				return Reliability.class;
-			case RANGE_COLUMN_INDEX:
+			case RANGE_INDEX:
 				return Integer.class;
-			case COST_COLUMN_INDEX:
+			case COST_INDEX:
 				return Double.class;
-			case WEIGHT_COLUMN_INDEX:
+			case WEIGHT_INDEX:
 				return Double.class;
 			default:
 				return Object.class;

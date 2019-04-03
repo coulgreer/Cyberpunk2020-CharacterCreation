@@ -31,7 +31,7 @@ public class EmptyAmmunitionContainer implements AmmunitionContainer {
 
 	@Override
 	public String getAmmunitionType() {
-		return CyberpunkWeapon.DEFAULT_AMMUNITION_TYPE;
+		return CyberpunkWeapon.NO_AMMUNITION_TYPE;
 	}
 
 	@Override

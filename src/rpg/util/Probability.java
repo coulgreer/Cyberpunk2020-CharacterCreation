@@ -32,6 +32,11 @@ public class Probability implements Serializable {
 	}
 
 	public String toString() {
-		return die.toString() + "+" + modifier;
+
+		if (modifier <= 0) {
+			return die.toString();
+		} else {
+			return die.toString() + "+" + modifier;
+		}
 	}
 }

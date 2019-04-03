@@ -40,7 +40,7 @@ public class ThrownWeaponTest {
 		concealability = Concealability.LONG_COAT;
 		availability = Availability.COMMON;
 		damage = new Probability(new Die(1, 10), 1);
-		ammoType = CyberpunkWeapon.DEFAULT_WEAPON_TYPE;
+		ammoType = CyberpunkWeapon.NO_WEAPON_TYPE;
 		reliability = Reliability.VERY_RELIABLE;
 		weight = 0.5;
 		cost = 999.0;

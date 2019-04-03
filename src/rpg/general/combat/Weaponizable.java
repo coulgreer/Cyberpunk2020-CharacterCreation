@@ -1,5 +1,12 @@
 package rpg.general.combat;
 
+/**
+ * Allows an object to be used as a weapon in the sense of displaying how
+ * accurate an object is to hit its intended target, how much damage the object
+ * does, and how far the object can attack on its own.
+ * 
+ * @author Coul Greer
+ */
 public interface Weaponizable {
 	/**
 	 * Gets the modifier number for the ability to hit another thing.

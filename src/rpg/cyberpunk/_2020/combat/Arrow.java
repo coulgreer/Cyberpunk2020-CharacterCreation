@@ -3,6 +3,7 @@ package rpg.cyberpunk._2020.combat;
 import java.util.Objects;
 
 import rpg.general.combat.Ammunition;
+import rpg.util.Probability;
 
 public class Arrow implements Ammunition {
 	/**
@@ -13,23 +14,24 @@ public class Arrow implements Ammunition {
 	public static final String AMMUNITION_TYPE_ARROW = "Arrow";
 	public static final int AMMO_PER_BOX = 12;
 
-	public static enum ArrowTip {
-		TARGET_POINT("Target point",
-				"Made to penetrate archery targets easily, but it is just as easy to pull them out.", 1.0, 1.0, 0.5,
-				0.5);
+	public static enum Tip {
+		TARGET_POINT("Target point", "The basic arrow/quarrel (bows use arrows, crossbows use quarrels)." //
+				+ " Halves all armor SP, does normal damage.", 24.0, 1.0, 0.5, 0.5),
+		BROADHEAD_POINT("Broadhead point", "A head consisting of two or more razor-sharp blades." //
+				+ " Acts as a knife for armor penetration, penetrating damage is doubled.", 40.0, 2.0, 1.0, 0.5);
 
 		private String name;
 		private String description;
-		private double costMultiplier;
+		private double cost;
 		private double damageMultiplier;
 		private double hardArmorMultiplier;
 		private double softArmorMultiplier;
 
-		ArrowTip(String name, String description, double costMultiplier, double damageMultiplier,
-				double hardArmorMultiplier, double softArmorMultiplier) {
+		Tip(String name, String description, double cost, double damageMultiplier, double hardArmorMultiplier,
+				double softArmorMultiplier) {
 			this.name = name;
 			this.description = description;
-			this.costMultiplier = costMultiplier;
+			this.cost = cost;
 			this.damageMultiplier = damageMultiplier;
 			this.hardArmorMultiplier = hardArmorMultiplier;
 			this.softArmorMultiplier = softArmorMultiplier;
@@ -55,30 +57,20 @@ public class Arrow implements Ammunition {
 			return softArmorMultiplier;
 		}
 
-		public double costMultiplier() {
-			return costMultiplier;
+		public double cost() {
+			return cost;
 		}
 	}
 
-	private ArrowTip arrowTip;
-	private double cost;
+	private Tip arrowTip;
 
-	public Arrow(ArrowTip arrowTip, double cost) {
+	public Arrow(Tip arrowTip) {
 		setArrowTip(arrowTip);
-		setCost(cost);
 	}
 
-	private void setArrowTip(ArrowTip arrowTip) {
+	private void setArrowTip(Tip arrowTip) {
 		if (arrowTip != null) {
 			this.arrowTip = arrowTip;
-		} else {
-			throw new NullPointerException();
-		}
-	}
-
-	private void setCost(double cost) {
-		if (cost >= 0.0) {
-			this.cost = cost;
 		} else {
 			throw new IllegalArgumentException();
 		}
@@ -97,7 +89,7 @@ public class Arrow implements Ammunition {
 
 	@Override
 	public double getCost() {
-		return (cost * arrowTip.costMultiplier()) / AMMO_PER_BOX;
+		return arrowTip.cost() / AMMO_PER_BOX;
 	}
 
 	@Override
@@ -105,7 +97,7 @@ public class Arrow implements Ammunition {
 		return AMMUNITION_TYPE_ARROW;
 	}
 
-	protected ArrowTip getArrowTip() {
+	protected Tip getArrowTip() {
 		return arrowTip;
 	}
 
@@ -117,6 +109,17 @@ public class Arrow implements Ammunition {
 	@Override
 	public int getAmmunitionPerBox() {
 		return AMMO_PER_BOX;
+	}
+
+	/**
+	 * An arrow does not provide the damage for a weapon. It only augments the bows
+	 * raw damage.
+	 * 
+	 * @return null
+	 */
+	@Override
+	public Probability getDamage() {
+		return null;
 	}
 
 	@Override

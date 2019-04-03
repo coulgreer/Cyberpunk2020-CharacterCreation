@@ -1,9 +1,10 @@
 package rpg.general.combat;
 
 import rpg.general.commerce.Item;
+import rpg.util.Probability;
 
 public interface Ammunition extends Item {
-	public static final String DEFAULT_AMMUNITION_TYPE = "None";
+	public static final String NO_AMMUNITION_TYPE = "None";
 	public static final double WEIGHT_OF_BOX = 0.5;
 
 	/**
@@ -21,6 +22,13 @@ public interface Ammunition extends Item {
 	 * @return the amount of ammunition held within a container before purchase.
 	 */
 	public int getAmmunitionPerBox();
+
+	/**
+	 * Returns the damage potential represented by die and a flat modifier.
+	 * 
+	 * @return the damage potential represented as a die
+	 */
+	public Probability getDamage();
 
 	/**
 	 * Returns the conditional bonuses. This excludes any flat bonuses that are

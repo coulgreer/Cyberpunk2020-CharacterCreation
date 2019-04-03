@@ -1,12 +1,9 @@
 package rpg.cyberpunk._2020.gui;
 
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-
-import rpg.Player;
-import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
-import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
 
 /**
  * A panel that provides housing for the buy button and the default presentation
@@ -15,9 +12,6 @@ import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
  * @author Coul Greer
  */
 public class BuyButtonPanel extends JPanel {
-	private Player player;
-	private CyberpunkVendor vendor;
-	private JTable table;
 
 	/**
 	 * Constructs a panel used to house a button that allows the user to purchase
@@ -28,27 +22,11 @@ public class BuyButtonPanel extends JPanel {
 	 *               element.
 	 * @param table  the object holding a collection of items to be bought
 	 */
-	public BuyButtonPanel(Player player, CyberpunkVendor vendor, JTable table) {
-		this.player = player;
-		this.vendor = vendor;
-		this.table = table;
-
+	public BuyButtonPanel(ActionListener listener) {
 		JButton buyButton = new JButton("Buy");
-		buyButton.addActionListener(e -> buy());
+		buyButton.addActionListener(listener);
 
 		add(buyButton);
-	}
-
-	private void buy() {
-		int selectedRowIndex = table.getSelectedRow();
-		int actualSelectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
-
-		if (actualSelectedRowIndex >= 0) {
-			CyberpunkWeapon weapon = (CyberpunkWeapon) table.getModel().getValueAt(actualSelectedRowIndex,
-					ShopWeaponCategoryTable.ShopWeaponTableModel.OBJECT_INDEX);
-
-			player.buy(vendor.sellWeapon(weapon), vendor.getAskPrice(weapon));
-		}
 	}
 
 }

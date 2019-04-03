@@ -2,6 +2,12 @@ package rpg.general.combat;
 
 import java.util.List;
 
+/**
+ * Allows an object to store and use ammunition while also getting the amount of
+ * ammunition that can be and is stored within.
+ * 
+ * @author Coul Greer
+ */
 public interface Shootable extends Weaponizable {
 	/**
 	 * Allows this <code>Shootable</code> to discharge/remove ammunition from

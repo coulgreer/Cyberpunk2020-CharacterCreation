@@ -12,19 +12,23 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class DistanceRenderer extends DefaultTableCellRenderer {
 
 	/**
-	 * Constructs a renderer that aligns its contents to the right.
+	 * Constructs a renderer that aligns its contents in the center.
 	 */
 	public DistanceRenderer() {
 		super();
 
-		setHorizontalAlignment(RIGHT);
+		setHorizontalAlignment(CENTER);
 	}
 
 	@Override
 	public void setValue(Object value) {
 		Number number = (Number) value;
+		if (number.doubleValue() <= 0.0) {
+			setText("---");
+		} else {
+			setText(number + "m");
 
-		setText(number + "m");
+		}
 	}
 
 }

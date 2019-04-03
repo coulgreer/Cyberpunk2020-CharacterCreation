@@ -5,10 +5,17 @@ import java.util.Iterator;
 import rpg.general.commerce.Item;
 import rpg.util.Die;
 
+/**
+ * An object that can be held by a combatant resulting in modification to the
+ * internal data. A skill is associated to help derive the modified values
+ * provided by the combatant.
+ * 
+ * @author Coul Greer
+ */
 public interface Weapon extends Shootable, Item {
-	public static final String DEFAULT_WEAPON_TYPE = "None";
-	public static final String DEFAULT_SKILL_NAME = "None";
-	public static final String DEFAULT_AMMUNITION_TYPE = "None";
+	public static final String NO_WEAPON_TYPE = "None";
+	public static final String NO_SKILL_NAME = "None";
+	public static final String NO_AMMUNITION_TYPE = "None";
 
 	/**
 	 * Registers a <code>Combatant</code> to be used in modifying the <i>scores</i>

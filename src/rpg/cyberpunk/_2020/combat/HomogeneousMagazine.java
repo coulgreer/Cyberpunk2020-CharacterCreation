@@ -24,7 +24,7 @@ public class HomogeneousMagazine implements AmmunitionContainer {
 		if (ammunitionType != null) {
 			this.ammunitionType = ammunitionType;
 		} else {
-			this.ammunitionType = Ammunition.DEFAULT_AMMUNITION_TYPE;
+			this.ammunitionType = Ammunition.NO_AMMUNITION_TYPE;
 		}
 	}
 
