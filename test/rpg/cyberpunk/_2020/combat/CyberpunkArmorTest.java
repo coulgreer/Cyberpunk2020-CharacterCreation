@@ -40,8 +40,8 @@ public class CyberpunkArmorTest {
 
 	@Test
 	public void testDamagingTheArmor() {
-		CyberpunkArmor armor = new CyberpunkArmor(name, description, cost, weight, iterator, armorType, stoppingPower,
-				encumbranceValue);
+		CyberpunkArmor armor = new CyberpunkArmor(name, description, iterator, armorType, stoppingPower,
+				encumbranceValue, cost, weight);
 
 		armor.damage(BodyLocation.TORSO, 1);
 		armor.damage(BodyLocation.LEFT_ARM, 5);
@@ -57,8 +57,8 @@ public class CyberpunkArmorTest {
 
 	@Test
 	public void testDamagingThenRepairingAllArmorToMaxDurability() {
-		CyberpunkArmor armor = new CyberpunkArmor(name, description, cost, weight, iterator, armorType, stoppingPower,
-				encumbranceValue);
+		CyberpunkArmor armor = new CyberpunkArmor(name, description, iterator, armorType, stoppingPower,
+				encumbranceValue, cost, weight);
 
 		int points = 9;
 		armor.damageAll(points);

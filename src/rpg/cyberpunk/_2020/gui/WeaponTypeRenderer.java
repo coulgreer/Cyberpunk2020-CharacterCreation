@@ -38,34 +38,34 @@ public class WeaponTypeRenderer extends DefaultTableCellRenderer {
 		case CyberpunkWeapon.WEAPON_TYPE_MEDIUM_PISTOL:
 		case CyberpunkWeapon.WEAPON_TYPE_HEAVY_PISTOL:
 		case CyberpunkWeapon.WEAPON_TYPE_VERY_HEAVY_PISTOL:
-			imgAddress = "img/ICONS/pistol-512.png";
+			imgAddress = "img/icons/weapon/pistol-512.png";
 			break;
 		case CyberpunkWeapon.WEAPON_TYPE_LIGHT_SUBMACHINEGUN:
 		case CyberpunkWeapon.WEAPON_TYPE_MEDIUM_SUBMACHINEGUN:
 		case CyberpunkWeapon.WEAPON_TYPE_HEAVY_SUBMACHINEGUN:
-			imgAddress = "img/ICONS/smg-512.png";
+			imgAddress = "img/icons/weapon/smg-512.png";
 			break;
 		case CyberpunkWeapon.WEAPON_TYPE_RIFLE:
-			imgAddress = "img/ICONS/rifle-512.png";
+			imgAddress = "img/icons/weapon/rifle-512.png";
 			break;
 		case CyberpunkWeapon.WEAPON_TYPE_SHOTGUN:
-			imgAddress = "img/ICONS/shotgun-512.png";
+			imgAddress = "img/icons/weapon/shotgun-512.png";
 			break;
 		case CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON:
-			imgAddress = "img/ICONS/melee-512.png";
+			imgAddress = "img/icons/weapon/melee-512.png";
 			break;
 		case CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON:
-			imgAddress = "img/ICONS/explosive-512.png";
+			imgAddress = "img/icons/weapon/explosive-512.png";
 			break;
 		case CyberpunkWeapon.WEAPON_TYPE_BOW:
-			imgAddress = "img/ICONS/bow-512.png";
+			imgAddress = "img/icons/weapon/bow-512.png";
 			break;
 		case CyberpunkWeapon.WEAPON_TYPE_UNARMED:
-			imgAddress = "img/ICONS/fist-512.png";
+			imgAddress = "img/icons/weapon/fist-512.png";
 			break;
 		default:
 			// TODO Think about default icon and add a icon for exotics.
-			imgAddress = "img/ICONS/fist-512.png";
+			imgAddress = "img/icons/weapon/fist-512.png";
 			break;
 		}
 

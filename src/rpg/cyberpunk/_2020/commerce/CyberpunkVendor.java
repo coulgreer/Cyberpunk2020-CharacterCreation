@@ -1,6 +1,7 @@
 package rpg.cyberpunk._2020.commerce;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,11 +20,12 @@ import rpg.cyberpunk._2020.combat.CyberpunkWeaponModifier;
 import rpg.cyberpunk._2020.combat.ExoticFirearm;
 import rpg.cyberpunk._2020.combat.Firearm;
 import rpg.cyberpunk._2020.combat.HomogeneousMagazine;
+import rpg.cyberpunk._2020.combat.MeleeWeapon;
 import rpg.cyberpunk._2020.combat.ShotShell;
 import rpg.cyberpunk._2020.combat.ThrownWeapon;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Ammunition;
-import rpg.general.combat.AmmunitionContainer;
+import rpg.general.combat.BodyLocation;
 import rpg.general.commerce.Item;
 import rpg.general.commerce.Trader;
 import rpg.util.Die;
@@ -38,6 +40,7 @@ public class CyberpunkVendor {
 		this.trader = trader;
 		startingInventory = new BottomlessInventory();
 		addWeaponsToVendor();
+		addArmorToVendor();
 	}
 
 	private void addWeaponsToVendor() {
@@ -334,6 +337,176 @@ public class CyberpunkVendor {
 				shotgunAttachmentPoints));
 
 		// Melee Weapons
+		startingInventory.add(new MeleeWeapon("Kendachi Monoknife",
+				"Mono-sectional crystal blade. Incredibly sharp. "
+						+ "In the Japanese \"tanto\" style. Also available in a nadinata form for 100.00 extra.",
+				CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, CyberpunkSkill.MELEE, 1, Concealability.POCKET,
+				Availability.POOR, new Probability(new Die(2, 6), 0), true, Reliability.VERY_RELIABLE, 1, 200.0, 0.5,
+				shotgunAttachmentPoints));
+		startingInventory.add(new MeleeWeapon("Kendachi MonoKatana",
+				"Sword length version of monoblade. "
+						+ "Resembles a hightech katana with a milky, nearly transparent blade.",
+				CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, CyberpunkSkill.MELEE, 1, Concealability.CANNOT_HIDE,
+				Availability.RARE, new Probability(new Die(4, 6), 0), true, Reliability.VERY_RELIABLE, 1, 600.0, 1.0,
+				shotgunAttachmentPoints));
+		startingInventory.add(new MeleeWeapon("SPM-1 Battleglove",
+				"This is a large gauntlet covering the hand and forearm."
+						+ " It does 3D6 in crush damage, 2D6 punch damage,"
+						+ " and has three spaces which can be used to store any standard cyberarm option.",
+				CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, CyberpunkSkill.MELEE, -2, Concealability.CANNOT_HIDE,
+				Availability.POOR, new Probability(new Die(2, 6), 0), false, Reliability.VERY_RELIABLE, 1, 900.0, 1.0,
+				shotgunAttachmentPoints));
+
+		startingInventory
+				.add(new MeleeWeapon("Club", "", CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, CyberpunkSkill.MELEE, 0,
+						Concealability.LONG_COAT, Availability.COMMON, new Probability(new Die(1, 6), 0), false,
+						Reliability.VERY_RELIABLE, 1, 0.0, 1.0, shotgunAttachmentPoints));
+		startingInventory.add(new MeleeWeapon("Knife", "", CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON,
+				CyberpunkSkill.MELEE, 0, Concealability.POCKET, Availability.COMMON, new Probability(new Die(1, 6), 0),
+				true, Reliability.VERY_RELIABLE, 1, 20.0, 0.5, shotgunAttachmentPoints));
+		startingInventory
+				.add(new MeleeWeapon("Sword", "", CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, CyberpunkSkill.MELEE, 0,
+						Concealability.CANNOT_HIDE, Availability.COMMON, new Probability(new Die(2, 6), 2), true,
+						Reliability.VERY_RELIABLE, 1, 200.0, 1.0, shotgunAttachmentPoints));
+		startingInventory.add(new MeleeWeapon("Axe", "", CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, CyberpunkSkill.MELEE,
+				-1, Concealability.CANNOT_HIDE, Availability.COMMON, new Probability(new Die(2, 6), 3), true,
+				Reliability.VERY_RELIABLE, 1, 20.0, 0.0, shotgunAttachmentPoints));
+		startingInventory
+				.add(new MeleeWeapon("Nunchaku", "", CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, CyberpunkSkill.MELEE, 0,
+						Concealability.LONG_COAT, Availability.COMMON, new Probability(new Die(3, 6), 0), false,
+						Reliability.VERY_RELIABLE, 1, 15.0, 0.0, shotgunAttachmentPoints));
+		startingInventory
+				.add(new MeleeWeapon("Naginata", "", CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, CyberpunkSkill.MELEE, 0,
+						Concealability.CANNOT_HIDE, Availability.POOR, new Probability(new Die(3, 6), 0), false,
+						Reliability.VERY_RELIABLE, 2, 100.0, 0.5, shotgunAttachmentPoints));
+		startingInventory.add(new ThrownWeapon("Shiriken", "", CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, 0,
+				Concealability.POCKET, Availability.COMMON, new Probability(new Die(1, 6, 3), 0),
+				Reliability.VERY_RELIABLE, 3.0, 0.5));
+		startingInventory
+				.add(new MeleeWeapon("Switchblade", "", CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, CyberpunkSkill.MELEE,
+						0, Concealability.POCKET, Availability.COMMON, new Probability(new Die(1, 6, 2), 0), true,
+						Reliability.VERY_RELIABLE, 1, 15.0, 0.5, shotgunAttachmentPoints));
+		startingInventory.add(new MeleeWeapon("Brass knuckles", "", CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON,
+				CyberpunkSkill.MELEE, 0, Concealability.POCKET, Availability.COMMON, new Probability(new Die(1, 6), 2),
+				false, Reliability.VERY_RELIABLE, 1, 10.0, 0.5, shotgunAttachmentPoints));
+		startingInventory
+				.add(new MeleeWeapon("Sledgehammer", "", CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, CyberpunkSkill.MELEE,
+						-1, Concealability.CANNOT_HIDE, Availability.COMMON, new Probability(new Die(4, 6), 0), false,
+						Reliability.VERY_RELIABLE, 1, 20.0, 5.0, shotgunAttachmentPoints));
+		startingInventory
+				.add(new MeleeWeapon("Chainsaw", "", CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, CyberpunkSkill.MELEE, -3,
+						Concealability.CANNOT_HIDE, Availability.COMMON, new Probability(new Die(4, 6), 0), true,
+						Reliability.VERY_RELIABLE, 2, 80.0, 5.0, shotgunAttachmentPoints));
+	}
+
+	private void addArmorToVendor() {
+		BodyLocation headgear[] = { BodyLocation.HEAD };
+		BodyLocation vest[] = { BodyLocation.TORSO };
+		BodyLocation shirt[] = { BodyLocation.TORSO, BodyLocation.LEFT_ARM, BodyLocation.RIGHT_ARM };
+		BodyLocation pants[] = { BodyLocation.LEFT_LEG, BodyLocation.RIGHT_LEG };
+		BodyLocation bodySuit[] = { BodyLocation.HEAD, BodyLocation.TORSO, BodyLocation.LEFT_ARM,
+				BodyLocation.RIGHT_ARM, BodyLocation.LEFT_LEG, BodyLocation.RIGHT_LEG };
+
+		startingInventory.add(new CyberpunkArmor("Generic Chic Pants",
+				"This is the standard Streetwear, made up of colorful modular components in many colors."
+						+ " Belts, coats, sashes, boots predominate.",
+				Arrays.stream(pants).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 20.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("Generic Chic Top",
+				"This is the standard Streetwear, made up of colorful modular components in many colors."
+						+ " Belts, coats, sashes, boots predominate.",
+				Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 15.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("Generic Chic Jacket",
+				"This is the standard Streetwear, made up of colorful modular components in many colors."
+						+ " Belts, coats, sashes, boots predominate.",
+				Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 35.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("Leisurewear Pants",
+				"This is the equivalent of 21st century athletic wear."
+						+ " Padded fleece, corporate and athletic logos.",
+				Arrays.stream(pants).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 40.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("Leisurewear Top",
+				"This is the equivalent of 21st century athletic wear."
+						+ " Padded fleece, corporate and athletic logos.",
+				Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 30.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("Leisurewear Jacket",
+				"This is the equivalent of 21st century athletic wear."
+						+ " Padded fleece, corporate and athletic logos.",
+				Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 70.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("Businesswear Pants",
+				"This is the equivalent of the standard business suit; understated colors, pinstripes, real leather shoes etc."
+						+ " Wool and other natural fabrics are considered the proper outfitting for the up and coming Corp.",
+				Arrays.stream(pants).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 60.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("Businesswear Top",
+				"This is the equivalent of the standard business suit; understated colors, pinstripes, real leather shoes etc."
+						+ " Wool and other natural fabrics are considered the proper outfitting for the up and coming Corp.",
+				Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 45.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("Businesswear Jacket",
+				"This is the equivalent of the standard business suit; understated colors, pinstripes, real leather shoes etc."
+						+ " Wool and other natural fabrics are considered the proper outfitting for the up and coming Corp.",
+				Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 105.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("High Fashion Pants",
+				"Sophisticated and expensive dressing for the upper class."
+						+ " Designer labels like Miyake, Si-fui Yan, and Anne Calvin.",
+				Arrays.stream(pants).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 80.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("High Fashion Top",
+				"Sophisticated and expensive dressing for the upper class."
+						+ " Designer labels like Miyake, Si-fui Yan, and Anne Calvin.",
+				Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 60.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("High Fashion Jacket",
+				"Sophisticated and expensive dressing for the upper class."
+						+ " Designer labels like Miyake, Si-fui Yan, and Anne Calvin.",
+				Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 140.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("Urban Flash Pants",
+				"Video jackets, colorshift fabrics, cammo, leathers, metal spikes, Logowear, jeans, leather skirts, boots."
+						+ " The wildest and most utterly chilled in cyberfashion.",
+				Arrays.stream(pants).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 40.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("Urban Flash Top",
+				"Video jackets, colorshift fabrics, cammo, leathers, metal spikes, Logowear, jeans, leather skirts, boots."
+						+ " The wildest and most utterly chilled in cyberfashion.",
+				Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 30.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("Urban Flash Jacket",
+				"Video jackets, colorshift fabrics, cammo, leathers, metal spikes, Logowear, jeans, leather skirts, boots."
+						+ " The wildest and most utterly chilled in cyberfashion.",
+				Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 70.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("Heavy leather jacket",
+				"Good for road rash, stopping knives, etc. A good .38 slug will probably rip you to bits, however.",
+				Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 4, 0, 50.0, 1.0));
+		startingInventory.add(new CyberpunkArmor("Heavy leather pants",
+				"Good for road rash, stopping knives, etc. A good .38 slug will probably rip you to bits, however.",
+				Arrays.stream(pants).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 4, 0, 50.0, 1.0));
+		startingInventory.add(new CyberpunkArmor("Kevlar vest",
+				"Can be worn unnoticably under most street clothes. Will stop most rounds up to a .45 ACP.",
+				Arrays.stream(vest).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 10, 0, 90.0, 1.0));
+		startingInventory.add(new CyberpunkArmor("Light Kevlar armor jacket",
+				"Personal protection for the fashion conscious, these lightweight Kevlar jackets have nylon coverings that resemble normal jackets.",
+				Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 14, 0, 150.0, 3.0));
+		startingInventory.add(new CyberpunkArmor("Medium Kevlar armor jacket",
+				"Personal protection for the fashion conscious, these lightweight Kevlar jackets have nylon coverings that resemble normal jackets.",
+				Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 18, 1, 200.0, 3.0));
+		startingInventory.add(new CyberpunkArmor("Heavy Kevlar armor jacket",
+				"Personal protection for the fashion conscious, these lightweight Kevlar jackets have nylon coverings that resemble normal jackets.",
+				Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 20, 2, 250.0, 3.0));
+		startingInventory.add(new CyberpunkArmor("Steel helmet",
+				"Heavy duty protection for the head, standard for most military."
+						+ " Some are made of steel, others of kevlar and high impact plastics."
+						+ " Most (90%) have face shields with 1/2 the SP level as the rest of the helmet.",
+				Arrays.stream(headgear).iterator(), CyberpunkArmor.ARMOR_TYPE_HARD, 14, 0, 20.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("Nylon helmet",
+				"Heavy duty protection for the head, standard for most military."
+						+ " Some are made of steel, others of kevlar and high impact plastics."
+						+ " Most (90%) have face shields with 1/2 the SP level as the rest of the helmet.",
+				Arrays.stream(headgear).iterator(), CyberpunkArmor.ARMOR_TYPE_HARD, 20, 0, 100.0, 0.5));
+		startingInventory.add(new CyberpunkArmor("Flack vest",
+				"Standard protection for combat soldiers, the flack vest is designed to stop small arms fire, grenade shrapnel, but only slow up assault rifle rounds.",
+				Arrays.stream(vest).iterator(), CyberpunkArmor.ARMOR_TYPE_HARD, 20, 1, 200.0, 3.0));
+		startingInventory.add(new CyberpunkArmor("Flack pants",
+				"Standard protection for combat soldiers, the flack vest is designed to stop small arms fire, grenade shrapnel, but only slow up assault rifle rounds.",
+				Arrays.stream(pants).iterator(), CyberpunkArmor.ARMOR_TYPE_HARD, 20, 1, 200.0, 3.0));
+		startingInventory.add(new CyberpunkArmor("Doorgunner's vest",
+				"Heavy duty protection for stationary positions, like machinegun nests, helicopter doors, etc.",
+				Arrays.stream(vest).iterator(), CyberpunkArmor.ARMOR_TYPE_HARD, 25, 3, 250.0, 4.0));
+		startingInventory.add(new CyberpunkArmor("MetalGear", "Laminated expoxide plate armor."
+				+ " Bulky and designed in modular sections, with helmet, arm & leg coverings, torso and back clamshell",
+				Arrays.stream(bodySuit).iterator(), CyberpunkArmor.ARMOR_TYPE_HARD, 25, 2, 600.0, 8.0));
 	}
 
 	public CyberpunkWeapon sellWeapon(CyberpunkWeapon weapon) {

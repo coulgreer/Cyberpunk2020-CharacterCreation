@@ -12,7 +12,14 @@ import rpg.general.combat.Protective;
 import rpg.general.commerce.Item;
 
 public class CyberpunkArmor implements Protective, Item {
-	
+	public static final String COVERING_NOTHING = "Covering: nothing";
+	public static final String COVERING_HEAD = "Covering: head";
+	public static final String COVERING_ARMS_AND_TORSO = "Covering: arms & torso";
+	public static final String COVERING_TORSO = "Covering: torso";
+	public static final String COVERING_ARMS = "Covering: arms";
+	public static final String COVERING_LEGS = "Covering: legs";
+	public static final String COVERING_EVERYTHING = "Covering: everything";
+
 	public static final String ARMOR_TYPE_SOFT = "Soft Armor";
 	public static final String ARMOR_TYPE_HARD = "Hard Armor";
 	public static final int DEFAULT_STOPPING_POWER = 0;
@@ -26,8 +33,8 @@ public class CyberpunkArmor implements Protective, Item {
 	private int stoppingPower;
 	private int encumbranceValue;
 
-	public CyberpunkArmor(String name, String description, double cost, double weight,
-			Iterator<BodyLocation> coveredLocationIterator, String armorType, int stoppingPower, int encumbrance) {
+	public CyberpunkArmor(String name, String description, Iterator<BodyLocation> coveredLocationIterator,
+			String armorType, int stoppingPower, int encumbrance, double cost, double weight) {
 		this.name = name;
 		this.description = description;
 		this.cost = cost;
@@ -137,10 +144,10 @@ public class CyberpunkArmor implements Protective, Item {
 		}
 
 		CyberpunkArmor armor = (CyberpunkArmor) o;
-		return isArmorEqual(armor);
+		return getName().equals(armor.getName()) && isArmorStatsEqual(armor);
 	}
 
-	private boolean isArmorEqual(CyberpunkArmor armor) {
+	private boolean isArmorStatsEqual(CyberpunkArmor armor) {
 		Iterator<BodyLocation> iterator = BodyLocation.createIterator();
 		while (iterator.hasNext()) {
 			BodyLocation location = iterator.next();
@@ -157,6 +164,8 @@ public class CyberpunkArmor implements Protective, Item {
 	@Override
 	public int hashCode() {
 		ArrayList<Object> objectsToHash = new ArrayList<>();
+
+		objectsToHash.add(getName());
 		addIsCoveringTo(objectsToHash);
 		addGetDurabilityTo(objectsToHash);
 		objectsToHash.add(getProtectionScore());

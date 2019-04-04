@@ -52,25 +52,29 @@ public class ShopTab extends JPanel {
 
 	private void buyWeapon(JTable table) {
 		int selectedRowIndex = table.getSelectedRow();
-		int actualSelectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
+		if (selectedRowIndex == -1) {
+			int actualSelectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
 
-		if (actualSelectedRowIndex >= 0) {
-			CyberpunkWeapon weapon = (CyberpunkWeapon) table.getModel().getValueAt(actualSelectedRowIndex,
-					ShopWeaponTableModel.OBJECT_INDEX);
+			if (actualSelectedRowIndex >= 0) {
+				CyberpunkWeapon weapon = (CyberpunkWeapon) table.getModel().getValueAt(actualSelectedRowIndex,
+						ShopWeaponTableModel.OBJECT_INDEX);
 
-			player.buy(vendor.sellWeapon(weapon), vendor.getAskPrice(weapon));
+				player.buy(vendor.sellWeapon(weapon), vendor.getAskPrice(weapon));
+			}
 		}
 	}
 
 	private void buyArmor(JTable table) {
 		int selectedRowIndex = table.getSelectedRow();
-		int actualSelectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
+		if (selectedRowIndex == -1) {
+			int actualSelectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
 
-		if (actualSelectedRowIndex >= 0) {
-			CyberpunkArmor armor = (CyberpunkArmor) table.getModel().getValueAt(actualSelectedRowIndex,
-					ShopArmorTableModel.OBJECT_INDEX);
+			if (actualSelectedRowIndex >= 0) {
+				CyberpunkArmor armor = (CyberpunkArmor) table.getModel().getValueAt(actualSelectedRowIndex,
+						ShopArmorTableModel.OBJECT_INDEX);
 
-			player.buy(vendor.sellArmor(armor), vendor.getAskPrice(armor));
+				player.buy(vendor.sellArmor(armor), vendor.getAskPrice(armor));
+			}
 		}
 	}
 
