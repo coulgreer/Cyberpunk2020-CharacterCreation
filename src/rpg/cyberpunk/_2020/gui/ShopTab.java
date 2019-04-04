@@ -52,7 +52,7 @@ public class ShopTab extends JPanel {
 
 	private void buyWeapon(JTable table) {
 		int selectedRowIndex = table.getSelectedRow();
-		if (selectedRowIndex == -1) {
+		if (selectedRowIndex != -1) {
 			int actualSelectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
 
 			if (actualSelectedRowIndex >= 0) {
@@ -66,7 +66,7 @@ public class ShopTab extends JPanel {
 
 	private void buyArmor(JTable table) {
 		int selectedRowIndex = table.getSelectedRow();
-		if (selectedRowIndex == -1) {
+		if (selectedRowIndex != -1) {
 			int actualSelectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
 
 			if (actualSelectedRowIndex >= 0) {
