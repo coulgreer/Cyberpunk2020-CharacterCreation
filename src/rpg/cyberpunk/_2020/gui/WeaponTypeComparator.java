@@ -32,8 +32,10 @@ public class WeaponTypeComparator implements Comparator<String> {
 		orderedDictionary.put(CyberpunkWeapon.WEAPON_TYPE_SHOTGUN, 9);
 		orderedDictionary.put(CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 10);
 		orderedDictionary.put(CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, 11);
-		orderedDictionary.put(CyberpunkWeapon.WEAPON_TYPE_EXOTIC, 12);
-		orderedDictionary.put(CyberpunkWeapon.WEAPON_TYPE_UNARMED, 13);
+		orderedDictionary.put(CyberpunkWeapon.WEAPON_TYPE_BOW, 12);
+		orderedDictionary.put(CyberpunkWeapon.WEAPON_TYPE_GRENADE, 13);
+		orderedDictionary.put(CyberpunkWeapon.WEAPON_TYPE_EXOTIC, 14);
+		orderedDictionary.put(CyberpunkWeapon.WEAPON_TYPE_UNARMED, 15);
 	}
 
 	@Override

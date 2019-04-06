@@ -10,7 +10,6 @@ import rpg.Player;
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
-import rpg.cyberpunk._2020.commerce.VendorTrader;
 import rpg.cyberpunk._2020.gui.ShopArmorCategoryTable.ShopArmorTableModel;
 import rpg.cyberpunk._2020.gui.ShopWeaponCategoryTable.ShopWeaponTableModel;
 

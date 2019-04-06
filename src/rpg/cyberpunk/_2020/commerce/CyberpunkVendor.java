@@ -20,7 +20,9 @@ import rpg.cyberpunk._2020.combat.CyberpunkWeaponModifier;
 import rpg.cyberpunk._2020.combat.ExoticFirearm;
 import rpg.cyberpunk._2020.combat.Firearm;
 import rpg.cyberpunk._2020.combat.HomogeneousMagazine;
+import rpg.cyberpunk._2020.combat.LaunchedGrenade;
 import rpg.cyberpunk._2020.combat.MeleeWeapon;
+import rpg.cyberpunk._2020.combat.Payload;
 import rpg.cyberpunk._2020.combat.ShotShell;
 import rpg.cyberpunk._2020.combat.ThrownWeapon;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
@@ -223,24 +225,14 @@ public class CyberpunkVendor {
 				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, -2, Concealability.CANNOT_HIDE, Availability.RARE,
 				new HomogeneousMagazine(Cartridge.NO_AMMUNITION_TYPE, 1), 1, Reliability.VERY_RELIABLE, 750, 1500.0,
 				10.0, shotgunAttachmentPoints));
-		startingInventory.add(new ThrownWeapon("Fragmentation Grenade",
-				"A grenade that launches shrapnel on detonation dealing damage in an area.",
-				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
-				new Probability(new Die(7, 6), 0), Reliability.VERY_RELIABLE, 30.0, 0.5));
-		startingInventory.add(new ThrownWeapon("Incendiary Grenade",
-				"This grenade does 4D6 damage for 3 turns to all targets within 5 meters, and sets fires very well. "
-						+ "Damage is done by fragments of white phosphorous. Any soft armor attacked is reduced 2SP per round.",
-				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
-				new Probability(new Die(4, 6), 0), Reliability.VERY_RELIABLE, 30.0, 0.5));
-		startingInventory.add(new ThrownWeapon("Stun Grenade",
-				"A grenade that, when detonated, causes temporary vision and hearing loss as well as loss of balance.",
-				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
-				NullProbability.getInstance(), Reliability.VERY_RELIABLE, 30.0, 0.5));
-		startingInventory.add(new ThrownWeapon("Dazzle Grenade",
-				"A grenade that emits infrared and visual lights to cause temporary vision loss for organic and "
-						+ "mechanical targets.",
-				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
-				NullProbability.getInstance(), Reliability.VERY_RELIABLE, 30.0, 0.5));
+		startingInventory.add(
+				new ThrownWeapon("Fragmentation Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0, Concealability.POCKET,
+						Availability.POOR, Payload.HIGH_EXPLOSIVES, Reliability.VERY_RELIABLE, 30.0, 0.5));
+		startingInventory
+				.add(new ThrownWeapon("Incendiary Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0, Concealability.POCKET,
+						Availability.POOR, Payload.WHITE_PHOSPHOROUS, Reliability.VERY_RELIABLE, 30.0, 0.5));
+		startingInventory.add(new ThrownWeapon("Flashbang Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0,
+				Concealability.POCKET, Availability.POOR, Payload.FLASHBANG, Reliability.VERY_RELIABLE, 30.0, 0.5));
 		startingInventory.add(new ThrownWeapon("Sonic Grenade",
 				"An experimental type, popular in the EuroThater. Essentially, a mini-voder box, with a 1-second play "
 						+ "time and a one-use power source that fuses the unit into a lump. The burst of high decibels mixed with"
@@ -249,34 +241,26 @@ public class CyberpunkVendor {
 						+ "Noise-resistant headphones and various editing cyberaudio options allow you to resist the effects.",
 				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
 				NullProbability.getInstance(), Reliability.VERY_RELIABLE, 30.0, 0.5));
-		startingInventory.add(new ThrownWeapon("Nausea Grenade",
-				"Causes Illness in a 3m radius resulting in -4 REF. On a successful Save, take half the effects.",
-				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
-				NullProbability.getInstance(), Reliability.VERY_RELIABLE, 30.0, 0.5));
-		startingInventory.add(new ThrownWeapon("Teargas Grenade",
-				"Tear gas causes tearing & -2 REF in a 10m radius. On a successful Save, take half the effects.",
-				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
-				NullProbability.getInstance(), Reliability.VERY_RELIABLE, 30.0, 0.5));
-		startingInventory.add(new ThrownWeapon("Sleep Grenade",
-				"Causes sleep. On a successful Save, causes drowsiness (-2 to all stats).",
-				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
-				NullProbability.getInstance(), Reliability.VERY_RELIABLE, 30.0, 0.5));
-		startingInventory.add(new ThrownWeapon("Biotoxin I Grenade", "Deals 4D6 for each turn in the gas.",
-				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
-				NullProbability.getInstance(), Reliability.VERY_RELIABLE, 30.0, 0.5));
-		startingInventory.add(new ThrownWeapon("Biotoxin II Grenade", "Deals 8D6 for each turn in the gas.",
-				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
-				NullProbability.getInstance(), Reliability.VERY_RELIABLE, 30.0, 0.5));
-		startingInventory.add(new ThrownWeapon("Nerve Gas Grenade", "Deals 8D10 for each turn in the gas.",
-				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
-				NullProbability.getInstance(), Reliability.VERY_RELIABLE, 30.0, 0.5));
-		// TODO Change ammunition type to a Launched Grenade type.
+		startingInventory.add(new ThrownWeapon("Nausea Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0,
+				Concealability.POCKET, Availability.POOR, Payload.NAUSEA_GAS, Reliability.VERY_RELIABLE, 30.0, 0.5));
+		startingInventory.add(new ThrownWeapon("Teargas Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0,
+				Concealability.POCKET, Availability.POOR, Payload.TEARGAS, Reliability.VERY_RELIABLE, 30.0, 0.5));
+		startingInventory.add(new ThrownWeapon("Sleep Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0,
+				Concealability.POCKET, Availability.POOR, Payload.SLEEP_DRUGS, Reliability.VERY_RELIABLE, 30.0, 0.5));
+		startingInventory
+				.add(new ThrownWeapon("Biotoxin I Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0, Concealability.POCKET,
+						Availability.POOR, Payload.BIOTOXIN_I_GAS, Reliability.VERY_RELIABLE, 30.0, 0.5));
+		startingInventory
+				.add(new ThrownWeapon("Biotoxin II Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0, Concealability.POCKET,
+						Availability.POOR, Payload.BIOTOXIN_II_GAS, Reliability.VERY_RELIABLE, 30.0, 0.5));
+		startingInventory.add(new ThrownWeapon("Nerve Gas Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0,
+				Concealability.POCKET, Availability.POOR, Payload.NERVE_GAS, Reliability.VERY_RELIABLE, 30.0, 0.5));
 		startingInventory.add(new Firearm("Grenade Launchers",
 				"These come from manufacturers worldwide, and may be attached to any assault rifle (under the barrel). "
 						+ "Some can be given a simple shoulder stock for separate use.",
 				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.LONG_COAT, Availability.RARE,
-				new HomogeneousMagazine(Cartridge.AMMUNITION_TYPE_GRENADE, 1), 1, Reliability.STANDARD, 225, 150.0, 1.0,
-				shotgunAttachmentPoints));
+				new HomogeneousMagazine(LaunchedGrenade.AMMUNITION_TYPE_40MM, 1), 1, Reliability.STANDARD, 225, 150.0,
+				1.0, shotgunAttachmentPoints));
 		startingInventory.add(new Firearm("C-6 \"Flatfire\" Plastic Explosive",
 				"Grey block of plastique, can be detonated by timer, tripwire or signal.",
 				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
@@ -303,22 +287,21 @@ public class CyberpunkVendor {
 				new Probability(new Die(5, 6), 0),
 				new HomogeneousMagazine(CyberpunkWeapon.AMMUNITION_TYPE_RECHARGABLE_BATTERY, 20), 2,
 				Reliability.UNRELIABLE, 200, 8000.0, 3.0, shotgunAttachmentPoints));
-		startingInventory.add(new ExoticFirearm("Avante P-1135 Needlegun",
+		startingInventory.add(new Firearm("Avante P-1135 Needlegun",
 				"Lightweight, plastic, compressed air powered. Can be doped with drugs, poison. See FNFF for details.",
 				CyberpunkWeapon.WEAPON_TYPE_EXOTIC, CyberpunkSkill.HANDGUN, 0, Concealability.POCKET, Availability.POOR,
-				NullProbability.getInstance(), new HomogeneousMagazine(CyberpunkWeapon.AMMUNITION_TYPE_DRUGS, 15), 2,
-				Reliability.STANDARD, 40, 200.0, 1.0, shotgunAttachmentPoints));
-		startingInventory.add(new ExoticFirearm("Enertex AKM Power Squirt",
+				new HomogeneousMagazine(CyberpunkWeapon.AMMUNITION_TYPE_DRUGS, 15), 2, Reliability.STANDARD, 40, 200.0,
+				1.0, shotgunAttachmentPoints));
+		startingInventory.add(new Firearm("Enertex AKM Power Squirt",
 				"A squirtgun. Yes, a powered squirtgun. See FNFF before you laugh.", CyberpunkWeapon.WEAPON_TYPE_EXOTIC,
-				CyberpunkSkill.HANDGUN, -2, Concealability.JACKET, Availability.COMMON, NullProbability.getInstance(),
+				CyberpunkSkill.HANDGUN, -2, Concealability.JACKET, Availability.COMMON,
 				new HomogeneousMagazine(CyberpunkWeapon.AMMUNITION_TYPE_DRUGS, 50), 1, Reliability.VERY_RELIABLE, 10,
 				15.0, 1.0, shotgunAttachmentPoints));
-		startingInventory.add(new ExoticFirearm("Nelspot \"Wombat\" Airpistol",
+		startingInventory.add(new Firearm("Nelspot \"Wombat\" Airpistol",
 				"Paintball gun from hell. Can fire acid, paint, drugs, poison. See FNFF.",
 				CyberpunkWeapon.WEAPON_TYPE_EXOTIC, CyberpunkSkill.HANDGUN, -1, Concealability.JACKET,
-				Availability.COMMON, NullProbability.getInstance(),
-				new HomogeneousMagazine(CyberpunkWeapon.AMMUNITION_TYPE_DRUGS, 20), 2, Reliability.UNRELIABLE, 40,
-				200.0, 1.0, shotgunAttachmentPoints));
+				Availability.COMMON, new HomogeneousMagazine(CyberpunkWeapon.AMMUNITION_TYPE_DRUGS, 20), 2,
+				Reliability.UNRELIABLE, 40, 200.0, 1.0, shotgunAttachmentPoints));
 		startingInventory.add(new ExoticFirearm("Militech Electronics Taser",
 				"Zap. About the size of a small hand flashlight. See FNFF for details.",
 				CyberpunkWeapon.WEAPON_TYPE_EXOTIC, CyberpunkSkill.HANDGUN, -1, Concealability.JACKET,

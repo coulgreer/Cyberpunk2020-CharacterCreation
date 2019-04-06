@@ -185,6 +185,7 @@ public abstract class CyberpunkWeapon implements Weapon {
 	public static final String WEAPON_TYPE_HEAVY_WEAPON = "Heavy Weapon";
 	public static final String WEAPON_TYPE_MELEE_WEAPON = "Melee Weapon";
 	public static final String WEAPON_TYPE_BOW = "Bow";
+	public static final String WEAPON_TYPE_GRENADE = "Grenade";
 	public static final String WEAPON_TYPE_EXOTIC = "Exotic Weapon";
 	public static final String WEAPON_TYPE_UNARMED = "Unarmed";
 

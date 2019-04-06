@@ -58,6 +58,31 @@ public class ThrownWeapon extends CyberpunkWeapon {
 	private Combatant combatant;
 
 	/**
+	 * Constructs a thrown weapon with a payload. The payload is used to get the
+	 * damage and description for this weapon. This constructor is akin to a firearm
+	 * and a thrown weapon.
+	 * 
+	 * @param weaponName     the name used to identify this weapon
+	 * @param weaponType     the category of weapon that this weapon belongs to
+	 * @param weaponAccuracy the flat modifier to accuracy based solely on the
+	 *                       weapon
+	 * @param concealability the rating representing the ability to hide this weapon
+	 * @param availability   the rating representing how easy this weapon is to
+	 *                       obtain
+	 * @param load           the payload held inside the thrown weapon to derive
+	 *                       damage and description
+	 * @param reliability    the rating representing the probability of a weapon
+	 *                       jamming or malfunctioning
+	 * @param cost           the amount of money this weapon is worth
+	 * @param weight         the heaviness of this weapon
+	 */
+	public ThrownWeapon(String weaponName, String weaponType, int weaponAccuracy, Concealability concealability,
+			Availability availability, Payload load, Reliability reliability, double cost, double weight) {
+		this(weaponName, load.getEffects(), weaponType, weaponAccuracy, concealability, availability, load.getDamge(),
+				reliability, cost, weight);
+	}
+
+	/**
 	 * Constructs a thrown weapon that does not allow null values or non-negative
 	 * values excluding weaponAccuracy.
 	 * 
