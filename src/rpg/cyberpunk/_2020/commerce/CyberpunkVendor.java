@@ -239,7 +239,7 @@ public class CyberpunkVendor {
 						+ " super- or sub-sonics causes all within a 6m radius to make a Stun Save at +1; if the save is made, "
 						+ "make a Difficult BOD check or suffer deafness and disorientation (-2 all skill rolls) for 40 seconds. "
 						+ "Noise-resistant headphones and various editing cyberaudio options allow you to resist the effects.",
-				CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 0, Concealability.POCKET, Availability.POOR,
+				CyberpunkWeapon.WEAPON_TYPE_GRENADE, 0, Concealability.POCKET, Availability.POOR,
 				NullProbability.getInstance(), Reliability.VERY_RELIABLE, 30.0, 0.5));
 		startingInventory.add(new ThrownWeapon("Nausea Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0,
 				Concealability.POCKET, Availability.POOR, Payload.NAUSEA_GAS, Reliability.VERY_RELIABLE, 30.0, 0.5));

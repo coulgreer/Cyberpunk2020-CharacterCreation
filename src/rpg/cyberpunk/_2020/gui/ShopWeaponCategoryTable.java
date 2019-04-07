@@ -3,18 +3,19 @@ package rpg.cyberpunk._2020.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
+import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
 import rpg.util.Probability;
 
 /**
@@ -25,14 +26,12 @@ import rpg.util.Probability;
 public class ShopWeaponCategoryTable extends JTable {
 
 	/**
-	 * Constructs a table using a set of weapons.
+	 * Constructs a table using a set of weapons provided by a vendor.
 	 * 
-	 * @param weaponSet a collection of weapons a user can buy
+	 * @param vendor the owner of the set of weapons displayed on the table
 	 */
-	public ShopWeaponCategoryTable(Set<CyberpunkWeapon> weaponSet) {
-		super(new ShopWeaponTableModel(weaponSet));
-
-		setupRenderers();
+	public ShopWeaponCategoryTable(CyberpunkVendor vendor) {
+		super(new ShopWeaponTableModel(vendor));
 
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(getModel());
 		setRowSorter(sorter);
@@ -41,14 +40,9 @@ public class ShopWeaponCategoryTable extends JTable {
 		setRowHeight(WeaponTypeRenderer.ICON_HEIGHT);
 		getColumnModel().removeColumn(getColumnModel().getColumn(ShopWeaponTableModel.OBJECT_INDEX));
 		getColumnModel().getColumn(ShopWeaponTableModel.TYPE_INDEX).setPreferredWidth(WeaponTypeRenderer.ICON_HEIGHT);
-	}
-
-	private void setupRenderers() {
-		TableColumnModel columnModel = getColumnModel();
-		columnModel.getColumn(ShopWeaponTableModel.TYPE_INDEX).setCellRenderer(new WeaponTypeRenderer());
-		columnModel.getColumn(ShopWeaponTableModel.RANGE_INDEX).setCellRenderer(new DistanceRenderer());
-		columnModel.getColumn(ShopWeaponTableModel.COST_INDEX).setCellRenderer(new CurrencyRenderer());
-		columnModel.getColumn(ShopWeaponTableModel.DAMAGE_INDEX).setCellRenderer(new DamageRenderer());
+		
+		getTableHeader().setReorderingAllowed(false);
+		getTableHeader().setResizingAllowed(false);
 	}
 
 	@Override
@@ -79,6 +73,22 @@ public class ShopWeaponCategoryTable extends JTable {
 	}
 
 	@Override
+	public TableCellRenderer getCellRenderer(int rowIndex, int columnIndex) {
+		switch (convertColumnIndexToModel(columnIndex)) {
+		case ShopWeaponTableModel.TYPE_INDEX:
+			return new WeaponTypeRenderer();
+		case ShopWeaponTableModel.RANGE_INDEX:
+			return new DistanceRenderer();
+		case ShopWeaponTableModel.COST_INDEX:
+			return new CurrencyRenderer();
+		case ShopWeaponTableModel.DAMAGE_INDEX:
+			return new DamageRenderer();
+		default:
+			return super.getCellRenderer(rowIndex, columnIndex);
+		}
+	}
+
+	@Override
 	public String getToolTipText(MouseEvent e) {
 		String tip = null;
 		java.awt.Point p = e.getPoint();
@@ -98,7 +108,7 @@ public class ShopWeaponCategoryTable extends JTable {
 	 * 
 	 * @author Coul Greer
 	 */
-	public static class ShopWeaponTableModel extends DefaultTableModel {
+	public static class ShopWeaponTableModel extends AbstractTableModel {
 		/**
 		 * The index of the column used to hold the type of a weapon.
 		 */
@@ -167,6 +177,9 @@ public class ShopWeaponCategoryTable extends JTable {
 		 */
 		public static final int OBJECT_INDEX = 12;
 
+		/**
+		 * A collection of the names of the table headers.
+		 */
 		public static final String[] COLUMN_NAMES = { //
 				"", //
 				"Name", //
@@ -184,38 +197,14 @@ public class ShopWeaponCategoryTable extends JTable {
 
 		private Set<CyberpunkWeapon> weaponSet;
 
-		public ShopWeaponTableModel(Set<CyberpunkWeapon> weaponSet) {
-			this.weaponSet = weaponSet;
-
-			populateModel();
-		}
-
-		private void populateModel() {
-			Iterator<CyberpunkWeapon> iterator = weaponSet.iterator();
-
-			while (iterator.hasNext()) {
-				addRow(createRow(iterator.next()));
-			}
-		}
-
-		private Object[] createRow(CyberpunkWeapon weapon) {
-			Object[] row = new Object[COLUMN_NAMES.length];
-
-			row[NAME_INDEX] = weapon.getName();
-			row[TYPE_INDEX] = weapon.getWeaponType();
-			row[WEAPON_ACCURACY_INDEX] = weapon.getHitModifier();
-			row[CONCEALABILITY_INDEX] = weapon.getConcealability();
-			row[AVAILABILITY_INDEX] = weapon.getAvailability();
-			row[DAMAGE_INDEX] = new Probability(weapon.getDamageDice(), weapon.getDamageScore());
-			row[AMMO_INDEX] = weapon.getAmmunitionType();
-			row[NUMBER_OF_SHOTS_INDEX] = weapon.getAmmunitionCapacity();
-			row[RATE_OF_FIRE_INDEX] = weapon.getRateOfFire();
-			row[RELIABILITY_INDEX] = weapon.getReliability();
-			row[RANGE_INDEX] = weapon.getRangeModifier();
-			row[COST_INDEX] = weapon.getCost();
-			row[OBJECT_INDEX] = weapon;
-
-			return row;
+		/**
+		 * Creates a model that uses a set of weapons provided by a vendor to populate
+		 * the table view.
+		 * 
+		 * @param vendor the provider of the weapons that populate the table view
+		 */
+		public ShopWeaponTableModel(CyberpunkVendor vendor) {
+			this.weaponSet = vendor.getStoredWeapons();
 		}
 
 		@Override
@@ -224,18 +213,63 @@ public class ShopWeaponCategoryTable extends JTable {
 		}
 
 		@Override
-		public String getColumnName(int col) {
-			return COLUMN_NAMES[col];
+		public int getRowCount() {
+			return weaponSet.size();
 		}
 
 		@Override
-		public boolean isCellEditable(int row, int col) {
+		public Object getValueAt(int rowIndex, int columnIndex) {
+			List<CyberpunkWeapon> rows = new ArrayList<>(weaponSet);
+			CyberpunkWeapon weapon = rows.get(rowIndex);
+
+			switch (columnIndex) {
+			case TYPE_INDEX:
+				return weapon.getWeaponType();
+			case NAME_INDEX:
+				return weapon.getName();
+			case WEAPON_ACCURACY_INDEX:
+				return weapon.getHitModifier();
+			case CONCEALABILITY_INDEX:
+				return weapon.getConcealability();
+			case AVAILABILITY_INDEX:
+				return weapon.getAvailability();
+			case DAMAGE_INDEX:
+				return new Probability(weapon.getDamageDice(), weapon.getDamageScore());
+			case AMMO_INDEX:
+				return weapon.getAmmunitionType();
+			case NUMBER_OF_SHOTS_INDEX:
+				return weapon.getAmmunitionCapacity();
+			case RATE_OF_FIRE_INDEX:
+				return weapon.getRateOfFire();
+			case RELIABILITY_INDEX:
+				return weapon.getReliability();
+			case RANGE_INDEX:
+				return weapon.getRangeScore();
+			case COST_INDEX:
+				return weapon.getCost();
+			case OBJECT_INDEX:
+				return weapon;
+			default:
+				throw new IllegalArgumentException(
+						"The index " + columnIndex + " does not have a constant associated with it.");
+			}
+		}
+
+		@Override
+		public String getColumnName(int columnIndex) {
+			return COLUMN_NAMES[columnIndex];
+		}
+
+		@Override
+		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			return false;
 		}
 
 		@Override
-		public Class<?> getColumnClass(int col) {
-			return getValueAt(0, col).getClass();
+		public Class<?> getColumnClass(int columnIndex) {
+			Object value = getRowCount() > 0 ? getValueAt(0, columnIndex) : null;
+
+			return value == null ? Object.class : value.getClass();
 		}
 
 	}

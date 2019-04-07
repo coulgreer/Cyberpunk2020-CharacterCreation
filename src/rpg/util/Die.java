@@ -2,7 +2,13 @@ package rpg.util;
 
 import java.io.Serializable;
 
-public class Die implements Comparable<Die>, Serializable {
+/**
+ * Holds the data for dice notation used in many RPGs. The data being number of
+ * faces and the pool of chance.
+ * 
+ * @author Coul Greer
+ */
+public class Die implements Serializable {
 	protected static final int MIN_NUMBER_OF_DICE = 0;
 	protected static final int MIN_NUMBER_OF_FACES = 1;
 	protected static final int MIN_DIVIDEND = 1;
@@ -12,7 +18,7 @@ public class Die implements Comparable<Die>, Serializable {
 	private int dividend;
 
 	/**
-	 * Constructs a collection of die with the same face amount.
+	 * Constructs a pool of die with the same face amount.
 	 * 
 	 * @param numberOfDie   the amount of dice used in a roll
 	 * @param numberOfFaces the amount of sides on the rolled dice
@@ -23,8 +29,8 @@ public class Die implements Comparable<Die>, Serializable {
 	}
 
 	/**
-	 * Constructs a collection of die with the same face amount that is then divided
-	 * by a given amount after rolling.
+	 * Constructs a pool of die with the same face amount that is then divided by a
+	 * given amount after rolling.
 	 * 
 	 * @param numberOfDie   the amount of dice used in a roll
 	 * @param numberOfFaces the amount of sides on the rolled dice
@@ -46,7 +52,7 @@ public class Die implements Comparable<Die>, Serializable {
 		if (dividend > MIN_DIVIDEND) {
 			this.dividend = dividend;
 		} else {
-			dividend = MIN_DIVIDEND;
+			this.dividend = MIN_DIVIDEND;
 		}
 	}
 
@@ -68,6 +74,15 @@ public class Die implements Comparable<Die>, Serializable {
 		return numberOfFaces;
 	}
 
+	/**
+	 * Returns the value to divide the roll results by.
+	 * 
+	 * @return the value to divide the roll results by
+	 */
+	public int getDividend() {
+		return dividend;
+	}
+
 	@Override
 	public String toString() {
 		if (dividend > MIN_DIVIDEND) {
@@ -77,20 +92,4 @@ public class Die implements Comparable<Die>, Serializable {
 		}
 	}
 
-	@Override
-	public int compareTo(Die o) {
-		int die = numberOfFaces * numberOfDie;
-		int anotherDie = o.getNumberOfFaces() * o.getNumberOfDie();
-		int result = 0;
-
-		if (die < anotherDie) {
-			result = -1;
-		} else if (die == anotherDie) {
-			result = 0;
-		} else if (die > anotherDie) {
-			result = 1;
-		}
-
-		return result;
-	}
 }

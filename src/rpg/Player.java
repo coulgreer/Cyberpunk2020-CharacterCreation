@@ -27,7 +27,8 @@ import rpg.util.Probability;
 public class Player {
 	public static final String PROPERTY_NAME_MONEY = "Money";
 	public static final String PROPERTY_NAME_INVENTORY_WEIGHT = "Inventory";
-	public static final String PROPERTY_NAME_INVENTORY_WEAPON_ADDED = "Inventory: Weapon Added";
+	public static final String PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED = "Inventory: Weapon Manipulated";
+	public static final String PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED = "Inventory: Armor Manipulated";
 	public static final String PROPERTY_NAME_ROLE = "Role";
 
 	private PropertyChangeSupport changeSupport;
@@ -130,12 +131,17 @@ public class Player {
 
 		pocketInventory.add(weapon);
 
-		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_ADDED, null, weapon);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED, null, weapon);
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
 	}
 
 	public void addToInventory(CyberpunkArmor armor) {
+		double oldWeight = getTotalWeight();
+
 		pocketInventory.add(armor);
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED, null, armor);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
 	}
 
 	public void addToInventory(Ammunition ammunition) {
@@ -143,11 +149,21 @@ public class Player {
 	}
 
 	public void removeFromInventory(CyberpunkWeapon weapon, int quantity) {
+		double oldWeight = getTotalWeight();
+
 		pocketInventory.remove(weapon);
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED, null, weapon);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
 	}
 
 	public void removeFromInventory(CyberpunkArmor armor, int quantity) {
+		double oldWeight = getTotalWeight();
+
 		pocketInventory.remove(armor);
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED, null, armor);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
 	}
 
 	public void removeFromInventory(Ammunition ammunition, int quantity) {
@@ -193,8 +209,12 @@ public class Player {
 	}
 
 	public void buy(CyberpunkArmor armor, double price) {
+		double oldMoney = trader.getMoney();
+
 		trader.buy(price);
 		addToInventory(armor);
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
 	}
 
 	public void buy(Ammunition ammunition, double price) {
@@ -203,18 +223,30 @@ public class Player {
 	}
 
 	public void sell(CyberpunkWeapon weapon, double price) {
+		double oldMoney = trader.getMoney();
+
 		trader.sell(price);
-		pocketInventory.remove(weapon);
+		removeFromInventory(weapon, 1);
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
 	}
 
 	public void sell(CyberpunkArmor armor, double price) {
+		double oldMoney = trader.getMoney();
+
 		trader.sell(price);
-		pocketInventory.remove(armor);
+		removeFromInventory(armor, 1);
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
 	}
 
 	public void sell(Ammunition ammunition, double price) {
+		double oldMoney = trader.getMoney();
+
 		trader.sell(price);
 		pocketInventory.remove(ammunition);
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
 	}
 
 	public double getMoney() {

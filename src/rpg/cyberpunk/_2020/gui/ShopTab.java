@@ -41,10 +41,10 @@ public class ShopTab extends JPanel {
 		tabbedPane.setTabPlacement(JTabbedPane.LEFT);
 		add(tabbedPane, BorderLayout.CENTER);
 
-		JTable weaponTable = new ShopWeaponCategoryTable(vendor.getStoredWeapons());
+		JTable weaponTable = new ShopWeaponCategoryTable(vendor);
 		tabbedPane.addTab("Weapons", new ShopCategoryPanel(weaponTable, evt -> buyWeapon(weaponTable)));
 
-		JTable armorTable = new ShopArmorCategoryTable(vendor.getStoredArmors());
+		JTable armorTable = new ShopArmorCategoryTable(vendor);
 		tabbedPane.addTab("Armors", new ShopCategoryPanel(armorTable, evt -> buyArmor(armorTable)));
 
 	}
