@@ -9,8 +9,11 @@ import java.util.Set;
 import org.apache.commons.lang3.SerializationUtils;
 
 import rpg.cyberpunk._2020.combat.Arrow;
+import rpg.cyberpunk._2020.combat.Arrow.Tip;
 import rpg.cyberpunk._2020.combat.Bow;
 import rpg.cyberpunk._2020.combat.Cartridge;
+import rpg.cyberpunk._2020.combat.Cartridge.BulletType;
+import rpg.cyberpunk._2020.combat.Cartridge.CaseMaterial;
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Availability;
@@ -24,6 +27,7 @@ import rpg.cyberpunk._2020.combat.LaunchedGrenade;
 import rpg.cyberpunk._2020.combat.MeleeWeapon;
 import rpg.cyberpunk._2020.combat.Payload;
 import rpg.cyberpunk._2020.combat.ShotShell;
+import rpg.cyberpunk._2020.combat.ShotShell.Load;
 import rpg.cyberpunk._2020.combat.ThrownWeapon;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Ammunition;
@@ -43,6 +47,7 @@ public class CyberpunkVendor {
 		startingInventory = new BottomlessInventory();
 		addWeaponsToVendor();
 		addArmorToVendor();
+		addAmmunitionToVendor();
 	}
 
 	private void addWeaponsToVendor() {
@@ -490,6 +495,70 @@ public class CyberpunkVendor {
 		startingInventory.add(new CyberpunkArmor("MetalGear", "Laminated expoxide plate armor."
 				+ " Bulky and designed in modular sections, with helmet, arm & leg coverings, torso and back clamshell",
 				Arrays.stream(bodySuit).iterator(), CyberpunkArmor.ARMOR_TYPE_HARD, 25, 2, 600.0, 8.0));
+	}
+
+	// TODO Create enums for Calibers in Firearm.
+	private void addAmmunitionToVendor() {
+		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_5MM, 15.0);
+		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_6MM, 15.0);
+		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_9MM, 30.0);
+		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_10MM, 30.0);
+		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_11MM, 36.0);
+		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_12MM, 40.0);
+		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_556, 40.0);
+		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_762, 40.0);
+		// TODO 20MM ammo should be sold seperate not as 100/box.
+		startingInventory
+				.add(new Cartridge(Cartridge.AMMUNITION_TYPE_20MM, BulletType.SOFT_POINT, CaseMaterial.CASELESS, 25.0));
+		startingInventory.add(
+				new Cartridge(Cartridge.AMMUNITION_TYPE_20MM, BulletType.ARMOR_PIERCING, CaseMaterial.CASELESS, 25.0));
+		startingInventory
+				.add(new Cartridge(Cartridge.AMMUNITION_TYPE_20MM, BulletType.SOFT_POINT, CaseMaterial.COPPER, 25.0));
+		startingInventory.add(
+				new Cartridge(Cartridge.AMMUNITION_TYPE_20MM, BulletType.ARMOR_PIERCING, CaseMaterial.COPPER, 25.0));
+
+		addShotshells();
+		addArrows();
+		// TODO There are still more ammunition types to add to the vendor's inventory.
+	}
+
+	private void addCartridgeVarients(String caliber, double baseCost) {
+		BulletType[] bullets = BulletType.values();
+		CaseMaterial[] caseMaterials = CaseMaterial.values();
+
+		for (int bulletIndex = 0; bulletIndex < bullets.length; bulletIndex++) {
+			for (int caseIndex = 0; caseIndex < caseMaterials.length; caseIndex++) {
+				Ammunition ammunition = new Cartridge(caliber, bullets[bulletIndex], caseMaterials[caseIndex],
+						baseCost);
+
+				startingInventory.add(ammunition);
+			}
+		}
+	}
+
+	private void addShotshells() {
+		addShotshellVarients(ShotShell.AMMUNITION_TYPE_10_GAUGE);
+		addShotshellVarients(ShotShell.AMMUNITION_TYPE_12_GAUGE);
+		addShotshellVarients(ShotShell.AMMUNITION_TYPE_20_GAUGE);
+	}
+
+	private void addShotshellVarients(String gauge) {
+		Load[] shotloads = Load.values();
+		double baseCost = 15.0;
+
+		for (int loadIndex = 0; loadIndex < shotloads.length; loadIndex++) {
+			Ammunition shotshell = new ShotShell(gauge, shotloads[loadIndex], baseCost);
+
+			startingInventory.add(shotshell);
+		}
+	}
+
+	private void addArrows() {
+		Tip[] tips = Tip.values();
+
+		for (int tipIndex = 0; tipIndex < tips.length; tipIndex++) {
+			startingInventory.add(new Arrow(tips[tipIndex]));
+		}
 	}
 
 	public CyberpunkWeapon sellWeapon(CyberpunkWeapon weapon) {

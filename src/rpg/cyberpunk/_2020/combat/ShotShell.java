@@ -12,7 +12,7 @@ public class ShotShell implements Ammunition {
 
 	public static enum Load {
 		BUCKSHOT("Buckshot", " Small balls or pellets, often made of lead.", 1.0, 1.0, 1.0, 1.0), //
-		SLUG("Shotgun slug", "A solid shotgun round, using one large, rigid-core bullet instead of shot." //
+		SLUG("Slug", "A solid shotgun round, using one large, rigid-core bullet instead of shot." //
 				+ " The slug does 3D6+1 (20-gauge), 4D6+2 (12-gauge), 5D6+3 (10-gauge) damage at all ranges, and has no area effect."//
 				+ " The round is AP; any damage that penetrates hard armor is not halved.", 1.0, 1.0, 0.5, 1.0);
 
@@ -60,12 +60,12 @@ public class ShotShell implements Ammunition {
 
 	private String gauge;
 	private Load load;
-	private int cost;
+	private double cost;
 
-	public ShotShell(String gauge, Load load, int cost) {
+	public ShotShell(String gauge, Load load, double baseCost) {
 		this.gauge = gauge;
 		this.load = load;
-		this.cost = cost;
+		this.cost = baseCost;
 	}
 
 	@Override

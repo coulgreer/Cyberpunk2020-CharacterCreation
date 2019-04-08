@@ -12,6 +12,7 @@ import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
 import rpg.cyberpunk._2020.gui.ShopArmorCategoryTable.ShopArmorTableModel;
 import rpg.cyberpunk._2020.gui.ShopWeaponCategoryTable.ShopWeaponTableModel;
+import rpg.general.combat.Ammunition;
 
 /**
  * A panel used to hold all elements used to display all items that a vendor can
@@ -47,6 +48,9 @@ public class ShopTab extends JPanel {
 		JTable armorTable = new ShopArmorCategoryTable(vendor);
 		tabbedPane.addTab("Armors", new ShopCategoryPanel(armorTable, evt -> buyArmor(armorTable)));
 
+		JTable ammunitionTable = new ShopAmmunitionCategoryTable(vendor);
+		tabbedPane.addTab("Ammunition", new ShopCategoryPanel(ammunitionTable, evt -> buyAmmunition(ammunitionTable)));
+
 	}
 
 	private void buyWeapon(JTable table) {
@@ -76,5 +80,21 @@ public class ShopTab extends JPanel {
 			}
 		}
 	}
+
+	private void buyAmmunition(JTable table) {
+		int selectedRowIndex = table.getSelectedRow();
+		if (selectedRowIndex != -1) {
+			int actualSelectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
+
+			if (actualSelectedRowIndex >= 0) {
+				Ammunition ammunition = (Ammunition) table.getModel().getValueAt(actualSelectedRowIndex,
+						ShopArmorTableModel.OBJECT_INDEX);
+
+				player.buy(vendor.sellBoxOfAmmunition(ammunition), vendor.getAskPrice(ammunition));
+			}
+		}
+	}
+	
+	
 
 }

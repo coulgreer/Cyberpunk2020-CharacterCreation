@@ -2,6 +2,8 @@ package rpg;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
@@ -217,9 +219,13 @@ public class Player {
 		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
 	}
 
-	public void buy(Ammunition ammunition, double price) {
+	public void buy(List<Ammunition> ammunition, double price) {
 		trader.buy(price);
-		addToInventory(ammunition);
+
+		Iterator<Ammunition> iterator = ammunition.iterator();
+		while (iterator.hasNext()) {
+			addToInventory(iterator.next());
+		}
 	}
 
 	public void sell(CyberpunkWeapon weapon, double price) {

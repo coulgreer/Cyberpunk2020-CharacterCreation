@@ -3,6 +3,7 @@ package rpg.cyberpunk._2020.combat;
 import java.util.Objects;
 
 import rpg.general.combat.Ammunition;
+import rpg.util.NullProbability;
 import rpg.util.Probability;
 
 public class Arrow implements Ammunition {
@@ -115,11 +116,11 @@ public class Arrow implements Ammunition {
 	 * An arrow does not provide the damage for a weapon. It only augments the bows
 	 * raw damage.
 	 * 
-	 * @return null
+	 * @return a pool of 0 dice
 	 */
 	@Override
 	public Probability getDamage() {
-		return null;
+		return NullProbability.getInstance();
 	}
 
 	@Override
