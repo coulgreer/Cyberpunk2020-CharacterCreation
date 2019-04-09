@@ -6,12 +6,16 @@ import rpg.general.combat.Ammunition;
 import rpg.util.Die;
 import rpg.util.Probability;
 
+/**
+ * This is an implementation of <code>Ammunition</code> that uses
+ * <code>CaseMaterial</code>, <code>Bullet</code>, and a String representing the
+ * weapons caliber. A cartridge uses both the case material and a bullet to
+ * determine the overall cost while also using the bullet to get the damage
+ * modifiers and armor penetration.
+ * 
+ * @author Coul Greer
+ */
 public class Cartridge implements Ammunition {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8990165631272366924L;
-
 	public static final String AMMUNITION_TYPE_5MM = "5mm";
 	public static final String AMMUNITION_TYPE_6MM = "6mm";
 	public static final String AMMUNITION_TYPE_9MM = "9mm";
@@ -21,140 +25,220 @@ public class Cartridge implements Ammunition {
 	public static final String AMMUNITION_TYPE_556 = "5.56";
 	public static final String AMMUNITION_TYPE_762 = "7.62";
 	public static final String AMMUNITION_TYPE_20MM = "20mm";
-	public static final int AMMO_PER_BOX = 100;
 
+	/**
+	 * The part of the cartridge that determines what the material used for the
+	 * cartridge is made of. The default material being the caseless value.
+	 * 
+	 * @author Coul Greer
+	 */
 	public static enum CaseMaterial {
 		CASELESS("Caseless", "The powder is the casing of the projectile.", 1.0), //
-		COPPER("Copper", "A basic copper case.", 2.0);
+		COPPER("Copper", "A basic copper case for older weapons.", 2.0);
 
 		private String name;
 		private String description;
 		private double costMultiplier;
 
+		/**
+		 * Constructs a <code>CaseMaterial</code> used to modify the cost of the
+		 * cartridge as well as giving data for the name and description.
+		 * 
+		 * @param name           the identifier used to find the material used on a
+		 *                       cartridge
+		 * @param description    a blurb used to give an idea of what the case material
+		 *                       is made of
+		 * @param costMultiplier the amount to multiply the base cost of a cartridge by
+		 */
 		CaseMaterial(String name, String description, double costMultiplier) {
 			this.name = name;
 			this.description = description;
 			this.costMultiplier = costMultiplier;
 		}
 
+		/**
+		 * Returns the identifier of this case material.
+		 * 
+		 * @return the identifier of this case material
+		 */
 		public String getName() {
 			return name;
 		}
 
+		/**
+		 * Returns the blurb giving an idea of what the case material is made of.
+		 * 
+		 * @return the blurb giving an idea of what the case material is made of
+		 */
 		public String getDescription() {
 			return description;
 		}
 
+		/**
+		 * Returns the value to multiply the base cost of a <code>Cartridge</code> by.
+		 * 
+		 * @return the value to multiply the base cost of a <code>Cartridge</code> by
+		 */
 		public double getCostMultiplier() {
 			return costMultiplier;
 		}
 	}
 
-	public static enum BulletType {
-		SOFT_POINT("Soft Point", "These are the standard bullets that all guns fire.", 1.0, 1.0, 1.0, 1.0),
+	/**
+	 * The part of the cartridge that dictates the damage modifier and the armor
+	 * penetration. Also, modifies the base cost of a cartridge.
+	 * 
+	 * @author Coul Greer
+	 */
+	public static enum Bullet {
+		SOFT_POINT("Soft Point", "These are the standard bullets that all guns fire.", 1.0),
 		ARMOR_PIERCING("Armor Piercing",
 				"AP bullets have a steel jacket or core meant to penetrate various forms of armor." //
 						+ " The effects are armor SP x1/2 and penetrating damage x1/2 as well." //
 						+ " This is because such bullets have little or no expansion, and therefore reduce true damage.",
-				3.0, 0.5, 0.5, 0.5),
+				3.0),
 		HOLLOW_POINT("Hollow Point", "Special hollow-nosed ammo made of soft, quickly mushrooming lead." //
 				+ " When these rounds hit armor, the lead flattens bluntly and does mostly bruising damage." //
 				+ " However, when these rounds hit flesh, the lead squashes out to cause a massive wound cavity." //
 				+ " In effect, these rounds treat all armor as having 2x normal SP, but damage that penetrates is x1.5.",
-				1.125, 1.5, 2.0, 2.0);
+				1.125);
 
 		private String name;
 		private String description;
 		private double costMultiplier;
-		private double damageMultiplier;
-		private double hardArmorMultiplier;
-		private double softArmorMultiplier;
 
-		BulletType(String name, String description, double costMultiplier, double damageMultiplier,
-				double hardArmorMultiplier, double softArmorMultiplier) {
+		/**
+		 * Constructs a <code>Bullet</code> used to modify the cost of the cartridge as
+		 * well as give part of the name and the basic description related to damage
+		 * modification.
+		 * 
+		 * @param name           the identifier used to find the bullet used in a
+		 *                       cartridge
+		 * @param description    a blurb used to give an idea of what the bullet does
+		 *                       when damaging
+		 * @param costMultiplier the amount to multiply the base cost of a cartridge by
+		 */
+		Bullet(String name, String description, double costMultiplier) {
 			this.name = name;
 			this.description = description;
 			this.costMultiplier = costMultiplier;
-			this.damageMultiplier = damageMultiplier;
-			this.hardArmorMultiplier = hardArmorMultiplier;
-			this.softArmorMultiplier = softArmorMultiplier;
 		}
 
+		/**
+		 * Returns the identifier of the bullet used by this <code>Cartridge</code>
+		 * 
+		 * @return the identifier of the bullet used by this <code>Cartridge</code>
+		 */
 		public String getName() {
 			return name;
 		}
 
+		/**
+		 * Returns a blurb giving the multipliers used in damage manipulation.
+		 * 
+		 * @return a blurb giving the multipliers used in damage manipulation
+		 */
 		public String getDescription() {
 			return description;
 		}
 
-		public double getDamageMultiplier() {
-			return damageMultiplier;
-		}
-
-		public double getHardArmorMultiplier() {
-			return hardArmorMultiplier;
-		}
-
-		public double getSoftArmorMultiplier() {
-			return softArmorMultiplier;
-		}
-
+		/**
+		 * Returns the value to multiply the base cost of a <code>Cartridge</code> by.
+		 * 
+		 * @return the value to multiply the base cost of a <code>Cartridge</code> by
+		 */
 		public double getCostMultiplier() {
 			return costMultiplier;
 		}
 	}
 
 	private String caliber;
-	private BulletType bulletType;
+	private Bullet bullet;
 	private CaseMaterial caseMaterial;
-	private double cost;
+	private double baseCost;
+	private double weight;
 
-	public Cartridge(String caliber, BulletType bulletType, CaseMaterial caseMaterial, double cost) {
-		this.caliber = caliber;
-		this.bulletType = bulletType;
-		this.caseMaterial = caseMaterial;
-		this.cost = cost;
+	/**
+	 * Constructs a <code>Cartridge</code> with a given caliber used by
+	 * <code>CyberpunkWeapon</code>s to determine if they are compatible. Also, uses
+	 * <code>Bullet</code> and <code>CaseMaterial</code> to determine compatibility
+	 * and cost.
+	 * 
+	 * @param caliber      the identifier used to check if this cartridge will fit
+	 *                     inside a <code>CyberpunkWeapon</code> that expects this
+	 *                     caliber of cartridge
+	 * @param bullet       the delegate used to get the damage modifiers and
+	 *                     multiply the cost
+	 * @param caseMaterial a modifier to cost of this cartridge
+	 * @param baseCost     the value that is multiplied by the <code>Bullet</code>
+	 *                     and <code>CaseMaterial</code>
+	 * @param weight       the heaviness of a cartridge
+	 */
+	public Cartridge(String caliber, Bullet bullet, CaseMaterial caseMaterial, double baseCost, double weight) {
+		setCaliber(caliber);
+		setBullet(bullet);
+		setCost(baseCost);
+		setCaseMaterial(caseMaterial);
+	}
+
+	private void setCaliber(String caliber) {
+		if (caliber == null) {
+			throw new IllegalArgumentException("The field 'caliber' cannot be null.");
+		} else {
+			this.caliber = caliber;
+		}
+	}
+
+	private void setBullet(Bullet bullet) {
+		if (bullet == null) {
+			throw new IllegalArgumentException("The field 'bullet' cannot be null.");
+		} else {
+			this.bullet = bullet;
+		}
+	}
+
+	private void setCaseMaterial(CaseMaterial caseMaterial) {
+		if (caseMaterial == null) {
+			throw new IllegalArgumentException("The field 'caseMaterial' cannot be null.");
+		} else {
+			this.caseMaterial = caseMaterial;
+		}
+	}
+
+	private void setCost(double baseCost) {
+		if (baseCost < 0) {
+			throw new IllegalArgumentException("The field 'cost' cannot be a negative number.");
+		} else {
+			this.baseCost = baseCost;
+		}
 	}
 
 	@Override
 	public String getName() {
-		return caliber + " " + bulletType.getName() + " " + caseMaterial.getName();
+		return caseMaterial.getName() + " " + caliber + " " + bullet.getName();
 	}
 
 	@Override
 	public String getDescription() {
-		return "A cartridge with a " + bulletType.getName() + " bullet and a " + caseMaterial.getName() + "case./n/n   " //
-				+ bulletType.getName() + ": " + bulletType.getDescription() + "/n   " //
-				+ caseMaterial.getName() + ": " + caseMaterial.getDescription();
+		return "A " + caliber + " cartridge with a " + bullet.getName() + " bullet and a " + caseMaterial.getName()
+				+ "case./n/n   " //
+				+ "Bullet: " + bullet.getDescription() + "/n   " //
+				+ "Case Mat.: " + caseMaterial.getDescription();
 	}
 
 	@Override
 	public double getCost() {
-		return (cost * bulletType.getCostMultiplier() * caseMaterial.getCostMultiplier()) / AMMO_PER_BOX;
+		return (baseCost * bullet.getCostMultiplier() * caseMaterial.getCostMultiplier());
 	}
 
 	@Override
 	public double getWeight() {
-		return WEIGHT_OF_BOX / AMMO_PER_BOX;
-	}
-
-	@Override
-	public int getAmmunitionPerBox() {
-		return AMMO_PER_BOX;
+		return weight;
 	}
 
 	@Override
 	public String getAmmunitionType() {
 		return caliber;
-	}
-
-	protected BulletType getBullet() {
-		return bulletType;
-	}
-
-	protected CaseMaterial getCaseMaterial() {
-		return caseMaterial;
 	}
 
 	@Override
@@ -203,11 +287,12 @@ public class Cartridge implements Ammunition {
 		return new Probability(die, modifier);
 	}
 
-	@Override
-	public String printBonuses() {
-		return "Damage multiplier: " + bulletType.getDamageMultiplier() + "/n" //
-				+ "Soft Armor multiplier: " + bulletType.getSoftArmorMultiplier() + "/n"//
-				+ "Hard Armor multiplier: " + bulletType.getHardArmorMultiplier();
+	protected Bullet getBullet() {
+		return bullet;
+	}
+
+	protected CaseMaterial getCaseMaterial() {
+		return caseMaterial;
 	}
 
 	@Override
@@ -225,12 +310,12 @@ public class Cartridge implements Ammunition {
 		}
 
 		Cartridge cartridge = (Cartridge) o;
-		return cartridge.getAmmunitionType().equals(getAmmunitionType()) && cartridge.getBullet().equals(getBullet())
-				&& cartridge.getCaseMaterial().equals(getCaseMaterial());
+		return getAmmunitionType().equals(cartridge.getAmmunitionType()) && getBullet().equals(cartridge.getBullet())
+				&& getCaseMaterial().equals(cartridge.getCaseMaterial());
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getAmmunitionType(), bulletType, caseMaterial);
+		return Objects.hash(getAmmunitionType(), getBullet(), getCaseMaterial());
 	}
 }

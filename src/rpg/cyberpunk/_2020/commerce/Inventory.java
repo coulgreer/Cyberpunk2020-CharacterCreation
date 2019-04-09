@@ -81,6 +81,13 @@ public interface Inventory extends Serializable {
 	public void add(Ammunition ammunition);
 
 	/**
+	 * Stores a generic item.
+	 * 
+	 * @param item a generic element
+	 */
+	public void addItem(Item item);
+
+	/**
 	 * Throws away a <code>CyberpunkWeapon</code> if the item is stored in this
 	 * inventory.
 	 * 
@@ -104,6 +111,13 @@ public interface Inventory extends Serializable {
 	 * @param ammunition an <code>Ammunition</code> to throw out of this inventory
 	 */
 	public void remove(Ammunition ammunition);
+
+	/**
+	 * Throws away a generic item from all categories.
+	 * 
+	 * @param item a generic stored element
+	 */
+	public void removeItem(Item item);
 
 	/**
 	 * Makes a new set that contains a collection of <code>CyberpunkWeapon</code>.

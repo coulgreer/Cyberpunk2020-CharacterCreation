@@ -13,6 +13,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import rpg.cyberpunk._2020.commerce.Box;
 import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
 import rpg.general.combat.Ammunition;
 
@@ -89,7 +90,7 @@ public class ShopAmmunitionCategoryTable extends JTable {
 				"Ammo/Box", //
 				"Object" };
 
-		private Set<Ammunition> ammunitionSet;
+		private Set<Box<Ammunition>> ammunitionSet;
 
 		public ShopAmmunitionTableModel(CyberpunkVendor vendor) {
 			ammunitionSet = vendor.getStoredAmmunition();
@@ -107,24 +108,25 @@ public class ShopAmmunitionCategoryTable extends JTable {
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
-			List<Ammunition> rows = new ArrayList<>(ammunitionSet);
-			Ammunition ammunition = rows.get(rowIndex);
+			List<Box<Ammunition>> rows = new ArrayList<>(ammunitionSet);
+			Box<Ammunition> box = rows.get(rowIndex);
+			Ammunition ammunition = box.getItems().get(0);
 
 			switch (columnIndex) {
 			case ICON_INDEX:
 				return ammunition.getAmmunitionType();
 			case NAME_INDEX:
-				return ammunition.getName();
+				return box.getName();
 			case AMMUNITION_TYPE_INDEX:
 				return ammunition.getAmmunitionType();
 			case DAMAGE_INDEX:
 				return ammunition.getDamage();
 			case COST_INDEX:
-				return ammunition.getCost() * ammunition.getAmmunitionPerBox();
+				return box.getCost();
 			case BOX_INDEX:
-				return ammunition.getAmmunitionPerBox();
+				return box.getQuantity();
 			case OBJECT_INDEX:
-				return ammunition;
+				return box;
 			default:
 				throw new IllegalArgumentException();
 			}

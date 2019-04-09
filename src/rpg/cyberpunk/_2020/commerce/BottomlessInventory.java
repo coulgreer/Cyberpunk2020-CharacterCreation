@@ -79,10 +79,21 @@ public class BottomlessInventory implements Inventory {
 	@Override
 	public void add(Ammunition ammunition) {
 		if (ammunition == null) {
-			throw new IllegalArgumentException("Null AmmunitionStorage cannot be added to BottomlessInventory.");
+			throw new IllegalArgumentException("Null Ammunition cannot be added to BottomlessInventory.");
 		} else {
 			ammunitions.add(ammunition);
 			items.add(ammunition);
+
+			calculateWeight();
+		}
+	}
+
+	@Override
+	public void addItem(Item item) {
+		if (item == null) {
+			throw new IllegalArgumentException("Null Item cannot be added to BottomlessInventory.");
+		} else {
+			items.add(item);
 
 			calculateWeight();
 		}
@@ -110,6 +121,14 @@ public class BottomlessInventory implements Inventory {
 		items.remove(ammunition);
 
 		calculateWeight();
+	}
+
+	@Override
+	public void removeItem(Item item) {
+		weapons.remove(item);
+		armors.remove(item);
+		ammunitions.remove(item);
+		items.remove(item);
 	}
 
 	@Override

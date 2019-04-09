@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import rpg.cyberpunk._2020.combat.Cartridge.BulletType;
+import rpg.cyberpunk._2020.combat.Cartridge.Bullet;
 import rpg.cyberpunk._2020.combat.Cartridge.CaseMaterial;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Availability;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Concealability;
@@ -19,7 +19,7 @@ import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Ammunition;
 import rpg.general.combat.AmmunitionContainer;
 
-public class MissileWeaponTest {
+public class FirearmTest {
 	private static String weaponName;
 	private static String description;
 	private static int weaponAccuracy;
@@ -44,7 +44,7 @@ public class MissileWeaponTest {
 		concealability = Concealability.LONG_COAT;
 		availability = Availability.COMMON;
 		ammunitionType = Cartridge.AMMUNITION_TYPE_9MM;
-		cartridge = new Cartridge(ammunitionType, BulletType.SOFT_POINT, CaseMaterial.CASELESS, 0.0);
+		cartridge = new Cartridge(ammunitionType, Bullet.SOFT_POINT, CaseMaterial.CASELESS, 0.0, 0.0);
 		numberOfShots = 10;
 		rateOfFire = 2;
 		reliability = Reliability.VERY_RELIABLE;

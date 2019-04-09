@@ -1,6 +1,7 @@
 package rpg.cyberpunk._2020.gui;
 
 import java.awt.BorderLayout;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -9,6 +10,7 @@ import javax.swing.JTable;
 import rpg.Player;
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
+import rpg.cyberpunk._2020.commerce.Box;
 import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
 import rpg.cyberpunk._2020.gui.ShopArmorCategoryTable.ShopArmorTableModel;
 import rpg.cyberpunk._2020.gui.ShopWeaponCategoryTable.ShopWeaponTableModel;
@@ -87,14 +89,13 @@ public class ShopTab extends JPanel {
 			int actualSelectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
 
 			if (actualSelectedRowIndex >= 0) {
-				Ammunition ammunition = (Ammunition) table.getModel().getValueAt(actualSelectedRowIndex,
+				@SuppressWarnings("unchecked")
+				Box<Ammunition> ammunition = (Box<Ammunition>) table.getModel().getValueAt(actualSelectedRowIndex,
 						ShopArmorTableModel.OBJECT_INDEX);
 
 				player.buy(vendor.sellBoxOfAmmunition(ammunition), vendor.getAskPrice(ammunition));
 			}
 		}
 	}
-	
-	
 
 }

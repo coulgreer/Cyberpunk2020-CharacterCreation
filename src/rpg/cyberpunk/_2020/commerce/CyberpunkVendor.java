@@ -12,7 +12,7 @@ import rpg.cyberpunk._2020.combat.Arrow;
 import rpg.cyberpunk._2020.combat.Arrow.Tip;
 import rpg.cyberpunk._2020.combat.Bow;
 import rpg.cyberpunk._2020.combat.Cartridge;
-import rpg.cyberpunk._2020.combat.Cartridge.BulletType;
+import rpg.cyberpunk._2020.combat.Cartridge.Bullet;
 import rpg.cyberpunk._2020.combat.Cartridge.CaseMaterial;
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
@@ -41,10 +41,12 @@ import rpg.util.Probability;
 public class CyberpunkVendor {
 	private Trader trader;
 	private Inventory startingInventory;
+	private List<Box<Ammunition>> boxes;
 
 	public CyberpunkVendor(Trader trader) {
 		this.trader = trader;
 		startingInventory = new BottomlessInventory();
+		boxes = new ArrayList<Box<Ammunition>>();
 		addWeaponsToVendor();
 		addArmorToVendor();
 		addAmmunitionToVendor();
@@ -497,67 +499,72 @@ public class CyberpunkVendor {
 				Arrays.stream(bodySuit).iterator(), CyberpunkArmor.ARMOR_TYPE_HARD, 25, 2, 600.0, 8.0));
 	}
 
-	// TODO Create enums for Calibers in Firearm.
 	private void addAmmunitionToVendor() {
-		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_5MM, 15.0);
-		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_6MM, 15.0);
-		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_9MM, 30.0);
-		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_10MM, 30.0);
-		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_11MM, 36.0);
-		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_12MM, 40.0);
-		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_556, 40.0);
-		addCartridgeVarients(Cartridge.AMMUNITION_TYPE_762, 40.0);
-		// TODO 20MM ammo should be sold seperate not as 100/box.
-		startingInventory
-				.add(new Cartridge(Cartridge.AMMUNITION_TYPE_20MM, BulletType.SOFT_POINT, CaseMaterial.CASELESS, 25.0));
-		startingInventory.add(
-				new Cartridge(Cartridge.AMMUNITION_TYPE_20MM, BulletType.ARMOR_PIERCING, CaseMaterial.CASELESS, 25.0));
-		startingInventory
-				.add(new Cartridge(Cartridge.AMMUNITION_TYPE_20MM, BulletType.SOFT_POINT, CaseMaterial.COPPER, 25.0));
-		startingInventory.add(
-				new Cartridge(Cartridge.AMMUNITION_TYPE_20MM, BulletType.ARMOR_PIERCING, CaseMaterial.COPPER, 25.0));
-
+		addRegularCartridges();
+		boxes.add(new AmmunitionBox(new Cartridge(Cartridge.AMMUNITION_TYPE_20MM, Bullet.SOFT_POINT,
+				CaseMaterial.CASELESS, 25.0, AmmunitionBox.WEIGHT), 1));
+		boxes.add(new AmmunitionBox(new Cartridge(Cartridge.AMMUNITION_TYPE_20MM, Bullet.ARMOR_PIERCING,
+				CaseMaterial.CASELESS, 25.0, AmmunitionBox.WEIGHT), 1));
 		addShotshells();
 		addArrows();
-		// TODO There are still more ammunition types to add to the vendor's inventory.
+		addLaunchedGrenades();
 	}
 
-	private void addCartridgeVarients(String caliber, double baseCost) {
-		BulletType[] bullets = BulletType.values();
-		CaseMaterial[] caseMaterials = CaseMaterial.values();
+	private void addRegularCartridges() {
+		createCartridgeVarients(Cartridge.AMMUNITION_TYPE_5MM, 15.0);
+		createCartridgeVarients(Cartridge.AMMUNITION_TYPE_6MM, 15.0);
+		createCartridgeVarients(Cartridge.AMMUNITION_TYPE_9MM, 30.0);
+		createCartridgeVarients(Cartridge.AMMUNITION_TYPE_10MM, 30.0);
+		createCartridgeVarients(Cartridge.AMMUNITION_TYPE_11MM, 36.0);
+		createCartridgeVarients(Cartridge.AMMUNITION_TYPE_12MM, 40.0);
+		createCartridgeVarients(Cartridge.AMMUNITION_TYPE_556, 40.0);
+		createCartridgeVarients(Cartridge.AMMUNITION_TYPE_762, 40.0);
+	}
 
-		for (int bulletIndex = 0; bulletIndex < bullets.length; bulletIndex++) {
-			for (int caseIndex = 0; caseIndex < caseMaterials.length; caseIndex++) {
-				Ammunition ammunition = new Cartridge(caliber, bullets[bulletIndex], caseMaterials[caseIndex],
-						baseCost);
+	private void createCartridgeVarients(String caliber, double cost) {
+		int ammoPerBox = 100;
+		CaseMaterial[] materials = CaseMaterial.values();
+		Bullet[] bullets = Bullet.values();
 
-				startingInventory.add(ammunition);
+		for (int materialIndex = 0; materialIndex < materials.length; materialIndex++) {
+			for (int bulletIndex = 0; bulletIndex < bullets.length; bulletIndex++) {
+				boxes.add(new AmmunitionBox(new Cartridge(caliber, bullets[bulletIndex], materials[materialIndex],
+						cost / ammoPerBox, AmmunitionBox.WEIGHT / ammoPerBox), ammoPerBox));
 			}
 		}
 	}
 
 	private void addShotshells() {
-		addShotshellVarients(ShotShell.AMMUNITION_TYPE_10_GAUGE);
-		addShotshellVarients(ShotShell.AMMUNITION_TYPE_12_GAUGE);
-		addShotshellVarients(ShotShell.AMMUNITION_TYPE_20_GAUGE);
+		createShotshellVarients(ShotShell.AMMUNITION_TYPE_10_GAUGE);
+		createShotshellVarients(ShotShell.AMMUNITION_TYPE_12_GAUGE);
+		createShotshellVarients(ShotShell.AMMUNITION_TYPE_20_GAUGE);
 	}
 
-	private void addShotshellVarients(String gauge) {
-		Load[] shotloads = Load.values();
-		double baseCost = 15.0;
+	private void createShotshellVarients(String gauge) {
+		int ammoPerBox = 12;
+		Load[] loads = Load.values();
 
-		for (int loadIndex = 0; loadIndex < shotloads.length; loadIndex++) {
-			Ammunition shotshell = new ShotShell(gauge, shotloads[loadIndex], baseCost);
-
-			startingInventory.add(shotshell);
+		for (int loadIndex = 0; loadIndex < loads.length; loadIndex++) {
+			boxes.add(new AmmunitionBox(new ShotShell(gauge, loads[loadIndex], 15.0 / ammoPerBox), ammoPerBox));
 		}
 	}
 
 	private void addArrows() {
+		int ammoPerBox = 12;
 		Tip[] tips = Tip.values();
 
 		for (int tipIndex = 0; tipIndex < tips.length; tipIndex++) {
-			startingInventory.add(new Arrow(tips[tipIndex]));
+			boxes.add(new AmmunitionBox(new Arrow(tips[tipIndex]), ammoPerBox));
+		}
+	}
+
+	private void addLaunchedGrenades() {
+		int ammoPerBox = 1;
+		Payload[] loads = Payload.values();
+
+		for (int loadIndex = 0; loadIndex < loads.length; loadIndex++) {
+			boxes.add(new AmmunitionBox(new LaunchedGrenade(LaunchedGrenade.AMMUNITION_TYPE_40MM, loads[loadIndex],
+					50.0, AmmunitionBox.WEIGHT), ammoPerBox));
 		}
 	}
 
@@ -573,37 +580,16 @@ public class CyberpunkVendor {
 		return clonedArmor;
 	}
 
-	public List<Ammunition> sellBoxOfAmmunition(Ammunition ammunition) {
-		List<Ammunition> clonedAmmunition = new ArrayList<Ammunition>();
-		for (int i = 0; i < ammunition.getAmmunitionPerBox(); i++) {
-			clonedAmmunition.add((Ammunition) SerializationUtils.clone(ammunition));
-		}
-
-		return clonedAmmunition;
+	public List<Ammunition> sellBoxOfAmmunition(Box<Ammunition> ammunition) {
+		return ammunition.getItems();
 	}
 
-	public double getAskPrice(CyberpunkWeapon weapon) {
-		return trader.getAskPrice(weapon);
+	public double getAskPrice(Item item) {
+		return trader.getAskPrice(item);
 	}
 
-	public double getAskPrice(CyberpunkArmor armor) {
-		return trader.getAskPrice(armor);
-	}
-
-	public double getAskPrice(Ammunition ammunition) {
-		return trader.getAskPrice(ammunition);
-	}
-
-	public double getBidPrice(CyberpunkWeapon weapon) {
-		return trader.getBidPrice(weapon);
-	}
-
-	public double getBidPrice(CyberpunkArmor armor) {
-		return trader.getBidPrice(armor);
-	}
-
-	public double getBidPrice(Ammunition ammunition) {
-		return trader.getBidPrice(ammunition);
+	public double getBidPrice(Item item) {
+		return trader.getBidPrice(item);
 	}
 
 	public Set<CyberpunkWeapon> getStoredWeapons() {
@@ -614,8 +600,8 @@ public class CyberpunkVendor {
 		return startingInventory.createArmorSet();
 	}
 
-	public Set<Ammunition> getStoredAmmunition() {
-		return startingInventory.createAmmunitionSet();
+	public Set<Box<Ammunition>> getStoredAmmunition() {
+		return new HashSet<Box<Ammunition>>(boxes);
 	}
 
 	public Set<Item> getStoredItems() {

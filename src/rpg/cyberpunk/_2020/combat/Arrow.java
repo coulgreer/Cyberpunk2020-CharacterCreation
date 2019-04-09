@@ -6,58 +6,75 @@ import rpg.general.combat.Ammunition;
 import rpg.util.NullProbability;
 import rpg.util.Probability;
 
+/**
+ * This is an implementation of <code>Ammunition</code> that uses a
+ * <code>Tip</code> in order to get the description of this ammunition. The
+ * description in this case displays the special effects such as armor
+ * penetration and damage multiplication.
+ * 
+ * @author Coul Greer
+ */
 public class Arrow implements Ammunition {
 	/**
-	 * 
+	 * The default weight of a single arrow.
 	 */
-	private static final long serialVersionUID = 8916026780282546741L;
+	public static final double WEIGHT = 0.05;
 
 	public static final String AMMUNITION_TYPE_ARROW = "Arrow";
-	public static final int AMMO_PER_BOX = 12;
 
+	/**
+	 * The part of an <code>Arrow</code> that determines the cost, description, and
+	 * modifies the arrow's name.
+	 * 
+	 * @author Coul Greer
+	 */
 	public static enum Tip {
-		TARGET_POINT("Target point", "The basic arrow/quarrel (bows use arrows, crossbows use quarrels)." //
-				+ " Halves all armor SP, does normal damage.", 24.0, 1.0, 0.5, 0.5),
-		BROADHEAD_POINT("Broadhead point", "A head consisting of two or more razor-sharp blades." //
-				+ " Acts as a knife for armor penetration, penetrating damage is doubled.", 40.0, 2.0, 1.0, 0.5);
+		TARGET("Target", "The basic arrow/quarrel (bows use arrows, crossbows use quarrels)." //
+				+ " Halves all armor SP, does normal damage.", 2.0),
+		BROADHEAD("Broadhead", "A head consisting of two or more razor-sharp blades." //
+				+ " Acts as a knife for armor penetration, penetrating damage is doubled.", 3.5);
 
 		private String name;
 		private String description;
 		private double cost;
-		private double damageMultiplier;
-		private double hardArmorMultiplier;
-		private double softArmorMultiplier;
 
-		Tip(String name, String description, double cost, double damageMultiplier, double hardArmorMultiplier,
-				double softArmorMultiplier) {
+		/**
+		 * Constructs a value that belongs to a set of known <code>Tips</code> that
+		 * provides an <code>Arrow</code> with its name, description, and its base cost.
+		 * 
+		 * @param name        the identifier for this tip
+		 * @param description a blurb used to give an idea of what the given tip does
+		 * @param cost        the amount of money that the tip is worth
+		 */
+		Tip(String name, String description, double cost) {
 			this.name = name;
 			this.description = description;
 			this.cost = cost;
-			this.damageMultiplier = damageMultiplier;
-			this.hardArmorMultiplier = hardArmorMultiplier;
-			this.softArmorMultiplier = softArmorMultiplier;
 		}
 
+		/**
+		 * Returns the identifier of this tip.
+		 * 
+		 * @return the identifier of this tip
+		 */
 		public String getName() {
 			return name;
 		}
 
+		/**
+		 * Returns the blurb giving an idea of what the tip does when used.
+		 * 
+		 * @return the blurb giving an idea of what the tip does when used
+		 */
 		public String getDescription() {
 			return description;
 		}
 
-		public double getDamageMultiplier() {
-			return damageMultiplier;
-		}
-
-		public double getHardArmorMultiplier() {
-			return hardArmorMultiplier;
-		}
-
-		public double getSoftArmorMultiplier() {
-			return softArmorMultiplier;
-		}
-
+		/**
+		 * Returns the flat value used when getting the cost of an arrow as a whole.
+		 * 
+		 * @return the flat value used when getting the cost of an arrow
+		 */
 		public double cost() {
 			return cost;
 		}
@@ -65,32 +82,39 @@ public class Arrow implements Ammunition {
 
 	private Tip arrowTip;
 
-	public Arrow(Tip arrowTip) {
-		setArrowTip(arrowTip);
+	/**
+	 * Constructs an <code>Arrow</code> instance with a <code>Tip</code> that
+	 * dictates this arrow's name, description, and cost.
+	 * 
+	 * @param tip one of the tips used to derived the arrow's name, description, and
+	 *            base cost
+	 */
+	public Arrow(Tip tip) {
+		setTip(tip);
 	}
 
-	private void setArrowTip(Tip arrowTip) {
-		if (arrowTip != null) {
-			this.arrowTip = arrowTip;
+	private void setTip(Tip arrowTip) {
+		if (arrowTip == null) {
+			throw new IllegalArgumentException("The field 'arrowTip' cannot be null.");
 		} else {
-			throw new IllegalArgumentException();
+			this.arrowTip = arrowTip;
 		}
 	}
 
 	@Override
 	public String getName() {
-		return AMMUNITION_TYPE_ARROW + " with " + arrowTip.getName();
+		return arrowTip.getName() + " " + AMMUNITION_TYPE_ARROW;
 	}
 
 	@Override
 	public String getDescription() {
-		return "An arrow with a " + arrowTip.getName() + " tip./n/n   " //
-				+ arrowTip.getName() + ": " + arrowTip.getDescription();
+		return "An arrow with a " + arrowTip.getName() + "./n/n   " //
+				+ "Tip: " + arrowTip.getDescription();
 	}
 
 	@Override
 	public double getCost() {
-		return arrowTip.cost() / AMMO_PER_BOX;
+		return arrowTip.cost();
 	}
 
 	@Override
@@ -98,18 +122,9 @@ public class Arrow implements Ammunition {
 		return AMMUNITION_TYPE_ARROW;
 	}
 
-	protected Tip getArrowTip() {
-		return arrowTip;
-	}
-
 	@Override
 	public double getWeight() {
-		return WEIGHT_OF_BOX / AMMO_PER_BOX;
-	}
-
-	@Override
-	public int getAmmunitionPerBox() {
-		return AMMO_PER_BOX;
+		return WEIGHT;
 	}
 
 	/**
@@ -123,11 +138,8 @@ public class Arrow implements Ammunition {
 		return NullProbability.getInstance();
 	}
 
-	@Override
-	public String printBonuses() {
-		return "Damage multiplier: " + arrowTip.getDamageMultiplier() + "/n" //
-				+ "Soft Armor multiplier: " + arrowTip.getSoftArmorMultiplier() + "/n"//
-				+ "Hard Armor multiplier: " + arrowTip.getHardArmorMultiplier();
+	protected Tip getArrowTip() {
+		return arrowTip;
 	}
 
 	@Override
@@ -145,11 +157,11 @@ public class Arrow implements Ammunition {
 		}
 
 		Arrow arrow = (Arrow) o;
-		return arrow.getAmmunitionType().equals(getAmmunitionType()) && arrow.getArrowTip().equals(getArrowTip());
+		return getAmmunitionType().equals(arrow.getAmmunitionType()) && getArrowTip().equals(arrow.getArrowTip());
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getAmmunitionType(), arrowTip);
+		return Objects.hash(getAmmunitionType(), getArrowTip());
 	}
 }
