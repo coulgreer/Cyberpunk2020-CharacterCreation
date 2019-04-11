@@ -6,11 +6,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import rpg.Player;
 import rpg.general.combat.BodyLocation;
 
+/**
+ * A class that manages if a piece of armor can be worn and then can display the
+ * protective score for each body location.
+ * 
+ * @author Coul Greer
+ */
 public class ArmorManager {
+	/**
+	 * A constant representing how many pieces of hard armor can be placed on a body
+	 * location.
+	 */
 	public static final int MAX_HARD_ARMOR_LAYERS = 1;
+
+	/**
+	 * The maximum amount of armor that can be placed on a body location regardless
+	 * of armor type.
+	 */
 	public static final int MAX_TOTAL_ARMOR_LAYERS = 3;
 
 	public static final int NO_STOPPING_POWER_MODIFIER = 0;
@@ -20,14 +34,15 @@ public class ArmorManager {
 	public static final int HIGH_STOPPING_POWER_MODIFIER = 4;
 	public static final int VERY_HIGH_STOPPING_POWER_MODIFIER = 5;
 
-	private Player player;
 	private int totalEncumbranceValue;
 	private List<CyberpunkArmor> armors;
 	private Map<BodyLocation, Integer> layerTracker;
 	private Map<BodyLocation, Integer> localizedDurabilities;
 
-	public ArmorManager(Player player) {
-		this.player = player;
+	/**
+	 * Constructs an ArmorManager that initializes the total encumbrance to be 0.
+	 */
+	public ArmorManager() {
 		totalEncumbranceValue = 0;
 		armors = new ArrayList<CyberpunkArmor>();
 		initializeLayerTracker();
@@ -50,13 +65,20 @@ public class ArmorManager {
 		}
 	}
 
+	/**
+	 * Puts the armor in the manager and updates the data where the armor is
+	 * covering.
+	 * 
+	 * @param armor the item to keep track of
+	 * @return true, if the armor was accepted into the collection
+	 */
 	public boolean add(CyberpunkArmor armor) {
 		boolean hasAdded;
 		if (hasAdded = isAddable(armor)) {
-			player.removeFromInventory(armor, 1);
 			updateLocalizedDurabilities(armor);
 			incrementLayers(armor);
 			armors.add(armor);
+
 			calculateEncumbranceValue();
 		}
 		return hasAdded;
@@ -152,21 +174,7 @@ public class ArmorManager {
 		}
 	}
 
-	public boolean remove(CyberpunkArmor armor) {
-		boolean hasRemoved = false;
-		if (armors.contains(armor)) {
-			player.addToInventory(armor);
-			armors.remove(armor);
-			hasRemoved = true;
-		}
-		return hasRemoved;
-	}
-
-	public int getLocationDurability(BodyLocation location) {
-		return localizedDurabilities.get(location);
-	}
-
-	public void calculateEncumbranceValue() {
+	private void calculateEncumbranceValue() {
 		totalEncumbranceValue = totalEncumbranceValue + getEncumbranceBonus(layerTracker.get(BodyLocation.HEAD))
 				+ getEncumbranceBonus(layerTracker.get(BodyLocation.TORSO))
 				+ (getEncumbranceBonus(layerTracker.get(BodyLocation.RIGHT_ARM))
@@ -191,6 +199,33 @@ public class ArmorManager {
 		} else {
 			return -1;
 		}
+	}
+
+	/**
+	 * Takes the armor out of the manager and updates the data where the armor was
+	 * covering.
+	 * 
+	 * @param armor the item to take out
+	 * @return true, if the armor was taken out of the collection
+	 */
+	public boolean remove(CyberpunkArmor armor) {
+		boolean hasRemoved = false;
+		if (armors.contains(armor)) {
+			armors.remove(armor);
+			hasRemoved = true;
+		}
+		return hasRemoved;
+	}
+
+	/**
+	 * Returns the current durability of all armor pieces combined in the given body
+	 * location.
+	 * 
+	 * @param location the area used to get the specific durability value
+	 * @return the summation of all armor pieces at the <code>BodyLocation</code>
+	 */
+	public int getLocationDurability(BodyLocation location) {
+		return localizedDurabilities.get(location);
 	}
 
 	public int getEncumbranceValue() {

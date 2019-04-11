@@ -22,11 +22,6 @@ import rpg.util.Probability;
  */
 public class ThrownWeapon extends CyberpunkWeapon {
 	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3604411589693594584L;
-
-	/**
 	 * The default rate of fire of any thrown weapon.
 	 */
 	public static final int RATE_OF_FIRE = 1;

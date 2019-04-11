@@ -5,6 +5,14 @@ import java.util.List;
 
 import rpg.util.Probability;
 
+/**
+ * An interface that is the actor in combat. Used to get combat stats such as
+ * attack, hit, and damage modifiers. Also, calculates the scores for attack,
+ * hit, and damage while keeping track of when a combat action is done.
+ * 
+ * @author Coul Greer
+ *
+ */
 public interface Combatant extends Serializable {
 	/**
 	 * Equips a weapon to a combatants slot while returning the old weapon.

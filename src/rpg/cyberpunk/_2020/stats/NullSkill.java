@@ -3,18 +3,31 @@ package rpg.cyberpunk._2020.stats;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * An instance of CyberpunkSkill that does nothing. Follows the Null Object
+ * pattern.
+ * 
+ * @author Coul Greer
+ */
 public class NullSkill implements CyberpunkSkill {
 	private static NullSkill uniqueInstance;
 
-	private NullSkill() {
-		uniqueInstance = null;
-	}
-
+	/**
+	 * Constructs a new NullSkill if one has not already been created. This is the
+	 * only way to get an instance of this class, and this should represent that
+	 * this will be the only instance of this class.
+	 * 
+	 * @return the one and only instance of NullSkill
+	 */
 	public static NullSkill getInstance() {
 		if (uniqueInstance == null) {
 			uniqueInstance = new NullSkill();
 		}
 		return uniqueInstance;
+	}
+
+	private NullSkill() {
+		uniqueInstance = null;
 	}
 
 	@Override

@@ -2,6 +2,8 @@ package rpg.cyberpunk._2020.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -13,31 +15,31 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import rpg.cyberpunk._2020.commerce.Box;
-import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
+import rpg.Player;
 import rpg.general.combat.Ammunition;
 
 /**
- * An instance of JTable that uses a <code>ShopAmmunitionTableModel</code>.
+ * An instance of JTable that uses a <code>InventoryAmmunitionTableModel</code>.
  * 
  * @author Coul Greer
  */
-public class ShopAmmunitionCategoryTable extends JTable {
+public class InventoryAmmunitionTable extends JTable {
 
 	/**
 	 * Constructs a table that does not allow the columns to be resized or headers
 	 * to be reordered. As well as having a hidden column that hosts the object that
-	 * the information is derived from.
+	 * the information is derived from. While also using a player to get data for
+	 * the table model.
 	 * 
-	 * @param vendor the owner of the data given to the model
+	 * @param player the owner of the displayed inventory
 	 */
-	public ShopAmmunitionCategoryTable(CyberpunkVendor vendor) {
-		super(new ShopAmmunitionTableModel(vendor));
+	public InventoryAmmunitionTable(Player player) {
+		super(new InventoryAmmunitionTableModel(player));
 
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(getModel());
 		setRowSorter(sorter);
 
-		getColumnModel().removeColumn(getColumnModel().getColumn(ShopAmmunitionTableModel.OBJECT_INDEX));
+		getColumnModel().removeColumn(getColumnModel().getColumn(InventoryAmmunitionTableModel.OBJECT_INDEX));
 
 		getTableHeader().setReorderingAllowed(false);
 		getTableHeader().setResizingAllowed(false);
@@ -73,23 +75,24 @@ public class ShopAmmunitionCategoryTable extends JTable {
 	@Override
 	public TableCellRenderer getCellRenderer(int rowIndex, int columnIndex) {
 		switch (convertColumnIndexToModel(columnIndex)) {
-		case ShopAmmunitionTableModel.DAMAGE_INDEX:
+		case InventoryAmmunitionTableModel.DAMAGE_INDEX:
 			return new DamageRenderer();
-		case ShopAmmunitionTableModel.COST_INDEX:
+		case InventoryAmmunitionTableModel.COST_INDEX:
 			return new CurrencyRenderer();
+		case InventoryAmmunitionTableModel.WEIGHT_INDEX:
+			return new WeightRenderer();
 		default:
 			return super.getCellRenderer(rowIndex, columnIndex);
 		}
 	}
 
 	/**
-	 * An instance of AbstractTableModel that uses <code>CyberpunkVendor</code> to
-	 * populate the model with stored <code>Ammunition</code>. Has a Name, Type,
-	 * Damage, Cost,Ammo per Box, and Object column.
+	 * An instance of AbstractTableModel that has a Name, Type, Damage, Cost,
+	 * Weight, Quantity, and Object column.
 	 * 
 	 * @author Coul Greer
 	 */
-	public static class ShopAmmunitionTableModel extends AbstractTableModel {
+	public static class InventoryAmmunitionTableModel extends AbstractTableModel implements PropertyChangeListener {
 		/**
 		 * The index for the column that holds the data for an ammunition's name.
 		 */
@@ -112,37 +115,46 @@ public class ShopAmmunitionCategoryTable extends JTable {
 		public static final int COST_INDEX = 3;
 
 		/**
-		 * The index for the column that holds the data for how much ammunition is
-		 * bought at once.
+		 * The index for the column that holds the data for an ammunition's weight.
 		 */
-		public static final int BOX_INDEX = 4;
+		public static final int WEIGHT_INDEX = 4;
+
+		/**
+		 * The index for the column that holds the amount of that ammunition held.
+		 */
+		public static final int QUANTITY_INDEX = 5;
 
 		/**
 		 * The index for the column that holds the ammunition object.
 		 */
-		public static final int OBJECT_INDEX = 5;
+		public static final int OBJECT_INDEX = 6;
 
 		/**
 		 * The identifier of all the columns.
 		 */
-		public static final String[] COLUMN_NAMES = { //
+		public String[] COLUMN_NAMES = { //
 				"Name", //
 				"Type", //
 				"Damage", //
 				"Cost", //
-				"Ammo/Box", //
+				"Weight", //
+				"Quantity", //
 				"Object" };
 
-		private Set<Box<Ammunition>> ammunitionSet;
+		private Player player;
+		private Set<Ammunition> ammunitionSet;
 
 		/**
-		 * Constructs a model that uses CyberpunkVendor to get a collection of
-		 * Ammunition.
+		 * Constructs a model that uses player to get data for the model while also
+		 * observing the player for changes in their inventory related to ammunition.
 		 * 
-		 * @param vendor the owner of the collection of ammunition
+		 * @param player the provider of the model data.
 		 */
-		public ShopAmmunitionTableModel(CyberpunkVendor vendor) {
-			ammunitionSet = vendor.getStoredAmmunition();
+		public InventoryAmmunitionTableModel(Player player) {
+			this.player = player;
+			this.ammunitionSet = player.getCarriedAmmunition();
+
+			player.addPropertyChangeListener(Player.PROPERTY_NAME_INVENTORY_AMMUNITION_MANIPULATED, this);
 		}
 
 		@Override
@@ -157,23 +169,25 @@ public class ShopAmmunitionCategoryTable extends JTable {
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
-			List<Box<Ammunition>> rows = new ArrayList<>(ammunitionSet);
-			Box<Ammunition> box = rows.get(rowIndex);
-			Ammunition ammunition = box.getItems().get(0);
+			List<Ammunition> rows = new ArrayList<>(ammunitionSet);
+			Ammunition ammunition = rows.get(rowIndex);
+			int quantity = player.getQuantity(ammunition);
 
 			switch (columnIndex) {
 			case NAME_INDEX:
-				return box.getName();
+				return ammunition.getName();
 			case TYPE_INDEX:
 				return ammunition.getAmmunitionType();
 			case DAMAGE_INDEX:
 				return ammunition.getDamage();
 			case COST_INDEX:
-				return box.getCost();
-			case BOX_INDEX:
-				return box.getQuantity();
+				return ammunition.getCost() * quantity;
+			case WEIGHT_INDEX:
+				return ammunition.getWeight() * quantity;
+			case QUANTITY_INDEX:
+				return quantity;
 			case OBJECT_INDEX:
-				return box;
+				return ammunition;
 			default:
 				throw new IllegalArgumentException(
 						"The index " + columnIndex + " does not have a constant associated with it.");
@@ -195,6 +209,16 @@ public class ShopAmmunitionCategoryTable extends JTable {
 			Object value = getRowCount() > 0 ? getValueAt(0, columnIndex) : null;
 
 			return value == null ? Object.class : value.getClass();
+		}
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			Object source = evt.getSource();
+
+			if (source == player) {
+				ammunitionSet = player.getCarriedAmmunition();
+				fireTableDataChanged();
+			}
 		}
 
 	}

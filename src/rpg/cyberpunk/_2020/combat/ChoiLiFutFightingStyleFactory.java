@@ -4,7 +4,7 @@ import java.util.Collections;
 
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
-public class ChoiLiFutFightingStyleFactory implements AbstractFightingStyleFactory {
+public class ChoiLiFutFightingStyleFactory implements FightingStyleFactory {
 	protected static final String DESCRIPTION = "Descended directly from the ancient Shaolin temples, this form combines powerful roundhouse blows and sweeping kicks into a dynamic fighting style.";
 
 	private static ChoiLiFutFightingStyleFactory uniqueInstance;

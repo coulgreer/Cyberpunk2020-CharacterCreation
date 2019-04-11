@@ -15,7 +15,7 @@ public class Probability implements Comparable<Probability>, Serializable {
 	/**
 	 * Constructs a default probability with a die pool of 0 and a modifier of 0.
 	 * 
-	 * @see rpg.util.Probability#Probability(Die, int)
+	 * @see Probability#Probability(Die, int)
 	 */
 	public Probability() {
 		this(new Die(0, 0), 0);

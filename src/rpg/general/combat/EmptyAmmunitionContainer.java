@@ -2,6 +2,13 @@ package rpg.general.combat;
 
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 
+/**
+ * An instance of AmmunitionContainer that models itself after the Null Object
+ * pattern. There is no unique instance, however, this is still a do-nothing
+ * AmmunitionContainer used for weapons that cannot hold ammunition.
+ * 
+ * @author Coul Greer
+ */
 public class EmptyAmmunitionContainer implements AmmunitionContainer {
 	@Override
 	public Ammunition withdrawAmmunition() {

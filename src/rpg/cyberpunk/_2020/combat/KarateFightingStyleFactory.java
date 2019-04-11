@@ -4,7 +4,7 @@ import java.util.Collections;
 
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
-public class KarateFightingStyleFactory implements AbstractFightingStyleFactory {
+public class KarateFightingStyleFactory implements FightingStyleFactory {
 	protected static final String DESCRIPTION = "The Japanese version of kung fu, this style uses straight line movements and powerful blows." //
 			+ " Variations include shotokan and kenpo, each with their own special moves.";
 

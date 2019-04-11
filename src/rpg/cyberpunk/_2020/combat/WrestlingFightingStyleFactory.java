@@ -4,7 +4,7 @@ import java.util.Collections;
 
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
-public class WrestlingFightingStyleFactory implements AbstractFightingStyleFactory {
+public class WrestlingFightingStyleFactory implements FightingStyleFactory {
 	public static final String DESCRIPTION = "This form combines techniques of Olympic and Professional wrestling." //
 			+ " The style uses a wide variety of throws and holds to incapacitate the opponent.";
 

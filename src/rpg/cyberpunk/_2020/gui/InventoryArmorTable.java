@@ -25,7 +25,7 @@ import rpg.general.combat.BodyLocation;
  * 
  * @author Coul Greer
  */
-public class InventoryArmorCategoryTable extends JTable {
+public class InventoryArmorTable extends JTable {
 
 	/**
 	 * Constructs a table used to display a player's collection of armor held in
@@ -33,7 +33,7 @@ public class InventoryArmorCategoryTable extends JTable {
 	 * 
 	 * @param player the owner of the displayed inventory
 	 */
-	public InventoryArmorCategoryTable(Player player) {
+	public InventoryArmorTable(Player player) {
 		super(new InventoryArmorTableModel(player));
 
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(getModel());
@@ -133,9 +133,14 @@ public class InventoryArmorCategoryTable extends JTable {
 		public static final int WEIGHT_INDEX = 6;
 
 		/**
+		 * The index of the column used to hold the quantity of a weapon.
+		 */
+		public static final int QUANTITY_INDEX = 7;
+
+		/**
 		 * The index of the column used to hold the object representing an armor.
 		 */
-		public static final int OBJECT_INDEX = 7;
+		public static final int OBJECT_INDEX = 8;
 
 		/**
 		 * A collection of the names of the table headers.
@@ -148,6 +153,7 @@ public class InventoryArmorCategoryTable extends JTable {
 				"EV", //
 				"Cost", //
 				"Wt.", //
+				"Qty.", //
 				"Object" };
 
 		private Player player;
@@ -175,6 +181,7 @@ public class InventoryArmorCategoryTable extends JTable {
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			List<CyberpunkArmor> rows = new ArrayList<>(armorSet);
 			CyberpunkArmor armor = rows.get(rowIndex);
+			int quantity = player.getQuantity(armor);
 
 			switch (columnIndex) {
 			case COVERS_INDEX:
@@ -189,6 +196,8 @@ public class InventoryArmorCategoryTable extends JTable {
 				return armor.getEncumbranceValue();
 			case COST_INDEX:
 				return armor.getCost();
+			case QUANTITY_INDEX:
+				return quantity;
 			case WEIGHT_INDEX:
 				return armor.getWeight();
 			case OBJECT_INDEX:

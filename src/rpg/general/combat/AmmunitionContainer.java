@@ -4,7 +4,20 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An interface that handles Ammunition when used in the context of being inside
+ * a weapon. Allows the return of the current and maximum amount of ammunition
+ * that can be held within a weapon. Also, handles the deposit and withdraw of
+ * ammunition from an instance of this interface.
+ * 
+ * @author cagreer
+ *
+ */
 public interface AmmunitionContainer extends Serializable {
+	/**
+	 * A constant value representing that an AmmunitionContainer has no ammunition
+	 * present.
+	 */
 	public static final int EMPTY = 0;
 
 	/**

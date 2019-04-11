@@ -24,7 +24,7 @@ public class WeightRenderer extends DefaultTableCellRenderer {
 	public void setValue(Object value) {
 		Double weight = (Double) value;
 
-		setText(String.format("%01.1f kg", weight));
+		setText(String.format("%01.2f kg", weight));
 	}
 
 }

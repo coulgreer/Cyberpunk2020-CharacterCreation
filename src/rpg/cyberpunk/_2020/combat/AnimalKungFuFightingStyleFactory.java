@@ -4,7 +4,7 @@ import java.util.Collections;
 
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
-public class AnimalKungFuFightingStyleFactory implements AbstractFightingStyleFactory {
+public class AnimalKungFuFightingStyleFactory implements FightingStyleFactory {
 	protected static final String DESCRIPTION = "These forms based on animal movements, such as crane, mantis, tiger, leopard and dragon forms." //
 			+ " These attacks are fast and dangerous, with a style that is exciting and flashy.";
 	private static AnimalKungFuFightingStyleFactory uniqueInstance;

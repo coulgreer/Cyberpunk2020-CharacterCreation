@@ -64,12 +64,14 @@ public class WeaponTypeRenderer extends DefaultTableCellRenderer {
 		case CyberpunkWeapon.WEAPON_TYPE_GRENADE:
 			imgAddress = weaponIconAddress + "grenade-512.png";
 			break;
+		case CyberpunkWeapon.WEAPON_TYPE_EXOTIC:
+			imgAddress = weaponIconAddress + "explosive-512.png";
+			break;
 		case CyberpunkWeapon.WEAPON_TYPE_UNARMED:
 			imgAddress = weaponIconAddress + "fist-512.png";
 			break;
 		default:
-			// TODO Think about default icon and add a icon for exotics.
-			imgAddress = weaponIconAddress + "fist-512.png";
+			imgAddress = "img/icons/error-512.png";
 			break;
 		}
 

@@ -25,7 +25,7 @@ import rpg.util.Probability;
  * 
  * @author Coul Greer
  */
-public class InventoryWeaponCategoryTable extends JTable {
+public class InventoryWeaponTable extends JTable {
 
 	/**
 	 * Constructs a table used to display a player's collection of weapons held in
@@ -33,7 +33,7 @@ public class InventoryWeaponCategoryTable extends JTable {
 	 * 
 	 * @param player the owner of the displayed inventory
 	 */
-	public InventoryWeaponCategoryTable(Player player) {
+	public InventoryWeaponTable(Player player) {
 		super(new InventoryWeaponTableModel(player));
 
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(getModel());
@@ -169,9 +169,14 @@ public class InventoryWeaponCategoryTable extends JTable {
 		public static final int WEIGHT_INDEX = 12;
 
 		/**
+		 * The index of the column used to hold the quantity of a weapon.
+		 */
+		public static final int QUANTITY_INDEX = 13;
+
+		/**
 		 * The index of the column used to hold the object representing a weapon.
 		 */
-		public static final int OBJECT_INDEX = 13;
+		public static final int OBJECT_INDEX = 14;
 
 		/**
 		 * A list of names for each column with respect to the indices.
@@ -182,7 +187,7 @@ public class InventoryWeaponCategoryTable extends JTable {
 				"W.A.", //
 				"Con.", //
 				"Avail.", //
-				"Damage", //
+				"Dmg", //
 				"Ammo", //
 				"# Shots", //
 				"RoF", //
@@ -190,6 +195,7 @@ public class InventoryWeaponCategoryTable extends JTable {
 				"Range", //
 				"Cost", //
 				"Wt.", //
+				"Qty.", //
 				"Object" };
 
 		private Player player;
@@ -221,6 +227,7 @@ public class InventoryWeaponCategoryTable extends JTable {
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			List<CyberpunkWeapon> rows = new ArrayList<>(weaponSet);
 			CyberpunkWeapon weapon = rows.get(rowIndex);
+			int quantity = player.getQuantity(weapon);
 
 			switch (columnIndex) {
 			case TYPE_INDEX:
@@ -249,6 +256,8 @@ public class InventoryWeaponCategoryTable extends JTable {
 				return weapon.getCost();
 			case WEIGHT_INDEX:
 				return weapon.getWeight();
+			case QUANTITY_INDEX:
+				return quantity;
 			case OBJECT_INDEX:
 				return weapon;
 			default:

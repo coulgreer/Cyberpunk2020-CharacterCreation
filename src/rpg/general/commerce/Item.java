@@ -3,7 +3,7 @@ package rpg.general.commerce;
 import java.io.Serializable;
 
 /**
- * An object that is allowed to be bought or sold because of the ability to
+ * An interface that is allowed to be bought or sold because of the ability to
  * obtain the cost associated. There is also a name and description to help
  * identify this item. Also, a weight is associated for use when storing and
  * carrying this object.

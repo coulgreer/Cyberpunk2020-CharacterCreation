@@ -2,7 +2,17 @@ package rpg.general.combat;
 
 import java.util.Iterator;
 
+/**
+ * An interface that maps out the behavior for WeaponAttachments which extend
+ * <code>Weaponizable</code>. This allows WeaponAttachment to modify the scores
+ * that a weapon uses.
+ * 
+ * @author Coul Greer
+ */
 public interface WeaponAttachment extends Weaponizable {
+	/**
+	 * The constant used as a default attachment point.
+	 */
 	public static final String MISCELLANEOUS = "Miscellaneous";
 
 	/**

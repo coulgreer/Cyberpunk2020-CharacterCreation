@@ -178,6 +178,7 @@ public class Cartridge implements Ammunition {
 		setCaliber(caliber);
 		setBullet(bullet);
 		setCost(baseCost);
+		setWeight(weight);
 		setCaseMaterial(caseMaterial);
 	}
 
@@ -210,6 +211,14 @@ public class Cartridge implements Ammunition {
 			throw new IllegalArgumentException("The field 'cost' cannot be a negative number.");
 		} else {
 			this.baseCost = baseCost;
+		}
+	}
+
+	private void setWeight(double weight) {
+		if (weight < 0) {
+			throw new IllegalArgumentException("The field 'weight' cannot be a negative number.");
+		} else {
+			this.weight = weight;
 		}
 	}
 

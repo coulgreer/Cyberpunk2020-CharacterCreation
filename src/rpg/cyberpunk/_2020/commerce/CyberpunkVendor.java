@@ -38,11 +38,24 @@ import rpg.util.Die;
 import rpg.util.NullProbability;
 import rpg.util.Probability;
 
+/**
+ * A class that handles the Items a Player can buy.
+ * 
+ * @author Coul Greer
+ *
+ */
 public class CyberpunkVendor {
 	private Trader trader;
 	private Inventory startingInventory;
 	private List<Box<Ammunition>> boxes;
 
+	/**
+	 * Constructs a CyberpunkVendor that creates a base stock of inventory to buy
+	 * from. Uses a BottomlessInventory as its defalut way to store items and a List
+	 * of Box<Ammunition>.
+	 * 
+	 * @param trader the handler of the money exchanged
+	 */
 	public CyberpunkVendor(Trader trader) {
 		this.trader = trader;
 		startingInventory = new BottomlessInventory();
@@ -568,42 +581,101 @@ public class CyberpunkVendor {
 		}
 	}
 
+	/**
+	 * Clones and returns a weapon.
+	 * 
+	 * @param weapon the thing to clone
+	 * 
+	 * @return the cloned weapon
+	 */
 	public CyberpunkWeapon sellWeapon(CyberpunkWeapon weapon) {
 		CyberpunkWeapon clonedWeapon = (CyberpunkWeapon) SerializationUtils.clone(weapon);
 
 		return clonedWeapon;
 	}
 
+	/**
+	 * Clones and returns an armor.
+	 * 
+	 * @param armor the thing to clone
+	 * @return the cloned armor
+	 */
 	public CyberpunkArmor sellArmor(CyberpunkArmor armor) {
 		CyberpunkArmor clonedArmor = (CyberpunkArmor) SerializationUtils.clone(armor);
 
 		return clonedArmor;
 	}
 
+	/**
+	 * Clones and returns a list of Ammunition.
+	 * 
+	 * @param ammunition the thing to clone
+	 * @return the cloned list of Ammunition
+	 */
 	public List<Ammunition> sellBoxOfAmmunition(Box<Ammunition> ammunition) {
-		return ammunition.getItems();
+		Box<Ammunition> clonedBox = (Box<Ammunition>) SerializationUtils.clone(ammunition);
+
+		return clonedBox.getItems();
 	}
 
+	/**
+	 * Delegates to the Trader for an ask price of an item then returns the price.
+	 * 
+	 * @param item the item to derive the buying price from
+	 * @return the derived ask price of the given Item
+	 * @see Trader#getAskPrice(rpg.general.commerce.Tradeable)
+	 */
 	public double getAskPrice(Item item) {
 		return trader.getAskPrice(item);
 	}
 
+	/**
+	 * Delegates to the Trader for a bid price of an item then returns the price.
+	 * 
+	 * @param item the provider of the price to manipulate into getting the bid
+	 *             price
+	 * @return the derived bid price of the given Item
+	 * @see Trader#getBidPrice(rpg.general.commerce.Tradeable)
+	 */
 	public double getBidPrice(Item item) {
 		return trader.getBidPrice(item);
 	}
 
+	/**
+	 * Delegates to the Inventory to make a set of weapons and return it.
+	 * 
+	 * @return a new set of weapons created by the Inventory
+	 * @see Inventory#createWeaponSet()
+	 */
 	public Set<CyberpunkWeapon> getStoredWeapons() {
 		return startingInventory.createWeaponSet();
 	}
 
+	/**
+	 * Delegates to the Inventory to make a set of armor and return it.
+	 * 
+	 * @return a new set of armor created by the Inventory
+	 * @see Inventory#createArmorSet()
+	 */
 	public Set<CyberpunkArmor> getStoredArmors() {
 		return startingInventory.createArmorSet();
 	}
 
+	/**
+	 * Returns a Set created from the Boxes of Ammunition stored and return it.
+	 * 
+	 * @return a Set created from the Boxes of Ammunition stored
+	 */
 	public Set<Box<Ammunition>> getStoredAmmunition() {
 		return new HashSet<Box<Ammunition>>(boxes);
 	}
 
+	/**
+	 * Delegates to the Inventory to make a set of items and return it.
+	 * 
+	 * @return a Set of items created by the Inventory
+	 * @see Inventory#createItemSet()
+	 */
 	public Set<Item> getStoredItems() {
 		return startingInventory.createItemSet();
 	}

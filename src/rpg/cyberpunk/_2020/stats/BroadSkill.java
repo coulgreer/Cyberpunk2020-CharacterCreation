@@ -100,7 +100,6 @@ public class BroadSkill implements CyberpunkSkill {
 		throw new UnsupportedOperationException();
 	}
 
-	// TODO Think about throwing an exception for all propertyChange methods.
 	@Override
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		// Do nothing. This class is immutable so properties never change

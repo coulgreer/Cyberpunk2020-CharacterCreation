@@ -14,8 +14,15 @@ import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
 import rpg.util.Probability;
 
+/**
+ * An instance of <code>CyberpunkWeapon</code> that provides its own flat damage
+ * probability, and uses <code>Ammunition</code> of the type
+ * {@link rpg.cyberpunk._2020.combat.Arrow#AMMUNITION_TYPE_ARROW Arrow} in order
+ * to deal the flat damage to a target.
+ * 
+ * @author Coul Greer
+ */
 public class Bow extends CyberpunkWeapon {
-
 	private String weaponName;
 	private String description;
 	private String weaponType;
@@ -34,6 +41,31 @@ public class Bow extends CyberpunkWeapon {
 	private Map<String, WeaponAttachment> attachments;
 	private Combatant combatant;
 
+	/**
+	 * Constructs a default Bow that uses the {@link CyberpunkSkill#ARCHERY archery}
+	 * skill and has a weapon type of {@link CyberpunkWeapon#WEAPON_TYPE_BOW Bow}.
+	 * 
+	 * @param weaponName          the identifier of this weapon
+	 * @param description         a blurb used to help give an idea of the given
+	 *                            weapon
+	 * @param weaponAccuracy      the flat modifier for the hit score
+	 * @param concealability      the rating score for how easy this weapon can be
+	 *                            hidden
+	 * @param availability        the rating score for how easy this weapon can be
+	 *                            found on the market
+	 * @param damage              the probability of damage represented in die
+	 *                            notation
+	 * @param ammunitionContainer the holder of all ammunition
+	 * @param rateOfFire          the amount of attacks that can be made per turn
+	 * @param reliability         the rating score for how likely this weapon is to
+	 *                            fail in combat
+	 * @param rangeModifier       the flat modifier for how far this weapon can make
+	 *                            an attack
+	 * @param cost                the base value used when transacting
+	 * @param weight              the heaviness value
+	 * @param attachmentPoints    the slots that allow for weapon modifiers to be
+	 *                            attached to
+	 */
 	public Bow(String weaponName, String description, int weaponAccuracy, Concealability concealability,
 			Availability availability, Probability damage, AmmunitionContainer ammunitionContainer, int rateOfFire,
 			Reliability reliability, int rangeModifier, double cost, double weight, Set<String> attachmentPoints) {
@@ -56,105 +88,109 @@ public class Bow extends CyberpunkWeapon {
 	}
 
 	private void setWeaponName(String weaponName) {
-		if (weaponName != null) {
-			this.weaponName = weaponName;
+		if (weaponName == null) {
+			throw new IllegalArgumentException("The field 'weaponName' cannot be null.");
 		} else {
-			throw new IllegalArgumentException();
+			this.weaponName = weaponName;
 		}
 	}
 
 	private void setDescription(String description) {
-		if (description != null) {
-			this.description = description;
+		if (description == null) {
+			throw new IllegalArgumentException("The field 'description' cannot be null.");
 		} else {
-			throw new IllegalArgumentException();
+			this.description = description;
 		}
 	}
 
 	private void setConcealability(Concealability concealability) {
-		if (concealability != null) {
-			this.concealability = concealability;
+		if (concealability == null) {
+			throw new IllegalArgumentException("The field 'concealability' cannot be null.");
 		} else {
-			throw new IllegalArgumentException();
+			this.concealability = concealability;
 		}
 	}
 
 	private void setAvailability(Availability availability) {
-		if (availability != null) {
-			this.availability = availability;
+		if (availability == null) {
+			throw new IllegalArgumentException("The field 'availability' cannot be null.");
 		} else {
-			throw new IllegalArgumentException();
+			this.availability = availability;
 		}
 	}
 
 	private void setAmmunitionContainer(AmmunitionContainer ammunitionContainer) {
-		if (ammunitionContainer != null) {
-			this.ammunitionContainer = ammunitionContainer;
+		if (ammunitionContainer == null) {
+			throw new IllegalArgumentException("The field 'ammunitionContainer' cannot be null.");
 		} else {
-			throw new IllegalArgumentException();
+			this.ammunitionContainer = ammunitionContainer;
 		}
 	}
 
 	private void setDamage(Probability damage) {
-		if (damage != null) {
-			this.damage = damage;
+		if (damage == null) {
+			throw new IllegalArgumentException("The field 'damage' cannot be null.");
 		} else {
-			throw new IllegalArgumentException();
+			this.damage = damage;
 		}
 	}
 
 	private void setRateOfFire(int rateOfFire) {
-		if (rateOfFire >= 1) {
-			this.rateOfFire = rateOfFire;
+		if (rateOfFire < 1) {
+			throw new IllegalArgumentException("The field 'rateOfFire' cannot be less than 1.");
 		} else {
-			throw new IllegalArgumentException();
+			this.rateOfFire = rateOfFire;
 		}
 	}
 
 	private void setReliability(Reliability reliability) {
-		if (reliability != null) {
-			this.reliability = reliability;
+		if (reliability == null) {
+			throw new IllegalArgumentException("The field 'reliability' cannot be null.");
 		} else {
-			throw new IllegalArgumentException();
+			this.reliability = reliability;
 		}
 	}
 
 	private void setRangeModifier(int rangeModifier) {
-		if (rangeModifier >= 0) {
-			this.rangeModifier = rangeModifier;
+		if (rangeModifier < 0) {
+			throw new IllegalArgumentException("The field 'rangeModifier' cannot be negative.");
 		} else {
-			throw new IllegalArgumentException();
+			this.rangeModifier = rangeModifier;
 		}
 	}
 
 	private void setWeight(double weight) {
-		if (weight >= 0.0) {
-			this.weight = weight;
+		if (weight < 0.0) {
+			throw new IllegalArgumentException("The field 'weight' cannot be negative.");
 		} else {
-			throw new IllegalArgumentException();
+			this.weight = weight;
 		}
 	}
 
 	private void setAttachmentsAndAttachmentPoints(Set<String> attachmentPoints) {
-		if (attachmentPoints != null) {
+		if (attachmentPoints == null) {
+			throw new IllegalArgumentException("The field 'attachmentPoints' cannot be null.");
+		} else {
 			this.attachmentPoints = attachmentPoints;
 			this.attachments = new HashMap<String, WeaponAttachment>();
-		} else {
-			throw new IllegalArgumentException("");
 		}
 	}
 
 	private void setCost(double cost) {
-		if (cost >= 0.0) {
-			this.cost = cost;
+		if (cost < 0.0) {
+			throw new IllegalArgumentException("The field 'cost' cannot be negative.");
 		} else {
-			throw new IllegalArgumentException();
+			this.cost = cost;
 		}
 	}
 
 	@Override
 	public void setCombatant(Combatant c) {
-		this.combatant = c;
+		if (c == null) {
+			this.combatant = NullCombatant.getInstance();
+		} else {
+			this.combatant = c;
+		}
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package rpg.cyberpunk._2020.commerce;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,7 +22,6 @@ public class BottomlessInventory implements Inventory {
 	private ArrayList<Ammunition> ammunitions;
 	private ArrayList<Item> items;
 	private double weight;
-	private PropertyChangeSupport changeSupport;
 
 	/**
 	 * Construct an empty Inventory that creates an empty list for CyberpunkWeapon,
@@ -37,7 +34,6 @@ public class BottomlessInventory implements Inventory {
 		ammunitions = new ArrayList<>();
 		items = new ArrayList<>();
 		weight = 0.0;
-		changeSupport = new PropertyChangeSupport(this);
 	}
 
 	@Override
@@ -48,7 +44,7 @@ public class BottomlessInventory implements Inventory {
 	@Override
 	public void add(CyberpunkWeapon weapon) {
 		if (weapon == null) {
-			throw new IllegalArgumentException("Null CyberpunkWeapon cannot be added to BottomlessInventory.");
+			throw new IllegalArgumentException("A null CyberpunkWeapon cannot be added.");
 		} else {
 			weapons.add(weapon);
 			items.add(weapon);
@@ -58,16 +54,13 @@ public class BottomlessInventory implements Inventory {
 	}
 
 	private void calculateWeight() {
-		double oldValue = weight;
 		weight = items.stream().mapToDouble(i -> i.getWeight()).sum();
-
-		changeSupport.firePropertyChange(PROPERTY_NAME_TOTAL_WEIGHT, oldValue, weight);
 	}
 
 	@Override
 	public void add(CyberpunkArmor armor) {
 		if (armor == null) {
-			throw new IllegalArgumentException("Null CyberpunkArmor cannot be added to BottomlessInventory.");
+			throw new IllegalArgumentException("A null CyberpunkArmor cannot be added.");
 		} else {
 			armors.add(armor);
 			items.add(armor);
@@ -79,7 +72,7 @@ public class BottomlessInventory implements Inventory {
 	@Override
 	public void add(Ammunition ammunition) {
 		if (ammunition == null) {
-			throw new IllegalArgumentException("Null Ammunition cannot be added to BottomlessInventory.");
+			throw new IllegalArgumentException("A null Ammunition cannot be added.");
 		} else {
 			ammunitions.add(ammunition);
 			items.add(ammunition);
@@ -91,7 +84,7 @@ public class BottomlessInventory implements Inventory {
 	@Override
 	public void addItem(Item item) {
 		if (item == null) {
-			throw new IllegalArgumentException("Null Item cannot be added to BottomlessInventory.");
+			throw new IllegalArgumentException("A null Item cannot be added.");
 		} else {
 			items.add(item);
 
@@ -166,23 +159,4 @@ public class BottomlessInventory implements Inventory {
 		return items.size();
 	}
 
-	@Override
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		changeSupport.addPropertyChangeListener(listener);
-	}
-
-	@Override
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		changeSupport.removePropertyChangeListener(listener);
-	}
-
-	@Override
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-		changeSupport.addPropertyChangeListener(propertyName, listener);
-	}
-
-	@Override
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-		changeSupport.removePropertyChangeListener(propertyName, listener);
-	}
 }

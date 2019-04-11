@@ -4,7 +4,7 @@ import java.util.Collections;
 
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
-public class AikidoFightingStyleFactory implements AbstractFightingStyleFactory {
+public class AikidoFightingStyleFactory implements FightingStyleFactory {
 	protected static final String DESCRIPTION = "This form relies on using the opponent's strength and momentum against him." //
 			+ " It is a perfect form for tstopping an opponent peacefully while making yourself very hard to hit.";
 

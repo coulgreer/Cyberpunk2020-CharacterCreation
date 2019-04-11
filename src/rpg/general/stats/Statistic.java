@@ -1,5 +1,13 @@
 package rpg.general.stats;
 
+/**
+ * An interface that has a name, description, and the ability to be incremented
+ * and decremented in order to manipulate a single held value with an associated
+ * meaning.
+ * 
+ * @author cagreer
+ *
+ */
 public interface Statistic {
 
 	/**

@@ -9,8 +9,19 @@ import java.io.Serializable;
  * @author Coul Greer
  */
 public class Die implements Serializable {
+	/**
+	 * The least amount of dice allowed to be in a dice pool.
+	 */
 	protected static final int MIN_NUMBER_OF_DICE = 0;
+
+	/**
+	 * The least amount of sides a die is allowed to have.
+	 */
 	protected static final int MIN_NUMBER_OF_FACES = 1;
+
+	/**
+	 * The least amount that a pool of die is allowed to be divided by.
+	 */
 	protected static final int MIN_DIVIDEND = 1;
 
 	private int numberOfDie;

@@ -10,10 +10,11 @@ import rpg.general.combat.Ammunition;
 /**
  * An instance of <code>Box</code> that allows the storage of only one type of
  * ammunition. The type is maintained by calling cloning a given item.
- * 
- * @return
  */
 public class AmmunitionBox implements Box<Ammunition> {
+	/**
+	 * The default weight of an AmmunitionBox.
+	 */
 	public static final double WEIGHT = 0.5;
 
 	private Ammunition ammunition;

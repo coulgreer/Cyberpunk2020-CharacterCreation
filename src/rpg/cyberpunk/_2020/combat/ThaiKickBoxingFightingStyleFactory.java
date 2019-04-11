@@ -4,7 +4,7 @@ import java.util.Collections;
 
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
-public class ThaiKickBoxingFightingStyleFactory implements AbstractFightingStyleFactory {
+public class ThaiKickBoxingFightingStyleFactory implements FightingStyleFactory {
 	public static final String DESCRIPTION = "One of the deadliest forms in existence, this style is known for blinding kicks delivered with incredible power.";
 
 	private static ThaiKickBoxingFightingStyleFactory uniqueInstance;

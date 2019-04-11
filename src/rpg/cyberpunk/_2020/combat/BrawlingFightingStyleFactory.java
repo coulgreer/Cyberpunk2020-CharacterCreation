@@ -4,7 +4,7 @@ import java.util.Collections;
 
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
-public class BrawlingFightingStyleFactory implements AbstractFightingStyleFactory {
+public class BrawlingFightingStyleFactory implements FightingStyleFactory {
 	protected static final String DESCRIPTION = "The skill of fighting man to man with fist, feet and other parts of the body.";
 
 	private static BrawlingFightingStyleFactory uniqueInstance;

@@ -210,7 +210,7 @@ public abstract class CyberpunkWeapon implements Weapon {
 		}
 
 		CyberpunkWeapon weapon = (CyberpunkWeapon) o;
-		return ((weapon.getName()).equals(getName())) && (weapon.getWeaponType() == getWeaponType())
+		return getName().equals(weapon.getName()) && getWeaponType().equals(weapon.getWeaponType())
 				&& (weapon.getAmmunitionCount() == getAmmunitionCount())
 				&& (weapon.getAmmunitionCapacity() == getAmmunitionCapacity());
 	}

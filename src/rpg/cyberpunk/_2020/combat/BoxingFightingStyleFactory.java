@@ -4,7 +4,7 @@ import java.util.Collections;
 
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
-public class BoxingFightingStyleFactory implements AbstractFightingStyleFactory {
+public class BoxingFightingStyleFactory implements FightingStyleFactory {
 	protected static final String DESCRIPTION = "The manly art of fisticuffs, this form delivers lightning punches and a tight blocking defense.";
 
 	private static BoxingFightingStyleFactory uniqueInstance;

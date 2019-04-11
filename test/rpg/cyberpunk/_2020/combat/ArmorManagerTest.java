@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 
-import rpg.Player;
 import rpg.general.combat.BodyLocation;
 
 public class ArmorManagerTest {
@@ -63,9 +62,7 @@ public class ArmorManagerTest {
 		when(kevlarVest.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
 		when(kevlarVest.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
 
-		Player player = mock(Player.class);
-
-		ArmorManager manager = new ArmorManager(player);
+		ArmorManager manager = new ArmorManager();
 		manager.add(clothShirt);
 		manager.add(heavyLeatherJacket);
 		manager.add(kevlarVest);
@@ -96,9 +93,7 @@ public class ArmorManagerTest {
 		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
 		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
 
-		Player player = mock(Player.class);
-
-		ArmorManager manager = new ArmorManager(player);
+		ArmorManager manager = new ArmorManager();
 		for (int i = 0; i < ArmorManager.MAX_TOTAL_ARMOR_LAYERS; i++) {
 			manager.add(clothShirt);
 		}
@@ -126,9 +121,7 @@ public class ArmorManagerTest {
 		when(flackVest.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
 		when(flackVest.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
 
-		Player player = mock(Player.class);
-
-		ArmorManager manager = new ArmorManager(player);
+		ArmorManager manager = new ArmorManager();
 		for (int i = 0; i < ArmorManager.MAX_HARD_ARMOR_LAYERS; i++) {
 			manager.add(flackVest);
 		}
@@ -156,9 +149,7 @@ public class ArmorManagerTest {
 		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
 		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
 
-		Player player = mock(Player.class);
-
-		ArmorManager manager = new ArmorManager(player);
+		ArmorManager manager = new ArmorManager();
 		manager.add(clothShirt);
 		manager.add(clothShirt);
 
@@ -183,9 +174,7 @@ public class ArmorManagerTest {
 		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
 		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
 
-		Player player = mock(Player.class);
-
-		ArmorManager manager = new ArmorManager(player);
+		ArmorManager manager = new ArmorManager();
 		manager.add(clothShirt);
 		manager.add(clothShirt);
 
@@ -226,9 +215,7 @@ public class ArmorManagerTest {
 		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
 		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
 
-		Player player = mock(Player.class);
-
-		ArmorManager manager = new ArmorManager(player);
+		ArmorManager manager = new ArmorManager();
 		manager.add(clothShirt);
 		manager.add(heavyLeatherJacket);
 
@@ -269,9 +256,7 @@ public class ArmorManagerTest {
 		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
 		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
 
-		Player player = mock(Player.class);
-
-		ArmorManager manager = new ArmorManager(player);
+		ArmorManager manager = new ArmorManager();
 		manager.add(clothShirt);
 		manager.add(heavyLeatherJacket);
 
@@ -312,9 +297,7 @@ public class ArmorManagerTest {
 		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
 		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
 
-		Player player = mock(Player.class);
-
-		ArmorManager manager = new ArmorManager(player);
+		ArmorManager manager = new ArmorManager();
 		manager.add(clothShirt);
 		manager.add(heavyLeatherJacket);
 
@@ -355,9 +338,7 @@ public class ArmorManagerTest {
 		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
 		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
 
-		Player player = mock(Player.class);
-
-		ArmorManager manager = new ArmorManager(player);
+		ArmorManager manager = new ArmorManager();
 		manager.add(clothShirt);
 		manager.add(heavyLeatherJacket);
 
@@ -398,9 +379,7 @@ public class ArmorManagerTest {
 		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
 		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
 
-		Player player = mock(Player.class);
-
-		ArmorManager manager = new ArmorManager(player);
+		ArmorManager manager = new ArmorManager();
 		manager.add(clothShirt);
 		manager.add(heavyLeatherJacket);
 
@@ -425,9 +404,7 @@ public class ArmorManagerTest {
 		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
 		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
 
-		Player player = mock(Player.class);
-
-		ArmorManager manager = new ArmorManager(player);
+		ArmorManager manager = new ArmorManager();
 		manager.add(clothShirt);
 
 		assertTrue(manager.remove(clothShirt));

@@ -14,6 +14,13 @@ import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
 import rpg.util.Probability;
 
+/**
+ * An instance of <code>CyberpunkWeapon</code> that has a rate of fire of 1 and
+ * cannot hold any ammunition.
+ * 
+ * @author Coul Greer
+ *
+ */
 public class MeleeWeapon extends CyberpunkWeapon {
 	public static final int RATE_OF_FIRE = 1;
 
@@ -259,7 +266,7 @@ public class MeleeWeapon extends CyberpunkWeapon {
 
 	@Override
 	public String getDescription() {
-		return description;
+		return isEdged ? description + " Halves all soft armor SP." : description;
 	}
 
 	@Override

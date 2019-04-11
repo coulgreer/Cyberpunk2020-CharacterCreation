@@ -4,7 +4,7 @@ import java.util.Collections;
 
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
-public class TaeKwonDoFightingStyleFactory implements AbstractFightingStyleFactory {
+public class TaeKwonDoFightingStyleFactory implements FightingStyleFactory {
 	public static final String DESCRIPTION = "A very fast and precise form, with graceful movements and some aerial kicks.";
 
 	private static TaeKwonDoFightingStyleFactory uniqueInstance;

@@ -4,9 +4,21 @@ import java.beans.PropertyChangeListener;
 
 import rpg.general.stats.Attribute;
 
+/**
+ * An instance of Attribute that does nothing. Follows the Null Object pattern.
+ * 
+ * @author Coul Greer
+ */
 public class NullAttribute implements Attribute {
 	private static NullAttribute uniqueInstance;
 
+	/**
+	 * Constructs a new NullAttribute if one has not already been created. This is
+	 * the only way to get an instance of this class, and this should represent that
+	 * this will be the only instance of this class.
+	 * 
+	 * @return the one and only instance of NullAttribute
+	 */
 	public static NullAttribute getInstance() {
 		if (uniqueInstance == null) {
 			uniqueInstance = new NullAttribute();

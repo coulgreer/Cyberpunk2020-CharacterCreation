@@ -4,7 +4,7 @@ import java.util.Collections;
 
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
-public class CapoeriaFightingStyleFactory implements AbstractFightingStyleFactory {
+public class CapoeriaFightingStyleFactory implements FightingStyleFactory {
 	protected static final String DESCRIPTION = "Created by Carribean slaves, this form combines dancelike movements with fast kicks and low line sweeps." //
 			+ " It is a relatively unknown form and can be combined with dance moves to disguise it's true power.";
 

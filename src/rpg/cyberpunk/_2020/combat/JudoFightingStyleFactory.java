@@ -4,7 +4,7 @@ import java.util.Collections;
 
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
-public class JudoFightingStyleFactory implements AbstractFightingStyleFactory {
+public class JudoFightingStyleFactory implements FightingStyleFactory {
 	protected static final String DESCRIPTION = "This system was designed as a sport form, but is very effective in combat as well." //
 			+ " It uses throws and sweeps to knock down the opponent.";
 

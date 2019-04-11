@@ -12,17 +12,52 @@ import rpg.general.combat.Combatant;
 import rpg.general.combat.Weapon;
 import rpg.util.Probability;
 
+/**
+ * An instance of Combatant that uses Skills from Cyberpunk 2020 in order to get
+ * the scores and modifiers for hit, attack, and damage. Weapons can also be
+ * manipulated through this instance as well.
+ * 
+ * @author Coul Greer
+ */
 public class CyberpunkCombatant implements Combatant {
+	/**
+	 * A constant representing the index of the primary weapon slot.
+	 */
 	public static final int PRIMARY_SLOT = 0;
+
+	/**
+	 * A constant representing the index of the secondary weapon slot.
+	 */
 	public static final int SECONDARY_SLOT = 1;
+
+	/**
+	 * A constant representing the capacity of weapons a combatant can hold.
+	 */
 	public static final int MAX_WEAPON_AMOUNT = 2;
+
+	/**
+	 * The range modifier used when no range modifier is provided or an error would
+	 * occur.
+	 */
 	public static final int DEFAULT_RANGE_MODIFIER = 0;
+
+	/**
+	 * The damage modifier used when no damage modifier is provided or an error
+	 * would occur.
+	 */
 	public static final int DEFAULT_DAMAGE_MODIFIER = 0;
 
-	private AbstractFightingStyleFactory unarmedWeaponFactory;
+	private FightingStyleFactory unarmedWeaponFactory;
 	private final Player player;
 	private final Weapon[] weapons;
 
+	/**
+	 * Constructs a CyberpunkCombatant that requires a player to get the modifiers,
+	 * and initializes this combatant to start of with Brawling Strikes equipped in
+	 * both slots.
+	 * 
+	 * @param player the owner of the stats used to derive scores and modifiers
+	 */
 	public CyberpunkCombatant(Player player) {
 		this.player = player;
 
@@ -142,7 +177,7 @@ public class CyberpunkCombatant implements Combatant {
 		arm(SECONDARY_SLOT, unarmedWeapon);
 	}
 
-	private AbstractFightingStyleFactory parseFightingStyleFactory(FightingStyle style) {
+	private FightingStyleFactory parseFightingStyleFactory(FightingStyle style) {
 		switch (style) {
 		case BRAWLING:
 			return BrawlingFightingStyleFactory.getInstance();

@@ -10,6 +10,9 @@ import rpg.util.Probability;
  * @author Coul Greer
  */
 public interface Ammunition extends Item {
+	/**
+	 * The constant value representing that an ammunition has no type.
+	 */
 	public static final String NO_AMMUNITION_TYPE = "None";
 
 	/**
