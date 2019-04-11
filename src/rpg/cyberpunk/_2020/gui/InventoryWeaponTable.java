@@ -208,7 +208,7 @@ public class InventoryWeaponTable extends JTable {
 		 */
 		public InventoryWeaponTableModel(Player player) {
 			this.player = player;
-			this.weaponSet = player.getCarriedWeapons();
+			this.weaponSet = player.createCarriedWeaponSet();
 
 			player.addPropertyChangeListener(Player.PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED, this);
 		}
@@ -288,7 +288,7 @@ public class InventoryWeaponTable extends JTable {
 			Object source = evt.getSource();
 
 			if (source == player) {
-				weaponSet = player.getCarriedWeapons();
+				weaponSet = player.createCarriedWeaponSet();
 				fireTableDataChanged();
 			}
 		}

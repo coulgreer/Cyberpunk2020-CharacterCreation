@@ -32,6 +32,7 @@ public class Player {
 	public static final String PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED = "Inventory: Weapon Manipulated";
 	public static final String PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED = "Inventory: Armor Manipulated";
 	public static final String PROPERTY_NAME_INVENTORY_AMMUNITION_MANIPULATED = "Inventory: Ammunition Manipulated";
+	public static final String PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED = "Inventory: Item Manipulated";
 	public static final String PROPERTY_NAME_ROLE = "Role";
 
 	private PropertyChangeSupport changeSupport;
@@ -139,6 +140,7 @@ public class Player {
 		pocketInventory.add(weapon);
 
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED, null, weapon);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, null, weapon);
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
 	}
 
@@ -148,6 +150,7 @@ public class Player {
 		pocketInventory.add(armor);
 
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED, null, armor);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, null, armor);
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
 	}
 
@@ -157,6 +160,7 @@ public class Player {
 		pocketInventory.add(ammunition);
 
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_AMMUNITION_MANIPULATED, null, ammunition);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, null, ammunition);
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
 	}
 
@@ -165,7 +169,8 @@ public class Player {
 
 		pocketInventory.remove(weapon);
 
-		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED, null, weapon);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED, weapon, null);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, weapon, null);
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
 	}
 
@@ -174,7 +179,8 @@ public class Player {
 
 		pocketInventory.remove(armor);
 
-		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED, null, armor);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED, armor, null);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, armor, null);
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
 	}
 
@@ -183,23 +189,44 @@ public class Player {
 
 		pocketInventory.remove(ammunition);
 
-		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_AMMUNITION_MANIPULATED, null, ammunition);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_AMMUNITION_MANIPULATED, ammunition, null);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, ammunition, null);
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
 	}
 
-	public Set<CyberpunkWeapon> getCarriedWeapons() {
+	public void removeFromInventory(Item item, int quantity) {
+		double oldWeight = getTotalWeight();
+
+		pocketInventory.removeItem(item);
+		if (item instanceof CyberpunkWeapon) {
+			changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED, item, null);
+		}
+
+		if (item instanceof CyberpunkArmor) {
+			changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED, item, null);
+		}
+
+		if (item instanceof Ammunition) {
+			changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_AMMUNITION_MANIPULATED, item, null);
+		}
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, item, null);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
+	}
+
+	public Set<CyberpunkWeapon> createCarriedWeaponSet() {
 		return pocketInventory.createWeaponSet();
 	}
 
-	public Set<CyberpunkArmor> getCarriedArmors() {
+	public Set<CyberpunkArmor> createCarriedArmorSet() {
 		return pocketInventory.createArmorSet();
 	}
 
-	public Set<Ammunition> getCarriedAmmunition() {
+	public Set<Ammunition> createCarriedAmmunitionSet() {
 		return pocketInventory.createAmmunitionSet();
 	}
 
-	public Set<Item> getCarriedItems() {
+	public Set<Item> createCarriedItemSet() {
 		return pocketInventory.createItemSet();
 	}
 
@@ -272,6 +299,16 @@ public class Player {
 		removeFromInventory(ammunition, 1);
 
 		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
+	}
+
+	public void sell(Item item, double price) {
+		double oldMoney = trader.getMoney();
+
+		trader.sell(price);
+		removeFromInventory(item, 1);
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
+
 	}
 
 	public double getMoney() {

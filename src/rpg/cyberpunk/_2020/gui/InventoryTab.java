@@ -12,8 +12,10 @@ import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
 import rpg.cyberpunk._2020.gui.InventoryAmmunitionTable.InventoryAmmunitionTableModel;
 import rpg.cyberpunk._2020.gui.InventoryArmorTable.InventoryArmorTableModel;
+import rpg.cyberpunk._2020.gui.InventoryItemTable.InventoryItemTableModel;
 import rpg.cyberpunk._2020.gui.InventoryWeaponTable.InventoryWeaponTableModel;
 import rpg.general.combat.Ammunition;
+import rpg.general.commerce.Item;
 
 /**
  * A panel used to keep all the inventory GUI elements organized for layout
@@ -54,6 +56,9 @@ public class InventoryTab extends JPanel {
 		JTable ammunitionTable = new InventoryAmmunitionTable(player);
 		tabbedPane.addTab("Ammunition",
 				new InventoryCategoryPanel(ammunitionTable, evt -> sellAmmunition(ammunitionTable)));
+
+		JTable itemTable = new InventoryItemTable(player);
+		tabbedPane.addTab("Items", new InventoryCategoryPanel(itemTable, evt -> sellItem(itemTable)));
 	}
 
 	private void sellWeapon(JTable table) {
@@ -92,6 +97,19 @@ public class InventoryTab extends JPanel {
 					InventoryAmmunitionTableModel.OBJECT_INDEX);
 
 			player.sell(ammunition, vendor.getBidPrice(ammunition));
+		}
+	}
+
+	private void sellItem(JTable table) {
+		int selectedRowIndex = table.getSelectedRow();
+
+		if (selectedRowIndex >= 0) {
+			int actualSelectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
+
+			Item item = (Item) table.getModel().getValueAt(actualSelectedRowIndex,
+					InventoryItemTableModel.OBJECT_INDEX);
+
+			player.sell(item, vendor.getBidPrice(item));
 		}
 	}
 

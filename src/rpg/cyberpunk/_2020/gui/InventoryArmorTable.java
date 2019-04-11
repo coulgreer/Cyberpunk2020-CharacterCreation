@@ -167,7 +167,7 @@ public class InventoryArmorTable extends JTable {
 		 */
 		public InventoryArmorTableModel(Player player) {
 			this.player = player;
-			this.armorSet = player.getCarriedArmors();
+			this.armorSet = player.createCarriedArmorSet();
 
 			player.addPropertyChangeListener(Player.PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED, this);
 		}
@@ -304,7 +304,7 @@ public class InventoryArmorTable extends JTable {
 			Object source = evt.getSource();
 
 			if (source == player) {
-				armorSet = player.getCarriedArmors();
+				armorSet = player.createCarriedArmorSet();
 				fireTableDataChanged();
 			}
 		}
