@@ -14,18 +14,14 @@ import javax.swing.JPanel;
 public class SellButtonPanel extends JPanel {
 
 	/**
-	 * Constructs a panel used to house a button that allows the user to sell the
-	 * current selection on the presented table.
+	 * Constructs a panel used to house a button that allows the user to sell an
+	 * item
 	 * 
-	 * @param player the seller of an item
-	 * @param vendor the purchaser of an item. Used to get cost of a selected table
-	 *               element.
-	 * @param table  the object holding a collection of items to be bought
+	 * @param sellListener the listener task executed upon clicking the sell button
 	 */
-	public SellButtonPanel(ActionListener listener) {
+	public SellButtonPanel(ActionListener sellListener, ActionListener equipListener) {
 		JButton sellButton = new JButton("Sell");
-		sellButton.addActionListener(listener);
-
+		sellButton.addActionListener(sellListener);
 		add(sellButton);
 	}
 

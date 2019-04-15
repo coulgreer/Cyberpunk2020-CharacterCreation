@@ -36,34 +36,34 @@ public class CyberpunkWeaponModifier implements Item, WeaponAttachment {
 	}
 
 	private void setName(String name) {
-		if (name != null) {
-			this.name = name;
-		} else {
+		if (name == null) {
 			throw new IllegalArgumentException("The name of an item cannot be set to a null value.");
+		} else {
+			this.name = name;
 		}
 	}
 
 	private void setDescription(String description) {
-		if (description != null) {
-			this.description = description;
-		} else {
+		if (description == null) {
 			throw new IllegalArgumentException("The description of an item cannot be set to a null value.");
+		} else {
+			this.description = description;
 		}
 	}
 
 	private void setBonuses(List<String> bonuses) {
-		if (bonuses != null) {
-			this.bonuses = bonuses;
-		} else {
+		if (bonuses == null) {
 			throw new IllegalArgumentException("The list of bonuses cannot be null.");
+		} else {
+			this.bonuses = bonuses;
 		}
 	}
 
 	private void setCost(double cost) {
-		if (cost >= 0.0) {
-			this.cost = cost;
-		} else {
+		if (cost < 0.0) {
 			throw new IllegalArgumentException("The cost of an item cannot be negative.");
+		} else {
+			this.cost = cost;
 		}
 	}
 

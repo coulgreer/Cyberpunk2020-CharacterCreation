@@ -3,6 +3,7 @@ package rpg.cyberpunk._2020.commerce;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
@@ -41,10 +42,13 @@ public class BottomlessInventory implements Inventory {
 		return items.contains(o);
 	}
 
+	/**
+	 * @throws NullPointerException if weapon is null
+	 */
 	@Override
 	public void add(CyberpunkWeapon weapon) {
 		if (weapon == null) {
-			throw new IllegalArgumentException("A null CyberpunkWeapon cannot be added.");
+			throw new NullPointerException();
 		} else {
 			weapons.add(weapon);
 			items.add(weapon);
@@ -57,10 +61,13 @@ public class BottomlessInventory implements Inventory {
 		weight = items.stream().mapToDouble(i -> i.getWeight()).sum();
 	}
 
+	/**
+	 * @throws NullPointerException if armor is null
+	 */
 	@Override
 	public void add(CyberpunkArmor armor) {
 		if (armor == null) {
-			throw new IllegalArgumentException("A null CyberpunkArmor cannot be added.");
+			throw new NullPointerException();
 		} else {
 			armors.add(armor);
 			items.add(armor);
@@ -69,10 +76,13 @@ public class BottomlessInventory implements Inventory {
 		}
 	}
 
+	/**
+	 * @throws NullPointerException if ammunition is null
+	 */
 	@Override
 	public void add(Ammunition ammunition) {
 		if (ammunition == null) {
-			throw new IllegalArgumentException("A null Ammunition cannot be added.");
+			throw new NullPointerException();
 		} else {
 			ammunitions.add(ammunition);
 			items.add(ammunition);
@@ -81,10 +91,13 @@ public class BottomlessInventory implements Inventory {
 		}
 	}
 
+	/**
+	 * @throws NullPointerException if item is null
+	 */
 	@Override
 	public void addItem(Item item) {
 		if (item == null) {
-			throw new IllegalArgumentException("A null Item cannot be added.");
+			throw new NullPointerException();
 		} else {
 			items.add(item);
 
@@ -92,36 +105,78 @@ public class BottomlessInventory implements Inventory {
 		}
 	}
 
+	/**
+	 * @throws NullPointerException   if weapon is null
+	 * @throws NoSuchElementException if weapon is not found
+	 */
 	@Override
 	public void remove(CyberpunkWeapon weapon) {
-		weapons.remove(weapon);
-		items.remove(weapon);
+		if (weapon == null) {
+			throw new NullPointerException();
+		} else if (!contains(weapon)) {
+			throw new NoSuchElementException();
+		} else {
+			weapons.remove(weapon);
+			items.remove(weapon);
 
-		calculateWeight();
+			calculateWeight();
+		}
 	}
 
+	/**
+	 * @throws NullPointerException   if armor is null
+	 * @throws NoSuchElementException if armor is not found
+	 */
 	@Override
 	public void remove(CyberpunkArmor armor) {
-		armors.remove(armor);
-		items.remove(armor);
+		if (armor == null) {
+			throw new NullPointerException();
+		} else if (!contains(armor)) {
+			throw new NoSuchElementException();
+		} else {
+			armors.remove(armor);
+			items.remove(armor);
 
-		calculateWeight();
+			calculateWeight();
+		}
 	}
 
+	/**
+	 * @throws NullPointerException   if ammunition is null
+	 * @throws NoSuchElementException if ammunition is not found
+	 */
 	@Override
 	public void remove(Ammunition ammunition) {
-		ammunitions.remove(ammunition);
-		items.remove(ammunition);
+		if (ammunition == null) {
+			throw new NullPointerException();
+		} else if (!contains(ammunition)) {
+			throw new NoSuchElementException();
+		} else {
+			ammunitions.remove(ammunition);
+			items.remove(ammunition);
 
-		calculateWeight();
+			calculateWeight();
+		}
 	}
 
+	/**
+	 * @throws NullPointerException   if item is null
+	 * @throws NoSuchElementException if item is not found
+	 */
 	@Override
 	public void removeItem(Item item) {
-		weapons.remove(item);
-		armors.remove(item);
-		ammunitions.remove(item);
-		items.remove(item);
+		if (item == null) {
+			throw new NullPointerException();
+		} else if (!contains(item)) {
+			throw new NoSuchElementException();
+		} else {
+			weapons.remove(item);
+			armors.remove(item);
+			ammunitions.remove(item);
+			items.remove(item);
+
+			calculateWeight();
+		}
 	}
 
 	@Override

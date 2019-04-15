@@ -11,7 +11,8 @@ import rpg.util.Die;
 import rpg.util.Probability;
 
 public class NullCombatant implements Combatant {
-	private static final Probability PROBABILITY = new Probability(new Die(0, 0), 0);
+	private static final Probability PROBABILITY = new Probability(
+			new Die(Die.MIN_NUMBER_OF_DICE, Die.MIN_NUMBER_OF_FACES), Probability.DEFAULT_MODIFIER);
 
 	private static NullCombatant uniqueInstance;
 

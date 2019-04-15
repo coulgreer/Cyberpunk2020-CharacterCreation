@@ -74,7 +74,7 @@ public class ThrownWeaponTest {
 
 		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.WEAPON_TYPE_LIGHT_PISTOL,
 				weaponAccuracy, concealability, availability, damage, reliability, cost, weight);
-		spyPlayer.arm(CyberpunkCombatant.PRIMARY_SLOT, weapon);
+		spyPlayer.equip(CyberpunkCombatant.PRIMARY_SLOT, weapon);
 
 		weapon.fire(1);
 

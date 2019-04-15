@@ -14,13 +14,10 @@ import javax.swing.JPanel;
 public class BuyButtonPanel extends JPanel {
 
 	/**
-	 * Constructs a panel used to house a button that allows the user to purchase
-	 * the current selection on the presented table.
+	 * Constructs a panel used to house a button that allows the user to purchase an
+	 * item.
 	 * 
-	 * @param player the purchaser of an item
-	 * @param vendor the seller of an item. Used to get cost of a selected table
-	 *               element.
-	 * @param table  the object holding a collection of items to be bought
+	 * @param listener the listener task executed upon clicking the buy button
 	 */
 	public BuyButtonPanel(ActionListener listener) {
 		JButton buyButton = new JButton("Buy");

@@ -15,7 +15,7 @@ import rpg.util.Probability;
  */
 public interface Combatant extends Serializable {
 	/**
-	 * Equips a weapon to a combatants slot while returning the old weapon.
+	 * Equips a weapon to a combatants slot.
 	 * 
 	 * @param slot   the index of where the weapon will be stored
 	 * @param weapon the weapon to be stored at the given index

@@ -10,30 +10,31 @@ import java.io.Serializable;
  */
 public class Die implements Serializable {
 	/**
-	 * The least amount of dice allowed to be in a dice pool.
+	 * The minimum amount of dice allowed to be in a dice pool.
 	 */
-	protected static final int MIN_NUMBER_OF_DICE = 0;
+	public static final int MIN_NUMBER_OF_DICE = 0;
 
 	/**
-	 * The least amount of sides a die is allowed to have.
+	 * The minimum amount of sides a die is allowed to have.
 	 */
-	protected static final int MIN_NUMBER_OF_FACES = 1;
+	public static final int MIN_NUMBER_OF_FACES = 1;
 
 	/**
-	 * The least amount that a pool of die is allowed to be divided by.
+	 * The minimum amount that a pool of die is allowed to be divided by.
 	 */
-	protected static final int MIN_DIVIDEND = 1;
+	public static final int MIN_DIVIDEND = 1;
 
 	private int numberOfDie;
 	private int numberOfFaces;
 	private int dividend;
 
 	/**
-	 * Constructs a pool of die with the same face amount.
+	 * Constructs a pool of die with the same face amount. Sets the dividend to
+	 * {@link #MIN_DIVIDEND}.
 	 * 
 	 * @param numberOfDie   the amount of dice used in a roll
 	 * @param numberOfFaces the amount of sides on the rolled dice
-	 * @see rpg.util.Die#Die(int, int, int)
+	 * @see #Die(int, int, int)
 	 */
 	public Die(int numberOfDie, int numberOfFaces) {
 		this(numberOfDie, numberOfFaces, MIN_DIVIDEND);
@@ -48,20 +49,32 @@ public class Die implements Serializable {
 	 * @param dividend      the number to dived the result of the dice roll
 	 */
 	public Die(int numberOfDie, int numberOfFaces, int dividend) {
+		setNumberOfDie(numberOfDie);
+		setNumberOfFaces(numberOfFaces);
+		setDividend(dividend);
+	}
+
+	private void setNumberOfDie(int numberOfDie) {
 		if (numberOfDie < MIN_NUMBER_OF_DICE) {
-			this.numberOfDie = MIN_NUMBER_OF_DICE;
+			throw new IllegalArgumentException(
+					"number of dice: " + numberOfDie + "; minimum die: " + MIN_NUMBER_OF_DICE);
 		} else {
 			this.numberOfDie = numberOfDie;
 		}
+	}
 
+	private void setNumberOfFaces(int numberOfFaces) {
 		if (numberOfFaces < MIN_NUMBER_OF_FACES) {
-			this.numberOfFaces = MIN_NUMBER_OF_FACES;
+			throw new IllegalArgumentException(
+					"number of faces: " + numberOfFaces + "; minimum faces: " + MIN_NUMBER_OF_FACES);
 		} else {
 			this.numberOfFaces = numberOfFaces;
 		}
+	}
 
-		if (dividend > MIN_DIVIDEND) {
-			this.dividend = dividend;
+	private void setDividend(int dividend) {
+		if (dividend < MIN_DIVIDEND) {
+			throw new IllegalArgumentException("dividend: " + dividend + "; minimum dividend:" + MIN_DIVIDEND);
 		} else {
 			this.dividend = MIN_DIVIDEND;
 		}
@@ -77,7 +90,7 @@ public class Die implements Serializable {
 	}
 
 	/**
-	 * Returns the amount of sides of the die involved in a single roll.
+	 * Returns the amount of sides of the die involved in a roll.
 	 * 
 	 * @return the amount of sides for the die in a roll
 	 */

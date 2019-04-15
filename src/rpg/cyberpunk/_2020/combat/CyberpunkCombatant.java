@@ -65,41 +65,70 @@ public class CyberpunkCombatant implements Combatant {
 		weapons = new Weapon[] { unarmedWeaponFactory.createStrike(), unarmedWeaponFactory.createStrike() };
 	}
 
+	/**
+	 * @throws IndexOutOfBoundsException if slot is not {@link #PRIMARY_SLOT} or
+	 *                                   {@link #SECONDARY_SLOT}
+	 * @throws NullPointerException      if weapon is null
+	 */
 	@Override
 	public void arm(int slot, Weapon weapon) {
-		switch (slot) {
-		case PRIMARY_SLOT:
-			weapons[PRIMARY_SLOT] = weapon;
-			weapon.setCombatant(this);
-			break;
-		case SECONDARY_SLOT:
-			weapons[SECONDARY_SLOT] = weapon;
-			weapon.setCombatant(this);
-			break;
-		default:
-			break;
+		validateSlot(slot);
+		validateWeapon(weapon);
+		weapons[slot] = weapon;
+		weapon.setCombatant(this);
+	}
+
+	private void validateSlot(int slot) {
+		if (slot != PRIMARY_SLOT && slot != SECONDARY_SLOT) {
+			throw new IndexOutOfBoundsException(
+					"index: " + slot + "; valid indices: " + PRIMARY_SLOT + " or " + SECONDARY_SLOT);
 		}
 	}
 
+	private void validateWeapon(Weapon weapon) {
+		if (weapon == null) {
+			throw new NullPointerException();
+		}
+	}
+
+	/**
+	 * @throws IndexOutOfBoundsException if slot is not {@link #PRIMARY_SLOT} or
+	 *                                   {@link #SECONDARY_SLOT}
+	 */
 	@Override
 	public void disarm(int slot) {
+		validateSlot(slot);
 		arm(slot, unarmedWeaponFactory.createStrike());
 	}
 
+	/**
+	 * @throws IndexOutOfBoundsException if slot is not {@link #PRIMARY_SLOT} or
+	 *                                   {@link #SECONDARY_SLOT}
+	 */
 	@Override
 	public int getRangeScore(int slot) {
-		Weapon weapon = weapons[slot];
-		return weapon.getRangeScore();
+		validateSlot(slot);
+		return weapons[slot].getRangeScore();
 	}
 
+	/**
+	 * @throws IndexOutOfBoundsException if slot is not {@link #PRIMARY_SLOT} or
+	 *                                   {@link #SECONDARY_SLOT}
+	 */
 	@Override
 	public Probability getTotalDamageChance(int slot) {
+		validateSlot(slot);
 		Weapon weapon = weapons[slot];
 		return new Probability(weapon.getDamageDice(), weapon.getDamageScore());
 	}
 
+	/**
+	 * @throws IndexOutOfBoundsException if slot is not {@link #PRIMARY_SLOT} or
+	 *                                   {@link #SECONDARY_SLOT}
+	 */
 	@Override
 	public Probability getTotalHitChance(int slot) {
+		validateSlot(slot);
 		Weapon weapon = weapons[slot];
 		return new Probability(weapon.getHitDice(), weapon.getHitScore());
 	}
@@ -157,16 +186,8 @@ public class CyberpunkCombatant implements Combatant {
 
 	@Override
 	public void attack(int slot, int shotsFired) {
-		switch (slot) {
-		case PRIMARY_SLOT:
-			weapons[PRIMARY_SLOT].fire(shotsFired);
-			break;
-		case SECONDARY_SLOT:
-			weapons[SECONDARY_SLOT].fire(shotsFired);
-			break;
-		default:
-			break;
-		}
+		validateSlot(slot);
+		weapons[slot].fire(shotsFired);
 	}
 
 	public void setUnarmedStance(FightingStyle style, FightingMove move) {
@@ -237,24 +258,20 @@ public class CyberpunkCombatant implements Combatant {
 
 	@Override
 	public int getAmmoCount(int slot) {
-		switch (slot) {
-		case PRIMARY_SLOT:
-			return weapons[PRIMARY_SLOT].getAmmunitionCount();
-		case SECONDARY_SLOT:
-			return weapons[SECONDARY_SLOT].getAmmunitionCount();
-		default:
+		try {
+			validateSlot(slot);
+			return weapons[slot].getAmmunitionCount();
+		} catch (IndexOutOfBoundsException ex) {
 			return AmmunitionContainer.EMPTY;
 		}
 	}
 
 	@Override
 	public List<Ammunition> reload(int slot, AmmunitionContainer storageUnit) {
-		switch (slot) {
-		case PRIMARY_SLOT:
-			return weapons[PRIMARY_SLOT].reload(storageUnit);
-		case SECONDARY_SLOT:
-			return weapons[SECONDARY_SLOT].reload(storageUnit);
-		default:
+		try {
+			validateSlot(slot);
+			return weapons[slot].reload(storageUnit);
+		} catch (IndexOutOfBoundsException ex) {
 			ArrayList<Ammunition> remainingAmmunition = new ArrayList<>();
 
 			while (!storageUnit.isEmpty()) {
@@ -265,8 +282,13 @@ public class CyberpunkCombatant implements Combatant {
 		}
 	}
 
+	/**
+	 * @throws IndexOutOfBoundsException if slot is not {@link #PRIMARY_SLOT} or
+	 *                                   {@link #SECONDARY_SLOT}
+	 */
 	@Override
 	public Weapon getWeapon(int slot) {
+		validateSlot(slot);
 		return weapons[slot];
 	}
 }

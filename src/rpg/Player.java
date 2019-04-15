@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import rpg.cyberpunk._2020.combat.ArmorManager;
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
 import rpg.cyberpunk._2020.combat.CyberpunkCombatant;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
@@ -41,6 +42,7 @@ public class Player {
 	private Role role;
 	private Trader trader;
 	private CyberpunkCombatant combatant;
+	private ArmorManager armorManager;
 	private StatisticManager<Attribute> attributeManager;
 	private StatisticManager<CyberpunkSkill> skillManager;
 
@@ -48,43 +50,155 @@ public class Player {
 		changeSupport = new PropertyChangeSupport(this);
 		trader = new PlayerTrader(0.0);
 		combatant = new CyberpunkCombatant(this);
+		armorManager = new ArmorManager();
 		attributeManager = new AttributeManager();
 		skillManager = new SkillManager(attributeManager, this);
 	}
 
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		changeSupport.addPropertyChangeListener(listener);
+	public void buy(CyberpunkWeapon weapon, double price) {
+		double oldMoney = trader.getMoney();
+
+		try {
+			trader.buy(price);
+			addToInventory(weapon);
+		} catch (Exception ex) {
+			trader.sell(price);
+			throw ex;
+		}
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
 	}
 
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		changeSupport.removePropertyChangeListener(listener);
+	public void buy(CyberpunkArmor armor, double price) {
+		double oldMoney = trader.getMoney();
+
+		try {
+			trader.buy(price);
+			addToInventory(armor);
+		} catch (Exception ex) {
+			trader.sell(price);
+			throw ex;
+		}
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
 	}
 
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-		changeSupport.addPropertyChangeListener(propertyName, listener);
+	public void buy(List<Ammunition> ammunition, double price) {
+		double oldMoney = trader.getMoney();
+
+		try {
+			trader.buy(price);
+
+			Iterator<Ammunition> iterator = ammunition.iterator();
+			while (iterator.hasNext()) {
+				addToInventory(iterator.next());
+			}
+		} catch (Exception ex) {
+			trader.sell(price);
+			throw ex;
+		}
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
 	}
 
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-		changeSupport.addPropertyChangeListener(propertyName, listener);
+	public void sell(CyberpunkWeapon weapon, double price) {
+		double oldMoney = trader.getMoney();
+
+		try {
+			trader.sell(price);
+			removeFromInventory(weapon, 1);
+		} catch (Exception ex) {
+			trader.buy(price);
+			throw ex;
+		}
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
 	}
 
-	public void arm(int slot, CyberpunkWeapon weapon) {
-		if (pocketInventory.contains(weapon)) {
-			pocketInventory.remove(weapon);
-			equippedInventory.add(weapon);
+	public void sell(CyberpunkArmor armor, double price) {
+		double oldMoney = trader.getMoney();
+
+		try {
+			trader.sell(price);
+			removeFromInventory(armor, 1);
+		} catch (Exception ex) {
+			trader.buy(price);
+			throw ex;
+		}
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
+	}
+
+	public void sell(Ammunition ammunition, double price) {
+		double oldMoney = trader.getMoney();
+
+		try {
+			trader.sell(price);
+			removeFromInventory(ammunition, 1);
+		} catch (Exception ex) {
+			trader.buy(price);
+			throw ex;
+		}
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
+	}
+
+	public void sell(Item item, double price) {
+		double oldMoney = trader.getMoney();
+
+		trader.sell(price);
+		try {
+			removeFromInventory(item, 1);
+		} catch (Exception ex) {
+			trader.buy(price);
+			throw ex;
+		}
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
+
+	}
+
+	public double getMoney() {
+		return trader.getMoney();
+	}
+
+	public void equip(int slot, CyberpunkWeapon weapon) {
+		CyberpunkWeapon tempWeapon = (CyberpunkWeapon) combatant.getWeapon(slot);
+
+		unequip(slot);
+		try {
+			removeFromInventory(weapon, 1);
+			addToEquipped(weapon);
 			combatant.arm(slot, weapon);
+		} catch (NullPointerException ex) {
+			equip(slot, tempWeapon);
+			throw ex;
 		}
 	}
 
-	public void disarm(int slot) {
-		// TODO Think of a solution that does not require casting. Casting is not
-		// polymorphic however Combatant hinders our polymorphism by returning Weapon
-		// instead of CyberpunkWeapon.
+	// TODO Think of throwing an exception to allow propagation of an error to the
+	// UI.
+	public void equip(CyberpunkArmor armor) {
+		if (armorManager.add(armor)) {
+			removeFromInventory(armor, 1);
+			addToEquipped(armor);
+		}
+	}
+
+	public void unequip(int slot) {
 		CyberpunkWeapon weapon = (CyberpunkWeapon) combatant.getWeapon(slot);
-		if (equippedInventory.contains(weapon)) {
-			pocketInventory.add(weapon);
-			equippedInventory.remove(weapon);
-			combatant.disarm(slot);
+
+		addToInventory(weapon);
+		removeFromEquipped(weapon);
+		combatant.disarm(slot);
+	}
+
+	// TODO Think of throwing an exception to allow propagation of an error to the
+	// UI.
+	public void unequip(CyberpunkArmor armor) {
+		if (armorManager.remove(armor)) {
+			addToInventory(armor);
+			removeFromEquipped(armor);
 		}
 	}
 
@@ -113,7 +227,6 @@ public class Player {
 		combatant.attack(slot, shotsFired);
 	}
 
-	// TODO Find a clean way to transfer ammunition from inventory to weapon.
 	public void reload(int slot, AmmunitionContainer ammunitionStorage) {
 		combatant.reload(slot, ammunitionStorage);
 	}
@@ -137,7 +250,9 @@ public class Player {
 	public void addToInventory(CyberpunkWeapon weapon) {
 		double oldWeight = getTotalWeight();
 
-		pocketInventory.add(weapon);
+		if (!CyberpunkWeapon.WEAPON_TYPE_UNARMED.equals(weapon.getWeaponType())) {
+			pocketInventory.add(weapon);
+		}
 
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED, null, weapon);
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, null, weapon);
@@ -164,10 +279,30 @@ public class Player {
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
 	}
 
+	public void addToEquipped(CyberpunkWeapon weapon) {
+		if (!CyberpunkWeapon.WEAPON_TYPE_UNARMED.equals(weapon.getWeaponType())) {
+			equippedInventory.add(weapon);
+		}
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED, null, weapon);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, null, weapon);
+	}
+
+	public void addToEquipped(CyberpunkArmor armor) {
+		equippedInventory.add(armor);
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED, null, armor);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, null, armor);
+	}
+
 	public void removeFromInventory(CyberpunkWeapon weapon, int quantity) {
 		double oldWeight = getTotalWeight();
 
-		pocketInventory.remove(weapon);
+		if (!CyberpunkWeapon.WEAPON_TYPE_UNARMED.equals(weapon.getWeaponType())) {
+			for (int i = 0; i < quantity; i++) {
+				pocketInventory.remove(weapon);
+			}
+		}
 
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED, weapon, null);
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, weapon, null);
@@ -177,7 +312,9 @@ public class Player {
 	public void removeFromInventory(CyberpunkArmor armor, int quantity) {
 		double oldWeight = getTotalWeight();
 
-		pocketInventory.remove(armor);
+		for (int i = 0; i < quantity; i++) {
+			pocketInventory.remove(armor);
+		}
 
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED, armor, null);
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, armor, null);
@@ -187,7 +324,9 @@ public class Player {
 	public void removeFromInventory(Ammunition ammunition, int quantity) {
 		double oldWeight = getTotalWeight();
 
-		pocketInventory.remove(ammunition);
+		for (int i = 0; i < quantity; i++) {
+			pocketInventory.remove(ammunition);
+		}
 
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_AMMUNITION_MANIPULATED, ammunition, null);
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, ammunition, null);
@@ -197,7 +336,10 @@ public class Player {
 	public void removeFromInventory(Item item, int quantity) {
 		double oldWeight = getTotalWeight();
 
-		pocketInventory.removeItem(item);
+		for (int i = 0; i < quantity; i++) {
+			pocketInventory.removeItem(item);
+		}
+
 		if (item instanceof CyberpunkWeapon) {
 			changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED, item, null);
 		}
@@ -212,6 +354,22 @@ public class Player {
 
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, item, null);
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
+	}
+
+	public void removeFromEquipped(CyberpunkWeapon weapon) {
+		if (!CyberpunkWeapon.WEAPON_TYPE_UNARMED.equals(weapon.getWeaponType())) {
+			equippedInventory.remove(weapon);
+		}
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED, weapon, null);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, weapon, null);
+	}
+
+	public void removeFromEquipped(CyberpunkArmor armor) {
+		equippedInventory.remove(armor);
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED, armor, null);
+		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, armor, null);
 	}
 
 	public Set<CyberpunkWeapon> createCarriedWeaponSet() {
@@ -234,88 +392,23 @@ public class Player {
 		return pocketInventory.getTotalWeight() + equippedInventory.getTotalWeight();
 	}
 
-	public boolean canBuy(double price) {
-		return trader.canBuy(price);
-	}
-
-	public boolean canSell(Item item, int quantity) {
-		boolean hasQuantity = pocketInventory.getQuantity(item) >= quantity;
-		return pocketInventory.contains(item) && hasQuantity;
-	}
-
-	public void buy(CyberpunkWeapon weapon, double price) {
-		double oldMoney = trader.getMoney();
-
-		trader.buy(price);
-		addToInventory(weapon);
-
-		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
-	}
-
-	public void buy(CyberpunkArmor armor, double price) {
-		double oldMoney = trader.getMoney();
-
-		trader.buy(price);
-		addToInventory(armor);
-
-		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
-	}
-
-	public void buy(List<Ammunition> ammunition, double price) {
-		double oldMoney = trader.getMoney();
-
-		trader.buy(price);
-
-		Iterator<Ammunition> iterator = ammunition.iterator();
-		while (iterator.hasNext()) {
-			addToInventory(iterator.next());
-		}
-
-		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
-	}
-
-	public void sell(CyberpunkWeapon weapon, double price) {
-		double oldMoney = trader.getMoney();
-
-		trader.sell(price);
-		removeFromInventory(weapon, 1);
-
-		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
-	}
-
-	public void sell(CyberpunkArmor armor, double price) {
-		double oldMoney = trader.getMoney();
-
-		trader.sell(price);
-		removeFromInventory(armor, 1);
-
-		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
-	}
-
-	public void sell(Ammunition ammunition, double price) {
-		double oldMoney = trader.getMoney();
-
-		trader.sell(price);
-		removeFromInventory(ammunition, 1);
-
-		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
-	}
-
-	public void sell(Item item, double price) {
-		double oldMoney = trader.getMoney();
-
-		trader.sell(price);
-		removeFromInventory(item, 1);
-
-		changeSupport.firePropertyChange(PROPERTY_NAME_MONEY, oldMoney, trader.getMoney());
-
-	}
-
-	public double getMoney() {
-		return trader.getMoney();
-	}
-
 	public Role getRole() {
 		return role;
+	}
+
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.removePropertyChangeListener(listener);
+	}
+
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(propertyName, listener);
+	}
+
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(propertyName, listener);
 	}
 }

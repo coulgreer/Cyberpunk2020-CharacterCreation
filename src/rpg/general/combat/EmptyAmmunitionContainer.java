@@ -10,6 +10,10 @@ import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
  * @author Coul Greer
  */
 public class EmptyAmmunitionContainer implements AmmunitionContainer {
+	/**
+	 * @throws UnsupportedOperationException because no ammunition can be contained
+	 *                                       within
+	 */
 	@Override
 	public Ammunition withdrawAmmunition() {
 		throw new UnsupportedOperationException(

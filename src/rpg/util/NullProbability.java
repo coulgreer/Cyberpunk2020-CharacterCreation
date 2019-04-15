@@ -25,7 +25,7 @@ public class NullProbability extends Probability {
 	}
 
 	private NullProbability() {
-		super(new Die(0, 0), 0);
+		super(new Die(Die.MIN_NUMBER_OF_DICE, Die.MIN_NUMBER_OF_FACES), DEFAULT_MODIFIER);
 	}
 
 }

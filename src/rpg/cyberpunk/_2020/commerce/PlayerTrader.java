@@ -22,7 +22,7 @@ public class PlayerTrader implements Trader {
 
 	/**
 	 * Construct a PlayerTrader with a default money starting value of
-	 * {@value #STARTING_MONEY}.
+	 * {@link #STARTING_MONEY}.
 	 */
 	public PlayerTrader() {
 		this(STARTING_MONEY);

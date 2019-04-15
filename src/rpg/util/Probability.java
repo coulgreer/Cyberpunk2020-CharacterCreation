@@ -9,16 +9,22 @@ import java.io.Serializable;
  * @author Coul Greer
  */
 public class Probability implements Comparable<Probability>, Serializable {
+	/**
+	 * The neutral modifier for the die roll associated with the Probability.
+	 */
+	public static final int DEFAULT_MODIFIER = 0;
+
 	private Die die;
 	private int modifier;
 
 	/**
-	 * Constructs a default probability with a die pool of 0 and a modifier of 0.
+	 * Constructs a default probability with the {@link Die#MIN_NUMBER_OF_DICE} and
+	 * a modifier of {@link #DEFAULT_MODIFIER}.
 	 * 
-	 * @see Probability#Probability(Die, int)
+	 * @see #Probability(Die, int)
 	 */
 	public Probability() {
-		this(new Die(0, 0), 0);
+		this(new Die(Die.MIN_NUMBER_OF_DICE, Die.MIN_NUMBER_OF_FACES), DEFAULT_MODIFIER);
 	}
 
 	/**
@@ -30,7 +36,7 @@ public class Probability implements Comparable<Probability>, Serializable {
 	 * @param modifier the flat value to attach to the result of the die roll
 	 */
 	public Probability(Die die, int modifier) {
-		this.die = die;
+		setDice(die);
 		this.modifier = modifier;
 	}
 
@@ -51,7 +57,11 @@ public class Probability implements Comparable<Probability>, Serializable {
 	 * @param die the new data structure to use
 	 */
 	public void setDice(Die die) {
-		this.die = die;
+		if (die == null) {
+			throw new NullPointerException();
+		} else {
+			this.die = die;
+		}
 	}
 
 	/**
@@ -75,7 +85,7 @@ public class Probability implements Comparable<Probability>, Serializable {
 
 	@Override
 	public String toString() {
-		if (modifier <= 0) {
+		if (modifier == DEFAULT_MODIFIER) {
 			return die.toString();
 		} else {
 			return die.toString() + "+" + modifier;
@@ -99,4 +109,5 @@ public class Probability implements Comparable<Probability>, Serializable {
 
 		return result;
 	}
+
 }

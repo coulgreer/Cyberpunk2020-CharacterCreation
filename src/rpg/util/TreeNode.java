@@ -26,12 +26,12 @@ public class TreeNode<T> {
 	private Map<String, TreeNode<T>> children;
 
 	/**
-	 * Constructs a <code>Node</code> with a name and data. Sets the parent to null
-	 * by default
+	 * Constructs a <code>Node</code> with a name and data. Sets the parent to
+	 * <code>null</code> by default.
 	 * 
 	 * @param name the name for this node. Used to obtain this node from nodes
 	 *             higher in the tree structure.
-	 * @param data the value to be associated with the name
+	 * @param data the element to be associated with the name
 	 */
 	public TreeNode(String name, T data) {
 		setName(name);
@@ -42,18 +42,19 @@ public class TreeNode<T> {
 
 	private void setName(String name) {
 		if (name == null) {
-			throw new IllegalArgumentException("The field 'name' cannot be null.");
+			throw new NullPointerException();
 		} else {
 			this.nodeName = name;
 		}
 	}
 
 	/**
-	 * Adds data to this node after wrapping the data in a node with the given name.
+	 * Appends data to this node after wrapping the data in a node with the given
+	 * name.
 	 * 
-	 * @param name the tag for the node that will be created
-	 * @param data the data to keep inside the generated node
-	 * @see rpg.util.TreeNode#appendChild(TreeNode)
+	 * @param name the identifier for the node
+	 * @param data the element to store inside the generated node
+	 * @see #appendChild(TreeNode)
 	 */
 	public void appendChild(String name, T data) {
 		TreeNode<T> node = new TreeNode<T>(name, data);
@@ -61,32 +62,43 @@ public class TreeNode<T> {
 	}
 
 	/**
-	 * Adds another node to this node.
+	 * Appends another node to this node as a child.
 	 * 
 	 * @param child the node to add to this node
+	 * @throws NullPointerException if child is null
 	 */
 	public void appendChild(TreeNode<T> child) {
-		String nodeName = child.getName();
+		if (child == null) {
+			throw new NullPointerException();
+		}
 
+		String nodeName = child.getName();
 		TreeNode<T> root = getRoot();
 
 		if (root.getNode(nodeName) != null || child.getChild(nodeName) != null) {
-			throw new IllegalArgumentException("The node name '" + nodeName + "' has already been taken.");
-		} else {
-			child.setParent(this);
-			children.put(nodeName, child);
+			throw new IllegalArgumentException("node name: " + nodeName + "; node name already in use");
 		}
+
+		child.setParent(this);
+		children.put(nodeName, child);
 	}
 
 	/**
-	 * Deletes a child from this. The removed child gets returned as a result.
+	 * Removes the child if it exists. Then, returns the child with the given
+	 * identifier if removed or <code>null</code> if it does not exist.
 	 * 
-	 * @param name the tag of the target node to remove
+	 * @param name the name of the target node to remove
 	 * @return the child that got removed from this node
+	 * @throws NullPointerException if name is not associated with a child node
 	 */
 	public TreeNode<T> removeChild(String name) {
-		if (children.get(name).getParent() == this) {
-			children.get(name).setParent(null);
+		TreeNode<T> child = children.get(name);
+		if (child == null) {
+			throw new NullPointerException();
+		}
+
+		if (child.getParent() == this) {
+			child.setParent(null);
 		}
 
 		return children.remove(name);
@@ -102,12 +114,12 @@ public class TreeNode<T> {
 	}
 
 	/**
-	 * Returns any node with the given tag. This includes this node as a potentially
-	 * returned object.
+	 * Returns any node with the given identifier. This includes this node as a
+	 * potentially returned object.
 	 * 
-	 * @param name the tag used to identify the desired node for return
-	 * @return a node with the given tag name
-	 * @see rpg.util.TreeNode#getChild(String)
+	 * @param name the identifier used to get the desired node
+	 * @return a node with the given identifier
+	 * @see #getChild(String)
 	 */
 	public TreeNode<T> getNode(String name) {
 		if (nodeName.equals(name)) {
@@ -118,10 +130,10 @@ public class TreeNode<T> {
 	}
 
 	/**
-	 * Returns any child node of this node with the given tag.
+	 * Returns the child of this node with the given identifier.
 	 * 
-	 * @param name the tag used to identify the desired node for return
-	 * @return a node with the given tag name
+	 * @param name the identifier used to get the desired node
+	 * @return a node with the given identifier
 	 */
 	public TreeNode<T> getChild(String name) {
 		TreeNode<T> resultNode = null;
@@ -136,34 +148,34 @@ public class TreeNode<T> {
 	}
 
 	/**
-	 * Returns this nodes identification tag.
+	 * Returns this nodes name.
 	 * 
-	 * @return this nodes id tag
+	 * @return this nodes name
 	 */
 	public String getName() {
 		return nodeName;
 	}
 
 	/**
-	 * Returns the object stored in this node.
+	 * Returns the element stored in this node.
 	 * 
-	 * @return the object stored in this node
+	 * @return the element stored in this node
 	 */
 	public T getData() {
 		return data;
 	}
 
 	/**
-	 * Returns the immediate parent to this node.
+	 * Returns the immediate parent of this node.
 	 * 
-	 * @return the immediate parent
+	 * @return the immediate parent of this node
 	 */
 	public TreeNode<T> getParent() {
 		return parent;
 	}
 
 	/**
-	 * Changes the immediate node to be above this node in a hierarchy.
+	 * Changes the given node to be above this node in a hierarchy.
 	 * 
 	 * @param parent the desired node to be above this node in a hierarchy
 	 */

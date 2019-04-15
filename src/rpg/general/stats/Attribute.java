@@ -7,7 +7,6 @@ import java.beans.PropertyChangeListener;
  * sense are stats filling out a person's traits.
  */
 public interface Attribute extends Statistic {
-
 	/**
 	 * A constant used to identify when the level state changes.
 	 */

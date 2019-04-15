@@ -40,6 +40,10 @@ import rpg.util.Probability;
 
 /**
  * A class that handles the Items a Player can buy.
+ * <p>
+ * Unless otherwise mentioned, passing a <code>null</code> parameter into any
+ * method of a <code>CyberpunkVendor</code> will cause a
+ * <code>NullPointerException</code> to be thrown.
  * 
  * @author Coul Greer
  *
@@ -585,13 +589,16 @@ public class CyberpunkVendor {
 	 * Clones and returns a weapon.
 	 * 
 	 * @param weapon the thing to clone
-	 * 
 	 * @return the cloned weapon
+	 * @throws NullPointerException if weapon is null
 	 */
 	public CyberpunkWeapon sellWeapon(CyberpunkWeapon weapon) {
-		CyberpunkWeapon clonedWeapon = (CyberpunkWeapon) SerializationUtils.clone(weapon);
-
-		return clonedWeapon;
+		if (weapon == null) {
+			throw new NullPointerException();
+		} else {
+			CyberpunkWeapon clonedWeapon = (CyberpunkWeapon) SerializationUtils.clone(weapon);
+			return clonedWeapon;
+		}
 	}
 
 	/**
@@ -599,8 +606,12 @@ public class CyberpunkVendor {
 	 * 
 	 * @param armor the thing to clone
 	 * @return the cloned armor
+	 * @throws NullPointerException if armor is null
 	 */
 	public CyberpunkArmor sellArmor(CyberpunkArmor armor) {
+		if (armor == null) {
+			throw new NullPointerException();
+		}
 		CyberpunkArmor clonedArmor = (CyberpunkArmor) SerializationUtils.clone(armor);
 
 		return clonedArmor;
@@ -611,8 +622,12 @@ public class CyberpunkVendor {
 	 * 
 	 * @param ammunition the thing to clone
 	 * @return the cloned list of Ammunition
+	 * @throws NullPointerException if ammunition is null
 	 */
 	public List<Ammunition> sellBoxOfAmmunition(Box<Ammunition> ammunition) {
+		if (ammunition == null) {
+			throw new NullPointerException();
+		}
 		Box<Ammunition> clonedBox = (Box<Ammunition>) SerializationUtils.clone(ammunition);
 
 		return clonedBox.getItems();
