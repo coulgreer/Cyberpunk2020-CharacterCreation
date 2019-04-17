@@ -22,7 +22,7 @@ public class Die implements Serializable {
 	/**
 	 * The minimum amount that a pool of die is allowed to be divided by.
 	 */
-	public static final int MIN_DIVIDEND = 1;
+	public static final int DEFAULT_DIVIDEND = 1;
 
 	private int numberOfDie;
 	private int numberOfFaces;
@@ -30,14 +30,14 @@ public class Die implements Serializable {
 
 	/**
 	 * Constructs a pool of die with the same face amount. Sets the dividend to
-	 * {@link #MIN_DIVIDEND}.
+	 * {@link #DEFAULT_DIVIDEND}.
 	 * 
 	 * @param numberOfDie   the amount of dice used in a roll
 	 * @param numberOfFaces the amount of sides on the rolled dice
 	 * @see #Die(int, int, int)
 	 */
 	public Die(int numberOfDie, int numberOfFaces) {
-		this(numberOfDie, numberOfFaces, MIN_DIVIDEND);
+		this(numberOfDie, numberOfFaces, DEFAULT_DIVIDEND);
 	}
 
 	/**
@@ -73,10 +73,10 @@ public class Die implements Serializable {
 	}
 
 	private void setDividend(int dividend) {
-		if (dividend < MIN_DIVIDEND) {
-			throw new IllegalArgumentException("dividend: " + dividend + "; minimum dividend:" + MIN_DIVIDEND);
+		if (dividend < DEFAULT_DIVIDEND) {
+			throw new IllegalArgumentException("dividend: " + dividend + "; minimum dividend:" + DEFAULT_DIVIDEND);
 		} else {
-			this.dividend = MIN_DIVIDEND;
+			this.dividend = dividend;
 		}
 	}
 
@@ -109,10 +109,12 @@ public class Die implements Serializable {
 
 	@Override
 	public String toString() {
-		if (dividend > MIN_DIVIDEND) {
-			return numberOfDie + "D" + numberOfFaces + "/" + dividend;
-		} else {
+		if (numberOfDie == MIN_NUMBER_OF_DICE) {
+			return String.valueOf(MIN_NUMBER_OF_DICE);
+		} else if (dividend == DEFAULT_DIVIDEND) {
 			return numberOfDie + "D" + numberOfFaces;
+		} else {
+			return numberOfDie + "D" + numberOfFaces + "/" + dividend;
 		}
 	}
 

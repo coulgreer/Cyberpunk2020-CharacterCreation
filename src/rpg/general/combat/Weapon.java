@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import rpg.general.commerce.Item;
 import rpg.util.Die;
+import rpg.util.Probability;
 
 /**
  * An object that can be held by a combatant resulting in modification to the
@@ -12,7 +13,7 @@ import rpg.util.Die;
  * 
  * @author Coul Greer
  */
-public interface Weapon extends Shootable, Item {
+public interface Weapon extends Item, Shootable {
 	public static final String NO_WEAPON_TYPE = "None";
 	public static final String NO_SKILL_NAME = "None";
 	public static final String NO_AMMUNITION_TYPE = "None";
@@ -76,6 +77,13 @@ public interface Weapon extends Shootable, Item {
 	 * @return the probability of hitting a target
 	 */
 	public Die getHitDice();
+
+	/**
+	 * Returns the probability of damage a weapon can deal.
+	 * 
+	 * @return the probability of damage a weapon can deal
+	 */
+	public Probability getDamage();
 
 	/**
 	 * Returns the conditional bonuses. This excludes any flat bonuses that are

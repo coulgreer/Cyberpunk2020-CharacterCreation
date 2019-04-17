@@ -22,6 +22,7 @@ public class MainTab extends JTabbedPane {
 	public MainTab(Player player) {
 		CyberpunkVendor vendor = new CyberpunkVendor(new VendorTrader());
 
+		addTab("Equipment", new EquipmentTab(player));
 		addTab("Inventory", new InventoryTab(player, vendor));
 		addTab("Shop", new ShopTab(player, vendor));
 	}

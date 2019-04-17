@@ -89,7 +89,7 @@ public class Bow extends CyberpunkWeapon {
 
 	private void setWeaponName(String weaponName) {
 		if (weaponName == null) {
-			throw new IllegalArgumentException("The field 'weaponName' cannot be null.");
+			throw new NullPointerException();
 		} else {
 			this.weaponName = weaponName;
 		}
@@ -97,7 +97,7 @@ public class Bow extends CyberpunkWeapon {
 
 	private void setDescription(String description) {
 		if (description == null) {
-			throw new IllegalArgumentException("The field 'description' cannot be null.");
+			throw new NullPointerException();
 		} else {
 			this.description = description;
 		}
@@ -105,7 +105,7 @@ public class Bow extends CyberpunkWeapon {
 
 	private void setConcealability(Concealability concealability) {
 		if (concealability == null) {
-			throw new IllegalArgumentException("The field 'concealability' cannot be null.");
+			throw new NullPointerException();
 		} else {
 			this.concealability = concealability;
 		}
@@ -113,7 +113,7 @@ public class Bow extends CyberpunkWeapon {
 
 	private void setAvailability(Availability availability) {
 		if (availability == null) {
-			throw new IllegalArgumentException("The field 'availability' cannot be null.");
+			throw new NullPointerException();
 		} else {
 			this.availability = availability;
 		}
@@ -121,7 +121,7 @@ public class Bow extends CyberpunkWeapon {
 
 	private void setAmmunitionContainer(AmmunitionContainer ammunitionContainer) {
 		if (ammunitionContainer == null) {
-			throw new IllegalArgumentException("The field 'ammunitionContainer' cannot be null.");
+			throw new NullPointerException();
 		} else {
 			this.ammunitionContainer = ammunitionContainer;
 		}
@@ -129,7 +129,7 @@ public class Bow extends CyberpunkWeapon {
 
 	private void setDamage(Probability damage) {
 		if (damage == null) {
-			throw new IllegalArgumentException("The field 'damage' cannot be null.");
+			throw new NullPointerException();
 		} else {
 			this.damage = damage;
 		}
@@ -137,7 +137,7 @@ public class Bow extends CyberpunkWeapon {
 
 	private void setRateOfFire(int rateOfFire) {
 		if (rateOfFire < 1) {
-			throw new IllegalArgumentException("The field 'rateOfFire' cannot be less than 1.");
+			throw new IllegalArgumentException("rate of fire: " + rateOfFire + "; min value: 1");
 		} else {
 			this.rateOfFire = rateOfFire;
 		}
@@ -145,7 +145,7 @@ public class Bow extends CyberpunkWeapon {
 
 	private void setReliability(Reliability reliability) {
 		if (reliability == null) {
-			throw new IllegalArgumentException("The field 'reliability' cannot be null.");
+			throw new NullPointerException();
 		} else {
 			this.reliability = reliability;
 		}
@@ -153,7 +153,7 @@ public class Bow extends CyberpunkWeapon {
 
 	private void setRangeModifier(int rangeModifier) {
 		if (rangeModifier < 0) {
-			throw new IllegalArgumentException("The field 'rangeModifier' cannot be negative.");
+			throw new IllegalArgumentException("range modifier: " + rangeModifier + "; min value: 0");
 		} else {
 			this.rangeModifier = rangeModifier;
 		}
@@ -161,7 +161,7 @@ public class Bow extends CyberpunkWeapon {
 
 	private void setWeight(double weight) {
 		if (weight < 0.0) {
-			throw new IllegalArgumentException("The field 'weight' cannot be negative.");
+			throw new IllegalArgumentException("weight: " + weight + "; min value: 0");
 		} else {
 			this.weight = weight;
 		}
@@ -169,7 +169,7 @@ public class Bow extends CyberpunkWeapon {
 
 	private void setAttachmentsAndAttachmentPoints(Set<String> attachmentPoints) {
 		if (attachmentPoints == null) {
-			throw new IllegalArgumentException("The field 'attachmentPoints' cannot be null.");
+			throw new NullPointerException();
 		} else {
 			this.attachmentPoints = attachmentPoints;
 			this.attachments = new HashMap<String, WeaponAttachment>();
@@ -178,7 +178,7 @@ public class Bow extends CyberpunkWeapon {
 
 	private void setCost(double cost) {
 		if (cost < 0.0) {
-			throw new IllegalArgumentException("The field 'cost' cannot be negative.");
+			throw new IllegalArgumentException("cost: " + cost + "; min value: 0");
 		} else {
 			this.cost = cost;
 		}
@@ -323,6 +323,11 @@ public class Bow extends CyberpunkWeapon {
 	@Override
 	public Reliability getReliability() {
 		return reliability;
+	}
+
+	@Override
+	public Probability getDamage() {
+		return damage;
 	}
 
 }

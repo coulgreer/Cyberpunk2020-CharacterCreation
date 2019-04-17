@@ -64,108 +64,108 @@ public class MeleeWeapon extends CyberpunkWeapon {
 	}
 
 	private void setWeaponName(String weaponName) {
-		if (weaponName != null) {
-			this.weaponName = weaponName;
+		if (weaponName == null) {
+			throw new NullPointerException();
 		} else {
-			throw new IllegalArgumentException();
+			this.weaponName = weaponName;
 		}
 	}
 
 	private void setDescription(String description) {
-		if (description != null) {
-			this.description = description;
+		if (description == null) {
+			throw new NullPointerException();
 		} else {
-			throw new IllegalArgumentException();
+			this.description = description;
 		}
 	}
 
 	private void setWeaponType(String weaponType) {
-		if (weaponType != null) {
-			this.weaponType = weaponType;
+		if (weaponType == null) {
+			throw new NullPointerException();
 		} else {
-			throw new IllegalArgumentException();
+			this.weaponType = weaponType;
 		}
 	}
 
 	private void setSkillName(String skillName) {
-		if (skillName != null) {
-			this.skillName = skillName;
+		if (skillName == null) {
+			throw new NullPointerException();
 		} else {
-			throw new IllegalArgumentException();
+			this.skillName = skillName;
 		}
 	}
 
 	private void setConcealability(Concealability concealability) {
-		if (concealability != null) {
-			this.concealability = concealability;
+		if (concealability == null) {
+			throw new NullPointerException();
 		} else {
-			throw new IllegalArgumentException();
+			this.concealability = concealability;
 		}
 	}
 
 	private void setAvailability(Availability availability) {
-		if (availability != null) {
-			this.availability = availability;
+		if (availability == null) {
+			throw new NullPointerException();
 		} else {
-			throw new IllegalArgumentException();
+			this.availability = availability;
 		}
 	}
 
 	private void setDamage(Probability damage) {
-		if (damage != null) {
-			this.damage = damage;
+		if (damage == null) {
+			throw new NullPointerException();
 		} else {
-			throw new IllegalArgumentException();
+			this.damage = damage;
 		}
 	}
 
 	private void setReliability(Reliability reliability) {
-		if (reliability != null) {
-			this.reliability = reliability;
+		if (reliability == null) {
+			throw new NullPointerException();
 		} else {
-			throw new IllegalArgumentException();
+			this.reliability = reliability;
 		}
 	}
 
 	private void setRangeModifier(int rangeModifier) {
-		if (rangeModifier >= 0) {
-			this.rangeModifier = rangeModifier;
+		if (rangeModifier < 0) {
+			throw new IllegalArgumentException("range modifier: " + rangeModifier + "; min value: 0");
 		} else {
-			throw new IllegalArgumentException();
+			this.rangeModifier = rangeModifier;
 		}
 	}
 
 	private void setCost(double cost) {
-		if (cost >= 0.0) {
-			this.cost = cost;
+		if (cost < 0.0) {
+			throw new IllegalArgumentException("cost: " + cost + "; min value: 0.0");
 		} else {
-			throw new IllegalArgumentException();
+			this.cost = cost;
 		}
 	}
 
 	private void setAttachmentsAndAttachmentPoints(Set<String> attachmentPoints) {
-		if (attachmentPoints != null) {
+		if (attachmentPoints == null) {
+			throw new NullPointerException();
+		} else {
 			this.attachmentPoints = attachmentPoints;
 			this.attachments = new HashMap<String, WeaponAttachment>();
-		} else {
-			throw new IllegalArgumentException("");
 		}
 	}
 
 	private void setWeight(double weight) {
-		if (weight >= 0.0) {
-			this.weight = weight;
+		if (weight < 0.0) {
+			throw new IllegalArgumentException("weight: " + weight + "; min value: 0.0");
 		} else {
-			throw new IllegalArgumentException();
+			this.weight = weight;
 		}
 	}
 
 	@Override
 	public void setCombatant(Combatant c) {
-		if (c != null) {
-			combatant = c;
+		if (c == null) {
+			combatant = NullCombatant.getInstance();
 		} else {
-			throw new IllegalArgumentException();
+			combatant = c;
 		}
 	}
 
@@ -292,6 +292,11 @@ public class MeleeWeapon extends CyberpunkWeapon {
 	@Override
 	public Reliability getReliability() {
 		return reliability;
+	}
+
+	@Override
+	public Probability getDamage() {
+		return damage;
 	}
 
 }

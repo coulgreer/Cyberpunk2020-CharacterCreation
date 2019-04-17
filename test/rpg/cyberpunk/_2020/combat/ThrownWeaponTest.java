@@ -66,21 +66,4 @@ public class ThrownWeaponTest {
 		assertEquals(containerCapacity, remainingAmmunition.size());
 		assertEquals(ThrownWeapon.AMMUNITION_CAPACITY, weapon.getAmmunitionCount());
 	}
-
-	@Test
-	public void testFiringThrownWeaponChangesToUnarmedWeapon() {
-		Player player = new Player();
-		Player spyPlayer = spy(player);
-
-		ThrownWeapon weapon = new ThrownWeapon(weaponName, description, CyberpunkWeapon.WEAPON_TYPE_LIGHT_PISTOL,
-				weaponAccuracy, concealability, availability, damage, reliability, cost, weight);
-		spyPlayer.equip(CyberpunkCombatant.PRIMARY_SLOT, weapon);
-
-		weapon.fire(1);
-
-		// TODO Make the test check for what weapon type is help in each slot, not the
-		// ammo capacity. The ammo capacity can be very misleading.
-		assertEquals(0, player.getAmmoCount(CyberpunkCombatant.PRIMARY_SLOT));
-		assertEquals(0, player.getAmmoCount(CyberpunkCombatant.SECONDARY_SLOT));
-	}
 }

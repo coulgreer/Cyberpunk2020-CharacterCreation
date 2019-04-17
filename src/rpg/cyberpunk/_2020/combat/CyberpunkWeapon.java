@@ -2,6 +2,8 @@ package rpg.cyberpunk._2020.combat;
 
 import java.util.Objects;
 
+import org.apache.commons.text.WordUtils;
+
 import rpg.general.combat.Weapon;
 import rpg.util.Die;
 
@@ -73,6 +75,15 @@ public abstract class CyberpunkWeapon implements Weapon {
 		public String getAbbreviation() {
 			return abbreviation;
 		}
+
+		@Override
+		public String toString() {
+			String str = name();
+
+			str = str.replace("_", " ");
+			str = WordUtils.capitalizeFully(str);
+			return str;
+		}
 	}
 
 	/**
@@ -119,6 +130,15 @@ public abstract class CyberpunkWeapon implements Weapon {
 		 */
 		public String getAbbreviation() {
 			return abbreviation;
+		}
+
+		@Override
+		public String toString() {
+			String str = name();
+
+			str = str.replace("_", " ");
+			str = WordUtils.capitalizeFully(str);
+			return str;
 		}
 	}
 
@@ -170,6 +190,15 @@ public abstract class CyberpunkWeapon implements Weapon {
 		 */
 		public String getAbbreviation() {
 			return abbreviation;
+		}
+
+		@Override
+		public String toString() {
+			String str = name();
+
+			str = str.replace("_", " ");
+			str = WordUtils.capitalizeFully(str);
+			return str;
 		}
 	}
 

@@ -26,7 +26,7 @@ public class BottomlessInventoryTest {
 		assertTrue(inventory.contains(mockWeapon));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = NullPointerException.class)
 	public void testExceptionThrownIfNullCyberpunkWeaponIsAdded() {
 		CyberpunkWeapon nullWeapon = null;
 
@@ -46,7 +46,7 @@ public class BottomlessInventoryTest {
 		assertTrue(inventory.contains(mockArmor));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = NullPointerException.class)
 	public void testExceptionThrownIfNullCyberpunkArmorIsAdded() {
 		CyberpunkArmor nullArmor = null;
 
@@ -66,7 +66,7 @@ public class BottomlessInventoryTest {
 		assertTrue(inventory.contains(mockAmmunition));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = NullPointerException.class)
 	public void testExceptionThrownIfNullAmmunitionIsAdded() {
 		Ammunition nullAmmunition = null;
 

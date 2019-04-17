@@ -11,6 +11,7 @@ import rpg.general.combat.Combatant;
 import rpg.general.combat.EmptyAmmunitionContainer;
 import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
+import rpg.util.NullProbability;
 import rpg.util.Probability;
 
 public class NullCyberpunkWeapon extends CyberpunkWeapon {
@@ -155,5 +156,10 @@ public class NullCyberpunkWeapon extends CyberpunkWeapon {
 	@Override
 	public Reliability getReliability() {
 		return Reliability.UNRELIABLE;
+	}
+
+	@Override
+	public Probability getDamage() {
+		return NullProbability.getInstance();
 	}
 }

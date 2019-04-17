@@ -29,11 +29,12 @@ import rpg.util.Probability;
 
 public class Player {
 	public static final String PROPERTY_NAME_MONEY = "Money";
-	public static final String PROPERTY_NAME_INVENTORY_WEIGHT = "Inventory";
+	public static final String PROPERTY_NAME_INVENTORY_WEIGHT = "Inventory: Weight";
 	public static final String PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED = "Inventory: Weapon Manipulated";
 	public static final String PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED = "Inventory: Armor Manipulated";
 	public static final String PROPERTY_NAME_INVENTORY_AMMUNITION_MANIPULATED = "Inventory: Ammunition Manipulated";
 	public static final String PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED = "Inventory: Item Manipulated";
+	public static final String PROPERTY_NAME_WEAPON_EQUIPPED = "Equipped: Weapon";
 	public static final String PROPERTY_NAME_ROLE = "Role";
 
 	private PropertyChangeSupport changeSupport;
@@ -174,6 +175,8 @@ public class Player {
 			equip(slot, tempWeapon);
 			throw ex;
 		}
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_WEAPON_EQUIPPED, tempWeapon, weapon);
 	}
 
 	// TODO Think of throwing an exception to allow propagation of an error to the
@@ -227,16 +230,18 @@ public class Player {
 		combatant.attack(slot, shotsFired);
 	}
 
-	public void reload(int slot, AmmunitionContainer ammunitionStorage) {
-		combatant.reload(slot, ammunitionStorage);
+	public List<Ammunition> reload(int slot, AmmunitionContainer ammunitionStorage) {
+		List<Ammunition> spareAmmunition = combatant.reload(slot, ammunitionStorage);
+		spareAmmunition.stream().forEach(a -> addToInventory(a));
+		return spareAmmunition;
 	}
 
 	public void setFightingStance(FightingStyle style, FightingMove move) {
 		combatant.setUnarmedStance(style, move);
 	}
 
-	public int getAmmoCount(int slot) {
-		return combatant.getAmmoCount(slot);
+	public CyberpunkWeapon getWeapon(int slot) {
+		return (CyberpunkWeapon) combatant.getWeapon(slot);
 	}
 
 	public boolean hasItem(Object o) {
