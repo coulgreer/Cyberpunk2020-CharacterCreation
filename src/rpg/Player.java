@@ -2,9 +2,9 @@ package rpg;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import rpg.cyberpunk._2020.combat.ArmorManager;
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
@@ -21,6 +21,7 @@ import rpg.cyberpunk._2020.stats.Role;
 import rpg.cyberpunk._2020.stats.SkillManager;
 import rpg.general.combat.Ammunition;
 import rpg.general.combat.AmmunitionContainer;
+import rpg.general.combat.BodyLocation;
 import rpg.general.commerce.Item;
 import rpg.general.commerce.Trader;
 import rpg.general.stats.Attribute;
@@ -35,6 +36,7 @@ public class Player {
 	public static final String PROPERTY_NAME_INVENTORY_AMMUNITION_MANIPULATED = "Inventory: Ammunition Manipulated";
 	public static final String PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED = "Inventory: Item Manipulated";
 	public static final String PROPERTY_NAME_WEAPON_EQUIPPED = "Equipped: Weapon";
+	public static final String PROPERTY_NAME_ARMOR_EQUIPPED = "Equipped: Armor";
 	public static final String PROPERTY_NAME_ROLE = "Role";
 
 	private PropertyChangeSupport changeSupport;
@@ -185,6 +187,8 @@ public class Player {
 		if (armorManager.add(armor)) {
 			removeFromInventory(armor, 1);
 			addToEquipped(armor);
+
+			changeSupport.firePropertyChange(PROPERTY_NAME_ARMOR_EQUIPPED, null, armor);
 		}
 	}
 
@@ -377,24 +381,36 @@ public class Player {
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, armor, null);
 	}
 
-	public Set<CyberpunkWeapon> createCarriedWeaponSet() {
-		return pocketInventory.createWeaponSet();
+	public Collection<CyberpunkWeapon> createCarriedWeaponCollection() {
+		return pocketInventory.createWeaponCollection();
 	}
 
-	public Set<CyberpunkArmor> createCarriedArmorSet() {
-		return pocketInventory.createArmorSet();
+	public Collection<CyberpunkArmor> createCarriedArmorCollection() {
+		return pocketInventory.createArmorCollection();
 	}
 
-	public Set<Ammunition> createCarriedAmmunitionSet() {
-		return pocketInventory.createAmmunitionSet();
+	public Collection<Ammunition> createCarriedAmmunitionCollection() {
+		return pocketInventory.createAmmunitionCollection();
 	}
 
-	public Set<Item> createCarriedItemSet() {
-		return pocketInventory.createItemSet();
+	public Collection<Item> createCarriedItemCollection() {
+		return pocketInventory.createItemCollection();
+	}
+
+	public Collection<CyberpunkArmor> createEquippedArmorCollection() {
+		return equippedInventory.createArmorCollection();
 	}
 
 	public double getTotalWeight() {
 		return pocketInventory.getTotalWeight() + equippedInventory.getTotalWeight();
+	}
+
+	public int getLocationDurability(BodyLocation location) {
+		return armorManager.getLocationDurability(location);
+	}
+
+	public int getEncumbranceValue() {
+		return armorManager.getEncumbranceValue();
 	}
 
 	public Role getRole() {

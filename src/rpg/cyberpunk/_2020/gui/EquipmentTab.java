@@ -32,16 +32,7 @@ public class EquipmentTab extends JPanel {
 	private Component createMainPanel() {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
-		JPanel armorPanel = new JPanel(new GridLayout(1, 2));
-		mainPanel.add(armorPanel, BorderLayout.CENTER);
-
-		JPanel armorDisplayPanel = new JPanel();
-		armorDisplayPanel.setBackground(Color.RED);
-		armorPanel.add(armorDisplayPanel);
-
-		JPanel armorListPanel = new JPanel();
-		armorListPanel.setBackground(Color.BLUE);
-		armorPanel.add(armorListPanel);
+		mainPanel.add(new ArmorPanel(player), BorderLayout.CENTER);
 
 		mainPanel.add(createWeaponPanels(), BorderLayout.SOUTH);
 

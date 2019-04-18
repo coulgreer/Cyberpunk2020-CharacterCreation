@@ -660,20 +660,20 @@ public class CyberpunkVendor {
 	 * Delegates to the Inventory to make a set of weapons and return it.
 	 * 
 	 * @return a new set of weapons created by the Inventory
-	 * @see Inventory#createWeaponSet()
+	 * @see Inventory#createWeaponCollection()
 	 */
 	public Set<CyberpunkWeapon> getStoredWeapons() {
-		return startingInventory.createWeaponSet();
+		return new HashSet<CyberpunkWeapon>(startingInventory.createWeaponCollection());
 	}
 
 	/**
 	 * Delegates to the Inventory to make a set of armor and return it.
 	 * 
 	 * @return a new set of armor created by the Inventory
-	 * @see Inventory#createArmorSet()
+	 * @see Inventory#createArmorCollection()
 	 */
 	public Set<CyberpunkArmor> getStoredArmors() {
-		return startingInventory.createArmorSet();
+		return new HashSet<CyberpunkArmor>(startingInventory.createArmorCollection());
 	}
 
 	/**
@@ -689,10 +689,10 @@ public class CyberpunkVendor {
 	 * Delegates to the Inventory to make a set of items and return it.
 	 * 
 	 * @return a Set of items created by the Inventory
-	 * @see Inventory#createItemSet()
+	 * @see Inventory#createItemCollection()
 	 */
 	public Set<Item> getStoredItems() {
-		return startingInventory.createItemSet();
+		return new HashSet<Item>(startingInventory.createItemCollection());
 	}
 
 }

@@ -1,7 +1,7 @@
 package rpg.cyberpunk._2020.commerce;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.Collection;
 
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
@@ -89,34 +89,33 @@ public interface Inventory extends Serializable {
 	public void removeItem(Item item);
 
 	/**
-	 * Makes a new set that contains a collection of <code>CyberpunkWeapon</code>.
+	 * Returns a new collection that contains <code>CyberpunkWeapon</code>.
 	 * 
-	 * @return a new set that contains a collection of <code>CyberpunkWeapon</code>
+	 * @return a new collection that contains <code>CyberpunkWeapon</code>
 	 */
-	public Set<CyberpunkWeapon> createWeaponSet();
+	public Collection<CyberpunkWeapon> createWeaponCollection();
 
 	/**
-	 * Makes a new set that contains a collection of <code>CyberpunkArmor</code>.
+	 * Returns a new collection that contains <code>CyberpunkArmor</code>.
 	 * 
-	 * @return a new set that contains a collection of <code>CyberpunkArmor</code>
+	 * @return a new collection that contains <code>CyberpunkArmor</code>
 	 */
-	public Set<CyberpunkArmor> createArmorSet();
+	public Collection<CyberpunkArmor> createArmorCollection();
 
 	/**
-	 * Makes a new set that contains a collection of <code>Ammunition</code>.
+	 * Returns a new collection that contains <code>Ammunition</code>.
 	 * 
-	 * @return a new set that contains a collection of <code>Ammunition</code>
+	 * @return a new collection that contains <code>Ammunition</code>
 	 */
-	public Set<Ammunition> createAmmunitionSet();
+	public Collection<Ammunition> createAmmunitionCollection();
 
 	/**
-	 * Makes a new set that contains a collection of <code>Item</code>. The
-	 * collection is indirectly mutated when objects are added or removed from this
-	 * inventory
+	 * Returns a new collection that contains <code>Item</code>. The collection is
+	 * indirectly mutated when objects are added or removed from this inventory
 	 * 
-	 * @return a new set that contains a collection of <code>Item</code>
+	 * @return a new list that contains a collection of <code>Item</code>
 	 */
-	public Set<Item> createItemSet();
+	public Collection<Item> createItemCollection();
 
 	/**
 	 * Returns the amount of o that is held in this inventory.

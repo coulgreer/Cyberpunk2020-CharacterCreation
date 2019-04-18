@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -152,7 +153,7 @@ public class InventoryAmmunitionTable extends JTable {
 		 */
 		public InventoryAmmunitionTableModel(Player player) {
 			this.player = player;
-			this.ammunitionSet = player.createCarriedAmmunitionSet();
+			this.ammunitionSet = new HashSet<Ammunition>(player.createCarriedAmmunitionCollection());
 
 			player.addPropertyChangeListener(Player.PROPERTY_NAME_INVENTORY_AMMUNITION_MANIPULATED, this);
 		}
@@ -216,7 +217,7 @@ public class InventoryAmmunitionTable extends JTable {
 			Object source = evt.getSource();
 
 			if (source == player) {
-				ammunitionSet = player.createCarriedAmmunitionSet();
+				ammunitionSet = new HashSet<Ammunition>(player.createCarriedAmmunitionCollection());
 				fireTableDataChanged();
 			}
 		}

@@ -5,8 +5,8 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -27,7 +27,7 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener {
 	private static final int BORDER_WIDTH = 1;
 	private static final int PADDING_WIDTH = 3;
 
-	private JPanel panel;
+	private JPanel parentPanel;
 	private Player player;
 	private int slot;
 	private CyberpunkWeapon weapon;
@@ -36,10 +36,10 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener {
 	private JButton fireButton;
 	private JButton reloadButton;
 
-	public WeaponPanel(JPanel panel, Player player, int slot) {
+	public WeaponPanel(JPanel parentPanel, Player player, int slot) {
 		super(new GridLayout(3, 1));
 
-		this.panel = panel;
+		this.parentPanel = parentPanel;
 		this.player = player;
 		this.slot = slot;
 		this.weapon = player.getWeapon(slot);
@@ -123,7 +123,12 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener {
 	private void fireWeapon() {
 		player.attack(slot, 1);
 		weaponDetailLabel.setText(generateWeaponDetails());
+		updateButtons();
+	}
+
+	private void updateButtons() {
 		fireButton.setEnabled(canFire());
+		reloadButton.setEnabled(canReload());
 	}
 
 	private boolean canFire() {
@@ -131,31 +136,36 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener {
 				|| weapon.getAmmunitionCapacity() == AmmunitionContainer.EMPTY;
 	}
 
+	private boolean canReload() {
+		return weapon.getAmmunitionCapacity() > AmmunitionContainer.EMPTY;
+	}
+
 	private void reloadWeapon() {
-		Set<Ammunition> ammunitionSet = player.createCarriedAmmunitionSet();
+		Collection<Ammunition> ammunitionSet = player.createCarriedAmmunitionCollection();
 		Map<String, Ammunition> filteredAmmunitionMap = ammunitionSet.stream()
 				.filter(ammunition -> weapon.getAmmunitionType().equals(ammunition.getAmmunitionType()))
 				.collect(Collectors.toMap(Ammunition::getName, Function.identity()));
 		Object[] options = filteredAmmunitionMap.keySet().toArray();
 
-		String result = (String) JOptionPane.showInputDialog(panel, "Select ammunition:", "Ammo Selection",
-				JOptionPane.PLAIN_MESSAGE, null, options, null);
+		if (options.length > 0) {
+			String result = (String) JOptionPane.showInputDialog(parentPanel, "Select ammunition:", "Ammo Selection",
+					JOptionPane.PLAIN_MESSAGE, null, options, null);
 
-		Ammunition targetAmmunition = filteredAmmunitionMap.get(result);
-		AmmunitionContainer ammunitionStorage = new HomogeneousMagazine(weapon.getAmmunitionType(),
-				weapon.getAmmunitionCapacity());
-		while (!ammunitionStorage.isFull() && player.getQuantity(targetAmmunition) > 0) {
-			ammunitionStorage.depositAmmunition(targetAmmunition);
-			player.removeFromInventory(targetAmmunition, 1);
+			Ammunition targetAmmunition = filteredAmmunitionMap.get(result);
+			AmmunitionContainer ammunitionStorage = new HomogeneousMagazine(weapon.getAmmunitionType(),
+					weapon.getAmmunitionCapacity());
+			while (!ammunitionStorage.isFull() && player.getQuantity(targetAmmunition) > 0) {
+				ammunitionStorage.depositAmmunition(targetAmmunition);
+				player.removeFromInventory(targetAmmunition, 1);
+			}
+
+			player.reload(slot, ammunitionStorage);
+
+			weaponDetailLabel.setText(generateWeaponDetails());
+			updateButtons();
+		} else {
+			JOptionPane.showMessageDialog(parentPanel, "There is no compatible ammunition in your inventory.");
 		}
-
-		player.reload(slot, ammunitionStorage);
-		weaponDetailLabel.setText(generateWeaponDetails());
-		fireButton.setEnabled(canFire());
-	}
-
-	private boolean canReload() {
-		return weapon.getAmmunitionCapacity() > AmmunitionContainer.EMPTY;
 	}
 
 	@Override
@@ -167,8 +177,7 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener {
 
 			weaponNameLabel.setText(weapon.getName());
 			weaponDetailLabel.setText(generateWeaponDetails());
-			reloadButton.setEnabled(canReload());
-			fireButton.setEnabled(canFire());
+			updateButtons();
 		}
 	}
 

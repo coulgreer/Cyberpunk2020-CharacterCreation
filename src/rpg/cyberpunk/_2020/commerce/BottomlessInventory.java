@@ -1,10 +1,9 @@
 package rpg.cyberpunk._2020.commerce;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
@@ -180,23 +179,23 @@ public class BottomlessInventory implements Inventory {
 	}
 
 	@Override
-	public Set<CyberpunkWeapon> createWeaponSet() {
-		return new HashSet<CyberpunkWeapon>(weapons);
+	public Collection<CyberpunkWeapon> createWeaponCollection() {
+		return new ArrayList<CyberpunkWeapon>(weapons);
 	}
 
 	@Override
-	public Set<CyberpunkArmor> createArmorSet() {
-		return new HashSet<CyberpunkArmor>(armors);
+	public Collection<CyberpunkArmor> createArmorCollection() {
+		return new ArrayList<CyberpunkArmor>(armors);
 	}
 
 	@Override
-	public Set<Ammunition> createAmmunitionSet() {
-		return new HashSet<Ammunition>(ammunitions);
+	public Collection<Ammunition> createAmmunitionCollection() {
+		return new ArrayList<Ammunition>(ammunitions);
 	}
 
 	@Override
-	public Set<Item> createItemSet() {
-		return new HashSet<Item>(items);
+	public Collection<Item> createItemCollection() {
+		return new ArrayList<Item>(items);
 	}
 
 	@Override
