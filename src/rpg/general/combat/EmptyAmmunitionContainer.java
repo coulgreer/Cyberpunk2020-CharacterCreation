@@ -10,6 +10,8 @@ import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
  * @author Coul Greer
  */
 public class EmptyAmmunitionContainer implements AmmunitionContainer {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * @throws UnsupportedOperationException because no ammunition can be contained
 	 *                                       within

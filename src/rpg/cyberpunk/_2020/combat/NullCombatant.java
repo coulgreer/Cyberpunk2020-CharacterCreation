@@ -14,6 +14,8 @@ public class NullCombatant implements Combatant {
 	private static final Probability PROBABILITY = new Probability(
 			new Die(Die.MIN_NUMBER_OF_DICE, Die.MIN_NUMBER_OF_FACES), Probability.DEFAULT_MODIFIER);
 
+	private static final long serialVersionUID = 1L;
+
 	private static NullCombatant uniqueInstance;
 
 	private NullCombatant() {

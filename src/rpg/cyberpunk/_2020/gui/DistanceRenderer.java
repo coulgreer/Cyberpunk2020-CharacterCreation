@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableCellRenderer;
  *
  */
 public class DistanceRenderer extends DefaultTableCellRenderer {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a renderer that aligns its contents in the center.

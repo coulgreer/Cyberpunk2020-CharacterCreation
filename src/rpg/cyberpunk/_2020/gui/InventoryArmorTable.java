@@ -27,6 +27,7 @@ import rpg.general.combat.BodyLocation;
  * @author Coul Greer
  */
 public class InventoryArmorTable extends JTable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a table used to display a player's collection of armor held in
@@ -156,6 +157,8 @@ public class InventoryArmorTable extends JTable {
 				"Wt.", //
 				"Qty.", //
 				"Object" };
+
+		private static final long serialVersionUID = 1L;
 
 		private Player player;
 		private Set<CyberpunkArmor> armorSet;

@@ -14,6 +14,8 @@ public class Probability implements Comparable<Probability>, Serializable {
 	 */
 	public static final int DEFAULT_MODIFIER = 0;
 
+	private static final long serialVersionUID = 1L;
+
 	private Die die;
 	private int modifier;
 

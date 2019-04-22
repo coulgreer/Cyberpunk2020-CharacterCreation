@@ -27,6 +27,7 @@ import rpg.util.Probability;
  * @author Coul Greer
  */
 public class InventoryWeaponTable extends JTable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a table used to display a player's collection of weapons held in
@@ -198,6 +199,8 @@ public class InventoryWeaponTable extends JTable {
 				"Wt.", //
 				"Qty.", //
 				"Object" };
+
+		private static final long serialVersionUID = 1L;
 
 		private Player player;
 		private Set<CyberpunkWeapon> weaponSet;

@@ -17,6 +17,7 @@ import javax.swing.ListSelectionModel;
  * @author Coul Greer
  */
 public class InventoryCategoryPanel extends JPanel {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a panel that uses a given player to display data of what is stored

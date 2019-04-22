@@ -7,6 +7,8 @@ package rpg.util;
  * @author Coul Greer
  */
 public class NullProbability extends Probability {
+	private static final long serialVersionUID = 1L;
+
 	private static NullProbability uniqueInstance;
 
 	/**

@@ -13,6 +13,7 @@ import rpg.cyberpunk._2020.commerce.VendorTrader;
  * @author Coul Greer
  */
 public class MainTab extends JTabbedPane {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a tabbed pane with a default set of tabs.

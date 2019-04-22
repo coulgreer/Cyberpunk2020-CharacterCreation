@@ -10,6 +10,8 @@ import rpg.general.combat.Ammunition;
 import rpg.general.combat.AmmunitionContainer;
 
 public class HomogeneousMagazine implements AmmunitionContainer {
+	private static final long serialVersionUID = 1L;
+
 	private String ammunitionType;
 	private int capacity;
 	private Deque<Ammunition> ammunition;
@@ -91,7 +93,7 @@ public class HomogeneousMagazine implements AmmunitionContainer {
 		} else if (this.isEmpty()) {
 			this.depositAmmunition(newContainer.withdrawAmmunition());
 		} else if (!isEqualAmmunition(newContainer)) {
-			while(!this.isEmpty()) {
+			while (!this.isEmpty()) {
 				remaining.add(this.withdrawAmmunition());
 			}
 			this.depositAmmunition(newContainer.withdrawAmmunition());
@@ -99,18 +101,18 @@ public class HomogeneousMagazine implements AmmunitionContainer {
 			this.depositAmmunition(newContainer.withdrawAmmunition());
 		}
 	}
-	
+
 	private boolean isEqualAmmunitionType(AmmunitionContainer container) {
 		String oldAmmunitionType = this.getAmmunitionType();
 		String newAmmunitionType = container.getAmmunitionType();
-		
+
 		return oldAmmunitionType.equals(newAmmunitionType);
 	}
-	
+
 	private boolean isEqualAmmunition(AmmunitionContainer container) {
 		Ammunition oldAmmunition = this.getAmmunition();
 		Ammunition newAmmunition = container.getAmmunition();
-		
+
 		return oldAmmunition.equals(newAmmunition);
 	}
 

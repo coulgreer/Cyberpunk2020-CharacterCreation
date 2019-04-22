@@ -152,6 +152,8 @@ public class Cartridge implements Ammunition {
 		}
 	}
 
+	private static final long serialVersionUID = 1L;
+
 	private String caliber;
 	private Bullet bullet;
 	private CaseMaterial caseMaterial;

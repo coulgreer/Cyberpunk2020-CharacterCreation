@@ -29,6 +29,8 @@ import rpg.general.commerce.Item;
  * @author Coul Greer
  */
 public class InventoryTab extends JPanel {
+	private static final long serialVersionUID = 1L;
+
 	private Player player;
 	private CyberpunkVendor vendor;
 

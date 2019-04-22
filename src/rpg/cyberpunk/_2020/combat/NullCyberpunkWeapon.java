@@ -16,6 +16,7 @@ import rpg.util.Probability;
 
 public class NullCyberpunkWeapon extends CyberpunkWeapon {
 	private static final Probability DAMAGE = new Probability(new Die(0, 0), 0);
+	private static final long serialVersionUID = 1L;
 
 	private static NullCyberpunkWeapon uniqueInstance;
 	private AmmunitionContainer ammunitionContainer;

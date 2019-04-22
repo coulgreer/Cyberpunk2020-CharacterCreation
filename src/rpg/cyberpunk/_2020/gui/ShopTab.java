@@ -23,6 +23,8 @@ import rpg.general.combat.Ammunition;
  * @author Coul Greer
  */
 public class ShopTab extends JPanel {
+	private static final long serialVersionUID = 1L;
+
 	private Player player;
 	private CyberpunkVendor vendor;
 

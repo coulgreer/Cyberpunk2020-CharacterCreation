@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableCellRenderer;
  *
  */
 public class WeightRenderer extends DefaultTableCellRenderer {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a renderer that forces data to be right aligned.

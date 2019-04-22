@@ -17,6 +17,8 @@ import rpg.general.commerce.Item;
  * @author Coul Greer
  */
 public class BottomlessInventory implements Inventory {
+	private static final long serialVersionUID = 1L;
+
 	private ArrayList<CyberpunkWeapon> weapons;
 	private ArrayList<CyberpunkArmor> armors;
 	private ArrayList<Ammunition> ammunitions;

@@ -23,6 +23,8 @@ import rpg.util.Probability;
  * @author Coul Greer
  */
 public class Firearm extends CyberpunkWeapon {
+	private static final long serialVersionUID = 1L;
+
 	private String weaponName;
 	private String description;
 	private String weaponType;

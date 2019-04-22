@@ -16,6 +16,8 @@ public class AmmunitionBox implements Box<Ammunition> {
 	 * The default weight of an AmmunitionBox.
 	 */
 	public static final double WEIGHT = 0.5;
+	
+	private static final long serialVersionUID = 1L;
 
 	private Ammunition ammunition;
 	private List<Ammunition> list;

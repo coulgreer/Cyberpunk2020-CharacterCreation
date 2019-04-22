@@ -27,8 +27,9 @@ import rpg.general.combat.Ammunition;
 import rpg.general.combat.AmmunitionContainer;
 
 public class WeaponPanel extends JPanel implements PropertyChangeListener, Selectable {
-	private static final int BORDER_WIDTH = 1;
-	private static final int PADDING_WIDTH = 3;
+	private static final int borderSize = 1;
+	private static final int paddingSize = 3;
+	private static final long serialVersionUID = 1L;
 
 	private JPanel parentPanel;
 	private Player player;
@@ -51,11 +52,11 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 		player.addPropertyChangeListener(Player.PROPERTY_NAME_WEAPON_EQUIPPED, this);
 
 		if (slot == CyberpunkCombatant.PRIMARY_SLOT) {
-			setBorder(BorderFactory.createMatteBorder(0, 0, 0, BORDER_WIDTH, Color.BLACK));
+			setBorder(BorderFactory.createMatteBorder(0, 0, 0, borderSize, Color.BLACK));
 		}
 
 		if (slot == CyberpunkCombatant.SECONDARY_SLOT) {
-			setBorder(BorderFactory.createMatteBorder(0, BORDER_WIDTH, 0, 0, Color.BLACK));
+			setBorder(BorderFactory.createMatteBorder(0, borderSize, 0, 0, Color.BLACK));
 		}
 
 		addMouseListener(new MouseAdapter() {
@@ -91,12 +92,12 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 
 		JLabel titleLabel = new JLabel(weaponSlotTitle);
 		titleLabel.setHorizontalAlignment(JLabel.LEFT);
-		titleLabel.setBorder(BorderFactory.createEmptyBorder(0, PADDING_WIDTH, 0, 0));
+		titleLabel.setBorder(BorderFactory.createEmptyBorder(0, paddingSize, 0, 0));
 		panel.add(titleLabel);
 
 		weaponNameLabel = new JLabel(weapon.getName());
 		weaponNameLabel.setHorizontalAlignment(JLabel.RIGHT);
-		weaponNameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, PADDING_WIDTH));
+		weaponNameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, paddingSize));
 		panel.add(weaponNameLabel);
 
 		return panel;
@@ -211,11 +212,11 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 			setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.CYAN));
 		} else {
 			if (slot == CyberpunkCombatant.PRIMARY_SLOT) {
-				setBorder(BorderFactory.createMatteBorder(0, 0, 0, BORDER_WIDTH, Color.BLACK));
+				setBorder(BorderFactory.createMatteBorder(0, 0, 0, borderSize, Color.BLACK));
 			}
 
 			if (slot == CyberpunkCombatant.SECONDARY_SLOT) {
-				setBorder(BorderFactory.createMatteBorder(0, BORDER_WIDTH, 0, 0, Color.BLACK));
+				setBorder(BorderFactory.createMatteBorder(0, borderSize, 0, 0, Color.BLACK));
 			}
 		}
 	}

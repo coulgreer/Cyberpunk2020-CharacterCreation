@@ -35,6 +35,8 @@ import rpg.general.combat.BodyLocation;
 public class ArmorPanel extends JPanel implements PropertyChangeListener, Selectable {
 	public static final int BORDER_SIZE = 3;
 
+	private static final long serialVersionUID = 1L;
+
 	private Player player;
 	private JLabel label;
 	private JTable table;

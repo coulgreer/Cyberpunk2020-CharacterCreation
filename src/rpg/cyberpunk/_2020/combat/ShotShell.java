@@ -85,6 +85,8 @@ public class ShotShell implements Ammunition {
 		}
 	}
 
+	private static final long serialVersionUID = 1L;
+
 	private String gauge;
 	private Load load;
 	private double baseCost;

@@ -17,6 +17,8 @@ import rpg.cyberpunk._2020.combat.CyberpunkCombatant;
  * @author Coul Greer
  */
 public class EquipmentTab extends JPanel {
+	private static final long serialVersionUID = 1L;
+
 	private Player player;
 	private SelectionMediator selectionMediator;
 	private ArmorPanel armorPanel;

@@ -19,6 +19,8 @@ import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 public class WeaponTypeRenderer extends DefaultTableCellRenderer {
 	public static final int ICON_HEIGHT = 28;
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructs a renderer that centers its data elements.
 	 */

@@ -14,6 +14,8 @@ import rpg.util.Probability;
 public class LaunchedGrenade implements Ammunition {
 	public static final String AMMUNITION_TYPE_40MM = "40mm";
 
+	private static final long serialVersionUID = 1L;
+
 	private double weight;
 	private double cost;
 	private String ammunitionType;

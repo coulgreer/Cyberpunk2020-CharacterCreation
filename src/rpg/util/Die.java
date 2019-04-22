@@ -24,6 +24,8 @@ public class Die implements Serializable {
 	 */
 	public static final int DEFAULT_DIVIDEND = 1;
 
+	private static final long serialVersionUID = 1L;
+
 	private int numberOfDie;
 	private int numberOfFaces;
 	private int dividend;

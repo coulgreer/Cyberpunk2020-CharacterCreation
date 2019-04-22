@@ -25,6 +25,8 @@ import rpg.general.combat.BodyLocation;
  * @author Coul Greer
  */
 public class EquippedArmorTable extends JTable {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructs a table that displays the equipped armor of a <code>Player</code>.
 	 * 
@@ -102,6 +104,8 @@ public class EquippedArmorTable extends JTable {
 				"L. Leg", //
 				"R. Leg", //
 				"Object" };
+
+		private static final long serialVersionUID = 1L;
 
 		private Player player;
 		private List<CyberpunkArmor> armor;

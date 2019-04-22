@@ -25,6 +25,7 @@ import rpg.general.combat.Ammunition;
  * @author Coul Greer
  */
 public class InventoryAmmunitionTable extends JTable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a table that does not allow the columns to be resized or headers
@@ -133,7 +134,7 @@ public class InventoryAmmunitionTable extends JTable {
 		/**
 		 * The identifier of all the columns.
 		 */
-		public String[] COLUMN_NAMES = { //
+		public static final String[] COLUMN_NAMES = { //
 				"Name", //
 				"Type", //
 				"Damage", //
@@ -141,6 +142,8 @@ public class InventoryAmmunitionTable extends JTable {
 				"Weight", //
 				"Quantity", //
 				"Object" };
+
+		private static final long serialVersionUID = 1L;
 
 		private Player player;
 		private Set<Ammunition> ammunitionSet;

@@ -14,6 +14,8 @@ import rpg.cyberpunk._2020.combat.CyberpunkArmor;
 public class ArmorCoveringRenderer extends DefaultTableCellRenderer {
 	public static final int ICON_HEIGHT = 28;
 
+	private static final long serialVersionUID = 1L;
+
 	public ArmorCoveringRenderer() {
 		super();
 

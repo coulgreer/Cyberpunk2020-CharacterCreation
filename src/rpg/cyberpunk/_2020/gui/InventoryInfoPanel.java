@@ -15,6 +15,8 @@ import rpg.Player;
  * @author Coul Greer
  */
 public class InventoryInfoPanel extends JPanel implements PropertyChangeListener {
+	private static final long serialVersionUID = 1L;
+
 	private Player player;
 	private JLabel moneyLabel;
 	private JLabel weightLabel;

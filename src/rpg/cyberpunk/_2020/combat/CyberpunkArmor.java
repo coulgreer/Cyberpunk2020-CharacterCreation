@@ -73,6 +73,8 @@ public class CyberpunkArmor implements Protective, Item {
 	 */
 	public static final int DEFAULT_STOPPING_POWER = 0;
 
+	private static final long serialVersionUID = 1L;
+
 	private String name;
 	private String description;
 	private double cost;

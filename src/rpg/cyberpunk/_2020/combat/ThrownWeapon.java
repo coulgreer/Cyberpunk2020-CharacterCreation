@@ -35,7 +35,9 @@ public class ThrownWeapon extends CyberpunkWeapon {
 	/**
 	 * The minimum weight amount allowed without suffering a range penalty.
 	 */
-	private static final int WEIGHT_THRESHOLD = 1;
+	public static final int WEIGHT_THRESHOLD = 1;
+
+	private static final long serialVersionUID = 1L;
 
 	private String weaponName;
 	private String description;

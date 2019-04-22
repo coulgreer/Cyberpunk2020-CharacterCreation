@@ -14,6 +14,8 @@ public class Durability implements Serializable {
 	 */
 	public static final int MIN_DURABILITY = 0;
 
+	private static final long serialVersionUID = 1L;
+
 	private int maxDurability;
 	private int currentDurability;
 

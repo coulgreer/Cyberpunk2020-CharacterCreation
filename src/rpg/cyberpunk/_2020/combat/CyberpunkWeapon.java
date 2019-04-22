@@ -222,6 +222,8 @@ public abstract class CyberpunkWeapon implements Weapon {
 	public static final String AMMUNITION_TYPE_DRUGS = "Drugs";
 	public static final String AMMUNITION_TYPE_STUN = "Stun";
 
+	private static final long serialVersionUID = 1L;
+
 	private final Die hitChance;
 
 	protected CyberpunkWeapon() {

@@ -15,6 +15,8 @@ public class CyberpunkWeaponModifier implements Item, WeaponAttachment {
 
 	public static final double WEIGHT = 0.0;
 
+	private static final long serialVersionUID = 1L;
+
 	private String name;
 	private String description;
 	private int hitModifier;

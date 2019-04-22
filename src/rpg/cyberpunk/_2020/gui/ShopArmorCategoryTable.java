@@ -23,6 +23,7 @@ import rpg.general.combat.BodyLocation;
  * @author Coul Greer
  */
 public class ShopArmorCategoryTable extends JTable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a table using a set of armor provided by a vendor.
@@ -39,7 +40,7 @@ public class ShopArmorCategoryTable extends JTable {
 		getColumnModel().removeColumn(getColumnModel().getColumn(ShopArmorTableModel.OBJECT_INDEX));
 		getColumnModel().getColumn(ShopArmorTableModel.COVERS_INDEX)
 				.setPreferredWidth(ArmorCoveringRenderer.ICON_HEIGHT);
-		
+
 		getTableHeader().setReorderingAllowed(false);
 		getTableHeader().setResizingAllowed(false);
 	}
@@ -137,6 +138,8 @@ public class ShopArmorCategoryTable extends JTable {
 				"EV", //
 				"Cost", //
 				"Object" };
+
+		private static final long serialVersionUID = 1L;
 
 		private Set<CyberpunkArmor> armorSet;
 

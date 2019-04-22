@@ -16,6 +16,7 @@ import javax.swing.ListSelectionModel;
  * @author Coul Greer
  */
 public class ShopCategoryPanel extends JPanel {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a panel populated by the weapon's that a vendor holds.

@@ -12,6 +12,8 @@ import rpg.util.Probability;
  * @author Coul Greer
  */
 public class ExoticFirearm extends Firearm {
+	private static final long serialVersionUID = 1L;
+
 	private Probability damage;
 
 	/**

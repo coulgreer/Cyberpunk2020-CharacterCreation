@@ -80,6 +80,8 @@ public class Arrow implements Ammunition {
 		}
 	}
 
+	private static final long serialVersionUID = 1L;
+
 	private Tip arrowTip;
 
 	/**

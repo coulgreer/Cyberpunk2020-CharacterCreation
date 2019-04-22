@@ -12,6 +12,7 @@ import javax.swing.JPanel;
  * @author Coul Greer
  */
 public class SellButtonPanel extends JPanel {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a panel used to house a button that allows the user to sell an

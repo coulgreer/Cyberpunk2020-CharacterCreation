@@ -12,6 +12,7 @@ import rpg.util.Probability;
  *
  */
 public class DamageRenderer extends DefaultTableCellRenderer {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a renderer that centers the probability for damage

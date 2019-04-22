@@ -24,6 +24,8 @@ import rpg.util.Probability;
 public class MeleeWeapon extends CyberpunkWeapon {
 	public static final int RATE_OF_FIRE = 1;
 
+	private static final long serialVersionUID = 1L;
+
 	private String weaponName;
 	private String description;
 	private String weaponType;

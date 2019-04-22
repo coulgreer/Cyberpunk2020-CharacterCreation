@@ -4,6 +4,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
 public class MainMenuBar extends JMenuBar {
+	private static final long serialVersionUID = 1L;
 
 	public MainMenuBar() {
 		JMenu saveLoadMenu = new JMenu("Save/Load");

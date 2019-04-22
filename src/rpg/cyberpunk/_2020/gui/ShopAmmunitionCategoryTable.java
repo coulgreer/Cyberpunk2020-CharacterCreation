@@ -23,6 +23,7 @@ import rpg.general.combat.Ammunition;
  * @author Coul Greer
  */
 public class ShopAmmunitionCategoryTable extends JTable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a table that does not allow the columns to be resized or headers
@@ -132,6 +133,8 @@ public class ShopAmmunitionCategoryTable extends JTable {
 				"Cost", //
 				"Ammo/Box", //
 				"Object" };
+
+		private static final long serialVersionUID = 1L;
 
 		private Set<Box<Ammunition>> ammunitionSet;
 

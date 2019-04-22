@@ -24,6 +24,7 @@ import rpg.util.Probability;
  * @author Coul Greer
  */
 public class ShopWeaponCategoryTable extends JTable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a table using a set of weapons provided by a vendor.
@@ -40,7 +41,7 @@ public class ShopWeaponCategoryTable extends JTable {
 		setRowHeight(WeaponTypeRenderer.ICON_HEIGHT);
 		getColumnModel().removeColumn(getColumnModel().getColumn(ShopWeaponTableModel.OBJECT_INDEX));
 		getColumnModel().getColumn(ShopWeaponTableModel.TYPE_INDEX).setPreferredWidth(WeaponTypeRenderer.ICON_HEIGHT);
-		
+
 		getTableHeader().setReorderingAllowed(false);
 		getTableHeader().setResizingAllowed(false);
 	}
@@ -194,6 +195,8 @@ public class ShopWeaponCategoryTable extends JTable {
 				"Range", //
 				"Cost", //
 				"Object" };
+
+		private static final long serialVersionUID = 1L;
 
 		private Set<CyberpunkWeapon> weaponSet;
 

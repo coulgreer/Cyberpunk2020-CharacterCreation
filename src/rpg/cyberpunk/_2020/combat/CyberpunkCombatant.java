@@ -47,6 +47,8 @@ public class CyberpunkCombatant implements Combatant {
 	 */
 	public static final int DEFAULT_DAMAGE_MODIFIER = 0;
 
+	private static final long serialVersionUID = 1L;
+
 	private FightingStyleFactory unarmedWeaponFactory;
 	private final Player player;
 	private final Weapon[] weapons;

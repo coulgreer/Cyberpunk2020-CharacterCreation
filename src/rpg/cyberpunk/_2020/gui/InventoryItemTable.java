@@ -25,6 +25,7 @@ import rpg.general.commerce.Item;
  * @author Coul Greer
  */
 public class InventoryItemTable extends JTable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a table used to display a player's collection of items held in
@@ -125,6 +126,8 @@ public class InventoryItemTable extends JTable {
 				"Weight", //
 				"Quantity", //
 				"Object" };
+
+		private static final long serialVersionUID = 1L;
 
 		private Player player;
 		private Set<Item> itemSet;
