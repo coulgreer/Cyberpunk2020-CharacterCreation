@@ -1,39 +1,49 @@
 package rpg.cyberpunk._2020.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import rpg.Player;
 import rpg.cyberpunk._2020.combat.CyberpunkCombatant;
 
-// TODO Make the colors into the corresponding panels. 
-// Pink = unequip button panel
-// Red = display character and give information based on body location
-// Blue = list of equipped armor
+/**
+ * An instance of JPanel that sets up a panel for armor, primary weapon, and
+ * secondary weapon from a Player to be displayed.
+ * 
+ * @author Coul Greer
+ */
 public class EquipmentTab extends JPanel {
 	private Player player;
+	private SelectionMediator selectionMediator;
+	private ArmorPanel armorPanel;
+	private WeaponPanel primaryWeaponPanel;
+	private WeaponPanel secondaryWeaponPanel;
 
+	/**
+	 * Constructs a EquipmentTab that uses a Player to make a main display.
+	 * 
+	 * @param player the source of the displayed information such as the armor and
+	 *               weapons equipped
+	 */
 	public EquipmentTab(Player player) {
 		super(new BorderLayout());
 
 		this.player = player;
+		this.selectionMediator = new SelectionMediator();
 
 		add(createMainPanel(), BorderLayout.CENTER);
-
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setBackground(Color.PINK);
-		add(buttonPanel, BorderLayout.SOUTH);
+		add(createUnequipButtonPanel(), BorderLayout.SOUTH);
 	}
 
 	private Component createMainPanel() {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
-		mainPanel.add(new ArmorPanel(player), BorderLayout.CENTER);
-
+		armorPanel = new ArmorPanel(player, selectionMediator);
+		mainPanel.add(armorPanel, BorderLayout.CENTER);
 		mainPanel.add(createWeaponPanels(), BorderLayout.SOUTH);
 
 		return mainPanel;
@@ -42,10 +52,34 @@ public class EquipmentTab extends JPanel {
 	private Component createWeaponPanels() {
 		JPanel weaponPanel = new JPanel(new GridLayout(1, 2));
 
-		weaponPanel.add(new WeaponPanel(this, player, CyberpunkCombatant.PRIMARY_SLOT));
-		weaponPanel.add(new WeaponPanel(this, player, CyberpunkCombatant.SECONDARY_SLOT));
+		primaryWeaponPanel = new WeaponPanel(this, player, CyberpunkCombatant.PRIMARY_SLOT, selectionMediator);
+		secondaryWeaponPanel = new WeaponPanel(this, player, CyberpunkCombatant.SECONDARY_SLOT, selectionMediator);
+		weaponPanel.add(primaryWeaponPanel);
+		weaponPanel.add(secondaryWeaponPanel);
 
 		return weaponPanel;
+	}
+
+	private Component createUnequipButtonPanel() {
+		JPanel unequipPanel = new JPanel();
+
+		JButton unequipButton = new JButton("Unequip");
+		unequipButton.addActionListener(e -> unequip());
+		unequipPanel.add(unequipButton);
+
+		return unequipPanel;
+	}
+
+	private void unequip() {
+		Object selected = selectionMediator.getSelected();
+
+		if (selected == armorPanel) {
+			player.unequip(armorPanel.getSelectedArmor());
+		} else if (selected == primaryWeaponPanel) {
+			player.unequip(CyberpunkCombatant.PRIMARY_SLOT);
+		} else if (selected == secondaryWeaponPanel) {
+			player.unequip(CyberpunkCombatant.SECONDARY_SLOT);
+		}
 	}
 
 }

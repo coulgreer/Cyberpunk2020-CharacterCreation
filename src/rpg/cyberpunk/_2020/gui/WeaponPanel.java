@@ -3,6 +3,9 @@ package rpg.cyberpunk._2020.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
@@ -23,7 +26,7 @@ import rpg.cyberpunk._2020.combat.HomogeneousMagazine;
 import rpg.general.combat.Ammunition;
 import rpg.general.combat.AmmunitionContainer;
 
-public class WeaponPanel extends JPanel implements PropertyChangeListener {
+public class WeaponPanel extends JPanel implements PropertyChangeListener, Selectable {
 	private static final int BORDER_WIDTH = 1;
 	private static final int PADDING_WIDTH = 3;
 
@@ -35,8 +38,9 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener {
 	private JLabel weaponDetailLabel;
 	private JButton fireButton;
 	private JButton reloadButton;
+	private SelectionMediator selectionMediator;
 
-	public WeaponPanel(JPanel parentPanel, Player player, int slot) {
+	public WeaponPanel(JPanel parentPanel, Player player, int slot, SelectionMediator selectionMediator) {
 		super(new GridLayout(3, 1));
 
 		this.parentPanel = parentPanel;
@@ -53,6 +57,16 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener {
 		if (slot == CyberpunkCombatant.SECONDARY_SLOT) {
 			setBorder(BorderFactory.createMatteBorder(0, BORDER_WIDTH, 0, 0, Color.BLACK));
 		}
+
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				selectionMediator.setActive(WeaponPanel.this);
+			}
+		});
+
+		this.selectionMediator = selectionMediator;
+		selectionMediator.registerColleague(this);
 
 		add(createWeaponSummaryPanel());
 		add(createWeaponDetailPanel());
@@ -117,6 +131,11 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener {
 		reloadButton.addActionListener(evt -> reloadWeapon());
 		panel.add(reloadButton);
 
+		for (MouseListener listener : getMouseListeners()) {
+			fireButton.addMouseListener(listener);
+			reloadButton.addMouseListener(listener);
+		}
+
 		return panel;
 	}
 
@@ -178,6 +197,26 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener {
 			weaponNameLabel.setText(weapon.getName());
 			weaponDetailLabel.setText(generateWeaponDetails());
 			updateButtons();
+		}
+	}
+
+	@Override
+	public boolean isSelected() {
+		return this == selectionMediator.getSelected();
+	}
+
+	@Override
+	public void setSelected(boolean isSelected) {
+		if (isSelected) {
+			setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.CYAN));
+		} else {
+			if (slot == CyberpunkCombatant.PRIMARY_SLOT) {
+				setBorder(BorderFactory.createMatteBorder(0, 0, 0, BORDER_WIDTH, Color.BLACK));
+			}
+
+			if (slot == CyberpunkCombatant.SECONDARY_SLOT) {
+				setBorder(BorderFactory.createMatteBorder(0, BORDER_WIDTH, 0, 0, Color.BLACK));
+			}
 		}
 	}
 

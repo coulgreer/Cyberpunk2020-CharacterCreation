@@ -198,6 +198,8 @@ public class Player {
 		addToInventory(weapon);
 		removeFromEquipped(weapon);
 		combatant.disarm(slot);
+
+		changeSupport.firePropertyChange(PROPERTY_NAME_WEAPON_EQUIPPED, weapon, null);
 	}
 
 	// TODO Think of throwing an exception to allow propagation of an error to the
@@ -206,6 +208,8 @@ public class Player {
 		if (armorManager.remove(armor)) {
 			addToInventory(armor);
 			removeFromEquipped(armor);
+
+			changeSupport.firePropertyChange(PROPERTY_NAME_ARMOR_EQUIPPED, armor, null);
 		}
 	}
 
