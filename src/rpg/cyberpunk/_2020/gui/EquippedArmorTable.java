@@ -21,8 +21,6 @@ import rpg.general.combat.BodyLocation;
 /**
  * An instance of JTable that uses <code>EquippedArmorTableModel</code> to
  * acquire the data.
- * 
- * @author Coul Greer
  */
 public class EquippedArmorTable extends JTable {
 	private static final long serialVersionUID = 1L;
@@ -63,12 +61,11 @@ public class EquippedArmorTable extends JTable {
 	}
 
 	private void alternateRowColors(Component component, int row) {
-		Color primeColor = Color.WHITE;
+		Color primaryColor = Color.WHITE;
 		Color secondaryColor = new Color(220, 220, 220); // gainsboro
 
-		if (!component.getBackground().equals(getSelectionBackground())) {
-			Color bg = (row % 2 == 0 ? secondaryColor : primeColor);
-			component.setBackground(bg);
+		if (!getSelectionBackground().equals(component.getBackground())) {
+			component.setBackground(row % 2 == 0 ? secondaryColor : primaryColor);
 		}
 	}
 
@@ -91,10 +88,7 @@ public class EquippedArmorTable extends JTable {
 		public static final int RIGHT_LEG_SP_INDEX = 7;
 		public static final int OBJECT_INDEX = 8;
 
-		/**
-		 * A collection of the names used to head columns.
-		 */
-		public static final String[] COLUMN_NAMES = { //
+		private static final String[] columnNames = { //
 				"", //
 				"Name", //
 				"Head", //
@@ -112,7 +106,7 @@ public class EquippedArmorTable extends JTable {
 
 		/**
 		 * Constructs an EquippedArmorTableModel that uses a <code>Player</code> for
-		 * getting data.
+		 * getting data. Also, the model listens to the passed Player.
 		 * 
 		 * @param player the object used to acquire data for display to the JTable
 		 */
@@ -120,17 +114,17 @@ public class EquippedArmorTable extends JTable {
 			this.player = player;
 			this.armor = new ArrayList<CyberpunkArmor>(player.createCarriedArmorCollection());
 
-			player.addPropertyChangeListener(Player.PROPERTY_NAME_ARMOR_EQUIPPED, this);
+			player.addPropertyChangeListener(Player.PROPERTY_NAME_EQUIPMENT_ARMOR, this);
 		}
 
 		@Override
 		public int getColumnCount() {
-			return COLUMN_NAMES.length;
+			return columnNames.length;
 		}
 
 		@Override
 		public String getColumnName(int columnIndex) {
-			return COLUMN_NAMES[columnIndex];
+			return columnNames[columnIndex];
 		}
 
 		@Override

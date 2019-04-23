@@ -4,18 +4,15 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  * A renderer that converts data into a numerical value preceded by 'kg' to
- * represent weight.
- * 
- * @author Coul Greer
- *
+ * represent weight in metric.
  */
-public class WeightRenderer extends DefaultTableCellRenderer {
+public class MetricWeightRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a renderer that forces data to be right aligned.
 	 */
-	public WeightRenderer() {
+	public MetricWeightRenderer() {
 		super();
 
 		setHorizontalAlignment(RIGHT);
@@ -23,9 +20,9 @@ public class WeightRenderer extends DefaultTableCellRenderer {
 
 	@Override
 	public void setValue(Object value) {
-		Double weight = (Double) value;
+		Double weightKg = (Double) value;
 
-		setText(String.format("%01.2f kg", weight));
+		setText(String.format("%01.2f kg", weightKg));
 	}
 
 }

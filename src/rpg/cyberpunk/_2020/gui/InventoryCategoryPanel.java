@@ -13,8 +13,6 @@ import javax.swing.ListSelectionModel;
  * A panel used to organize elements related to a player's weapon cache.
  * Provides housing for all elements to help ease the effort needed when using a
  * layout manager.
- * 
- * @author Coul Greer
  */
 public class InventoryCategoryPanel extends JPanel {
 	private static final long serialVersionUID = 1L;

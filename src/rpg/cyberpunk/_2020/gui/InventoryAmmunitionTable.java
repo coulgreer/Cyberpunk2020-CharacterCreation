@@ -21,8 +21,6 @@ import rpg.general.combat.Ammunition;
 
 /**
  * An instance of JTable that uses a <code>InventoryAmmunitionTableModel</code>.
- * 
- * @author Coul Greer
  */
 public class InventoryAmmunitionTable extends JTable {
 	private static final long serialVersionUID = 1L;
@@ -65,12 +63,11 @@ public class InventoryAmmunitionTable extends JTable {
 	}
 
 	private void alternateRowColors(Component component, int row) {
-		Color primeColor = Color.WHITE;
+		Color primaryColor = Color.WHITE;
 		Color secondaryColor = new Color(220, 220, 220); // gainsboro
 
-		if (!component.getBackground().equals(getSelectionBackground())) {
-			Color bg = (row % 2 == 0 ? secondaryColor : primeColor);
-			component.setBackground(bg);
+		if (!getSelectionBackground().equals(component.getBackground())) {
+			component.setBackground(row % 2 == 0 ? secondaryColor : primaryColor);
 		}
 	}
 
@@ -80,9 +77,9 @@ public class InventoryAmmunitionTable extends JTable {
 		case InventoryAmmunitionTableModel.DAMAGE_INDEX:
 			return new DamageRenderer();
 		case InventoryAmmunitionTableModel.COST_INDEX:
-			return new CurrencyRenderer();
+			return new USCurrencyRenderer();
 		case InventoryAmmunitionTableModel.WEIGHT_INDEX:
-			return new WeightRenderer();
+			return new MetricWeightRenderer();
 		default:
 			return super.getCellRenderer(rowIndex, columnIndex);
 		}
@@ -131,10 +128,7 @@ public class InventoryAmmunitionTable extends JTable {
 		 */
 		public static final int OBJECT_INDEX = 6;
 
-		/**
-		 * The identifier of all the columns.
-		 */
-		public static final String[] COLUMN_NAMES = { //
+		private static final String[] columnNames = { //
 				"Name", //
 				"Type", //
 				"Damage", //
@@ -163,7 +157,7 @@ public class InventoryAmmunitionTable extends JTable {
 
 		@Override
 		public int getColumnCount() {
-			return COLUMN_NAMES.length;
+			return columnNames.length;
 		}
 
 		@Override
@@ -200,7 +194,7 @@ public class InventoryAmmunitionTable extends JTable {
 
 		@Override
 		public String getColumnName(int columnIndex) {
-			return COLUMN_NAMES[columnIndex];
+			return columnNames[columnIndex];
 		}
 
 		@Override

@@ -7,8 +7,6 @@ import rpg.util.Probability;
 /**
  * A renderer that displays the probability to deal damage to a target. A
  * probability with no die AND no modifier will be displayed as 3 dashes, "---".
- * 
- * @author Coul Greer
  *
  */
 public class DamageRenderer extends DefaultTableCellRenderer {

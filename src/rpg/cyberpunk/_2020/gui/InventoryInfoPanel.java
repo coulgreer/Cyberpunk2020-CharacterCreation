@@ -11,8 +11,6 @@ import rpg.Player;
 
 /**
  * A panel that shows the current weight and money available for a given player.
- * 
- * @author Coul Greer
  */
 public class InventoryInfoPanel extends JPanel implements PropertyChangeListener {
 	private static final long serialVersionUID = 1L;
@@ -26,7 +24,8 @@ public class InventoryInfoPanel extends JPanel implements PropertyChangeListener
 	 * (or lack there of) money or the weight of their inventory and equipped items
 	 * combined.
 	 * 
-	 * @param player
+	 * @param player the owner of the inventory used to get the displayed
+	 *               information such as: weight and money
 	 */
 	public InventoryInfoPanel(Player player) {
 		super(new GridLayout(1, 2));
@@ -34,13 +33,21 @@ public class InventoryInfoPanel extends JPanel implements PropertyChangeListener
 		player.addPropertyChangeListener(Player.PROPERTY_NAME_MONEY, this);
 		player.addPropertyChangeListener(Player.PROPERTY_NAME_INVENTORY_WEIGHT, this);
 
-		moneyLabel = new JLabel(String.format("Available Money: $%01.2f", player.getMoney()));
+		moneyLabel = new JLabel(generateFormattedMoney(player));
 		moneyLabel.setHorizontalAlignment(JLabel.CENTER);
 		add(moneyLabel);
 
-		weightLabel = new JLabel(String.format("Current Inventory Weight: %01.2f", player.getTotalWeight()));
+		weightLabel = new JLabel(generateFormattedWeight(player));
 		weightLabel.setHorizontalAlignment(JLabel.CENTER);
 		add(weightLabel);
+	}
+
+	private String generateFormattedMoney(Player player) {
+		return String.format("Available Money: $%01.2f", player.getMoney());
+	}
+
+	private String generateFormattedWeight(Player player) {
+		return String.format("Current Inventory Weight: %01.2f", player.getTotalWeight());
 	}
 
 	@Override
@@ -50,9 +57,9 @@ public class InventoryInfoPanel extends JPanel implements PropertyChangeListener
 
 		if (source == player) {
 			if (Player.PROPERTY_NAME_MONEY.equals(propertyName)) {
-				moneyLabel.setText(String.format("Available Money: $%01.2f", player.getMoney()));
+				moneyLabel.setText(generateFormattedMoney(player));
 			} else if (Player.PROPERTY_NAME_INVENTORY_WEIGHT.equals(propertyName)) {
-				weightLabel.setText(String.format("Current Inventory Weight: %01.2f", player.getTotalWeight()));
+				weightLabel.setText(generateFormattedWeight(player));
 			}
 		}
 	}

@@ -23,8 +23,6 @@ import rpg.general.combat.BodyLocation;
 
 /**
  * A table that displays a set of armor that is owned by the given player.
- * 
- * @author Coul Greer
  */
 public class InventoryArmorTable extends JTable {
 	private static final long serialVersionUID = 1L;
@@ -68,12 +66,11 @@ public class InventoryArmorTable extends JTable {
 	}
 
 	private void alternateRowColors(Component component, int row) {
-		Color primeColor = Color.WHITE;
+		Color primaryColor = Color.WHITE;
 		Color secondaryColor = new Color(220, 220, 220); // gainsboro
 
 		if (!component.getBackground().equals(getSelectionBackground())) {
-			Color bg = (row % 2 == 0 ? secondaryColor : primeColor);
-			component.setBackground(bg);
+			component.setBackground(row % 2 == 0 ? secondaryColor : primaryColor);
 		}
 	}
 
@@ -83,9 +80,9 @@ public class InventoryArmorTable extends JTable {
 		case InventoryArmorTableModel.COVERS_INDEX:
 			return new ArmorCoveringRenderer();
 		case InventoryArmorTableModel.COST_INDEX:
-			return new CurrencyRenderer();
+			return new USCurrencyRenderer();
 		case InventoryArmorTableModel.WEIGHT_INDEX:
-			return new WeightRenderer();
+			return new MetricWeightRenderer();
 		default:
 			return super.getCellRenderer(rowIndex, columnIndex);
 		}
@@ -93,8 +90,6 @@ public class InventoryArmorTable extends JTable {
 
 	/**
 	 * The underlying model used by a table that displays a player's armor stock.
-	 * 
-	 * @author Coul Greer
 	 */
 	public static class InventoryArmorTableModel extends AbstractTableModel implements PropertyChangeListener {
 		/**
@@ -144,10 +139,7 @@ public class InventoryArmorTable extends JTable {
 		 */
 		public static final int OBJECT_INDEX = 8;
 
-		/**
-		 * A collection of the names of the table headers.
-		 */
-		public static final String[] COLUMN_NAMES = { //
+		private static final String[] columnNames = { //
 				"", //
 				"Name", //
 				"Type", //
@@ -290,12 +282,12 @@ public class InventoryArmorTable extends JTable {
 
 		@Override
 		public int getColumnCount() {
-			return COLUMN_NAMES.length;
+			return columnNames.length;
 		}
 
 		@Override
 		public String getColumnName(int columnIndex) {
-			return COLUMN_NAMES[columnIndex];
+			return columnNames[columnIndex];
 		}
 
 		@Override

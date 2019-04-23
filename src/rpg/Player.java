@@ -35,8 +35,8 @@ public class Player {
 	public static final String PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED = "Inventory: Armor Manipulated";
 	public static final String PROPERTY_NAME_INVENTORY_AMMUNITION_MANIPULATED = "Inventory: Ammunition Manipulated";
 	public static final String PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED = "Inventory: Item Manipulated";
-	public static final String PROPERTY_NAME_WEAPON_EQUIPPED = "Equipped: Weapon";
-	public static final String PROPERTY_NAME_ARMOR_EQUIPPED = "Equipped: Armor";
+	public static final String PROPERTY_NAME_EQUIPMENT_WEAPON = "Equipment: Weapon";
+	public static final String PROPERTY_NAME_EQUIPMENT_ARMOR = "Equipment: Armor";
 	public static final String PROPERTY_NAME_ROLE = "Role";
 
 	private PropertyChangeSupport changeSupport;
@@ -178,7 +178,7 @@ public class Player {
 			throw ex;
 		}
 
-		changeSupport.firePropertyChange(PROPERTY_NAME_WEAPON_EQUIPPED, tempWeapon, weapon);
+		changeSupport.firePropertyChange(PROPERTY_NAME_EQUIPMENT_WEAPON, tempWeapon, weapon);
 	}
 
 	// TODO Think of throwing an exception to allow propagation of an error to the
@@ -188,7 +188,7 @@ public class Player {
 			removeFromInventory(armor, 1);
 			addToEquipped(armor);
 
-			changeSupport.firePropertyChange(PROPERTY_NAME_ARMOR_EQUIPPED, null, armor);
+			changeSupport.firePropertyChange(PROPERTY_NAME_EQUIPMENT_ARMOR, null, armor);
 		}
 	}
 
@@ -199,7 +199,7 @@ public class Player {
 		removeFromEquipped(weapon);
 		combatant.disarm(slot);
 
-		changeSupport.firePropertyChange(PROPERTY_NAME_WEAPON_EQUIPPED, weapon, null);
+		changeSupport.firePropertyChange(PROPERTY_NAME_EQUIPMENT_WEAPON, weapon, null);
 	}
 
 	// TODO Think of throwing an exception to allow propagation of an error to the
@@ -209,7 +209,7 @@ public class Player {
 			addToInventory(armor);
 			removeFromEquipped(armor);
 
-			changeSupport.firePropertyChange(PROPERTY_NAME_ARMOR_EQUIPPED, armor, null);
+			changeSupport.firePropertyChange(PROPERTY_NAME_EQUIPMENT_ARMOR, armor, null);
 		}
 	}
 

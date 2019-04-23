@@ -17,10 +17,8 @@ import rpg.cyberpunk._2020.gui.ShopWeaponCategoryTable.ShopWeaponTableModel;
 import rpg.general.combat.Ammunition;
 
 /**
- * A panel used to hold all elements used to display all items that a vendor can
- * sell.
- * 
- * @author Coul Greer
+ * The parent to the displays for all objects that a <code>Player</code> can buy
+ * from a <code>Vendor</code>.
  */
 public class ShopTab extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -29,8 +27,8 @@ public class ShopTab extends JPanel {
 	private CyberpunkVendor vendor;
 
 	/**
-	 * Constructs a panel that helps organize elements used for the shopping GUI
-	 * experience.
+	 * Constructs a panel that holds a tabbed pane that holds a
+	 * <code>ShopCategoryPanel</code> for weapons, armor, and ammunition.
 	 * 
 	 * @param player the object that purchases items from the vendor
 	 */

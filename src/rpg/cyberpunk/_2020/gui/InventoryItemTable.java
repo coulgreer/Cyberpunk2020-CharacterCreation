@@ -21,8 +21,6 @@ import rpg.general.commerce.Item;
 
 /**
  * A JTable that houses the Items currently in a Player's Inventory.
- * 
- * @author Coul Greer
  */
 public class InventoryItemTable extends JTable {
 	private static final long serialVersionUID = 1L;
@@ -64,12 +62,11 @@ public class InventoryItemTable extends JTable {
 	}
 
 	private void alternateRowColors(Component component, int row) {
-		Color primeColor = Color.WHITE;
+		Color primaryColor = Color.WHITE;
 		Color secondaryColor = new Color(220, 220, 220); // gainsboro
 
-		if (!component.getBackground().equals(getSelectionBackground())) {
-			Color bg = (row % 2 == 0 ? secondaryColor : primeColor);
-			component.setBackground(bg);
+		if (!getSelectionBackground().equals(component.getBackground())) {
+			component.setBackground(row % 2 == 0 ? secondaryColor : primaryColor);
 		}
 	}
 
@@ -77,9 +74,9 @@ public class InventoryItemTable extends JTable {
 	public TableCellRenderer getCellRenderer(int rowIndex, int columnIndex) {
 		switch (convertColumnIndexToModel(columnIndex)) {
 		case InventoryItemTableModel.COST_INDEX:
-			return new CurrencyRenderer();
+			return new USCurrencyRenderer();
 		case InventoryItemTableModel.WEIGHT_INDEX:
-			return new WeightRenderer();
+			return new MetricWeightRenderer();
 		default:
 			return super.getCellRenderer(rowIndex, columnIndex);
 		}
@@ -88,8 +85,6 @@ public class InventoryItemTable extends JTable {
 	/**
 	 * An instance of AbstractTableModel that has a Name, Cost, Weight, and Object
 	 * column.
-	 * 
-	 * @author Coul Greer
 	 */
 	public static class InventoryItemTableModel extends AbstractTableModel implements PropertyChangeListener {
 		/**
@@ -117,10 +112,7 @@ public class InventoryItemTable extends JTable {
 		 */
 		public static final int OBJECT_INDEX = 4;
 
-		/**
-		 * The Strings used to identify each column.
-		 */
-		public static final String[] COLUMN_NAMES = { //
+		private static final String[] columnNames = { //
 				"Name", //
 				"Cost", //
 				"Weight", //
@@ -149,7 +141,7 @@ public class InventoryItemTable extends JTable {
 
 		@Override
 		public int getColumnCount() {
-			return COLUMN_NAMES.length;
+			return columnNames.length;
 		}
 
 		@Override
@@ -182,7 +174,7 @@ public class InventoryItemTable extends JTable {
 
 		@Override
 		public String getColumnName(int col) {
-			return COLUMN_NAMES[col];
+			return columnNames[col];
 		}
 
 		@Override

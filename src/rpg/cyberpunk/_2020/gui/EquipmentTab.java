@@ -13,8 +13,6 @@ import rpg.cyberpunk._2020.combat.CyberpunkCombatant;
 /**
  * An instance of JPanel that sets up a panel for armor, primary weapon, and
  * secondary weapon from a Player to be displayed.
- * 
- * @author Coul Greer
  */
 public class EquipmentTab extends JPanel {
 	private static final long serialVersionUID = 1L;

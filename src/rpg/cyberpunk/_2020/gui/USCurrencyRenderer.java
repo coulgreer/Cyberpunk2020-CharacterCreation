@@ -9,13 +9,13 @@ import javax.swing.table.DefaultTableCellRenderer;
  * 
  * @author Coul Greer
  */
-public class CurrencyRenderer extends DefaultTableCellRenderer {
+public class USCurrencyRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a renderer that aligns its contents to the right.
 	 */
-	public CurrencyRenderer() {
+	public USCurrencyRenderer() {
 		super();
 
 		setHorizontalAlignment(RIGHT);

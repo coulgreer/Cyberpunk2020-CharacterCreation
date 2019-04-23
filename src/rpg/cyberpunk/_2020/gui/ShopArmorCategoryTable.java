@@ -63,12 +63,11 @@ public class ShopArmorCategoryTable extends JTable {
 	}
 
 	private void alternateRowColors(Component component, int row) {
-		Color primeColor = Color.WHITE;
+		Color primaryColor = Color.WHITE;
 		Color secondaryColor = new Color(220, 220, 220); // gainsboro
 
-		if (!component.getBackground().equals(getSelectionBackground())) {
-			Color bg = (row % 2 == 0 ? secondaryColor : primeColor);
-			component.setBackground(bg);
+		if (!getSelectionBackground().equals(component.getBackground())) {
+			component.setBackground(row % 2 == 0 ? secondaryColor : primaryColor);
 		}
 	}
 
@@ -78,16 +77,15 @@ public class ShopArmorCategoryTable extends JTable {
 		case ShopArmorTableModel.COVERS_INDEX:
 			return new ArmorCoveringRenderer();
 		case ShopArmorTableModel.COST_INDEX:
-			return new CurrencyRenderer();
+			return new USCurrencyRenderer();
 		default:
 			return super.getCellRenderer(rowIndex, columnIndex);
 		}
 	}
 
 	/**
-	 * The underlying model used by a table that displays a vendor's armor stock.
-	 * 
-	 * @author Coul Greer
+	 * The underlying model used by a table that displays a <code>Vendor</code>'s
+	 * <code>CyberpunkArmor</code> stock.
 	 */
 	public static class ShopArmorTableModel extends AbstractTableModel {
 		/**
@@ -130,7 +128,7 @@ public class ShopArmorCategoryTable extends JTable {
 		/**
 		 * A collection of the names of the table headers.
 		 */
-		public static final String[] COLUMN_NAMES = { //
+		private static final String[] columnNames = { //
 				"", //
 				"Name", //
 				"Type", //
@@ -155,7 +153,7 @@ public class ShopArmorCategoryTable extends JTable {
 
 		@Override
 		public int getColumnCount() {
-			return COLUMN_NAMES.length;
+			return columnNames.length;
 		}
 
 		@Override
@@ -252,18 +250,18 @@ public class ShopArmorCategoryTable extends JTable {
 		}
 
 		@Override
-		public String getColumnName(int col) {
-			return COLUMN_NAMES[col];
+		public String getColumnName(int columnIndex) {
+			return columnNames[columnIndex];
 		}
 
 		@Override
-		public boolean isCellEditable(int row, int col) {
+		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			return false;
 		}
 
 		@Override
-		public Class<?> getColumnClass(int col) {
-			Object value = getValueAt(0, col);
+		public Class<?> getColumnClass(int columnIndex) {
+			Object value = getRowCount() > 0 ? getValueAt(0, columnIndex) : null;
 
 			return value == null ? Object.class : value.getClass();
 		}

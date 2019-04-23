@@ -26,6 +26,11 @@ import rpg.cyberpunk._2020.combat.HomogeneousMagazine;
 import rpg.general.combat.Ammunition;
 import rpg.general.combat.AmmunitionContainer;
 
+/**
+ * A panel that allows the manipulation of a <code>CyberpunkWeapon</code> as
+ * well as the display of its information in regards to its name, weapon type,
+ * ammunition count, reliability, etc.
+ */
 public class WeaponPanel extends JPanel implements PropertyChangeListener, Selectable {
 	private static final int borderSize = 1;
 	private static final int paddingSize = 3;
@@ -33,7 +38,7 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 
 	private JPanel parentPanel;
 	private Player player;
-	private int slot;
+	private int slotIndex;
 	private CyberpunkWeapon weapon;
 	private JLabel weaponNameLabel;
 	private JLabel weaponDetailLabel;
@@ -41,24 +46,35 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 	private JButton reloadButton;
 	private SelectionMediator selectionMediator;
 
-	public WeaponPanel(JPanel parentPanel, Player player, int slot, SelectionMediator selectionMediator) {
+	/**
+	 * Constructs a panel that displays the data of a <code>CyberpunkWeapon</code>
+	 * provided by the passed Player and slot index. The derived information from
+	 * the CyberpunkWeapon is shown as: a summary panel that displays the slot's
+	 * name and the weapon's name, a detail panel that displays all other
+	 * information not provided by the summary, and a panel that allows the user to
+	 * manipulate the weapon's state by firing and reloading the weapon if
+	 * permitted. Also, adds this panel to a selection group that allows for only
+	 * one of the selected items to be active at a time.
+	 * 
+	 * @param parentPanel       the panel used to display the error messages on
+	 * @param player            the provider of the CyberpunkWeapon given the slot
+	 *                          index
+	 * @param slotIndex         the numerical value used to access the
+	 *                          CyberpunkWeapon from player
+	 * @param selectionMediator the manager that tells this panel if it is selected
+	 *                          or not
+	 */
+	public WeaponPanel(JPanel parentPanel, Player player, int slotIndex, SelectionMediator selectionMediator) {
 		super(new GridLayout(3, 1));
 
 		this.parentPanel = parentPanel;
 		this.player = player;
-		this.slot = slot;
-		this.weapon = player.getWeapon(slot);
+		this.slotIndex = slotIndex;
+		this.weapon = player.getWeapon(slotIndex);
 
-		player.addPropertyChangeListener(Player.PROPERTY_NAME_WEAPON_EQUIPPED, this);
+		player.addPropertyChangeListener(Player.PROPERTY_NAME_EQUIPMENT_WEAPON, this);
 
-		if (slot == CyberpunkCombatant.PRIMARY_SLOT) {
-			setBorder(BorderFactory.createMatteBorder(0, 0, 0, borderSize, Color.BLACK));
-		}
-
-		if (slot == CyberpunkCombatant.SECONDARY_SLOT) {
-			setBorder(BorderFactory.createMatteBorder(0, borderSize, 0, 0, Color.BLACK));
-		}
-
+		createStartingBorder(slotIndex);
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -74,11 +90,21 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 		add(createButtonPanel());
 	}
 
+	private void createStartingBorder(int slot) {
+		if (slot == CyberpunkCombatant.PRIMARY_SLOT) {
+			setBorder(BorderFactory.createMatteBorder(0, 0, 0, borderSize, Color.BLACK));
+		}
+
+		if (slot == CyberpunkCombatant.SECONDARY_SLOT) {
+			setBorder(BorderFactory.createMatteBorder(0, borderSize, 0, 0, Color.BLACK));
+		}
+	}
+
 	private Component createWeaponSummaryPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 2));
 
 		String weaponSlotTitle;
-		switch (slot) {
+		switch (slotIndex) {
 		case CyberpunkCombatant.PRIMARY_SLOT:
 			weaponSlotTitle = "Primary";
 			break;
@@ -113,11 +139,15 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 	}
 
 	private String generateWeaponDetails() {
-		return weapon.getWeaponType() + " \u2022 " + weapon.getHitScore() + " \u2022 " + weapon.getConcealability()
-				+ " \u2022 " + weapon.getAvailability() + " \u2022 " + weapon.getDamage() + " \u2022 "
-				+ weapon.getAmmunitionType() + " \u2022 " + weapon.getAmmunitionCount() + "/"
-				+ weapon.getAmmunitionCapacity() + " \u2022 " + weapon.getRateOfFire() + " \u2022 "
-				+ weapon.getReliability();
+		return weapon.getWeaponType() //
+				+ " \u2022 " + weapon.getHitScore() //
+				+ " \u2022 " + weapon.getConcealability() //
+				+ " \u2022 " + weapon.getAvailability() //
+				+ " \u2022 " + weapon.getDamage() //
+				+ " \u2022 " + weapon.getAmmunitionType() //
+				+ " \u2022 " + weapon.getAmmunitionCount() + "/" + weapon.getAmmunitionCapacity() //
+				+ " \u2022 " + weapon.getRateOfFire() //
+				+ " \u2022 " + weapon.getReliability();
 	}
 
 	private Component createButtonPanel() {
@@ -127,6 +157,7 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 		fireButton.setEnabled(canFire());
 		fireButton.addActionListener(evt -> fireWeapon());
 		panel.add(fireButton);
+
 		reloadButton = new JButton("Reload");
 		reloadButton.setEnabled(canReload());
 		reloadButton.addActionListener(evt -> reloadWeapon());
@@ -141,7 +172,7 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 	}
 
 	private void fireWeapon() {
-		player.attack(slot, 1);
+		player.attack(slotIndex, 1);
 		weaponDetailLabel.setText(generateWeaponDetails());
 		updateButtons();
 	}
@@ -179,7 +210,7 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 				player.removeFromInventory(targetAmmunition, 1);
 			}
 
-			player.reload(slot, ammunitionStorage);
+			player.reload(slotIndex, ammunitionStorage);
 
 			weaponDetailLabel.setText(generateWeaponDetails());
 			updateButtons();
@@ -193,7 +224,7 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 		Object source = evt.getSource();
 
 		if (source == player) {
-			weapon = player.getWeapon(slot);
+			weapon = player.getWeapon(slotIndex);
 
 			weaponNameLabel.setText(weapon.getName());
 			weaponDetailLabel.setText(generateWeaponDetails());
@@ -211,13 +242,7 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 		if (isSelected) {
 			setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.CYAN));
 		} else {
-			if (slot == CyberpunkCombatant.PRIMARY_SLOT) {
-				setBorder(BorderFactory.createMatteBorder(0, 0, 0, borderSize, Color.BLACK));
-			}
-
-			if (slot == CyberpunkCombatant.SECONDARY_SLOT) {
-				setBorder(BorderFactory.createMatteBorder(0, borderSize, 0, 0, Color.BLACK));
-			}
+			createStartingBorder(slotIndex);
 		}
 	}
 

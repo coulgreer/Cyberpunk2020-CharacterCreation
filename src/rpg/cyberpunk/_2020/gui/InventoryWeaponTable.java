@@ -23,8 +23,6 @@ import rpg.util.Probability;
 
 /**
  * A table that displays a set of weapons that is owned by the given player.
- * 
- * @author Coul Greer
  */
 public class InventoryWeaponTable extends JTable {
 	private static final long serialVersionUID = 1L;
@@ -69,12 +67,11 @@ public class InventoryWeaponTable extends JTable {
 	}
 
 	private void alternateRowColors(Component component, int row) {
-		Color primeColor = Color.WHITE;
+		Color primaryColor = Color.WHITE;
 		Color secondaryColor = new Color(220, 220, 220); // gainsboro
 
 		if (!component.getBackground().equals(getSelectionBackground())) {
-			Color bg = (row % 2 == 0 ? secondaryColor : primeColor);
-			component.setBackground(bg);
+			component.setBackground(row % 2 == 0 ? secondaryColor : primaryColor);
 		}
 	}
 
@@ -84,11 +81,11 @@ public class InventoryWeaponTable extends JTable {
 		case InventoryWeaponTableModel.TYPE_INDEX:
 			return new WeaponTypeRenderer();
 		case InventoryWeaponTableModel.RANGE_INDEX:
-			return new DistanceRenderer();
+			return new MetricDistanceRenderer();
 		case InventoryWeaponTableModel.COST_INDEX:
-			return new CurrencyRenderer();
+			return new USCurrencyRenderer();
 		case InventoryWeaponTableModel.WEIGHT_INDEX:
-			return new WeightRenderer();
+			return new MetricWeightRenderer();
 		case ShopWeaponTableModel.DAMAGE_INDEX:
 			return new DamageRenderer();
 		default:
@@ -180,10 +177,7 @@ public class InventoryWeaponTable extends JTable {
 		 */
 		public static final int OBJECT_INDEX = 14;
 
-		/**
-		 * A list of names for each column with respect to the indices.
-		 */
-		public static final String[] COLUMN_NAMES = { //
+		private static final String[] columnNames = { //
 				"", //
 				"Name", //
 				"W.A.", //
@@ -208,7 +202,7 @@ public class InventoryWeaponTable extends JTable {
 		/**
 		 * Creates a model that uses a set of weapons to populate the table view.
 		 * 
-		 * @param vendor the provider of the weapons that populate the table view
+		 * @param player the provider of the weapons that populate the table view
 		 */
 		public InventoryWeaponTableModel(Player player) {
 			this.player = player;
@@ -219,7 +213,7 @@ public class InventoryWeaponTable extends JTable {
 
 		@Override
 		public int getColumnCount() {
-			return COLUMN_NAMES.length;
+			return columnNames.length;
 		}
 
 		@Override
@@ -272,7 +266,7 @@ public class InventoryWeaponTable extends JTable {
 
 		@Override
 		public String getColumnName(int col) {
-			return COLUMN_NAMES[col];
+			return columnNames[col];
 		}
 
 		@Override

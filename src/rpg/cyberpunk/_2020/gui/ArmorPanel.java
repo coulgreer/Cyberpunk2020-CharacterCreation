@@ -29,12 +29,9 @@ import rpg.general.combat.BodyLocation;
 /**
  * A panel that displays both a model of the character and displays a list of
  * armor pieces the character is wearing.
- * 
- * @author Coul Greer
  */
 public class ArmorPanel extends JPanel implements PropertyChangeListener, Selectable {
-	public static final int BORDER_SIZE = 3;
-
+	private static final int borderThickness = 3;
 	private static final long serialVersionUID = 1L;
 
 	private Player player;
@@ -55,7 +52,7 @@ public class ArmorPanel extends JPanel implements PropertyChangeListener, Select
 		super(new BorderLayout());
 
 		this.player = player;
-		player.addPropertyChangeListener(Player.PROPERTY_NAME_ARMOR_EQUIPPED, this);
+		player.addPropertyChangeListener(Player.PROPERTY_NAME_EQUIPMENT_ARMOR, this);
 
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -67,7 +64,7 @@ public class ArmorPanel extends JPanel implements PropertyChangeListener, Select
 		this.selectionMediator = selectionMediator;
 		selectionMediator.registerColleague(this);
 
-		setBorder(BorderFactory.createEmptyBorder(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE));
+		setBorder(BorderFactory.createEmptyBorder(borderThickness, borderThickness, borderThickness, borderThickness));
 
 		add(createArmorDisplayPanel(), BorderLayout.WEST);
 		add(createArmorListPanel(player), BorderLayout.CENTER);
@@ -83,7 +80,7 @@ public class ArmorPanel extends JPanel implements PropertyChangeListener, Select
 			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
 			panel.add(picLabel);
 		} catch (IOException e) {
-			// TODO Make this meaningful for the dev.
+			// TODO (Coul Greer): Add a logger to help handle this exception.
 			e.printStackTrace();
 		}
 
@@ -114,13 +111,13 @@ public class ArmorPanel extends JPanel implements PropertyChangeListener, Select
 	}
 
 	private String generateArmorSummary() {
-		return "TOTAL Encumbrance Value: " + player.getEncumbranceValue() + " \u2022 " + "Head SP: "
-				+ player.getLocationDurability(BodyLocation.HEAD) + " \u2022 " + "L. Arm SP: "
-				+ player.getLocationDurability(BodyLocation.LEFT_ARM) + " \u2022 " + "R. Arm SP: "
-				+ player.getLocationDurability(BodyLocation.RIGHT_ARM) + " \u2022 " + "Torso SP: "
-				+ player.getLocationDurability(BodyLocation.TORSO) + " \u2022 " + "L. Leg SP: "
-				+ player.getLocationDurability(BodyLocation.LEFT_LEG) + " \u2022 " + "R. Leg SP: "
-				+ player.getLocationDurability(BodyLocation.RIGHT_LEG);
+		return "TOTAL Encumbrance Value: " + player.getEncumbranceValue() //
+				+ " \u2022 " + "Head SP: " + player.getLocationDurability(BodyLocation.HEAD) //
+				+ " \u2022 " + "L. Arm SP: " + player.getLocationDurability(BodyLocation.LEFT_ARM) //
+				+ " \u2022 " + "R. Arm SP: " + player.getLocationDurability(BodyLocation.RIGHT_ARM) //
+				+ " \u2022 " + "Torso SP: " + player.getLocationDurability(BodyLocation.TORSO) //
+				+ " \u2022 " + "L. Leg SP: " + player.getLocationDurability(BodyLocation.LEFT_LEG) //
+				+ " \u2022 " + "R. Leg SP: " + player.getLocationDurability(BodyLocation.RIGHT_LEG);
 	}
 
 	@Override
@@ -140,9 +137,11 @@ public class ArmorPanel extends JPanel implements PropertyChangeListener, Select
 	@Override
 	public void setSelected(boolean isSelected) {
 		if (isSelected) {
-			setBorder(BorderFactory.createMatteBorder(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, Color.CYAN));
+			setBorder(BorderFactory.createMatteBorder(borderThickness, borderThickness, borderThickness,
+					borderThickness, Color.CYAN));
 		} else {
-			setBorder(BorderFactory.createEmptyBorder(BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE));
+			setBorder(BorderFactory.createEmptyBorder(borderThickness, borderThickness, borderThickness,
+					borderThickness));
 		}
 	}
 

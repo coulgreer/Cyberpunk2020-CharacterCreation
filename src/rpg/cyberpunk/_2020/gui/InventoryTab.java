@@ -24,9 +24,7 @@ import rpg.general.commerce.Item;
 
 /**
  * A panel used to keep all the inventory GUI elements organized for layout
- * mangers.
- * 
- * @author Coul Greer
+ * mangers. Uses a JTabbedPane to keep a category of panels organized.
  */
 public class InventoryTab extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -39,6 +37,7 @@ public class InventoryTab extends JPanel {
 	 * 
 	 * @param player the object from which data is drawn from and passed to while
 	 *               also displaying its contents to the GUI
+	 * @param vendor the purchaser of items if sold by player
 	 */
 	public InventoryTab(Player player, CyberpunkVendor vendor) {
 		super(new BorderLayout());

@@ -9,7 +9,7 @@ public class MainMenuBar extends JMenuBar {
 	public MainMenuBar() {
 		JMenu saveLoadMenu = new JMenu("Save/Load");
 
-		// TODO Add the option to save or load
+		// TODO (Coul Greer): Add the option to save or load
 
 		add(saveLoadMenu);
 	}

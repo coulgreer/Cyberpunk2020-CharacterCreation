@@ -18,9 +18,9 @@ import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
 import rpg.general.combat.Ammunition;
 
 /**
- * An instance of JTable that uses a <code>ShopAmmunitionTableModel</code>.
- * 
- * @author Coul Greer
+ * The display for a collection of <code>Ammunition</code> represented as a
+ * table of the derived data from the ammunition. Allows for a box of that
+ * ammunition to be sold at once.
  */
 public class ShopAmmunitionCategoryTable extends JTable {
 	private static final long serialVersionUID = 1L;
@@ -77,7 +77,7 @@ public class ShopAmmunitionCategoryTable extends JTable {
 		case ShopAmmunitionTableModel.DAMAGE_INDEX:
 			return new DamageRenderer();
 		case ShopAmmunitionTableModel.COST_INDEX:
-			return new CurrencyRenderer();
+			return new USCurrencyRenderer();
 		default:
 			return super.getCellRenderer(rowIndex, columnIndex);
 		}
@@ -87,8 +87,6 @@ public class ShopAmmunitionCategoryTable extends JTable {
 	 * An instance of AbstractTableModel that uses <code>CyberpunkVendor</code> to
 	 * populate the model with stored <code>Ammunition</code>. Has a Name, Type,
 	 * Damage, Cost,Ammo per Box, and Object column.
-	 * 
-	 * @author Coul Greer
 	 */
 	public static class ShopAmmunitionTableModel extends AbstractTableModel {
 		/**

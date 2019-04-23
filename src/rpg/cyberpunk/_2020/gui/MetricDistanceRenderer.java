@@ -5,17 +5,14 @@ import javax.swing.table.DefaultTableCellRenderer;
 /**
  * A renderer that turns Numbers into formatted data measured in meters. This
  * renderer is used to display Numbers in terms of distance.
- * 
- * @author Coul Greer
- *
  */
-public class DistanceRenderer extends DefaultTableCellRenderer {
+public class MetricDistanceRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a renderer that aligns its contents in the center.
 	 */
-	public DistanceRenderer() {
+	public MetricDistanceRenderer() {
 		super();
 
 		setHorizontalAlignment(CENTER);
@@ -28,7 +25,6 @@ public class DistanceRenderer extends DefaultTableCellRenderer {
 			setText("---");
 		} else {
 			setText(number + "m");
-
 		}
 	}
 

@@ -2,6 +2,7 @@ package rpg.cyberpunk._2020.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +20,16 @@ import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
 import rpg.util.Probability;
 
 /**
- * A table that displays a collection of weapons that a player can buy.
- * 
- * @author Coul Greer
+ * The display for a collection of <code>CyberpunkWeapon</code>s represented as
+ * a table of the derived data from the weapons.
  */
 public class ShopWeaponCategoryTable extends JTable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructs a table using a set of weapons provided by a vendor.
+	 * Constructs a table using a set of <code>CyberpunkWeapon</code>s provided by a
+	 * <code>Vendor</code>. The vendor's weapons are then allowed to be sorted using
+	 * this table and not allowed to reorder or resize the columns.
 	 * 
 	 * @param vendor the owner of the set of weapons displayed on the table
 	 */
@@ -40,7 +42,8 @@ public class ShopWeaponCategoryTable extends JTable {
 
 		setRowHeight(WeaponTypeRenderer.ICON_HEIGHT);
 		getColumnModel().removeColumn(getColumnModel().getColumn(ShopWeaponTableModel.OBJECT_INDEX));
-		getColumnModel().getColumn(ShopWeaponTableModel.TYPE_INDEX).setPreferredWidth(WeaponTypeRenderer.ICON_HEIGHT);
+		getColumnModel().getColumn(ShopWeaponTableModel.TYPE_INDEX) //
+				.setPreferredWidth(WeaponTypeRenderer.ICON_HEIGHT);
 
 		getTableHeader().setReorderingAllowed(false);
 		getTableHeader().setResizingAllowed(false);
@@ -64,12 +67,11 @@ public class ShopWeaponCategoryTable extends JTable {
 	}
 
 	private void alternateRowColors(Component component, int row) {
-		Color primeColor = Color.WHITE;
+		Color primaryColor = Color.WHITE;
 		Color secondaryColor = new Color(220, 220, 220); // gainsboro
 
-		if (!component.getBackground().equals(getSelectionBackground())) {
-			Color bg = (row % 2 == 0 ? secondaryColor : primeColor);
-			component.setBackground(bg);
+		if (!getSelectionBackground().equals(component.getBackground())) {
+			component.setBackground(row % 2 == 0 ? secondaryColor : primaryColor);
 		}
 	}
 
@@ -79,9 +81,9 @@ public class ShopWeaponCategoryTable extends JTable {
 		case ShopWeaponTableModel.TYPE_INDEX:
 			return new WeaponTypeRenderer();
 		case ShopWeaponTableModel.RANGE_INDEX:
-			return new DistanceRenderer();
+			return new MetricDistanceRenderer();
 		case ShopWeaponTableModel.COST_INDEX:
-			return new CurrencyRenderer();
+			return new USCurrencyRenderer();
 		case ShopWeaponTableModel.DAMAGE_INDEX:
 			return new DamageRenderer();
 		default:
@@ -90,14 +92,14 @@ public class ShopWeaponCategoryTable extends JTable {
 	}
 
 	@Override
-	public String getToolTipText(MouseEvent e) {
+	public String getToolTipText(MouseEvent evt) {
 		String tip = null;
-		java.awt.Point p = e.getPoint();
-		int rowIndex = rowAtPoint(p);
-		int colIndex = columnAtPoint(p);
-		int realColumnIndex = convertColumnIndexToModel(colIndex);
 
-		if (realColumnIndex == ShopWeaponTableModel.TYPE_INDEX) {
+		Point point = evt.getPoint();
+		int rowIndex = rowAtPoint(point);
+		int colIndex = columnAtPoint(point);
+
+		if (convertColumnIndexToModel(colIndex) == ShopWeaponTableModel.TYPE_INDEX) {
 			tip = (String) getValueAt(rowIndex, colIndex);
 		}
 
@@ -105,9 +107,8 @@ public class ShopWeaponCategoryTable extends JTable {
 	}
 
 	/**
-	 * The underlying model used by a table that displays a vendor's weapon stock.
-	 * 
-	 * @author Coul Greer
+	 * The underlying model used by <code>ShopWeaponTable</code> that displays a
+	 * <code>Vendor</code>'s weapon stock.
 	 */
 	public static class ShopWeaponTableModel extends AbstractTableModel {
 		/**
@@ -178,10 +179,7 @@ public class ShopWeaponCategoryTable extends JTable {
 		 */
 		public static final int OBJECT_INDEX = 12;
 
-		/**
-		 * A collection of the names of the table headers.
-		 */
-		public static final String[] COLUMN_NAMES = { //
+		private static final String[] columnNames = { //
 				"", //
 				"Name", //
 				"W.A.", //
@@ -201,10 +199,10 @@ public class ShopWeaponCategoryTable extends JTable {
 		private Set<CyberpunkWeapon> weaponSet;
 
 		/**
-		 * Creates a model that uses a set of weapons provided by a vendor to populate
-		 * the table view.
+		 * Constructs a model that uses a set of <code>CyberpunkWeapon</code>s provided
+		 * by a <code>Vendor</code> to populate the table view.
 		 * 
-		 * @param vendor the provider of the weapons that populate the table view
+		 * @param vendor the provider of the set of weapons
 		 */
 		public ShopWeaponTableModel(CyberpunkVendor vendor) {
 			this.weaponSet = vendor.getStoredWeapons();
@@ -212,7 +210,7 @@ public class ShopWeaponCategoryTable extends JTable {
 
 		@Override
 		public int getColumnCount() {
-			return COLUMN_NAMES.length;
+			return columnNames.length;
 		}
 
 		@Override
@@ -260,7 +258,7 @@ public class ShopWeaponCategoryTable extends JTable {
 
 		@Override
 		public String getColumnName(int columnIndex) {
-			return COLUMN_NAMES[columnIndex];
+			return columnNames[columnIndex];
 		}
 
 		@Override

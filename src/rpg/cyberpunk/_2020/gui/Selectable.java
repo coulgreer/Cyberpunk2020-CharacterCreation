@@ -2,8 +2,6 @@ package rpg.cyberpunk._2020.gui;
 
 /**
  * An interface that allows for an object to be selected.
- * 
- * @author Coul Greer
  */
 public interface Selectable {
 	/**
