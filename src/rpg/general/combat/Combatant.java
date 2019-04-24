@@ -1,131 +1,76 @@
 package rpg.general.combat;
 
 import java.io.Serializable;
-import java.util.List;
 
 import rpg.util.Probability;
 
 /**
- * An interface that is the actor in combat. Used to get combat stats such as
- * attack, hit, and damage modifiers. Also, calculates the scores for attack,
- * hit, and damage while keeping track of when a combat action is done.
- * 
- * @author Coul Greer
+ * An interface that is the actor in combat. Used to get combat statistics such
+ * as range, attack, and damage modifiers. Also, calculates the scores for
+ * range, attack, and damage.
  *
+ * @param <W> the type of Weapon this combatant can calculate
  */
-public interface Combatant extends Serializable {
+public interface Combatant<W extends Weapon> extends Serializable {
 	/**
-	 * Equips a weapon to a combatants slot.
+	 * Returns a modifier value based on information provided by an instance of
+	 * <code>Weapon</code>. The value represents the ability to land an attack on a
+	 * target excluding modifiers from the weapon.
 	 * 
-	 * @param slot   the index of where the weapon will be stored
-	 * @param weapon the weapon to be stored at the given index
+	 * @param weapon the source of information used to derive the attack modifier
+	 * @return the modifier value to be used in calculation of the attack score
 	 */
-	public void arm(int slot, Weapon weapon);
+	public int getAttackModifier(W weapon);
 
 	/**
-	 * Unequips a weapon from a combatants slot.
-	 * 
-	 * @param slot the index of the weapon to remove from storage
-	 */
-	public void disarm(int slot);
-
-	/**
-	 * Returns a modifier value based on information provided by
-	 * <code>Weapon</code>. The value represents the ability to hit a target.
-	 * 
-	 * @param weapon the <code>Weapon</code> used to derive the hit modifier
-	 * @return the modifier value to be used in calculation of the hit score for
-	 *         <code>Weapon</code>
-	 */
-	public int getHitModifier(Weapon weapon);
-
-	/**
-	 * Returns a modifier value based on information provided by
-	 * <code>Weapon</code>. The value represents the amount of additional damage
+	 * Returns a modifier value based on information provided by an instance of
+	 * <code>Weapon</code>. The returned value represents the flat amount of damage
 	 * dealt.
 	 * 
-	 * @param weapon the <code>Weapon</code> used to derive the damage modifier
+	 * @param weapon the source of information used to derive the damage modifier
 	 * @return the modifier value to be used in the calculation of the damage score
-	 *         for <code>Weapon</code>
 	 */
-	public int getDamageModifier(Weapon weapon);
+	public int getDamageModifier(W weapon);
 
 	/**
-	 * Returns a modifier value based on information provided by
-	 * <code>Weapon</code>. The value represents the additional range.
+	 * Returns a modifier value based on information provided by an instance
+	 * <code>Weapon</code>. The returned value represents the additional range that
+	 * a weapon can make an attack at. Usually, thrown weapons are the only weapons
+	 * that return a non-zero value.
 	 * 
-	 * @param isThrown determines if an item is being thrown or not. Usually, the
-	 *                 returned modifier is based on a characters strength.
+	 * @param weapon the source of information used to decide if a weapon is suited
+	 *               for applying a non-zero value
 	 * @return the modifier value to be used in the calculation of the range score
-	 *         for a <code>Weapon</code>
 	 */
-	public int getRangeModifier(boolean isThrown);
+	public int getRangeModifier(W weapon);
 
 	/**
-	 * Returns the total probability of hitting a target given an index. This is
-	 * based off the <code>Weapon</code> at the index, and this includes the die and
-	 * the guaranteed score to hit.
+	 * Returns the total chance of landing an attack on a target. This is based off
+	 * the <code>Weapon</code> instance, and this includes the die and the
+	 * guaranteed score to land the attack.
 	 * 
-	 * @param slot the index used to get the hit chance of a <code>Weapon</code>
-	 *             held by this <code>Combatant</code>
-	 * @return the hit chance of the <code>Weapon</code> held at the given index of
-	 *         this <code>Combatant</code>
+	 * @param weapon the source of information used to derive the chance to land an
+	 *               attack combined with the attack score
+	 * @return the chance to land an attack with the given weapon
 	 */
-	public Probability getTotalHitChance(int slot);
+	public Probability getTotalAttackChance(W weapon);
 
 	/**
-	 * Returns the total probability of damaging a target given an index. This
-	 * includes the die and the guaranteed score to deal damage.
+	 * Returns the total probability of damage dealt to a target. This includes the
+	 * die and the guaranteed score to deal damage.
 	 * 
-	 * @param slot the index used to get the damage chance of a <code>Weapon</code>
-	 *             held by this <code>Combatant</code>
-	 * @return the damage chance of the <code>Weapon</code> held at the given index
-	 *         of this <code>Combatant</code>
+	 * @param weapon the source of information used to derive the probability of
+	 *               damage combined with the damage score
+	 * @return the damage chance of the <code>Weapon</code>
 	 */
-	public Probability getTotalDamageChance(int slot);
+	public Probability getTotalDamageChance(W weapon);
 
 	/**
-	 * Returns the max range of a <code>Weapon</code> at a given index.
+	 * Returns the optimal range that a <code>Weapon</code> can make an attack at.
 	 * 
-	 * @param slot the index used to get the max range of a <code>Weapon</code> held
-	 *             by this <code>Combatant</code>
-	 * @return the range of the <code>Weapon</code> at the index of this
-	 *         <code>Combatant</code>
+	 * @param weapon the source of information used to derive the optimal range of
+	 *               attack
+	 * @return the optimal range an attack
 	 */
-	public int getRangeScore(int slot);
-
-	/**
-	 * Decrements the ammunition of a <code>Weapon</code> based on its slot.
-	 * 
-	 * @param slot       the index of an equipped weapon
-	 * @param shotsFired the desired amount of attacks wanted to be made
-	 */
-	public void attack(int slot, int shotsFired);
-
-	/**
-	 * Returns the current amount of ammunition stored
-	 * 
-	 * @param slot the index of an equipped weapon
-	 * @return the current amount of ammunition stored
-	 */
-	public int getAmmoCount(int slot);
-
-	/**
-	 * Transfers ammunition to the storage unit of the indexed weapon, returning the
-	 * remaining ammunition from the transfer.
-	 * 
-	 * @param slot        the index of an equipped weapon
-	 * @param storageUnit the storage unit used to get ammunition from and transfer
-	 *                    its contents to the indexed weapon
-	 * @return the remaining ammunition from the transfer
-	 */
-	public List<Ammunition> reload(int slot, AmmunitionContainer storageUnit);
-
-	/**
-	 * Returns a <code>Weapon</code> based on the given index.
-	 * 
-	 * @param slot the index of an equipped weapon
-	 * @return the equipped weapon in the given index
-	 */
-	public Weapon getWeapon(int slot);
+	public int getRangeScore(W weapon);
 }

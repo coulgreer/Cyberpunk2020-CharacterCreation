@@ -20,7 +20,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import rpg.Player;
-import rpg.cyberpunk._2020.combat.CyberpunkCombatant;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 import rpg.cyberpunk._2020.combat.HomogeneousMagazine;
 import rpg.general.combat.Ammunition;
@@ -91,11 +90,11 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 	}
 
 	private void createStartingBorder(int slot) {
-		if (slot == CyberpunkCombatant.PRIMARY_SLOT) {
+		if (slot == Player.PRIMARY_SLOT) {
 			setBorder(BorderFactory.createMatteBorder(0, 0, 0, borderSize, Color.BLACK));
 		}
 
-		if (slot == CyberpunkCombatant.SECONDARY_SLOT) {
+		if (slot == Player.SECONDARY_SLOT) {
 			setBorder(BorderFactory.createMatteBorder(0, borderSize, 0, 0, Color.BLACK));
 		}
 	}
@@ -105,10 +104,10 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 
 		String weaponSlotTitle;
 		switch (slotIndex) {
-		case CyberpunkCombatant.PRIMARY_SLOT:
+		case Player.PRIMARY_SLOT:
 			weaponSlotTitle = "Primary";
 			break;
-		case CyberpunkCombatant.SECONDARY_SLOT:
+		case Player.SECONDARY_SLOT:
 			weaponSlotTitle = "Secondary";
 			break;
 		default:
@@ -140,10 +139,10 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 
 	private String generateWeaponDetails() {
 		return weapon.getWeaponType() //
-				+ " \u2022 " + weapon.getHitScore() //
+				+ " \u2022 " + player.getTotalAttackChance(slotIndex).getModifier() //
 				+ " \u2022 " + weapon.getConcealability() //
 				+ " \u2022 " + weapon.getAvailability() //
-				+ " \u2022 " + weapon.getDamage() //
+				+ " \u2022 " + player.getTotalDamageChance(slotIndex) //
 				+ " \u2022 " + weapon.getAmmunitionType() //
 				+ " \u2022 " + weapon.getAmmunitionCount() + "/" + weapon.getAmmunitionCapacity() //
 				+ " \u2022 " + weapon.getRateOfFire() //

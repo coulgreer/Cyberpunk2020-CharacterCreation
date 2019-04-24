@@ -90,7 +90,7 @@ public class CyberpunkWeaponModifier implements Item, WeaponAttachment {
 	}
 
 	@Override
-	public int getHitModifier() {
+	public int getAttackModifier() {
 		return hitModifier;
 	}
 

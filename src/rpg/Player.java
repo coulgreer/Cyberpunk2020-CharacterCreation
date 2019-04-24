@@ -6,12 +6,24 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import rpg.cyberpunk._2020.combat.AikidoFightingStyleFactory;
+import rpg.cyberpunk._2020.combat.AnimalKungFuFightingStyleFactory;
 import rpg.cyberpunk._2020.combat.ArmorManager;
+import rpg.cyberpunk._2020.combat.BoxingFightingStyleFactory;
+import rpg.cyberpunk._2020.combat.BrawlingFightingStyleFactory;
+import rpg.cyberpunk._2020.combat.CapoeriaFightingStyleFactory;
+import rpg.cyberpunk._2020.combat.ChoiLiFutFightingStyleFactory;
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
 import rpg.cyberpunk._2020.combat.CyberpunkCombatant;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 import rpg.cyberpunk._2020.combat.FightingMove;
 import rpg.cyberpunk._2020.combat.FightingStyle;
+import rpg.cyberpunk._2020.combat.FightingStyleFactory;
+import rpg.cyberpunk._2020.combat.JudoFightingStyleFactory;
+import rpg.cyberpunk._2020.combat.KarateFightingStyleFactory;
+import rpg.cyberpunk._2020.combat.TaeKwonDoFightingStyleFactory;
+import rpg.cyberpunk._2020.combat.ThaiKickBoxingFightingStyleFactory;
+import rpg.cyberpunk._2020.combat.WrestlingFightingStyleFactory;
 import rpg.cyberpunk._2020.commerce.BottomlessInventory;
 import rpg.cyberpunk._2020.commerce.Inventory;
 import rpg.cyberpunk._2020.commerce.PlayerTrader;
@@ -22,6 +34,7 @@ import rpg.cyberpunk._2020.stats.SkillManager;
 import rpg.general.combat.Ammunition;
 import rpg.general.combat.AmmunitionContainer;
 import rpg.general.combat.BodyLocation;
+import rpg.general.combat.Combatant;
 import rpg.general.commerce.Item;
 import rpg.general.commerce.Trader;
 import rpg.general.stats.Attribute;
@@ -39,12 +52,24 @@ public class Player {
 	public static final String PROPERTY_NAME_EQUIPMENT_ARMOR = "Equipment: Armor";
 	public static final String PROPERTY_NAME_ROLE = "Role";
 
+	/**
+	 * A constant representing the index of the primary weapon slot.
+	 */
+	public static final int PRIMARY_SLOT = 0;
+
+	/**
+	 * A constant representing the index of the secondary weapon slot.
+	 */
+	public static final int SECONDARY_SLOT = 1;
+
 	private PropertyChangeSupport changeSupport;
 	private Inventory pocketInventory = new BottomlessInventory();
 	private Inventory equippedInventory = new BottomlessInventory();
 	private Role role;
 	private Trader trader;
-	private CyberpunkCombatant combatant;
+	private Combatant<CyberpunkWeapon> combatant;
+	private FightingStyleFactory unarmedWeaponFactory;
+	private CyberpunkWeapon[] equippedWeapons;
 	private ArmorManager armorManager;
 	private StatisticManager<Attribute> attributeManager;
 	private StatisticManager<CyberpunkSkill> skillManager;
@@ -53,6 +78,9 @@ public class Player {
 		changeSupport = new PropertyChangeSupport(this);
 		trader = new PlayerTrader(0.0);
 		combatant = new CyberpunkCombatant(this);
+		unarmedWeaponFactory = BrawlingFightingStyleFactory.getInstance();
+		equippedWeapons = new CyberpunkWeapon[] { unarmedWeaponFactory.createStrike(),
+				unarmedWeaponFactory.createStrike() };
 		armorManager = new ArmorManager();
 		attributeManager = new AttributeManager();
 		skillManager = new SkillManager(attributeManager, this);
@@ -166,13 +194,12 @@ public class Player {
 	}
 
 	public void equip(int slot, CyberpunkWeapon weapon) {
-		CyberpunkWeapon tempWeapon = (CyberpunkWeapon) combatant.getWeapon(slot);
+		CyberpunkWeapon tempWeapon = equippedWeapons[slot];
 
 		unequip(slot);
 		try {
 			removeFromInventory(weapon, 1);
 			addToEquipped(weapon);
-			combatant.arm(slot, weapon);
 		} catch (NullPointerException ex) {
 			equip(slot, tempWeapon);
 			throw ex;
@@ -193,11 +220,10 @@ public class Player {
 	}
 
 	public void unequip(int slot) {
-		CyberpunkWeapon weapon = (CyberpunkWeapon) combatant.getWeapon(slot);
+		CyberpunkWeapon weapon = equippedWeapons[slot];
 
 		addToInventory(weapon);
 		removeFromEquipped(weapon);
-		combatant.disarm(slot);
 
 		changeSupport.firePropertyChange(PROPERTY_NAME_EQUIPMENT_WEAPON, weapon, null);
 	}
@@ -213,10 +239,6 @@ public class Player {
 		}
 	}
 
-	public Probability getTotalHitChance(int slot) {
-		return combatant.getTotalHitChance(slot);
-	}
-
 	public int getAttributeValue(String attributeName) {
 		return attributeManager.getBaseLevel(attributeName);
 	}
@@ -226,8 +248,40 @@ public class Player {
 		return skill.getTotalValue();
 	}
 
+	public Probability getTotalAttackChance(int slot) {
+		return combatant.getTotalAttackChance(equippedWeapons[slot]);
+	}
+
+	public int getPlayerAttackModifier(int slot) {
+		return combatant.getAttackModifier(equippedWeapons[slot]);
+	}
+
+	public int getWeaponAttackModifier(int slot) {
+		return equippedWeapons[slot].getAttackModifier();
+	}
+
+	public Probability getTotalDamageChance(int slot) {
+		return combatant.getTotalDamageChance(equippedWeapons[slot]);
+	}
+
+	public int getPlayerDamageModifier(int slot) {
+		return combatant.getDamageModifier(equippedWeapons[slot]);
+	}
+
+	public int getWeaponDamageModifier(int slot) {
+		return equippedWeapons[slot].getDamageModifier();
+	}
+
 	public int getRangeScore(int slot) {
-		return combatant.getRangeScore(slot);
+		return combatant.getRangeScore(equippedWeapons[slot]);
+	}
+
+	public int getPlayerRangeModifier(int slot) {
+		return combatant.getRangeModifier(equippedWeapons[slot]);
+	}
+
+	public int getWeaponRangeModifier(int slot) {
+		return equippedWeapons[slot].getRangeModifier();
 	}
 
 	public void increaseSkillLevel(String skillName) {
@@ -235,21 +289,85 @@ public class Player {
 	}
 
 	public void attack(int slot, int shotsFired) {
-		combatant.attack(slot, shotsFired);
+		equippedWeapons[slot].fire(shotsFired);
 	}
 
 	public List<Ammunition> reload(int slot, AmmunitionContainer ammunitionStorage) {
-		List<Ammunition> spareAmmunition = combatant.reload(slot, ammunitionStorage);
+		List<Ammunition> spareAmmunition = equippedWeapons[slot].reload(ammunitionStorage);
 		spareAmmunition.stream().forEach(a -> addToInventory(a));
 		return spareAmmunition;
 	}
 
 	public void setFightingStance(FightingStyle style, FightingMove move) {
-		combatant.setUnarmedStance(style, move);
+		unarmedWeaponFactory = getFightingStyleFactory(style);
+		CyberpunkWeapon weapon = createFightingMove(move);
+
+		equip(PRIMARY_SLOT, weapon);
+		equip(SECONDARY_SLOT, weapon);
 	}
 
+	private FightingStyleFactory getFightingStyleFactory(FightingStyle style) {
+		switch (style) {
+		case BRAWLING:
+			return BrawlingFightingStyleFactory.getInstance();
+		case KARATE:
+			return KarateFightingStyleFactory.getInstance();
+		case JUDO:
+			return JudoFightingStyleFactory.getInstance();
+		case BOXING:
+			return BoxingFightingStyleFactory.getInstance();
+		case THAI_BOXING:
+			return ThaiKickBoxingFightingStyleFactory.getInstance();
+		case CHOI_LI_FUT:
+			return ChoiLiFutFightingStyleFactory.getInstance();
+		case AIKIDO:
+			return AikidoFightingStyleFactory.getInstance();
+		case ANIMAL_KUNG_FU:
+			return AnimalKungFuFightingStyleFactory.getInstance();
+		case TAE_KWON_DO:
+			return TaeKwonDoFightingStyleFactory.getInstance();
+		case WRESTLING:
+			return WrestlingFightingStyleFactory.getInstance();
+		case CAPEOIRA:
+			return CapoeriaFightingStyleFactory.getInstance();
+		default:
+			return unarmedWeaponFactory;
+		}
+	}
+
+	private CyberpunkWeapon createFightingMove(FightingMove move) {
+		switch (move) {
+		case STRIKE:
+			return unarmedWeaponFactory.createStrike();
+		case KICK:
+			return unarmedWeaponFactory.createKick();
+		case BLOCK:
+			return unarmedWeaponFactory.createBlock();
+		case DODGE:
+			return unarmedWeaponFactory.createDodge();
+		case DISARM:
+			return unarmedWeaponFactory.createDisarm();
+		case THROW:
+			return unarmedWeaponFactory.createThrow();
+		case HOLD:
+			return unarmedWeaponFactory.createHold();
+		case ESCAPE:
+			return unarmedWeaponFactory.createEscape();
+		case CHOKE:
+			return unarmedWeaponFactory.createChoke();
+		case SWEEP:
+			return unarmedWeaponFactory.createSweep();
+		case GRAPPLE:
+			return unarmedWeaponFactory.createGrapple();
+		default:
+			return unarmedWeaponFactory.createStrike();
+		}
+	}
+
+	// TODO (Coul Greer): Consider hiding this from any other classes. Perhaps use
+	// the player as a middle man to access a weapons data and delete this function.
 	public CyberpunkWeapon getWeapon(int slot) {
-		return (CyberpunkWeapon) combatant.getWeapon(slot);
+		return equippedWeapons[slot];
 	}
 
 	public boolean hasItem(Object o) {

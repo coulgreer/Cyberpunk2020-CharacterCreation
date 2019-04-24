@@ -9,7 +9,6 @@ import java.util.Set;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Ammunition;
 import rpg.general.combat.AmmunitionContainer;
-import rpg.general.combat.Combatant;
 import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
 import rpg.util.Probability;
@@ -17,10 +16,8 @@ import rpg.util.Probability;
 /**
  * An instance of <code>CyberpunkWeapon</code> that provides its own flat damage
  * probability, and uses <code>Ammunition</code> of the type
- * {@link rpg.cyberpunk._2020.combat.Arrow#AMMUNITION_TYPE_ARROW Arrow} in order
- * to deal the flat damage to a target.
- * 
- * @author Coul Greer
+ * {@link Arrow#AMMUNITION_TYPE_ARROW Arrow} in order to deal the flat damage to
+ * a target.
  */
 public class Bow extends CyberpunkWeapon {
 	private static final long serialVersionUID = 1L;
@@ -41,7 +38,6 @@ public class Bow extends CyberpunkWeapon {
 	private double weight;
 	private Set<String> attachmentPoints;
 	private Map<String, WeaponAttachment> attachments;
-	private Combatant combatant;
 
 	/**
 	 * Constructs a default Bow that uses the {@link CyberpunkSkill#ARCHERY archery}
@@ -71,6 +67,7 @@ public class Bow extends CyberpunkWeapon {
 	public Bow(String weaponName, String description, int weaponAccuracy, Concealability concealability,
 			Availability availability, Probability damage, AmmunitionContainer ammunitionContainer, int rateOfFire,
 			Reliability reliability, int rangeModifier, double cost, double weight, Set<String> attachmentPoints) {
+
 		setWeaponName(weaponName);
 		setDescription(description);
 		this.weaponType = CyberpunkWeapon.WEAPON_TYPE_BOW;
@@ -86,7 +83,6 @@ public class Bow extends CyberpunkWeapon {
 		setWeight(weight);
 		setCost(cost);
 		setAttachmentsAndAttachmentPoints(attachmentPoints);
-		this.combatant = NullCombatant.getInstance();
 	}
 
 	private void setWeaponName(String weaponName) {
@@ -187,15 +183,6 @@ public class Bow extends CyberpunkWeapon {
 	}
 
 	@Override
-	public void setCombatant(Combatant c) {
-		if (c == null) {
-			this.combatant = NullCombatant.getInstance();
-		} else {
-			this.combatant = c;
-		}
-	}
-
-	@Override
 	public String getWeaponType() {
 		return weaponType;
 	}
@@ -203,26 +190,6 @@ public class Bow extends CyberpunkWeapon {
 	@Override
 	public String getSkillName() {
 		return skillName;
-	}
-
-	@Override
-	public int getRangeScore() {
-		return getRangeModifier() + combatant.getRangeModifier(true);
-	}
-
-	@Override
-	public int getDamageScore() {
-		return getDamageModifier() + combatant.getDamageModifier(this);
-	}
-
-	@Override
-	public int getHitScore() {
-		return getHitModifier() + combatant.getHitModifier(this);
-	}
-
-	@Override
-	public Die getDamageDice() {
-		return damage.getDice();
 	}
 
 	@Override
@@ -278,8 +245,13 @@ public class Bow extends CyberpunkWeapon {
 	}
 
 	@Override
-	public int getHitModifier() {
+	public int getAttackModifier() {
 		return weaponAccuracy;
+	}
+
+	@Override
+	public Die getDamageDice() {
+		return damage.getDice();
 	}
 
 	@Override
@@ -325,11 +297,6 @@ public class Bow extends CyberpunkWeapon {
 	@Override
 	public Reliability getReliability() {
 		return reliability;
-	}
-
-	@Override
-	public Probability getDamage() {
-		return damage;
 	}
 
 }

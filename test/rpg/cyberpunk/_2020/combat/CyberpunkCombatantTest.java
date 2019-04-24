@@ -11,28 +11,6 @@ import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
 public class CyberpunkCombatantTest {
 	@Test
-	public void testEquippingTwoWeaponsThenUnequipAllWeapons() {
-		Player mockedPlayer = mock(Player.class);
-		CyberpunkCombatant combatant = new CyberpunkCombatant(mockedPlayer);
-		CyberpunkWeapon mockedPrimaryCyberpunkWeapon = mock(CyberpunkWeapon.class);
-		when(mockedPrimaryCyberpunkWeapon.getName()).thenReturn("Primary Cyberpunk Weapon");
-		CyberpunkWeapon mockedSecondaryCyberpunkWeapon = mock(CyberpunkWeapon.class);
-		when(mockedSecondaryCyberpunkWeapon.getName()).thenReturn("Secondary Cyberpunk Weapon");
-
-		combatant.arm(CyberpunkCombatant.PRIMARY_SLOT, mockedPrimaryCyberpunkWeapon);
-		combatant.arm(CyberpunkCombatant.SECONDARY_SLOT, mockedSecondaryCyberpunkWeapon);
-
-		assertEquals("Primary Cyberpunk Weapon", combatant.getWeapon(CyberpunkCombatant.PRIMARY_SLOT).getName());
-		assertEquals("Secondary Cyberpunk Weapon", combatant.getWeapon(CyberpunkCombatant.SECONDARY_SLOT).getName());
-
-		combatant.disarm(CyberpunkCombatant.PRIMARY_SLOT);
-		combatant.disarm(CyberpunkCombatant.SECONDARY_SLOT);
-
-		assertEquals("Brawling Strike", combatant.getWeapon(CyberpunkCombatant.PRIMARY_SLOT).getName());
-		assertEquals("Brawling Strike", combatant.getWeapon(CyberpunkCombatant.SECONDARY_SLOT).getName());
-	}
-
-	@Test
 	public void testGettingDamageModifierOfAkido() {
 		Player mockedPlayer = mock(Player.class);
 		when(mockedPlayer.getSkillValue(CyberpunkSkill.AIKIDO)).thenReturn(3);

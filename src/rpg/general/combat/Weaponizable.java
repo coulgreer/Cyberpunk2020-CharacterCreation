@@ -13,7 +13,7 @@ public interface Weaponizable {
 	 * 
 	 * @return a number used to boost base hit probability
 	 */
-	public int getHitModifier();
+	public int getAttackModifier();
 
 	/**
 	 * Gets the modifier number for the ability to deal damage to another thing.

@@ -8,7 +8,6 @@ import java.util.Set;
 
 import rpg.general.combat.Ammunition;
 import rpg.general.combat.AmmunitionContainer;
-import rpg.general.combat.Combatant;
 import rpg.general.combat.EmptyAmmunitionContainer;
 import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
@@ -17,9 +16,6 @@ import rpg.util.Probability;
 /**
  * An instance of <code>CyberpunkWeapon</code> that has a rate of fire of 1 and
  * cannot hold any ammunition.
- * 
- * @author Coul Greer
- *
  */
 public class MeleeWeapon extends CyberpunkWeapon {
 	public static final int RATE_OF_FIRE = 1;
@@ -42,11 +38,11 @@ public class MeleeWeapon extends CyberpunkWeapon {
 	private double weight;
 	private Set<String> attachmentPoints;
 	private Map<String, WeaponAttachment> attachments;
-	private Combatant combatant;
 
 	public MeleeWeapon(String weaponName, String description, String weaponType, String skillName, int weaponAccuracy,
 			Concealability concealability, Availability availability, Probability damage, boolean isEdged,
 			Reliability reliability, int rangeModifier, double cost, double weight, Set<String> attachmentPoints) {
+
 		setWeaponName(weaponName);
 		setDescription(description);
 		setWeaponType(weaponType);
@@ -62,7 +58,6 @@ public class MeleeWeapon extends CyberpunkWeapon {
 		setCost(cost);
 		setWeight(weight);
 		setAttachmentsAndAttachmentPoints(attachmentPoints);
-		this.combatant = NullCombatant.getInstance();
 	}
 
 	private void setWeaponName(String weaponName) {
@@ -163,15 +158,6 @@ public class MeleeWeapon extends CyberpunkWeapon {
 	}
 
 	@Override
-	public void setCombatant(Combatant c) {
-		if (c == null) {
-			combatant = NullCombatant.getInstance();
-		} else {
-			combatant = c;
-		}
-	}
-
-	@Override
 	public String getWeaponType() {
 		return weaponType;
 	}
@@ -179,21 +165,6 @@ public class MeleeWeapon extends CyberpunkWeapon {
 	@Override
 	public String getSkillName() {
 		return skillName;
-	}
-
-	@Override
-	public int getRangeScore() {
-		return getRangeModifier() + combatant.getRangeModifier(false);
-	}
-
-	@Override
-	public int getDamageScore() {
-		return getDamageModifier() + combatant.getDamageModifier(this);
-	}
-
-	@Override
-	public int getHitScore() {
-		return getHitModifier() + combatant.getHitModifier(this);
 	}
 
 	@Override
@@ -247,7 +218,7 @@ public class MeleeWeapon extends CyberpunkWeapon {
 	}
 
 	@Override
-	public int getHitModifier() {
+	public int getAttackModifier() {
 		return weaponAccuracy;
 	}
 
@@ -294,11 +265,6 @@ public class MeleeWeapon extends CyberpunkWeapon {
 	@Override
 	public Reliability getReliability() {
 		return reliability;
-	}
-
-	@Override
-	public Probability getDamage() {
-		return damage;
 	}
 
 }

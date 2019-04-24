@@ -9,7 +9,6 @@ import java.util.Set;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Ammunition;
 import rpg.general.combat.AmmunitionContainer;
-import rpg.general.combat.Combatant;
 import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
 import rpg.util.NullProbability;
@@ -40,7 +39,6 @@ public class Firearm extends CyberpunkWeapon {
 	private double weight;
 	private Set<String> attachmentPoints;
 	private Map<String, WeaponAttachment> attachments;
-	private Combatant combatant;
 
 	/**
 	 * Constructs a firearm that does not require a skillName.
@@ -76,6 +74,7 @@ public class Firearm extends CyberpunkWeapon {
 			Concealability concealability, Availability availability, AmmunitionContainer ammunitionContainer,
 			int rateOfFire, Reliability reliability, int rangeModifier, double cost, double weight,
 			Set<String> attachmentPoints) {
+
 		this(weaponName, description, weaponType, parseSkillFromWeaponType(weaponType), weaponAccuracy, concealability,
 				availability, ammunitionContainer, rateOfFire, reliability, rangeModifier, cost, weight,
 				attachmentPoints);
@@ -137,6 +136,7 @@ public class Firearm extends CyberpunkWeapon {
 			Concealability concealability, Availability availability, AmmunitionContainer ammunitionContainer,
 			int rateOfFire, Reliability reliability, int rangeModifier, double cost, double weight,
 			Set<String> attachmentPoints) {
+
 		setWeaponName(weaponName);
 		setDescription(description);
 		setWeaponType(weaponType);
@@ -151,7 +151,6 @@ public class Firearm extends CyberpunkWeapon {
 		setCost(cost);
 		setWeight(weight);
 		setAttachmentsAndAttachmentPoints(attachmentPoints);
-		combatant = NullCombatant.getInstance();
 	}
 
 	private void setWeaponName(String weaponName) {
@@ -260,16 +259,6 @@ public class Firearm extends CyberpunkWeapon {
 	}
 
 	@Override
-	public void setCombatant(Combatant c) {
-		if (c == null) {
-			combatant = NullCombatant.getInstance();
-		} else {
-			combatant = c;
-		}
-
-	}
-
-	@Override
 	public String getWeaponType() {
 		return weaponType;
 	}
@@ -277,40 +266,6 @@ public class Firearm extends CyberpunkWeapon {
 	@Override
 	public String getSkillName() {
 		return skillName;
-	}
-
-	@Override
-	public int getRangeScore() {
-		return getRangeModifier() + combatant.getRangeModifier(false);
-	}
-
-	@Override
-	public int getDamageScore() {
-		return getDamageModifier() + combatant.getDamageModifier(this);
-	}
-
-	@Override
-	public int getHitScore() {
-		return getHitModifier() + combatant.getHitModifier(this);
-	}
-
-	@Override
-	public Die getDamageDice() {
-		return getDamage().getDice();
-	}
-
-	@Override
-	public Probability getDamage() {
-		Ammunition ammunition = ammunitionContainer.getAmmunition();
-		Probability damage;
-
-		if (ammunition == null) {
-			damage = NullProbability.getInstance();
-		} else {
-			damage = ammunition.getDamage();
-		}
-
-		return damage;
 	}
 
 	@Override
@@ -366,8 +321,26 @@ public class Firearm extends CyberpunkWeapon {
 	}
 
 	@Override
-	public int getHitModifier() {
+	public int getAttackModifier() {
 		return weaponAccuracy;
+	}
+
+	@Override
+	public Die getDamageDice() {
+		return getDamage().getDice();
+	}
+
+	private Probability getDamage() {
+		Ammunition ammunition = ammunitionContainer.getAmmunition();
+		Probability damage;
+
+		if (ammunition == null) {
+			damage = NullProbability.getInstance();
+		} else {
+			damage = ammunition.getDamage();
+		}
+
+		return damage;
 	}
 
 	@Override

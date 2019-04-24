@@ -229,13 +229,13 @@ public class ShopWeaponCategoryTable extends JTable {
 			case NAME_INDEX:
 				return weapon.getName();
 			case WEAPON_ACCURACY_INDEX:
-				return weapon.getHitModifier();
+				return weapon.getAttackModifier();
 			case CONCEALABILITY_INDEX:
 				return weapon.getConcealability();
 			case AVAILABILITY_INDEX:
 				return weapon.getAvailability();
 			case DAMAGE_INDEX:
-				return new Probability(weapon.getDamageDice(), weapon.getDamageScore());
+				return new Probability(weapon.getDamageDice(), weapon.getDamageModifier());
 			case AMMO_INDEX:
 				return weapon.getAmmunitionType();
 			case NUMBER_OF_SHOTS_INDEX:
@@ -245,7 +245,7 @@ public class ShopWeaponCategoryTable extends JTable {
 			case RELIABILITY_INDEX:
 				return weapon.getReliability();
 			case RANGE_INDEX:
-				return weapon.getRangeScore();
+				return weapon.getRangeModifier();
 			case COST_INDEX:
 				return weapon.getCost();
 			case OBJECT_INDEX:

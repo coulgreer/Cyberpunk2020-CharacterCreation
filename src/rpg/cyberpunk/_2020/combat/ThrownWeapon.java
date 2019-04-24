@@ -7,7 +7,6 @@ import java.util.List;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Ammunition;
 import rpg.general.combat.AmmunitionContainer;
-import rpg.general.combat.Combatant;
 import rpg.general.combat.EmptyAmmunitionContainer;
 import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
@@ -52,7 +51,6 @@ public class ThrownWeapon extends CyberpunkWeapon {
 	private int rangeModifier;
 	private double cost;
 	private double weight;
-	private Combatant combatant;
 
 	/**
 	 * Constructs a thrown weapon with a payload. The payload is used to get the
@@ -75,6 +73,7 @@ public class ThrownWeapon extends CyberpunkWeapon {
 	 */
 	public ThrownWeapon(String weaponName, String weaponType, int weaponAccuracy, Concealability concealability,
 			Availability availability, Payload load, Reliability reliability, double cost, double weight) {
+
 		this(weaponName, load.getEffects(), weaponType, weaponAccuracy, concealability, availability, load.getDamge(),
 				reliability, cost, weight);
 	}
@@ -101,6 +100,7 @@ public class ThrownWeapon extends CyberpunkWeapon {
 	public ThrownWeapon(String weaponName, String description, String weaponType, int weaponAccuracy,
 			Concealability concealability, Availability availability, Probability damage, Reliability reliability,
 			double cost, double weight) {
+
 		setWeaponName(weaponName);
 		setDescription(description);
 		setWeaponType(weaponType);
@@ -113,7 +113,6 @@ public class ThrownWeapon extends CyberpunkWeapon {
 		setReliability(reliability);
 		setWeight(weight);
 		setCost(cost);
-		this.combatant = NullCombatant.getInstance();
 	}
 
 	private void setWeaponName(String weaponName) {
@@ -202,15 +201,6 @@ public class ThrownWeapon extends CyberpunkWeapon {
 	}
 
 	@Override
-	public void setCombatant(Combatant c) {
-		if (c == null) {
-			combatant = NullCombatant.getInstance();
-		} else {
-			combatant = c;
-		}
-	}
-
-	@Override
 	public String getWeaponType() {
 		return weaponType;
 	}
@@ -218,26 +208,6 @@ public class ThrownWeapon extends CyberpunkWeapon {
 	@Override
 	public String getSkillName() {
 		return skillName;
-	}
-
-	@Override
-	public int getRangeScore() {
-		return getRangeModifier() + combatant.getRangeModifier(true);
-	}
-
-	@Override
-	public int getDamageScore() {
-		return getDamageModifier() + combatant.getDamageModifier(this);
-	}
-
-	@Override
-	public int getHitScore() {
-		return getHitModifier() + combatant.getHitModifier(this);
-	}
-
-	@Override
-	public Die getDamageDice() {
-		return damage.getDice();
 	}
 
 	@Override
@@ -281,8 +251,13 @@ public class ThrownWeapon extends CyberpunkWeapon {
 	}
 
 	@Override
-	public int getHitModifier() {
+	public int getAttackModifier() {
 		return weaponAccuracy;
+	}
+
+	@Override
+	public Die getDamageDice() {
+		return damage.getDice();
 	}
 
 	@Override
@@ -328,11 +303,6 @@ public class ThrownWeapon extends CyberpunkWeapon {
 	@Override
 	public Reliability getReliability() {
 		return reliability;
-	}
-
-	@Override
-	public Probability getDamage() {
-		return damage;
 	}
 
 }

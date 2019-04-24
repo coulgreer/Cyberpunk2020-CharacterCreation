@@ -8,7 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import rpg.Player;
-import rpg.cyberpunk._2020.combat.CyberpunkCombatant;
 
 /**
  * An instance of JPanel that sets up a panel for armor, primary weapon, and
@@ -52,8 +51,8 @@ public class EquipmentTab extends JPanel {
 	private Component createWeaponPanels() {
 		JPanel weaponPanel = new JPanel(new GridLayout(1, 2));
 
-		primaryWeaponPanel = new WeaponPanel(this, player, CyberpunkCombatant.PRIMARY_SLOT, selectionMediator);
-		secondaryWeaponPanel = new WeaponPanel(this, player, CyberpunkCombatant.SECONDARY_SLOT, selectionMediator);
+		primaryWeaponPanel = new WeaponPanel(this, player, Player.PRIMARY_SLOT, selectionMediator);
+		secondaryWeaponPanel = new WeaponPanel(this, player, Player.SECONDARY_SLOT, selectionMediator);
 		weaponPanel.add(primaryWeaponPanel);
 		weaponPanel.add(secondaryWeaponPanel);
 
@@ -76,9 +75,9 @@ public class EquipmentTab extends JPanel {
 		if (selected == armorPanel) {
 			player.unequip(armorPanel.getSelectedArmor());
 		} else if (selected == primaryWeaponPanel) {
-			player.unequip(CyberpunkCombatant.PRIMARY_SLOT);
+			player.unequip(Player.PRIMARY_SLOT);
 		} else if (selected == secondaryWeaponPanel) {
-			player.unequip(CyberpunkCombatant.SECONDARY_SLOT);
+			player.unequip(Player.SECONDARY_SLOT);
 		}
 	}
 

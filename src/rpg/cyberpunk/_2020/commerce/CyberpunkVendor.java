@@ -386,6 +386,7 @@ public class CyberpunkVendor {
 				.add(new MeleeWeapon("Naginata", "", CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, CyberpunkSkill.MELEE, 0,
 						Concealability.CANNOT_HIDE, Availability.POOR, new Probability(new Die(3, 6), 0), false,
 						Reliability.VERY_RELIABLE, 2, 100.0, 0.5, shotgunAttachmentPoints));
+		// TODO (Coul Greer): Add a Thrown Weapon type.
 		startingInventory.add(new ThrownWeapon("Shiriken", "", CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, 0,
 				Concealability.POCKET, Availability.COMMON, new Probability(new Die(1, 6, 3), 0),
 				Reliability.VERY_RELIABLE, 3.0, 0.5));

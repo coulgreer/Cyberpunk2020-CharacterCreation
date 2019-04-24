@@ -253,8 +253,9 @@ public abstract class CyberpunkWeapon implements Weapon {
 
 	@Override
 	public String toString() {
-		return getName() + ": << <" + hitChance + "+" + getHitScore() + "> <" + getDamageDice() + "+"
-				+ getDamageModifier() + "> >>";
+		return getName() + ": << " //
+				+ "<hit:" + hitChance + "+" + getAttackModifier() + "> " //
+				+ "<damage: " + getDamageDice() + "+" + getDamageModifier() + "> >>";
 	}
 
 	@Override

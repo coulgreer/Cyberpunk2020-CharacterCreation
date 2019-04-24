@@ -12,7 +12,6 @@ import javax.swing.JTable;
 
 import rpg.Player;
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
-import rpg.cyberpunk._2020.combat.CyberpunkCombatant;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
 import rpg.cyberpunk._2020.gui.InventoryAmmunitionTable.InventoryAmmunitionTableModel;
@@ -115,10 +114,10 @@ public class InventoryTab extends JPanel {
 
 			switch (result) {
 			case JOptionPane.YES_OPTION:
-				equipWeapon(CyberpunkCombatant.PRIMARY_SLOT, weapon);
+				equipWeapon(Player.PRIMARY_SLOT, weapon);
 				break;
 			case JOptionPane.NO_OPTION:
-				equipWeapon(CyberpunkCombatant.SECONDARY_SLOT, weapon);
+				equipWeapon(Player.SECONDARY_SLOT, weapon);
 				break;
 			default:
 				break;

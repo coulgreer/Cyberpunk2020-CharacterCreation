@@ -17,9 +17,9 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import rpg.Player;
+import rpg.cyberpunk._2020.combat.CyberpunkCombatant;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 import rpg.cyberpunk._2020.gui.ShopWeaponCategoryTable.ShopWeaponTableModel;
-import rpg.util.Probability;
 
 /**
  * A table that displays a set of weapons that is owned by the given player.
@@ -224,6 +224,7 @@ public class InventoryWeaponTable extends JTable {
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			List<CyberpunkWeapon> rows = new ArrayList<>(weaponSet);
+			CyberpunkCombatant combatant = new CyberpunkCombatant(player);
 			CyberpunkWeapon weapon = rows.get(rowIndex);
 			int quantity = player.getQuantity(weapon);
 
@@ -233,13 +234,13 @@ public class InventoryWeaponTable extends JTable {
 			case NAME_INDEX:
 				return weapon.getName();
 			case WEAPON_ACCURACY_INDEX:
-				return weapon.getHitModifier();
+				return combatant.getTotalAttackChance(weapon).getModifier();
 			case CONCEALABILITY_INDEX:
 				return weapon.getConcealability();
 			case AVAILABILITY_INDEX:
 				return weapon.getAvailability();
 			case DAMAGE_INDEX:
-				return new Probability(weapon.getDamageDice(), weapon.getDamageScore());
+				return combatant.getTotalDamageChance(weapon);
 			case AMMO_INDEX:
 				return weapon.getAmmunitionType();
 			case NUMBER_OF_SHOTS_INDEX:
@@ -249,7 +250,7 @@ public class InventoryWeaponTable extends JTable {
 			case RELIABILITY_INDEX:
 				return weapon.getReliability();
 			case RANGE_INDEX:
-				return weapon.getRangeScore();
+				return combatant.getRangeScore(weapon);
 			case COST_INDEX:
 				return weapon.getCost();
 			case WEIGHT_INDEX:
