@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -31,8 +31,7 @@ import rpg.general.combat.AmmunitionContainer;
  * ammunition count, reliability, etc.
  */
 public class WeaponPanel extends JPanel implements PropertyChangeListener, Selectable {
-	private static final int borderSize = 1;
-	private static final int paddingSize = 3;
+	private static final int borderThickness = 2;
 	private static final long serialVersionUID = 1L;
 
 	private JPanel parentPanel;
@@ -76,7 +75,7 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 		createStartingBorder(slotIndex);
 		addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mousePressed(MouseEvent e) {
 				selectionMediator.setActive(WeaponPanel.this);
 			}
 		});
@@ -91,11 +90,15 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 
 	private void createStartingBorder(int slot) {
 		if (slot == Player.PRIMARY_SLOT) {
-			setBorder(BorderFactory.createMatteBorder(0, 0, 0, borderSize, Color.BLACK));
+			setBorder(BorderFactory.createCompoundBorder(
+					BorderFactory.createMatteBorder(0, 0, 0, borderThickness, Color.BLACK),
+					BorderFactory.createEmptyBorder(borderThickness, borderThickness, borderThickness, 0)));
 		}
 
 		if (slot == Player.SECONDARY_SLOT) {
-			setBorder(BorderFactory.createMatteBorder(0, borderSize, 0, 0, Color.BLACK));
+			setBorder(BorderFactory.createCompoundBorder(
+					BorderFactory.createMatteBorder(0, borderThickness, 0, 0, Color.BLACK),
+					BorderFactory.createEmptyBorder(borderThickness, 0, borderThickness, borderThickness)));
 		}
 	}
 
@@ -117,12 +120,12 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 
 		JLabel titleLabel = new JLabel(weaponSlotTitle);
 		titleLabel.setHorizontalAlignment(JLabel.LEFT);
-		titleLabel.setBorder(BorderFactory.createEmptyBorder(0, paddingSize, 0, 0));
+		titleLabel.setBorder(BorderFactory.createEmptyBorder(0, borderThickness, 0, 0));
 		panel.add(titleLabel);
 
 		weaponNameLabel = new JLabel(weapon.getName());
 		weaponNameLabel.setHorizontalAlignment(JLabel.RIGHT);
-		weaponNameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, paddingSize));
+		weaponNameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, borderThickness));
 		panel.add(weaponNameLabel);
 
 		return panel;
@@ -144,7 +147,7 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 				+ " \u2022 " + weapon.getAvailability() //
 				+ " \u2022 " + player.getTotalDamageChance(slotIndex) //
 				+ " \u2022 " + weapon.getAmmunitionType() //
-				+ " \u2022 " + weapon.getAmmunitionCount() + "/" + weapon.getAmmunitionCapacity() //
+				+ " \u2022 " + weapon.getAmmunitionCount() + " / " + weapon.getAmmunitionCapacity() //
 				+ " \u2022 " + weapon.getRateOfFire() //
 				+ " \u2022 " + weapon.getReliability();
 	}
@@ -191,9 +194,9 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 	}
 
 	private void reloadWeapon() {
-		Collection<Ammunition> ammunitionSet = player.createCarriedAmmunitionCollection();
-		Map<String, Ammunition> filteredAmmunitionMap = ammunitionSet.stream()
-				.filter(ammunition -> weapon.getAmmunitionType().equals(ammunition.getAmmunitionType()))
+		Map<String, Ammunition> filteredAmmunitionMap = new HashSet<>(player.createCarriedAmmunitionCollection())
+				.stream() //
+				.filter(ammunition -> weapon.getAmmunitionType().equals(ammunition.getAmmunitionType())) //
 				.collect(Collectors.toMap(Ammunition::getName, Function.identity()));
 		Object[] options = filteredAmmunitionMap.keySet().toArray();
 
@@ -239,7 +242,8 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 	@Override
 	public void setSelected(boolean isSelected) {
 		if (isSelected) {
-			setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.CYAN));
+			setBorder(BorderFactory.createMatteBorder( //
+					borderThickness, borderThickness, borderThickness, borderThickness, Color.CYAN));
 		} else {
 			createStartingBorder(slotIndex);
 		}

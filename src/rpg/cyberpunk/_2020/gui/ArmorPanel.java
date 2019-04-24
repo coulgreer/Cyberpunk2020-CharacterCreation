@@ -31,7 +31,7 @@ import rpg.general.combat.BodyLocation;
  * armor pieces the character is wearing.
  */
 public class ArmorPanel extends JPanel implements PropertyChangeListener, Selectable {
-	private static final int borderThickness = 3;
+	private static final int borderThickness = 2;
 	private static final long serialVersionUID = 1L;
 
 	private Player player;
@@ -56,7 +56,7 @@ public class ArmorPanel extends JPanel implements PropertyChangeListener, Select
 
 		addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent evt) {
+			public void mousePressed(MouseEvent evt) {
 				selectionMediator.setActive(ArmorPanel.this);
 			}
 		});
