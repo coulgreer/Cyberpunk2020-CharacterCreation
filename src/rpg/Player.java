@@ -64,7 +64,6 @@ public class Player {
 
 	private PropertyChangeSupport changeSupport;
 	private Inventory pocketInventory = new BottomlessInventory();
-	private Inventory equippedInventory = new BottomlessInventory();
 	private Role role;
 	private Trader trader;
 	private Combatant<CyberpunkWeapon> combatant;
@@ -199,7 +198,10 @@ public class Player {
 		unequip(slot);
 		try {
 			removeFromInventory(weapon, 1);
-			addToEquipped(weapon);
+
+			if (!CyberpunkWeapon.WEAPON_TYPE_UNARMED.equals(weapon.getWeaponType())) {
+				equippedWeapons[slot] = weapon;
+			}
 		} catch (NullPointerException ex) {
 			equip(slot, tempWeapon);
 			throw ex;
@@ -213,7 +215,6 @@ public class Player {
 	public void equip(CyberpunkArmor armor) {
 		if (armorManager.add(armor)) {
 			removeFromInventory(armor, 1);
-			addToEquipped(armor);
 
 			changeSupport.firePropertyChange(PROPERTY_NAME_EQUIPMENT_ARMOR, null, armor);
 		}
@@ -223,7 +224,10 @@ public class Player {
 		CyberpunkWeapon weapon = equippedWeapons[slot];
 
 		addToInventory(weapon);
-		removeFromEquipped(weapon);
+
+		if (!CyberpunkWeapon.WEAPON_TYPE_UNARMED.equals(weapon.getWeaponType())) {
+			equippedWeapons[slot] = createFightingMove(FightingMove.STRIKE);
+		}
 
 		changeSupport.firePropertyChange(PROPERTY_NAME_EQUIPMENT_WEAPON, weapon, null);
 	}
@@ -233,7 +237,6 @@ public class Player {
 	public void unequip(CyberpunkArmor armor) {
 		if (armorManager.remove(armor)) {
 			addToInventory(armor);
-			removeFromEquipped(armor);
 
 			changeSupport.firePropertyChange(PROPERTY_NAME_EQUIPMENT_ARMOR, armor, null);
 		}
@@ -410,22 +413,6 @@ public class Player {
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
 	}
 
-	public void addToEquipped(CyberpunkWeapon weapon) {
-		if (!CyberpunkWeapon.WEAPON_TYPE_UNARMED.equals(weapon.getWeaponType())) {
-			equippedInventory.add(weapon);
-		}
-
-		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED, null, weapon);
-		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, null, weapon);
-	}
-
-	public void addToEquipped(CyberpunkArmor armor) {
-		equippedInventory.add(armor);
-
-		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED, null, armor);
-		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, null, armor);
-	}
-
 	public void removeFromInventory(CyberpunkWeapon weapon, int quantity) {
 		double oldWeight = getTotalWeight();
 
@@ -487,22 +474,6 @@ public class Player {
 		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEIGHT, oldWeight, getTotalWeight());
 	}
 
-	public void removeFromEquipped(CyberpunkWeapon weapon) {
-		if (!CyberpunkWeapon.WEAPON_TYPE_UNARMED.equals(weapon.getWeaponType())) {
-			equippedInventory.remove(weapon);
-		}
-
-		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_WEAPON_MANIPULATED, weapon, null);
-		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, weapon, null);
-	}
-
-	public void removeFromEquipped(CyberpunkArmor armor) {
-		equippedInventory.remove(armor);
-
-		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED, armor, null);
-		changeSupport.firePropertyChange(PROPERTY_NAME_INVENTORY_ITEM_MANIPULATED, armor, null);
-	}
-
 	public Collection<CyberpunkWeapon> createCarriedWeaponCollection() {
 		return pocketInventory.createWeaponCollection();
 	}
@@ -520,11 +491,13 @@ public class Player {
 	}
 
 	public Collection<CyberpunkArmor> createEquippedArmorCollection() {
-		return equippedInventory.createArmorCollection();
+		return armorManager.createArmorCollection();
 	}
 
 	public double getTotalWeight() {
-		return pocketInventory.getTotalWeight() + equippedInventory.getTotalWeight();
+		return pocketInventory.getTotalWeight() //
+				+ equippedWeapons[PRIMARY_SLOT].getWeight() + equippedWeapons[SECONDARY_SLOT].getWeight() //
+				+ armorManager.getTotalWeight();
 	}
 
 	public int getLocationDurability(BodyLocation location) {

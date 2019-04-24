@@ -1,6 +1,7 @@
 package rpg.cyberpunk._2020.combat;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -148,7 +149,8 @@ public class ArmorManager {
 				stoppingPower = armor.getDurabilityAt(location);
 			} else {
 				int greatestStoppingPower = Math.max(stoppingPower, armor.getDurabilityAt(location));
-				stoppingPower = greatestStoppingPower + getArmorModifier(stoppingPower, armor.getDurabilityAt(location));
+				stoppingPower = greatestStoppingPower
+						+ getArmorModifier(stoppingPower, armor.getDurabilityAt(location));
 			}
 		}
 
@@ -256,4 +258,15 @@ public class ArmorManager {
 	public int getEncumbranceValue() {
 		return totalEncumbranceValue;
 	}
+
+	public double getTotalWeight() {
+		return armors.stream() //
+				.mapToDouble(armor -> armor.getWeight()) //
+				.sum();
+	}
+	
+	public Collection<CyberpunkArmor> createArmorCollection() {
+		return armors;
+	}
+	
 }
