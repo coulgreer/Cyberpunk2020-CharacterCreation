@@ -53,7 +53,7 @@ public class LeapAttribute implements Attribute, PropertyChangeListener {
 	}
 
 	private int calculateLevel() {
-		return (int) (int) (parentAttribute.getModifier() / 4.0);
+		return (int) ((3.0 * parentAttribute.getModifier()) / 4.0);
 	}
 
 	@Override

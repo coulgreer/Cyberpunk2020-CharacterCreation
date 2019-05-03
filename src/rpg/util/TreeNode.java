@@ -1,7 +1,9 @@
 package rpg.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -201,6 +203,18 @@ public class TreeNode<T> {
 		} else {
 			return parent.getRoot();
 		}
+	}
+
+	public List<T> compress() {
+		List<T> list = new ArrayList<>();
+		list.add(getData());
+
+		Iterator<TreeNode<T>> iterator = children.values().iterator();
+		while (iterator.hasNext()) {
+			list.addAll(iterator.next().compress());
+		}
+
+		return list;
 	}
 
 }
