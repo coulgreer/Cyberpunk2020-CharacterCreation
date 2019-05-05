@@ -35,6 +35,7 @@ public class SkillTab extends JPanel {
     setPlayer(player);
 
     JScrollPane scrollPane = new JScrollPane(createSkillColumns(COLUMN_COUNT));
+    scrollPane.getVerticalScrollBar().setUnitIncrement(20);
     add(scrollPane, BorderLayout.CENTER);
   }
 
@@ -52,34 +53,34 @@ public class SkillTab extends JPanel {
     Iterator<Map.Entry<String, Map<String, CyberpunkSkill>>> skillCategoryIterator =
         player.createSkillCategoryIterator();
 
-    double totalElementCount = countSkillElements();
-    int elementsPerColumn = (int) Math.ceil(totalElementCount / maxColumns);
+    double maxElements = countSkillElements();
+    int elementsPerColumn = (int) Math.ceil(maxElements / maxColumns);
 
-    int columnElementCount = 0;
+    int elementCount = 0;
     Container columnPanel = createColumnPanel();
     panel.add(columnPanel);
     while (skillCategoryIterator.hasNext()) {
       Map.Entry<String, Map<String, CyberpunkSkill>> categoryEntry = skillCategoryIterator.next();
 
-      if (hasReachedCapacity(elementsPerColumn, columnElementCount)) {
+      if (hasReachedCapacity(elementsPerColumn, elementCount)) {
         columnPanel = createColumnPanel();
         panel.add(columnPanel);
-        columnElementCount = 0;
+        elementCount = 0;
       }
 
       columnPanel.add(createSkillCategoryPanel(categoryEntry.getKey()));
-      columnElementCount++;
+      elementCount++;
 
       Iterator<CyberpunkSkill> skillsByNameIterator = categoryEntry.getValue().values().iterator();
       while (skillsByNameIterator.hasNext()) {
-        if (hasReachedCapacity(elementsPerColumn, columnElementCount)) {
+        if (hasReachedCapacity(elementsPerColumn, elementCount)) {
           columnPanel = createColumnPanel();
           panel.add(columnPanel);
-          columnElementCount = 0;
+          elementCount = 0;
         }
 
         columnPanel.add(new SkillPanel(skillsByNameIterator.next()));
-        columnElementCount++;
+        elementCount++;
       }
     }
 

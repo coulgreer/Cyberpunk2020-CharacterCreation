@@ -71,6 +71,7 @@ public class WeaponPanel extends JPanel implements PropertyChangeListener, Selec
 		this.weapon = player.getWeapon(slotIndex);
 
 		player.addPropertyChangeListener(Player.PROPERTY_NAME_EQUIPMENT_WEAPON, this);
+		player.addPropertyChangeListener(Player.PROPERTY_NAME_SKILL_LEVEL, this);
 
 		createStartingBorder(slotIndex);
 		addMouseListener(new MouseAdapter() {

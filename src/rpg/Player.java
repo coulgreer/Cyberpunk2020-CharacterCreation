@@ -1,12 +1,15 @@
 package rpg;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.TreeMap;
 import rpg.cyberpunk._2020.combat.AikidoFightingStyleFactory;
 import rpg.cyberpunk._2020.combat.AnimalKungFuFightingStyleFactory;
 import rpg.cyberpunk._2020.combat.ArmorManager;
@@ -53,6 +56,7 @@ public class Player {
       "Inventory: Item Manipulated";
   public static final String PROPERTY_NAME_EQUIPMENT_WEAPON = "Equipment: Weapon";
   public static final String PROPERTY_NAME_EQUIPMENT_ARMOR = "Equipment: Armor";
+  public static final String PROPERTY_NAME_SKILL_LEVEL = "Skill Level";
   public static final String PROPERTY_NAME_ROLE = "Role";
 
   /**
@@ -85,8 +89,28 @@ public class Player {
         unarmedWeaponFactory.createStrike()};
     armorManager = new ArmorManager();
     attributesByName = StatisticFactory.createAttributes();
-    skillsByNameByCategoryName =
-        StatisticFactory.createSkillByNameByCategoryName(attributesByName, this);
+    skillsByNameByCategoryName = createObservedSkillsByNameByCategoryName(attributesByName);
+  }
+
+  private Map<String, Map<String, CyberpunkSkill>> createObservedSkillsByNameByCategoryName(
+      Map<String, Attribute> attributesByName) {
+    Map<String, Map<String, CyberpunkSkill>> observedSkillsByNameByCategoryName =
+        new LinkedHashMap<String, Map<String, CyberpunkSkill>>();
+
+    for (Map.Entry<String, Map<String, CyberpunkSkill>> categoryEntry : StatisticFactory
+        .createSkillByNameByCategoryName(attributesByName, this).entrySet()) {
+
+      Map<String, CyberpunkSkill> observedSkillsByName = new TreeMap<String, CyberpunkSkill>();
+
+      for (Map.Entry<String, CyberpunkSkill> skillEntry : categoryEntry.getValue().entrySet()) {
+        observedSkillsByName.put(skillEntry.getKey(),
+            new PlayerSkill(changeSupport, skillEntry.getValue()));
+      }
+
+      observedSkillsByNameByCategoryName.put(categoryEntry.getKey(), observedSkillsByName);
+    }
+
+    return observedSkillsByNameByCategoryName;
   }
 
   public void buy(CyberpunkWeapon weapon, double price) {
@@ -278,8 +302,7 @@ public class Player {
   }
 
   public Iterator<Map.Entry<String, Map<String, CyberpunkSkill>>> createSkillCategoryIterator() {
-    return skillsByNameByCategoryName.entrySet() //
-        .iterator();
+    return skillsByNameByCategoryName.entrySet().iterator();
   }
 
   public Probability getTotalAttackChance(int slot) {
@@ -556,4 +579,138 @@ public class Player {
   public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
     changeSupport.addPropertyChangeListener(propertyName, listener);
   }
+
+  private static class PlayerSkill implements CyberpunkSkill {
+    private PropertyChangeSupport playerChangeSupport;
+    private PropertyChangeSupport skillChangeSupport;
+    private CyberpunkSkill skill;
+
+    /**
+     * Wraps a CyberpunkSkill. The Player can notify listeners when the wrapped skill's level or
+     * improvement points are increased or decreased.
+     * 
+     * @param changeSupport the PropertyChangeSupport object used by a Player
+     * @param skill the statistic to be observed
+     */
+    public PlayerSkill(PropertyChangeSupport changeSupport, CyberpunkSkill skill) {
+      setChangeSupport(changeSupport);
+      setSkill(skill);
+
+      skillChangeSupport = new PropertyChangeSupport(this);
+    }
+
+    private void setChangeSupport(PropertyChangeSupport changeSupport) {
+      if (changeSupport == null) {
+        throw new NullPointerException();
+      } else {
+        this.playerChangeSupport = changeSupport;
+      }
+    }
+
+    private void setSkill(CyberpunkSkill skill) {
+      if (skill == null) {
+        throw new NullPointerException();
+      } else {
+        this.skill = skill;
+      }
+    }
+
+    @Override
+    public int getTotalValue() {
+      return skill.getTotalValue();
+    }
+
+    @Override
+    public String getName() {
+      return skill.getName();
+    }
+
+    @Override
+    public String getDescription() {
+      return skill.getDescription();
+    }
+
+    @Override
+    public int getLevel() {
+      return skill.getLevel();
+    }
+
+    @Override
+    public void increaseLevel() {
+      int oldValue = skill.getLevel();
+
+      skill.increaseLevel();
+      playerChangeSupport.firePropertyChange(PROPERTY_NAME_SKILL_LEVEL, oldValue, skill.getLevel());
+      skillChangeSupport.firePropertyChange(PROPERTY_NAME_SKILL_LEVEL, oldValue, skill.getLevel());
+    }
+
+    @Override
+    public void decreaseLevel() {
+      int oldValue = skill.getLevel();
+
+      skill.decreaseLevel();
+      playerChangeSupport.firePropertyChange(PROPERTY_NAME_SKILL_LEVEL, oldValue, skill.getLevel());
+      skillChangeSupport.firePropertyChange(PROPERTY_NAME_SKILL_LEVEL, oldValue, skill.getLevel());
+    }
+
+    @Override
+    public void resetLevel() {
+      int oldValue = skill.getLevel();
+
+      skill.resetLevel();
+      playerChangeSupport.firePropertyChange(PROPERTY_NAME_SKILL_LEVEL, oldValue, skill.getLevel());
+      skillChangeSupport.firePropertyChange(PROPERTY_NAME_SKILL_LEVEL, oldValue, skill.getLevel());
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+      skill.propertyChange(evt);
+    }
+
+    @Override
+    public boolean isEnabled() {
+      return skill.isEnabled();
+    }
+
+    @Override
+    public void increaseCurrentImprovementPoints(int improvementPoints) {
+      int oldValue = skill.getLevel();
+
+      skill.increaseCurrentImprovementPoints(improvementPoints);
+      playerChangeSupport.firePropertyChange(PROPERTY_NAME_SKILL_LEVEL, oldValue, skill.getLevel());
+      skillChangeSupport.firePropertyChange(PROPERTY_NAME_SKILL_LEVEL, oldValue, skill.getLevel());
+    }
+
+    @Override
+    public int getCurrentImprovementPoints() {
+      return skill.getCurrentImprovementPoints();
+    }
+
+    @Override
+    public int getNeededImprovementPoints() {
+      return skill.getNeededImprovementPoints();
+    }
+
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+      skillChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+      skillChangeSupport.removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+      skillChangeSupport.addPropertyChangeListener(propertyName, listener);
+    }
+
+    @Override
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+      skillChangeSupport.removePropertyChangeListener(propertyName, listener);
+    }
+
+  }
+
 }

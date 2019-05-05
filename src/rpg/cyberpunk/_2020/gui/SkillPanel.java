@@ -91,7 +91,7 @@ public class SkillPanel extends JPanel implements PropertyChangeListener {
 
     return panel;
   }
-
+  
   private Component createLevelPanel() {
     JPanel panel = new JPanel();
     panel.setBorder(BorderFactory.createTitledBorder( //
@@ -144,32 +144,49 @@ public class SkillPanel extends JPanel implements PropertyChangeListener {
   }
 
   private Component createIpPanel() {
-    JPanel mainPanel = new JPanel(new GridLayout(1, 3));
-    mainPanel.setBorder(BorderFactory.createTitledBorder( //
+    JPanel panel = new JPanel(new GridLayout(1, 3));
+    panel.setBorder(BorderFactory.createTitledBorder( //
         BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK), //
         "IP"));
 
-    JPanel currentIpPanel = new JPanel(new BorderLayout());
-    currentIpPanel.add(new JLabel("Current", SwingConstants.CENTER), BorderLayout.NORTH);
-    JLabel currentIpLabel =
-        new JLabel(Integer.toString(skill.getCurrentImprovementPoints()), SwingConstants.CENTER);
-    currentIpPanel.add(currentIpLabel, BorderLayout.CENTER);
-    mainPanel.add(currentIpPanel);
+    panel.add(createCurrentIpPanel());
+    panel.add(createDividerPanel());
+    panel.add(createGoalIpPanel());
 
-    JPanel dividerPanel = new JPanel(new BorderLayout());
+    return panel;
+  }
+
+  private Component createCurrentIpPanel() {
+    JPanel panel = new JPanel(new BorderLayout());
+
+    panel.add(new JLabel("Current", SwingConstants.CENTER), BorderLayout.NORTH);
+
+    JLabel label =
+        new JLabel(Integer.toString(skill.getCurrentImprovementPoints()), SwingConstants.CENTER);
+    panel.add(label, BorderLayout.CENTER);
+
+    return panel;
+  }
+
+  private Component createDividerPanel() {
+    JPanel panel = new JPanel(new BorderLayout());
+
     JLabel label = new JLabel("/", SwingConstants.CENTER);
     label.setFont(new Font("Serif", Font.PLAIN, 25));
-    dividerPanel.add(label);
-    mainPanel.add(dividerPanel);
+    panel.add(label);
 
-    JPanel goalIpPanel = new JPanel(new BorderLayout());
-    goalIpPanel.add(new JLabel("Goal", SwingConstants.CENTER), BorderLayout.NORTH);
-    JLabel goalIpLabel =
+    return panel;
+  }
+
+  private Component createGoalIpPanel() {
+    JPanel panel = new JPanel(new BorderLayout());
+
+    panel.add(new JLabel("Goal", SwingConstants.CENTER), BorderLayout.NORTH);
+    JLabel label =
         new JLabel(Integer.toString(skill.getNeededImprovementPoints()), SwingConstants.CENTER);
-    goalIpPanel.add(goalIpLabel);
-    mainPanel.add(goalIpPanel);
+    panel.add(label);
 
-    return mainPanel;
+    return panel;
   }
 
   @Override
