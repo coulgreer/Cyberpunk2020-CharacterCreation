@@ -96,8 +96,8 @@ public class Probability implements Comparable<Probability>, Serializable {
 
 	@Override
 	public int compareTo(Probability probability) {
-		int thisProbabilityValue = die.getNumberOfDie() * die.getNumberOfFaces() / die.getDividend() + modifier;
-		int thatProbabilityValue = probability.getDice().getNumberOfDie() * probability.getDice().getNumberOfFaces()
+		int thisProbabilityValue = die.getDieCount() * die.getFaceCount() / die.getDividend() + modifier;
+		int thatProbabilityValue = probability.getDice().getDieCount() * probability.getDice().getFaceCount()
 				/ probability.getDice().getDividend() + probability.getModifier();
 		int result = 0;
 

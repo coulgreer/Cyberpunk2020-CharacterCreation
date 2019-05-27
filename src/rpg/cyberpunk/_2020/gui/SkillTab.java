@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-import rpg.Player;
+import rpg.cyberpunk._2020.Player;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 
 /**
@@ -79,7 +79,7 @@ public class SkillTab extends JPanel {
           elementCount = 0;
         }
 
-        columnPanel.add(new SkillPanel(skillsByNameIterator.next()));
+        columnPanel.add(new SkillPane(skillsByNameIterator.next()));
         elementCount++;
       }
     }

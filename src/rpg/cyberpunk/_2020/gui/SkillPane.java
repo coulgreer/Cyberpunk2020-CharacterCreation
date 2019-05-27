@@ -3,6 +3,7 @@ package rpg.cyberpunk._2020.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -26,8 +27,8 @@ import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 /**
  * A Panel used to display the details of a skill.
  */
-public class SkillPanel extends JPanel implements PropertyChangeListener {
-  private static final int ICON_HEIGHT = 16;
+public class SkillPane extends JPanel implements PropertyChangeListener {
+  private static final int iconHeight = 16;
   private static final long serialVersionUID = 1L;
 
   private CyberpunkSkill skill;
@@ -40,12 +41,12 @@ public class SkillPanel extends JPanel implements PropertyChangeListener {
    * 
    * @param skill the object used to derive data for display and that is manipulated by the buttons
    */
-  public SkillPanel(CyberpunkSkill skill) {
+  public SkillPane(CyberpunkSkill skill) {
     super(new GridLayout(1, 2));
     setSkill(skill);
 
-    add(createSkillSummaryPanel());
-    add(createSkillDetailPanel());
+    add(createSkillSummaryContent());
+    add(createSkillDetailContainer());
   }
 
   private void setSkill(CyberpunkSkill skill) {
@@ -57,7 +58,7 @@ public class SkillPanel extends JPanel implements PropertyChangeListener {
     }
   }
 
-  private Component createSkillSummaryPanel() {
+  private Component createSkillSummaryContent() {
     JPanel panel = new JPanel(new BorderLayout());
 
     JLabel label;
@@ -77,22 +78,22 @@ public class SkillPanel extends JPanel implements PropertyChangeListener {
     return panel;
   }
 
-  private Component createSkillDetailPanel() {
+  private Container createSkillDetailContainer() {
     JPanel panel = new JPanel(new GridBagLayout());
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.fill = GridBagConstraints.BOTH;
 
     constraints.gridx = 0;
     constraints.gridy = 0;
-    panel.add(createLevelPanel(), constraints);
+    panel.add(createLevelComponent(), constraints);
 
     constraints.gridx = 1;
-    panel.add(createIpPanel(), constraints);
+    panel.add(createIpComponent(), constraints);
 
     return panel;
   }
-  
-  private Component createLevelPanel() {
+
+  private Component createLevelComponent() {
     JPanel panel = new JPanel();
     panel.setBorder(BorderFactory.createTitledBorder( //
         BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK), //
@@ -100,9 +101,9 @@ public class SkillPanel extends JPanel implements PropertyChangeListener {
 
     valueLabel = new JLabel(getValueText());
     valueLabel.setFont(new Font("Serif", Font.PLAIN, 20));
+    valueLabel.setHorizontalAlignment(SwingConstants.CENTER);
     panel.add(valueLabel);
-
-    panel.add(createButtonPanel());
+    panel.add(createButtonContainer());
 
     return panel;
   }
@@ -111,13 +112,13 @@ public class SkillPanel extends JPanel implements PropertyChangeListener {
     return Integer.toString(skill.getTotalValue());
   }
 
-  private Component createButtonPanel() {
+  private Container createButtonContainer() {
     JPanel panel = new JPanel(new GridLayout(2, 1));
 
     try {
       BufferedImage bufferedImage = ImageIO.read(new File("img/increase-arrow-minor-64x64.png"));
       ImageIcon icon = new ImageIcon(
-          bufferedImage.getScaledInstance(ICON_HEIGHT, ICON_HEIGHT, Image.SCALE_SMOOTH));
+          bufferedImage.getScaledInstance(iconHeight, iconHeight, Image.SCALE_SMOOTH));
       JButton button = new JButton(icon);
       button.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
       button.addActionListener(evt -> skill.increaseLevel());
@@ -130,7 +131,7 @@ public class SkillPanel extends JPanel implements PropertyChangeListener {
     try {
       BufferedImage bufferedImage = ImageIO.read(new File("img/decrease-arrow-minor-64x64.png"));
       ImageIcon icon = new ImageIcon(
-          bufferedImage.getScaledInstance(ICON_HEIGHT, ICON_HEIGHT, Image.SCALE_SMOOTH));
+          bufferedImage.getScaledInstance(iconHeight, iconHeight, Image.SCALE_SMOOTH));
       JButton button = new JButton(icon);
       button.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
       button.addActionListener(evt -> skill.decreaseLevel());
@@ -143,20 +144,20 @@ public class SkillPanel extends JPanel implements PropertyChangeListener {
     return panel;
   }
 
-  private Component createIpPanel() {
+  private Component createIpComponent() {
     JPanel panel = new JPanel(new GridLayout(1, 3));
     panel.setBorder(BorderFactory.createTitledBorder( //
         BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK), //
         "IP"));
 
-    panel.add(createCurrentIpPanel());
-    panel.add(createDividerPanel());
-    panel.add(createGoalIpPanel());
+    panel.add(createCurrentIpContent());
+    panel.add(createDividerContent());
+    panel.add(createGoalIpContent());
 
     return panel;
   }
 
-  private Component createCurrentIpPanel() {
+  private Component createCurrentIpContent() {
     JPanel panel = new JPanel(new BorderLayout());
 
     panel.add(new JLabel("Current", SwingConstants.CENTER), BorderLayout.NORTH);
@@ -168,7 +169,7 @@ public class SkillPanel extends JPanel implements PropertyChangeListener {
     return panel;
   }
 
-  private Component createDividerPanel() {
+  private Component createDividerContent() {
     JPanel panel = new JPanel(new BorderLayout());
 
     JLabel label = new JLabel("/", SwingConstants.CENTER);
@@ -178,7 +179,7 @@ public class SkillPanel extends JPanel implements PropertyChangeListener {
     return panel;
   }
 
-  private Component createGoalIpPanel() {
+  private Component createGoalIpContent() {
     JPanel panel = new JPanel(new BorderLayout());
 
     panel.add(new JLabel("Goal", SwingConstants.CENTER), BorderLayout.NORTH);

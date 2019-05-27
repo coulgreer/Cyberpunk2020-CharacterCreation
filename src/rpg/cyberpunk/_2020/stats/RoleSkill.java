@@ -186,8 +186,13 @@ public class RoleSkill implements CyberpunkSkill {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if (attribute == evt.getSource()) {
+    Object source = evt.getSource();
+
+    if (attribute == source) {
+      int oldValue = totalValue;
+
       calculateTotalValue();
+      changeSupport.firePropertyChange(PROPERTY_NAME_SKILL_VALUE, oldValue, totalValue);
     }
   }
 

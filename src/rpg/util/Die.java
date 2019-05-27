@@ -87,7 +87,7 @@ public class Die implements Serializable {
 	 * 
 	 * @return the die amount for a roll
 	 */
-	public int getNumberOfDie() {
+	public int getDieCount() {
 		return numberOfDie;
 	}
 
@@ -96,7 +96,7 @@ public class Die implements Serializable {
 	 * 
 	 * @return the amount of sides for the die in a roll
 	 */
-	public int getNumberOfFaces() {
+	public int getFaceCount() {
 		return numberOfFaces;
 	}
 

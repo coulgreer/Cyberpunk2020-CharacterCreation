@@ -6,8 +6,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
-
-import rpg.Player;
+import rpg.cyberpunk._2020.Player;
 
 /**
  * An instance of JPanel that sets up a panel for armor, primary weapon, and
@@ -18,9 +17,9 @@ public class EquipmentTab extends JPanel {
 
 	private Player player;
 	private SelectionMediator selectionMediator;
-	private ArmorPanel armorPanel;
-	private WeaponPanel primaryWeaponPanel;
-	private WeaponPanel secondaryWeaponPanel;
+	private ArmorPane armorPanel;
+	private WeaponPane primaryWeaponPanel;
+	private WeaponPane secondaryWeaponPanel;
 
 	/**
 	 * Constructs a EquipmentTab that uses a Player to make a main display.
@@ -41,7 +40,7 @@ public class EquipmentTab extends JPanel {
 	private Component createMainPanel() {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
-		armorPanel = new ArmorPanel(player, selectionMediator);
+		armorPanel = new ArmorPane(player, selectionMediator);
 		mainPanel.add(armorPanel, BorderLayout.CENTER);
 		mainPanel.add(createWeaponPanels(), BorderLayout.SOUTH);
 
@@ -51,8 +50,8 @@ public class EquipmentTab extends JPanel {
 	private Component createWeaponPanels() {
 		JPanel weaponPanel = new JPanel(new GridLayout(1, 2));
 
-		primaryWeaponPanel = new WeaponPanel(this, player, Player.PRIMARY_SLOT, selectionMediator);
-		secondaryWeaponPanel = new WeaponPanel(this, player, Player.SECONDARY_SLOT, selectionMediator);
+		primaryWeaponPanel = new WeaponPane(this, player, Player.PRIMARY_SLOT, selectionMediator);
+		secondaryWeaponPanel = new WeaponPane(this, player, Player.SECONDARY_SLOT, selectionMediator);
 		weaponPanel.add(primaryWeaponPanel);
 		weaponPanel.add(secondaryWeaponPanel);
 

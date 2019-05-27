@@ -25,7 +25,7 @@ public class DamageRenderer extends DefaultTableCellRenderer {
 	public void setValue(Object value) {
 		Probability damage = (Probability) value;
 
-		if (damage.getDice().getNumberOfDie() <= 0 && damage.getModifier() <= 0) {
+		if (damage.getDice().getDieCount() <= 0 && damage.getModifier() <= 0) {
 			setText("---");
 		} else {
 			setText(damage.toString());

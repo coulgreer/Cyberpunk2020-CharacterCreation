@@ -13,8 +13,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-
-import rpg.Player;
+import rpg.cyberpunk._2020.Player;
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
 import rpg.general.combat.BodyLocation;
 

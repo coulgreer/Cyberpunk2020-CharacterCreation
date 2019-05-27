@@ -2,8 +2,7 @@ package rpg.cyberpunk._2020.stats;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
-import rpg.Player;
+import rpg.cyberpunk._2020.Player;
 import rpg.general.stats.Restriction;
 
 /**

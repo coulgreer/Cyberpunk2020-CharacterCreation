@@ -6,13 +6,12 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import rpg.Player;
+import rpg.cyberpunk._2020.Player;
 
 /**
  * A panel that shows the current weight and money available for a given player.
  */
-public class InventoryInfoPanel extends JPanel implements PropertyChangeListener {
+public class InventoryInfoPane extends JPanel implements PropertyChangeListener {
 	private static final long serialVersionUID = 1L;
 
 	private Player player;
@@ -27,7 +26,7 @@ public class InventoryInfoPanel extends JPanel implements PropertyChangeListener
 	 * @param player the owner of the inventory used to get the displayed
 	 *               information such as: weight and money
 	 */
-	public InventoryInfoPanel(Player player) {
+	public InventoryInfoPane(Player player) {
 		super(new GridLayout(1, 2));
 		this.player = player;
 		player.addPropertyChangeListener(Player.PROPERTY_NAME_MONEY, this);

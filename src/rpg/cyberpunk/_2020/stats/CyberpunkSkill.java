@@ -176,6 +176,11 @@ public interface CyberpunkSkill extends Skill {
   public static final String PROPERTY_NAME_SKILL_LEVEL = "Skill Level";
 
   /**
+   * A constant used to identify when the value changes.
+   */
+  public static final String PROPERTY_NAME_SKILL_VALUE = "Skill Value";
+
+  /**
    * A constant used to identify when the improvementPoints state change.
    */
   public static final String PROPERTY_NAME_SKILL_IMPROVEMENT_POINTS = "Skill Improvement Points";

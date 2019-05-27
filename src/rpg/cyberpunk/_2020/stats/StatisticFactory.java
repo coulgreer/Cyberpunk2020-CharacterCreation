@@ -1,27 +1,47 @@
 package rpg.cyberpunk._2020.stats;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import rpg.Player;
+import rpg.cyberpunk._2020.Player;
 import rpg.general.stats.Attribute;
 
+/**
+ * A factory object used to create a set of Skills and Attributes from Cyberpunk 2020.
+ */
 public class StatisticFactory {
+  public static final String INDEPENDENT_ATTRIBUTE = "Independent";
+  public static final int INDEPENDENT_ATTRIBUTE_COUNT = 9;
+  public static final String DEPENDENT_ATTRIBUTE = "Dependent";
 
   private StatisticFactory() {
     // Do Nothing
   }
 
-  public static Map<String, Attribute> createAttributes() {
-    Map<String, Attribute> attributesByName = new LinkedHashMap<String, Attribute>();
+  /**
+   * Creates a Map that contains two other Maps of Attributes. One Map is of dependent Attributes
+   * and the other is of independent Attributes.
+   * 
+   * @return all Attributes in the game Cyberpunk 2020
+   */
+  public static Map<String, Map<String, Attribute>> createAttributesByNameByType() {
+    Map<String, Map<String, Attribute>> attributesByNameByType =
+        new HashMap<String, Map<String, Attribute>>();
+    attributesByNameByType.put(INDEPENDENT_ATTRIBUTE, new LinkedHashMap<String, Attribute>());
+    attributesByNameByType.put(DEPENDENT_ATTRIBUTE, new LinkedHashMap<String, Attribute>());
 
-    addIndependentAttributesTo(attributesByName);
-    addDependentAttributesTo(attributesByName);
+    addIndependentAttributesTo(attributesByNameByType);
+    addDependentAttributesTo(attributesByNameByType);
 
-    return attributesByName;
+    return attributesByNameByType;
   }
 
-  private static void addIndependentAttributesTo(Map<String, Attribute> attributesByName) {
+  private static void addIndependentAttributesTo(
+      Map<String, Map<String, Attribute>> attributesByNameByType) {
+
+    Map<String, Attribute> attributesByName = attributesByNameByType.get(INDEPENDENT_ATTRIBUTE);
+
     CyberpunkAttribute attribute = new CyberpunkAttribute( //
         CyberpunkAttribute.INTELLIGENCE,
         "This is a measure of your problem solving ability; figuring out problems, noticing"
@@ -101,29 +121,44 @@ public class StatisticFactory {
     attributesByName.put(attribute.getName(), attribute);
   }
 
-  private static void addDependentAttributesTo(Map<String, Attribute> attributesByName) {
+  private static void addDependentAttributesTo(
+      Map<String, Map<String, Attribute>> attributesByNameByType) {
+
+    Map<String, Attribute> independentAttributesByName =
+        attributesByNameByType.get(INDEPENDENT_ATTRIBUTE);
+    Map<String, Attribute> dependentAttributesByName = attributesByNameByType.get(DEPENDENT_ATTRIBUTE);
+
     Attribute attribute = new RunAttribute( //
         CyberpunkAttribute.RUN,
         "To determine how far your character can run in a single combat round (@3.2 seconds) in"
             + " meters, multiply your MA by 3. The character can run three times this distance in"
             + " a full 10 second turn.",
-        attributesByName.get(CyberpunkAttribute.MOVEMENT_ALLOWANCE));
-    attributesByName.put(attribute.getName(), attribute);
+        independentAttributesByName.get(CyberpunkAttribute.MOVEMENT_ALLOWANCE));
+    dependentAttributesByName.put(attribute.getName(), attribute);
 
     attribute = new LeapAttribute( //
         CyberpunkAttribute.LEAP,
         "To determine how far your character can leap (from a running start), divide your RUN by"
             + " 4.",
-        attributesByName.get(CyberpunkAttribute.MOVEMENT_ALLOWANCE));
-    attributesByName.put(attribute.getName(), attribute);
+        independentAttributesByName.get(CyberpunkAttribute.MOVEMENT_ALLOWANCE));
+    dependentAttributesByName.put(attribute.getName(), attribute);
 
     attribute = new CarryAttribute( //
         CyberpunkAttribute.CARRY, //
         "The amount of weight you can carry on your back.",
-        attributesByName.get(CyberpunkAttribute.BODY_TYPE));
-    attributesByName.put(attribute.getName(), attribute);
+        independentAttributesByName.get(CyberpunkAttribute.BODY_TYPE));
+    dependentAttributesByName.put(attribute.getName(), attribute);
   }
 
+  /**
+   * Creates a Map that contains other Maps of CyberpunkSkill. Each child Map represents the
+   * categories of CyberpunkSkills grouped by shared Attribute or restrictions.
+   * 
+   * @param attributesByName the attributes used by CyberpunkSkills in order to get the skill's
+   *        total value
+   * @param player the provider of the role needed to enable some CyberpunkSkills
+   * @return all CyberpunkSkills in the game CyberpunkSkill 2020
+   */
   public static Map<String, Map<String, CyberpunkSkill>> createSkillByNameByCategoryName(
       Map<String, Attribute> attributesByName, //
       Player player) {
