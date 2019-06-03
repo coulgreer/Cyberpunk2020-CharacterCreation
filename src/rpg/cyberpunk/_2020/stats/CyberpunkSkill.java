@@ -131,16 +131,16 @@ public interface CyberpunkSkill extends Skill {
   public static final String STEALTH = "Stealth";
   public static final String SUBMACHINEGUN = "Submachinegun";
   // Martial Arts
-  public static final String AIKIDO = "Martial Arts: Aikido";
-  public static final String ANIMAL_KUNG_FU = "Martial Arts: Animal Kung Fu";
-  public static final String BOXING = "Martial Arts: Boxing";
-  public static final String CAPOERIA = "Martial Arts: Capoeria";
-  public static final String CHOI_LI_FUT = "Martial Arts: Choi Li Fut";
-  public static final String JUDO = "Martial Arts: Judo";
-  public static final String KARATE = "Martial Arts: Karate";
-  public static final String TAE_KWON_DO = "Martial Arts: Tae Kwon Do";
-  public static final String THAI_KICK_BOXING = "Martial Arts: Thai Kick Boxing";
-  public static final String WRESTLING = "Martial Arts: Wrestling";
+  public static final String MARTIAL_ARTS_AIKIDO = "Martial Arts: Aikido";
+  public static final String MARTIAL_ARTS_ANIMAL_KUNG_FU = "Martial Arts: Animal Kung Fu";
+  public static final String MARTIAL_ARTS_BOXING = "Martial Arts: Boxing";
+  public static final String MARTIAL_ARTS_CAPOERIA = "Martial Arts: Capoeria";
+  public static final String MARTIAL_ARTS_CHOI_LI_FUT = "Martial Arts: Choi Li Fut";
+  public static final String MARTIAL_ARTS_JUDO = "Martial Arts: Judo";
+  public static final String MARTIAL_ARTS_KARATE = "Martial Arts: Karate";
+  public static final String MARTIAL_ARTS_TAE_KWON_DO = "Martial Arts: Tae Kwon Do";
+  public static final String MARTIAL_ARTS_THAI_KICK_BOXING = "Martial Arts: Thai Kick Boxing";
+  public static final String MARTIAL_ARTS_WRESTLING = "Martial Arts: Wrestling";
   // Piloting
   public static final String PILOT_GYRO = "Pilot: Gyro";
   public static final String PILOT_FIXED_WING = "Pilot: Fixed Wing";

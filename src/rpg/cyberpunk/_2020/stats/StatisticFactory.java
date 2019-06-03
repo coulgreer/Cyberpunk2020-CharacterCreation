@@ -126,7 +126,8 @@ public class StatisticFactory {
 
     Map<String, Attribute> independentAttributesByName =
         attributesByNameByType.get(INDEPENDENT_ATTRIBUTE);
-    Map<String, Attribute> dependentAttributesByName = attributesByNameByType.get(DEPENDENT_ATTRIBUTE);
+    Map<String, Attribute> dependentAttributesByName =
+        attributesByNameByType.get(DEPENDENT_ATTRIBUTE);
 
     Attribute attribute = new RunAttribute( //
         CyberpunkAttribute.RUN,
@@ -206,7 +207,7 @@ public class StatisticFactory {
             + " there's a good chance he'll get nailed by the peoiple he's trying to confront. The"
             + " higher your Authority, the more able you are to face down criminals, particularly"
             + " high level mobsters and officials. Authority is applied to your Cool stat.",
-        new RoleRestriction(Role.COP, player));
+        player);
     skillsByName.put(skill.getName(), skill);
 
     skill = new RoleSkill( //
@@ -226,7 +227,7 @@ public class StatisticFactory {
             + " too far from hall. At Level +9, and higher, you have the same sort of mesmeric"
             + " ability as an Adolph Hitler - you can raise armies, start movements. And destroy"
             + " nations.",
-        new RoleRestriction(Role.ROCKERBOY, player));
+        player);
     skillsByName.put(skill.getName(), skill);
 
     skill = new RoleSkill( //
@@ -235,7 +236,7 @@ public class StatisticFactory {
             + " allows the Solo to perceive danger, notice traps, and have an almost unearthly"
             + " ability to avoid harm. Your Combat Sense gives you a bonus on both your Awareness"
             + " skill and your Initiative equal to your level in the Combat Sense skill.",
-        new RoleRestriction(Role.SOLO, player));
+        player);
     skillsByName.put(skill.getName(), skill);
 
     skill = new RoleSkill( //
@@ -252,7 +253,7 @@ public class StatisticFactory {
             + " successfully expose a scandal of Watergate proportions, or convince the President of"
             + " the EuroMarket Finance Board that aliens are secretly influencing world leaders."
             + " Credibility applies to your INT stat.",
-        new RoleRestriction(Role.MEDIA, player));
+        player);
     skillsByName.put(skill.getName(), skill);
 
     skill = new RoleSkill( //
@@ -267,7 +268,7 @@ public class StatisticFactory {
             + " wreck a town, for example. With a status of +7 or +8, you are able to make major"
             + " Pack decisions and lead troops. At +10, you may be the Leader of your Pack. Family"
             + " is applied to your INT stat.",
-        new RoleRestriction(Role.NOMAD, player));
+        player);
     skillsByName.put(skill.getName(), skill);
 
     skill = new RoleSkill( //
@@ -279,7 +280,7 @@ public class StatisticFactory {
             + " but cannot use the Menu. Interface is based on the INT Stat. Note for Cyberpunk 1"
             + " players--you may elect to swap your original INT and REF stats for characters"
             + " generated with the old rule.",
-        new RoleRestriction(Role.NETRUNNER, player));
+        player);
     skillsByName.put(skill.getName(), skill);
 
     skill = new RoleSkill( //
@@ -287,7 +288,7 @@ public class StatisticFactory {
         "This general repair skill allows the Techie to temporarily repair or alter anything for"
             + " 1D6 turns per level of skill. This is not a permanent repair; after the elapsed"
             + " time, the jury rig will break down.",
-        new RoleRestriction(Role.TECHIE, player));
+        player);
     skillsByName.put(skill.getName(), skill);
 
     skill = new RoleSkill( //
@@ -297,7 +298,7 @@ public class StatisticFactory {
             + " proper treatment of injuries. They can replace damaged organs with vatgrown"
             + " pieces, graft on new limbs, or install cyberlimbs. You cannot perform Medical Tech"
             + " skills on yourself.",
-        new RoleRestriction(Role.MEDTECH, player));
+        player);
     skillsByName.put(skill.getName(), skill);
 
     skill = new RoleSkill( //
@@ -313,7 +314,7 @@ public class StatisticFactory {
             + " from the Corporate Security Division. A Resource of +9 would allow you access to"
             + " almost all levels of the Corporation, as well as the ability to requisition almost"
             + " any Company resource. Your Resource ability is applied to your INT stat.",
-        new RoleRestriction(Role.CORPORATE, player));
+        player);
     skillsByName.put(skill.getName(), skill);
 
     skill = new RoleSkill( //
@@ -329,7 +330,7 @@ public class StatisticFactory {
             + " the most powerful crime families. At level +9, you are the equivalent of a Mafia"
             + " crimelord yourself, privy to every secret that's on the Street. Apply Streetdeal"
             + " to your Cool stat.",
-        new RoleRestriction(Role.FIXER, player));
+        player);
     skillsByName.put(skill.getName(), skill);
 
     skillsByNameByCategoryName.put(categoryName, skillsByName);
@@ -1403,7 +1404,7 @@ public class StatisticFactory {
     // Martial Arts --- start
     skill = new SpecializedSkill( //
         attribute, //
-        CyberpunkSkill.AIKIDO,
+        CyberpunkSkill.MARTIAL_ARTS_AIKIDO,
         "This form relies on using the opponent's strength and momentum against him. It is a"
             + " perfect form for stopping an opponent peacefully while making yourself very hard"
             + " to hit. Key attacks are: blocks & parries, dodges, throws, holds, escapes, chokes,"
@@ -1413,7 +1414,7 @@ public class StatisticFactory {
 
     skill = new SpecializedSkill( //
         attribute, //
-        CyberpunkSkill.ANIMAL_KUNG_FU,
+        CyberpunkSkill.MARTIAL_ARTS_ANIMAL_KUNG_FU,
         "There are forms based on animal movements, such as crane, mantis, tiger, leopard and"
             + " dragon forms. These attacks are fast and dangerous, with a style that is exciting"
             + " and flashy. Key attacks include: strikes, punches, kicks, blocks & parries, sweeps"
@@ -1423,7 +1424,7 @@ public class StatisticFactory {
 
     skill = new SpecializedSkill( //
         attribute, //
-        CyberpunkSkill.BOXING,
+        CyberpunkSkill.MARTIAL_ARTS_BOXING,
         "The manly art of fisticuffs, this form delivers lightning punches and tight blocking"
             + " defense. Key attacks are: punches, blocks & parries.",
         1);
@@ -1431,7 +1432,7 @@ public class StatisticFactory {
 
     skill = new SpecializedSkill( //
         attribute, //
-        CyberpunkSkill.CAPOERIA,
+        CyberpunkSkill.MARTIAL_ARTS_CAPOERIA,
         "Created by Caribbean slaves, this form combines dancelike movements with fast kicks and"
             + " low line sweeps. It is a relatively unknown form and can be combined with dance"
             + " moves to disguise it's true power. Key attacks are: punches, kicks, blocks &"
@@ -1441,7 +1442,7 @@ public class StatisticFactory {
 
     skill = new SpecializedSkill( //
         attribute, //
-        CyberpunkSkill.CHOI_LI_FUT,
+        CyberpunkSkill.MARTIAL_ARTS_CHOI_LI_FUT,
         "Descended directly form the ancient Shaolin temples, this form combines powerful"
             + " roundhouse blows and sweeping kicks into dynamic fighting style. Key attacks are:"
             + " strikes, punches, kicks, blocks & parries, dodges, throws, and sweeps & trips.",
@@ -1450,7 +1451,7 @@ public class StatisticFactory {
 
     skill = new SpecializedSkill( //
         attribute, //
-        CyberpunkSkill.JUDO,
+        CyberpunkSkill.MARTIAL_ARTS_JUDO,
         "This system was designed as a sport form, but is very effective in combat as well. It"
             + " uses throws and sweeps to knock down the opponent. Key attacks include dodges,"
             + " throws, holds, escape sweeps & trips and grappling.",
@@ -1459,7 +1460,7 @@ public class StatisticFactory {
 
     skill = new SpecializedSkill( //
         attribute, //
-        CyberpunkSkill.KARATE,
+        CyberpunkSkill.MARTIAL_ARTS_KARATE,
         "The Japanese version of kung fu, this style uses straight line movements and powerful"
             + " blows. Variations include shotokan and kenpo, each with their own special moves."
             + " Key attacks are: punches, kicks, and blocks & parries.",
@@ -1468,7 +1469,7 @@ public class StatisticFactory {
 
     skill = new SpecializedSkill( //
         attribute, //
-        CyberpunkSkill.TAE_KWON_DO,
+        CyberpunkSkill.MARTIAL_ARTS_TAE_KWON_DO,
         "A very fast and precise form, with graceful movements and some aerial kicks. Key attacks"
             + " include: strikes, punches, kicks, blocks & parries, dodges.",
         3);
@@ -1476,7 +1477,7 @@ public class StatisticFactory {
 
     skill = new SpecializedSkill( //
         attribute, //
-        CyberpunkSkill.THAI_KICK_BOXING,
+        CyberpunkSkill.MARTIAL_ARTS_THAI_KICK_BOXING,
         "One of the deadliest form in existence, this style is known for blinding kicks delivered"
             + " with incredible power. Key moves include: strikes, punches, kicks, blocks &"
             + " parries.",
@@ -1485,7 +1486,7 @@ public class StatisticFactory {
 
     skill = new SpecializedSkill( //
         attribute, //
-        CyberpunkSkill.WRESTLING,
+        CyberpunkSkill.MARTIAL_ARTS_WRESTLING,
         "This form combines techniques of Olympic and Professional wrestling. The style uses a"
             + " wide variety of throws and holds to incapacitate the opponent. Key attacks"
             + " include: throws, holds, escapes, chokes, sweeps, trips, and grapple.",

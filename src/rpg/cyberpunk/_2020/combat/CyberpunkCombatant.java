@@ -74,26 +74,26 @@ public class CyberpunkCombatant implements Combatant<CyberpunkWeapon> {
 
   private int getMiscellaneousDamageModifier(Weapon weapon) {
     switch (weapon.getSkillName()) {
-      case CyberpunkSkill.AIKIDO:
-        return player.getSkill(CyberpunkSkill.AIKIDO).getTotalValue();
-      case CyberpunkSkill.ANIMAL_KUNG_FU:
-        return player.getSkill(CyberpunkSkill.ANIMAL_KUNG_FU).getTotalValue();
-      case CyberpunkSkill.BOXING:
-        return player.getSkill(CyberpunkSkill.BOXING).getTotalValue();
-      case CyberpunkSkill.CAPOERIA:
-        return player.getSkill(CyberpunkSkill.CAPOERIA).getTotalValue();
-      case CyberpunkSkill.CHOI_LI_FUT:
-        return player.getSkill(CyberpunkSkill.CHOI_LI_FUT).getTotalValue();
-      case CyberpunkSkill.JUDO:
-        return player.getSkill(CyberpunkSkill.JUDO).getTotalValue();
-      case CyberpunkSkill.KARATE:
-        return player.getSkill(CyberpunkSkill.KARATE).getTotalValue();
-      case CyberpunkSkill.TAE_KWON_DO:
-        return player.getSkill(CyberpunkSkill.TAE_KWON_DO).getTotalValue();
-      case CyberpunkSkill.THAI_KICK_BOXING:
-        return player.getSkill(CyberpunkSkill.THAI_KICK_BOXING).getTotalValue();
-      case CyberpunkSkill.WRESTLING:
-        return player.getSkill(CyberpunkSkill.WRESTLING).getTotalValue();
+      case CyberpunkSkill.MARTIAL_ARTS_AIKIDO:
+        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_AIKIDO).getTotalValue();
+      case CyberpunkSkill.MARTIAL_ARTS_ANIMAL_KUNG_FU:
+        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_ANIMAL_KUNG_FU).getTotalValue();
+      case CyberpunkSkill.MARTIAL_ARTS_BOXING:
+        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_BOXING).getTotalValue();
+      case CyberpunkSkill.MARTIAL_ARTS_CAPOERIA:
+        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_CAPOERIA).getTotalValue();
+      case CyberpunkSkill.MARTIAL_ARTS_CHOI_LI_FUT:
+        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_CHOI_LI_FUT).getTotalValue();
+      case CyberpunkSkill.MARTIAL_ARTS_JUDO:
+        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_JUDO).getTotalValue();
+      case CyberpunkSkill.MARTIAL_ARTS_KARATE:
+        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_KARATE).getTotalValue();
+      case CyberpunkSkill.MARTIAL_ARTS_TAE_KWON_DO:
+        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_TAE_KWON_DO).getTotalValue();
+      case CyberpunkSkill.MARTIAL_ARTS_THAI_KICK_BOXING:
+        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_THAI_KICK_BOXING).getTotalValue();
+      case CyberpunkSkill.MARTIAL_ARTS_WRESTLING:
+        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_WRESTLING).getTotalValue();
       default:
         return DEFAULT_DAMAGE_MODIFIER;
     }

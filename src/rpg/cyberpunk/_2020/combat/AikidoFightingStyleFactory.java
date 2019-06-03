@@ -22,70 +22,70 @@ public class AikidoFightingStyleFactory implements FightingStyleFactory {
 
 	@Override
 	public CyberpunkWeapon createStrike() {
-		return new MeleeWeapon("Aikido Strike", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.AIKIDO,
+		return new MeleeWeapon("Aikido Strike", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.MARTIAL_ARTS_AIKIDO,
 				0, CONCEALABILITY, AVAILABILITY, STRIKE_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
 				Collections.emptySet());
 	}
 
 	@Override
 	public CyberpunkWeapon createKick() {
-		return new MeleeWeapon("Aikido Kick", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.AIKIDO,
+		return new MeleeWeapon("Aikido Kick", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.MARTIAL_ARTS_AIKIDO,
 				0, CONCEALABILITY, AVAILABILITY, KICK_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
 				Collections.emptySet());
 	}
 
 	@Override
 	public CyberpunkWeapon createBlock() {
-		return new MeleeWeapon("Aikido Block", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.AIKIDO,
+		return new MeleeWeapon("Aikido Block", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.MARTIAL_ARTS_AIKIDO,
 				4, CONCEALABILITY, AVAILABILITY, BLOCK_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
 				Collections.emptySet());
 	}
 
 	@Override
 	public CyberpunkWeapon createDodge() {
-		return new MeleeWeapon("Aikido Dodge", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.AIKIDO,
+		return new MeleeWeapon("Aikido Dodge", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.MARTIAL_ARTS_AIKIDO,
 				3, CONCEALABILITY, AVAILABILITY, DODGE_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
 				Collections.emptySet());
 	}
 
 	@Override
 	public CyberpunkWeapon createDisarm() {
-		return new MeleeWeapon("Aikido Disarm", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.AIKIDO,
+		return new MeleeWeapon("Aikido Disarm", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.MARTIAL_ARTS_AIKIDO,
 				0, CONCEALABILITY, AVAILABILITY, DISARM_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
 				Collections.emptySet());
 	}
 
 	@Override
 	public CyberpunkWeapon createThrow() {
-		return new MeleeWeapon("Aikido Throw", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.AIKIDO,
+		return new MeleeWeapon("Aikido Throw", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.MARTIAL_ARTS_AIKIDO,
 				3, CONCEALABILITY, AVAILABILITY, THROW_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
 				Collections.emptySet());
 	}
 
 	@Override
 	public CyberpunkWeapon createHold() {
-		return new MeleeWeapon("Aikido Hold", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.AIKIDO,
+		return new MeleeWeapon("Aikido Hold", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.MARTIAL_ARTS_AIKIDO,
 				3, CONCEALABILITY, AVAILABILITY, HOLD_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
 				Collections.emptySet());
 	}
 
 	@Override
 	public CyberpunkWeapon createEscape() {
-		return new MeleeWeapon("Aikido Escape", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.AIKIDO,
+		return new MeleeWeapon("Aikido Escape", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.MARTIAL_ARTS_AIKIDO,
 				3, CONCEALABILITY, AVAILABILITY, ESCAPE_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
 				Collections.emptySet());
 	}
 
 	@Override
 	public CyberpunkWeapon createChoke() {
-		return new MeleeWeapon("Aikido Choke", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.AIKIDO,
+		return new MeleeWeapon("Aikido Choke", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.MARTIAL_ARTS_AIKIDO,
 				1, CONCEALABILITY, AVAILABILITY, CHOKE_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
 				Collections.emptySet());
 	}
 
 	@Override
 	public CyberpunkWeapon createSweep() {
-		return new MeleeWeapon("Aikido Sweep", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.AIKIDO,
+		return new MeleeWeapon("Aikido Sweep", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED, CyberpunkSkill.MARTIAL_ARTS_AIKIDO,
 				3, CONCEALABILITY, AVAILABILITY, SWEEP_DAMAGE, false, RELIABILITY, RANGE_MODIFIER, COST, WEIGHT,
 				Collections.emptySet());
 	}
@@ -93,7 +93,7 @@ public class AikidoFightingStyleFactory implements FightingStyleFactory {
 	@Override
 	public CyberpunkWeapon createGrapple() {
 		return new MeleeWeapon("Aikido Grapple", DESCRIPTION, CyberpunkWeapon.WEAPON_TYPE_UNARMED,
-				CyberpunkSkill.AIKIDO, 2, CONCEALABILITY, AVAILABILITY, GRAPPLE_DAMAGE, false, RELIABILITY,
+				CyberpunkSkill.MARTIAL_ARTS_AIKIDO, 2, CONCEALABILITY, AVAILABILITY, GRAPPLE_DAMAGE, false, RELIABILITY,
 				RANGE_MODIFIER, COST, WEIGHT, Collections.emptySet());
 	}
 

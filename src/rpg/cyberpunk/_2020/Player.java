@@ -3,6 +3,7 @@ package rpg.cyberpunk._2020;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,7 @@ public class Player {
   public static final String PROPERTY_NAME_EQUIPMENT_WEAPON = "Equipment: Weapon";
   public static final String PROPERTY_NAME_EQUIPMENT_ARMOR = "Equipment: Armor";
   public static final String PROPERTY_NAME_ROLE = "Role";
+  public static final String PROPERTY_NAME_PICKUP_SKILL = "Pickup Skill";
 
   /**
    * A constant representing the index of the primary weapon slot.
@@ -77,6 +79,7 @@ public class Player {
   private Map<String, Map<String, Attribute>> attributesByNameByType;
   private Map<String, Map<String, CyberpunkSkill>> skillsByNameByCategoryName;
   private Background background;
+  private List<String> pickupSkillNames;
 
   public Player() {
     changeSupport = new PropertyChangeSupport(this);
@@ -90,6 +93,7 @@ public class Player {
     skillsByNameByCategoryName = StatisticFactory.createSkillByNameByCategoryName(
         attributesByNameByType.get(StatisticFactory.INDEPENDENT_ATTRIBUTE), this);
     background = new Background();
+    pickupSkillNames = Collections.emptyList();
   }
 
   public void buy(CyberpunkWeapon weapon, double price) {
@@ -617,6 +621,33 @@ public class Player {
 
   public Role getRole() {
     return role;
+  }
+
+  public void setRole(Role role) {
+    Object oldValue = this.role;
+
+    this.role = role;
+    changeSupport.firePropertyChange(PROPERTY_NAME_ROLE, oldValue, role);
+  }
+
+  public List<String> getPickupSkillNames() {
+    return pickupSkillNames;
+  }
+
+  public void setPickupSkillNames(List<String> pickupSkillNames) {
+    int minLength = 1;
+    List<String> oldValue = pickupSkillNames;
+
+    if (pickupSkillNames == null) {
+      throw new NullPointerException();
+    } else if (pickupSkillNames.size() < minLength) {
+      throw new IllegalArgumentException(
+          "length: " + pickupSkillNames.size() + "; min length: " + minLength);
+    } else {
+      this.pickupSkillNames = pickupSkillNames;
+    }
+
+    changeSupport.firePropertyChange(PROPERTY_NAME_PICKUP_SKILL, oldValue, pickupSkillNames);
   }
 
   public void addPropertyChangeListener(PropertyChangeListener listener) {

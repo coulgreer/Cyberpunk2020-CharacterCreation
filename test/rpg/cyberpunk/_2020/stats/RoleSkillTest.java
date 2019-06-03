@@ -3,127 +3,130 @@ package rpg.cyberpunk._2020.stats;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
-
+import rpg.cyberpunk._2020.Player;
 import rpg.general.stats.Attribute;
-import rpg.general.stats.Restriction;
 
 public class RoleSkillTest {
-	private static Attribute mockAttribute;
-	private static Restriction mockSkillRestriction;
+  private static final String skillName = "Test Skill";
+  private static Attribute mockAttribute;
+  private static Player mockPlayer;
+  private static Role mockRole;
 
-	@BeforeClass
-	public static void setUpBeforeClass() {
-		mockAttribute = mock(Attribute.class);
-		when(mockAttribute.getModifier()).thenReturn(2);
+  @BeforeClass
+  public static void setUpBeforeClass() {
+    mockAttribute = mock(Attribute.class);
+    when(mockAttribute.getModifier()).thenReturn(2);
 
-		mockSkillRestriction = mock(Restriction.class);
-		when(mockSkillRestriction.isRestricted()).thenReturn(false);
-	}
+    mockRole = mock(Role.class);
+    when(mockRole.getSpecialAbilityName()).thenReturn(skillName);
 
-	@Test
-	public void testSkillLevelEqualsOneIfLevelIncreasesOnce() {
-		RoleSkill skill = new RoleSkill(mockAttribute, "Test Skill", "A skill for a players role",
-				mockSkillRestriction);
+    mockPlayer = mock(Player.class);
+    when(mockPlayer.getRole()).thenReturn(mockRole);
+  }
 
-		skill.increaseLevel();
+  @Test
+  public void testSkillLevelEqualsOneIfLevelIncreasesOnce() {
+    RoleSkill skill =
+        new RoleSkill(mockAttribute, skillName, "A skill for a players role", mockPlayer);
 
-		assertEquals(1, skill.getLevel());
-	}
+    skill.increaseLevel();
 
-	@Test
-	public void testSkillLevelCannotExceedMax() {
-		RoleSkill skill = new RoleSkill(mockAttribute, "Test Skill", "A skill for a players role",
-				mockSkillRestriction);
+    assertEquals(1, skill.getLevel());
+  }
 
-		for (int i = 0; i < SpecializedSkill.MAX_LEVEL; i++) {
-			skill.increaseLevel();
-		}
+  @Test
+  public void testSkillLevelCannotExceedMax() {
+    RoleSkill skill =
+        new RoleSkill(mockAttribute, skillName, "A skill for a players role", mockPlayer);
 
-		assertEquals(10, skill.getLevel());
-	}
+    for (int i = 0; i < SpecializedSkill.MAX_LEVEL; i++) {
+      skill.increaseLevel();
+    }
 
-	@Test
-	public void testSkillLevelEqualsOneIfIncreasedTwiceThenDecreasedOnce() {
-		RoleSkill skill = new RoleSkill(mockAttribute, "Test Skill", "A skill for a players role",
-				mockSkillRestriction);
+    assertEquals(10, skill.getLevel());
+  }
 
-		skill.increaseLevel();
-		skill.increaseLevel();
-		skill.decreaseLevel();
+  @Test
+  public void testSkillLevelEqualsOneIfIncreasedTwiceThenDecreasedOnce() {
+    RoleSkill skill =
+        new RoleSkill(mockAttribute, skillName, "A skill for a players role", mockPlayer);
 
-		assertEquals(1, skill.getLevel());
+    skill.increaseLevel();
+    skill.increaseLevel();
+    skill.decreaseLevel();
 
-	}
+    assertEquals(1, skill.getLevel());
 
-	@Test
-	public void testSkillLevelCannotBeLowerThanMinLevel() {
-		RoleSkill skill = new RoleSkill(mockAttribute, "Test Skill", "A skill for a players role",
-				mockSkillRestriction);
+  }
 
-		skill.decreaseLevel();
+  @Test
+  public void testSkillLevelCannotBeLowerThanMinLevel() {
+    RoleSkill skill =
+        new RoleSkill(mockAttribute, skillName, "A skill for a players role", mockPlayer);
 
-		assertEquals(0, skill.getLevel());
-	}
+    skill.decreaseLevel();
 
-	@Test
-	public void testImprovementPointsEqualsTwoIfIncreasedByTwo() {
-		RoleSkill skill = new RoleSkill(mockAttribute, "Test Skill", "A skill for a players role",
-				mockSkillRestriction);
+    assertEquals(0, skill.getLevel());
+  }
 
-		skill.increaseCurrentImprovementPoints(2);
+  @Test
+  public void testImprovementPointsEqualsTwoIfIncreasedByTwo() {
+    RoleSkill skill =
+        new RoleSkill(mockAttribute, skillName, "A skill for a players role", mockPlayer);
 
-		assertEquals(2, skill.getCurrentImprovementPoints());
-	}
+    skill.increaseCurrentImprovementPoints(2);
 
-	@Test
-	public void testSkillLevelEqualsOneIfNeededImprovementPointsIsReached() {
-		RoleSkill skill = new RoleSkill(mockAttribute, "Test Skill", "A skill for a players role",
-				mockSkillRestriction);
+    assertEquals(2, skill.getCurrentImprovementPoints());
+  }
 
-		skill.increaseCurrentImprovementPoints(skill.getNeededImprovementPoints());
+  @Test
+  public void testSkillLevelEqualsOneIfNeededImprovementPointsIsReached() {
+    RoleSkill skill =
+        new RoleSkill(mockAttribute, skillName, "A skill for a players role", mockPlayer);
 
-		assertEquals(1, skill.getLevel());
-	}
+    skill.increaseCurrentImprovementPoints(skill.getNeededImprovementPoints());
 
-	@Test
-	public void testSkillTotalLevelEqualsThreeIfIncreasedLevelOnce() {
-		RoleSkill skill = new RoleSkill(mockAttribute, "Test Skill", "A skill for a players role",
-				mockSkillRestriction);
+    assertEquals(1, skill.getLevel());
+  }
 
-		skill.increaseLevel();
+  @Test
+  public void testSkillTotalLevelEqualsThreeIfIncreasedLevelOnce() {
+    RoleSkill skill =
+        new RoleSkill(mockAttribute, skillName, "A skill for a players role", mockPlayer);
 
-		assertEquals(3, skill.getTotalValue());
-	}
+    skill.increaseLevel();
 
-	@Test
-	public void testSkillTotalLevelEqualsTwoIfSkillLevelEqualsZero() {
-		RoleSkill skill = new RoleSkill(mockAttribute, "Test Skill", "A skill for a players role",
-				mockSkillRestriction);
+    assertEquals(3, skill.getTotalValue());
+  }
 
-		assertEquals(2, skill.getTotalValue());
-	}
+  @Test
+  public void testSkillTotalLevelEqualsTwoIfSkillLevelEqualsZero() {
+    RoleSkill skill =
+        new RoleSkill(mockAttribute, skillName, "A skill for a players role", mockPlayer);
 
-	@Test
-	public void testSkillTotalLevelEqualsThreeIfSkillLevelIncreasedOnce() {
-		RoleSkill skill = new RoleSkill(mockAttribute, "Test Skill", "A skill for a players role",
-				mockSkillRestriction);
+    assertEquals(2, skill.getTotalValue());
+  }
 
-		skill.increaseLevel();
+  @Test
+  public void testSkillTotalLevelEqualsThreeIfSkillLevelIncreasedOnce() {
+    RoleSkill skill =
+        new RoleSkill(mockAttribute, skillName, "A skill for a players role", mockPlayer);
 
-		assertEquals(3, skill.getTotalValue());
-	}
+    skill.increaseLevel();
 
-	@Test
-	public void testSkillLevelEqualsZeroIfSkillLevelIncreasedOnceThenReset() {
-		RoleSkill skill = new RoleSkill(mockAttribute, "Test Skill", "A skill for a players role",
-				mockSkillRestriction);
+    assertEquals(3, skill.getTotalValue());
+  }
 
-		skill.increaseLevel();
-		skill.resetLevel();
+  @Test
+  public void testSkillLevelEqualsZeroIfSkillLevelIncreasedOnceThenReset() {
+    RoleSkill skill =
+        new RoleSkill(mockAttribute, skillName, "A skill for a players role", mockPlayer);
 
-		assertEquals(0, skill.getLevel());
-	}
+    skill.increaseLevel();
+    skill.resetLevel();
+
+    assertEquals(0, skill.getLevel());
+  }
 }

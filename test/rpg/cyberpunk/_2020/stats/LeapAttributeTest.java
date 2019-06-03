@@ -19,10 +19,10 @@ public class LeapAttributeTest {
 	}
 
 	@Test
-	public void testLeapLevelEqualsTwoIfParentAttributeModifierEqualsTen() {
+	public void testLeapLevelEqualsSevenIfParentAttributeModifierEqualsTen() {
 		LeapAttribute attribute = new LeapAttribute("Leaping", "Attribute for Leaping", mockAttribute);
 
-		assertEquals(2, attribute.getLevel());
+		assertEquals(7, attribute.getLevel());
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

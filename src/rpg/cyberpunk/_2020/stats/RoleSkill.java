@@ -3,6 +3,7 @@ package rpg.cyberpunk._2020.stats;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import rpg.cyberpunk._2020.Player;
 import rpg.general.stats.Attribute;
 import rpg.general.stats.Restriction;
 
@@ -21,7 +22,7 @@ public class RoleSkill implements CyberpunkSkill {
   private int difficultyModifier;
   private int currentImprovementPoints;
   private int neededImprovementPoints;
-  private Restriction restriction;
+  private Player player;
   private PropertyChangeSupport changeSupport;
 
   /**
@@ -32,8 +33,8 @@ public class RoleSkill implements CyberpunkSkill {
    * @param restriction a constraint used to stop leveling until requirements are met
    * @see rpg.cyberpunk._2020.stats.RoleSkill#RoleSkill(Attribute, String, String, Restriction)
    */
-  public RoleSkill(String name, String description, Restriction restriction) {
-    this(NullAttribute.getInstance(), name, description, restriction);
+  public RoleSkill(String name, String description, Player player) {
+    this(NullAttribute.getInstance(), name, description, player);
   }
 
   /**
@@ -45,10 +46,10 @@ public class RoleSkill implements CyberpunkSkill {
    * @param restriction a constraint used to stop leveling until requirements are met
    * @see rpg.cyberpunk._2020.stats.RoleSkill#RoleSkill(Attribute, String, String, Restriction)
    */
-  public RoleSkill(Attribute attribute, String name, String description, Restriction restriction) {
+  public RoleSkill(Attribute attribute, String name, String description, Player player) {
     setName(name);
     setDescription(description);
-    setRestriction(restriction);
+    setPlayer(player);
     baseValue = MIN_LEVEL;
     difficultyModifier = MINIMUM_DIFFICULTY_MODIFIER;
     currentImprovementPoints = INITIAL_IP;
@@ -74,11 +75,11 @@ public class RoleSkill implements CyberpunkSkill {
     }
   }
 
-  private void setRestriction(Restriction restriction) {
-    if (restriction == null) {
+  private void setPlayer(Player player) {
+    if (player == null) {
       throw new NullPointerException();
     } else {
-      this.restriction = restriction;
+      this.player = player;
     }
   }
 
@@ -148,7 +149,12 @@ public class RoleSkill implements CyberpunkSkill {
 
   @Override
   public boolean isEnabled() {
-    return !restriction.isRestricted();
+    return hasSpecialSkill();
+  }
+
+  private boolean hasSpecialSkill() {
+    String specialAbilityName = player.getRole().getSpecialAbilityName();
+    return getName().equals(specialAbilityName);
   }
 
   @Override

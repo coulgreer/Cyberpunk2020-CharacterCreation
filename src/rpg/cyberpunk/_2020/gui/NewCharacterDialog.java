@@ -6,12 +6,14 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -37,6 +39,8 @@ import rpg.cyberpunk._2020.Sibling;
 import rpg.cyberpunk._2020.Sibling.RelativeAge;
 import rpg.cyberpunk._2020.Sibling.Sex;
 import rpg.cyberpunk._2020.stats.CyberpunkAttribute;
+import rpg.cyberpunk._2020.stats.Role;
+import rpg.cyberpunk._2020.stats.RoleFactory;
 import rpg.cyberpunk._2020.stats.StatisticFactory;
 import rpg.cyberpunk._2020.systems.CharacterPointsManager;
 import rpg.cyberpunk._2020.systems.FastAttribute;
@@ -68,6 +72,7 @@ public class NewCharacterDialog extends JDialog {
   private static final String familyTragedyPane = "Family Tragedy Pane";
   private static final String childhoodEnvironmentPane = "Childhood Environment Pane";
   private static final String siblingsPane = "Siblings Pane";
+  private static final String rolePane = "Role Pane";
 
   private Player player;
   private JPanel contentPane;
@@ -100,6 +105,7 @@ public class NewCharacterDialog extends JDialog {
     contentPane.add(createFamilyTragedyContainer(), familyTragedyPane);
     contentPane.add(createChildhoodEnvironmentContainer(), childhoodEnvironmentPane);
     contentPane.add(createSiblingsContainer(), siblingsPane);
+    contentPane.add(createRoleContainer(), rolePane);
 
     setContentPane(contentPane);
   }
@@ -208,8 +214,7 @@ public class NewCharacterDialog extends JDialog {
     managersByCardName = new HashMap<String, CharacterPointsManager>();
     Iterable<Attribute> iterable =
         () -> player.createAttributeByTypeIterator(StatisticFactory.INDEPENDENT_ATTRIBUTE);
-    List<Attribute> attributes = StreamSupport //
-        .stream(iterable.spliterator(), false) //
+    List<Attribute> attributes = StreamSupport.stream(iterable.spliterator(), false) //
         .collect(Collectors.toList());
     cards.add(createRandomPointManager(attributes), randomPointPane);
     cards.add(createFastPointManager(attributes), fastPointPane);
@@ -264,12 +269,14 @@ public class NewCharacterDialog extends JDialog {
         randomPointPane, //
         fastPointPane};
     activeCardName = items[0];
+
     JComboBox<String> comboBox = new JComboBox<String>(items);
     comboBox.addItemListener(evt -> {
       if (evt.getStateChange() == ItemEvent.SELECTED) {
         activeCardName = (String) evt.getItem();
         CardLayout layout = (CardLayout) container.getLayout();
         layout.show(container, activeCardName);
+
         if (activeCardName.equals(fastPointPane)) {
           managersByCardName.get(activeCardName)
               .rollPoints(new Die(StatisticFactory.INDEPENDENT_ATTRIBUTE_COUNT, 10));
@@ -280,6 +287,7 @@ public class NewCharacterDialog extends JDialog {
               CyberpunkAttribute.MAX_LEVEL * StatisticFactory.INDEPENDENT_ATTRIBUTE_COUNT;
           managersByCardName.get(activeCardName).rollPoints(minPoints, maxPoints);
         }
+
       }
     });
     panel.add(comboBox);
@@ -326,6 +334,7 @@ public class NewCharacterDialog extends JDialog {
         "Urban Homeless", //
         "Arcology Family"};
     player.setFamilyRanking(items[0]);
+
     JComboBox<String> comboBox = new JComboBox<String>(items);
     comboBox.addItemListener(evt -> {
       if (evt.getStateChange() == ItemEvent.SELECTED) {
@@ -473,6 +482,7 @@ public class NewCharacterDialog extends JDialog {
         "Your parent(s) gave you up for adoption.", //
         "Your parent(s) sold you for money."};
     player.setParentTragedy(items[0]);
+
     JComboBox<String> comboBox = new JComboBox<String>(items);
     comboBox.addItemListener(evt -> {
       if (evt.getStateChange() == ItemEvent.SELECTED) {
@@ -594,6 +604,7 @@ public class NewCharacterDialog extends JDialog {
         "You are the inheritor of a family debt; you must honor this debt before moving on with"
             + " your life."};
     player.setFamilyTragedy(items[0]);
+
     JComboBox<String> comboBox = new JComboBox<String>(items);
     comboBox.addItemListener(evt -> {
       if (evt.getStateChange() == ItemEvent.SELECTED) {
@@ -649,6 +660,7 @@ public class NewCharacterDialog extends JDialog {
         "In an aquatic Pirate Pack.", //
         "In a Corporate controlled Farm or Research Facility."};
     player.setChildhoodEnvironment(items[0]);
+
     JComboBox<String> comboBox = new JComboBox<String>(items);
     comboBox.addItemListener(evt -> {
       if (evt.getStateChange() == ItemEvent.SELECTED) {
@@ -681,17 +693,19 @@ public class NewCharacterDialog extends JDialog {
     panel.add( //
         createNavigationComponent( //
             "<<= Previous", evt -> switchCardTo(childhoodEnvironmentPane), //
-            "Done!", evt -> {
+            "Next =>>", evt -> {
               List<Sibling> siblings = new ArrayList<Sibling>(maxNumberOfSiblings);
+
               for (Map<String, Object> propertiesByName : propertiesByNameByJPanel.values()) {
                 String siblingName = (String) propertiesByName.get(name);
                 Sex siblingSex = (Sex) propertiesByName.get(sex);
                 RelativeAge siblingAge = (RelativeAge) propertiesByName.get(age);
                 String siblingRelationship = (String) propertiesByName.get(relationship);
+
                 siblings.add(new Sibling(siblingName, siblingSex, siblingAge, siblingRelationship));
               }
               player.setSiblings(siblings);
-              dispose();
+              switchCardTo(rolePane);
             }), //
         BorderLayout.SOUTH);
 
@@ -811,7 +825,7 @@ public class NewCharacterDialog extends JDialog {
             null, null));
 
     propertiesByName.put(name, "Unknown");
-    JTextField textField = new JTextField();
+    JTextField textField = new JTextField(20);
     textField.getDocument().addDocumentListener(new DocumentListener() {
 
       @Override
@@ -842,6 +856,7 @@ public class NewCharacterDialog extends JDialog {
         createTitleComponent( //
             "Sex", new Font("Serif", Font.PLAIN, 24), //
             "Roll or choose one.", new Font("Serif", Font.PLAIN, 12)));
+
     Sex[] items = {Sex.MALE, Sex.FEMALE};
     propertiesByName.put(sex, items[0]);
     JComboBox<Sex> comboBox = new JComboBox<Sex>(items);
@@ -863,6 +878,7 @@ public class NewCharacterDialog extends JDialog {
         createTitleComponent( //
             "Relative Age", new Font("Serif", Font.PLAIN, 24), //
             "Roll or choose one.", new Font("Serif", Font.PLAIN, 12)));
+
     RelativeAge[] items = {RelativeAge.OLDER, RelativeAge.YOUNGER, RelativeAge.TWIN};
     propertiesByName.put(age, items[0]);
     JComboBox<RelativeAge> comboBox = new JComboBox<RelativeAge>(items);
@@ -884,6 +900,7 @@ public class NewCharacterDialog extends JDialog {
         createTitleComponent( //
             "Relationship", new Font("Serif", Font.PLAIN, 24), //
             "Roll or choose one.", new Font("Serif", Font.PLAIN, 12)));
+
     String[] items = { //
         "Sibling dislikes you.", //
         "Sibling likes you.", //
@@ -900,6 +917,99 @@ public class NewCharacterDialog extends JDialog {
     panel.add(comboBox);
 
     return panel;
+  }
+
+  private Container createRoleContainer() {
+    JPanel panel = new JPanel(new BorderLayout());
+
+    panel.add( //
+        createTitleComponent( //
+            "ROLES", new Font("Serif", Font.PLAIN, 30), //
+            "The core of CYBERPUNK Role-playing", new Font("Serif", Font.PLAIN, 16)),
+        BorderLayout.NORTH);
+    panel.add(createRoleComponent(), BorderLayout.CENTER);
+    panel.add( //
+        createNavigationComponent( //
+            "<<= Previous", evt -> switchCardTo(siblingsPane), //
+            "Done!", evt -> {
+              dispose();
+            }), //
+        BorderLayout.SOUTH);
+
+    return panel;
+  }
+
+  private Component createRoleComponent() {
+    JPanel panel = new JPanel(new BorderLayout());
+
+    Map<String, Role> rolesByName = createRoles();
+    String[] items = rolesByName.keySet().toArray(new String[0]);
+
+    Role initRole = rolesByName.get(items[0]);
+    player.setRole(initRole);
+    panel.add(createSkillOptionContent(initRole), BorderLayout.CENTER);
+
+    JComboBox<String> comboBox = new JComboBox<String>(items);
+    comboBox.addItemListener(evt -> {
+      if (evt.getStateChange() == ItemEvent.SELECTED) {
+        Role role = rolesByName.get(evt.getItem());
+        player.setRole(role);
+
+        BorderLayout layout = (BorderLayout) panel.getLayout();
+        panel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
+        panel.add(createSkillOptionContent(role), BorderLayout.CENTER);
+        panel.revalidate();
+        panel.repaint();
+      }
+    });
+    panel.add(comboBox, BorderLayout.NORTH);
+
+    return panel;
+  }
+
+  private Map<String, Role> createRoles() {
+    Map<String, Role> rolesByName = new HashMap<String, Role>();
+
+    Iterator<String> iterator = RoleFactory.createNameIterator();
+    while (iterator.hasNext()) {
+      Role role = RoleFactory.createRole(iterator.next());
+      rolesByName.put(role.getName(), role);
+    }
+
+    return rolesByName;
+  }
+
+  private Component createSkillOptionContent(Role role) {
+    JPanel panel = new JPanel();
+    JPanel comboBoxPane = new JPanel(new GridLayout(Role.OPTION_COUNT, 0, 0, 3));
+
+    List<String> pickupSkillNames = new ArrayList<String>(Role.OPTION_COUNT);
+    List<List<String>> skillNameOptions = role.getSkillNameOptions();
+
+    for (int i = 0; i < skillNameOptions.size(); i++) {
+      int index = i;
+      List<String> options = skillNameOptions.get(i);
+
+      String[] items = options.toArray(new String[0]);
+      pickupSkillNames.add(items[0]);
+
+      JComboBox<String> comboBox = new JComboBox<String>(items);
+      comboBox.addItemListener(evt -> {
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+          String item = (String) evt.getItem();
+          pickupSkillNames.set(index, item);
+          player.setPickupSkillNames(pickupSkillNames);
+        }
+      });
+      comboBox.setEnabled(items.length > 1);
+
+      comboBoxPane.add(comboBox);
+    }
+    player.setPickupSkillNames(pickupSkillNames);
+
+    panel.add(comboBoxPane);
+    JScrollPane scrollPane = new JScrollPane(panel);
+    return scrollPane;
   }
 
 }
