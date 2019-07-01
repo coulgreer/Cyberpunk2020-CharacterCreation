@@ -1,115 +1,111 @@
 package rpg.util;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
- * An object holding the die notation and a modifier to get the range of values
- * possible with the given die and flat modifier.
- * 
- * @author Coul Greer
+ * A value object that wraps a <code>Die</code> and an <code>int</code> that then gives the range of
+ * values that can be rolled.
  */
 public class Probability implements Comparable<Probability>, Serializable {
-	/**
-	 * The neutral modifier for the die roll associated with the Probability.
-	 */
-	public static final int DEFAULT_MODIFIER = 0;
+  private static final int defaultModifier = 0;
+  private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+  private Die die;
+  private int modifier;
 
-	private Die die;
-	private int modifier;
+  /**
+   * Constructs an object that has a die notation data structure and a flat modifier.
+   * 
+   * @param die the amount of sides and the amount of objects with those sides that represent a set
+   *        of probable values
+   * @param modifier the flat value to attach to the result of the die roll
+   */
+  public Probability(Die die, int modifier) {
+    setDice(die);
+    setModifier(modifier);
+  }
 
-	/**
-	 * Constructs a default probability with the {@link Die#MIN_NUMBER_OF_DICE} and
-	 * a modifier of {@link #DEFAULT_MODIFIER}.
-	 * 
-	 * @see #Probability(Die, int)
-	 */
-	public Probability() {
-		this(new Die(Die.MIN_NUMBER_OF_DICE, Die.MIN_NUMBER_OF_FACES), DEFAULT_MODIFIER);
-	}
+  private void setDice(Die die) {
+    if (die == null) {
+      throw new NullPointerException();
+    } else {
+      this.die = die;
+    }
+  }
 
-	/**
-	 * Constructs an object that has a die notation data structure and a flat
-	 * modifier.
-	 * 
-	 * @param die      the amount of sides and the amount of objects with those
-	 *                 sides that represent a set of probable values
-	 * @param modifier the flat value to attach to the result of the die roll
-	 */
-	public Probability(Die die, int modifier) {
-		setDice(die);
-		this.modifier = modifier;
-	}
+  private void setModifier(int modifier) {
+    this.modifier = modifier;
+  }
 
-	/**
-	 * Returns the die data structure used to get the probable values from the die
-	 * roll.
-	 * 
-	 * @return the die notation data structure used to get the range of possible
-	 *         values
-	 */
-	public Die getDice() {
-		return die;
-	}
+  /**
+   * Returns the die data structure used to get the probable values from the die roll.
+   * 
+   * @return the die notation data structure used to get the range of possible values
+   */
+  public Die getDice() {
+    return die;
+  }
 
-	/**
-	 * Replaces the old die data structure with the new given data structure.
-	 * 
-	 * @param die the new data structure to use
-	 */
-	public void setDice(Die die) {
-		if (die == null) {
-			throw new NullPointerException();
-		} else {
-			this.die = die;
-		}
-	}
+  /**
+   * Returns the flat value used to change the results from the die notation.
+   * 
+   * @return the flat value used to change the die notation's results
+   */
+  public int getModifier() {
+    return modifier;
+  }
 
-	/**
-	 * Returns the flat value used to change the results from the die notation.
-	 * 
-	 * @return the flat value used to change the die notation's results
-	 */
-	public int getModifier() {
-		return modifier;
-	}
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
 
-	/**
-	 * Replaces the old value used to modify the results from the die notation.
-	 * 
-	 * @param modifier the new flat value to be used to change the die notation
-	 *                 results
-	 */
-	public void setModifier(int modifier) {
-		this.modifier = modifier;
-	}
+    if (o == null) {
+      return false;
+    }
 
-	@Override
-	public String toString() {
-		if (modifier == DEFAULT_MODIFIER) {
-			return die.toString();
-		} else {
-			return die.toString() + "+" + modifier;
-		}
-	}
+    if (!(o instanceof Probability)) {
+      return false;
+    }
 
-	@Override
-	public int compareTo(Probability probability) {
-		int thisProbabilityValue = die.getDieCount() * die.getFaceCount() / die.getDividend() + modifier;
-		int thatProbabilityValue = probability.getDice().getDieCount() * probability.getDice().getFaceCount()
-				/ probability.getDice().getDividend() + probability.getModifier();
-		int result = 0;
+    Probability probability = (Probability) o;
+    return getDice().equals(probability.getDice()) && getModifier() == probability.getModifier();
+  }
 
-		if (thisProbabilityValue < thatProbabilityValue) {
-			result = -1;
-		} else if (thisProbabilityValue == thatProbabilityValue) {
-			result = 0;
-		} else if (thisProbabilityValue > thatProbabilityValue) {
-			result = 1;
-		}
+  @Override
+  public int hashCode() {
+    return Objects.hash(getDice(), getModifier());
+  }
 
-		return result;
-	}
+  @Override
+  public String toString() {
+    if (modifier == defaultModifier) {
+      return die.toString();
+    } else {
+      return die.toString() + "+" + modifier;
+    }
+  }
+
+  @Override
+  public int compareTo(Probability probability) {
+    int thisProbabilityValue =
+        die.getDieCount() * die.getFaceCount() / die.getDividend() + modifier;
+    int thatProbabilityValue =
+        probability.getDice().getDieCount() * probability.getDice().getFaceCount()
+            / probability.getDice().getDividend() + probability.getModifier();
+    int result = 0;
+
+    if (thisProbabilityValue < thatProbabilityValue) {
+      result = -1;
+    } else if (thisProbabilityValue == thatProbabilityValue) {
+      result = 0;
+    } else if (thisProbabilityValue > thatProbabilityValue) {
+      result = 1;
+    }
+
+    return result;
+  }
 
 }

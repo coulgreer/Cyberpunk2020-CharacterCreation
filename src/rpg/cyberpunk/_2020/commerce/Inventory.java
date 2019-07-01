@@ -137,6 +137,6 @@ public interface Inventory extends Serializable {
 	 * 
 	 * @return the total count of items stored
 	 */
-	public int size();
+	public int getTotalItemCount();
 
 }

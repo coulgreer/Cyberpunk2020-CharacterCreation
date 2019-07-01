@@ -43,9 +43,7 @@ import rpg.cyberpunk._2020.stats.Role;
 import rpg.cyberpunk._2020.stats.RoleFactory;
 import rpg.cyberpunk._2020.stats.StatisticFactory;
 import rpg.cyberpunk._2020.systems.CharacterPointsManager;
-import rpg.cyberpunk._2020.systems.FastAttribute;
 import rpg.cyberpunk._2020.systems.FastCharacterPointsManager;
-import rpg.cyberpunk._2020.systems.RandomAttribute;
 import rpg.cyberpunk._2020.systems.RandomCharacterPointsManager;
 import rpg.general.stats.Attribute;
 import rpg.util.Die;
@@ -225,18 +223,9 @@ public class NewCharacterDialog extends JDialog {
   }
 
   private Component createRandomPointManager(List<Attribute> attributes) {
-    List<Attribute> decoratedAttributes = new ArrayList<Attribute>(attributes.size());
-    RandomCharacterPointsManager manager = new RandomCharacterPointsManager();
+    RandomCharacterPointsManager manager = new RandomCharacterPointsManager(attributes);
 
-    for (Attribute a : attributes) {
-      Attribute decoratedAttribute = new RandomAttribute(a, manager);
-      decoratedAttributes.add(decoratedAttribute);
-      manager.add(decoratedAttribute);
-    }
-
-    JPanel panel = new RandomCharacterPointsPane( //
-        decoratedAttributes, //
-        manager);
+    JPanel panel = new RandomCharacterPointsPane(manager);
 
     managersByCardName.put(randomPointPane, manager);
 
@@ -244,18 +233,9 @@ public class NewCharacterDialog extends JDialog {
   }
 
   private Component createFastPointManager(List<Attribute> attributes) {
-    List<Attribute> decoratedAttributes = new ArrayList<Attribute>(attributes.size());
-    FastCharacterPointsManager manager = new FastCharacterPointsManager();
+    FastCharacterPointsManager manager = new FastCharacterPointsManager(attributes);
 
-    for (Attribute a : attributes) {
-      Attribute decoratedAttribute = new FastAttribute(a, manager);
-      decoratedAttributes.add(decoratedAttribute);
-      manager.add(decoratedAttribute);
-    }
-
-    JPanel panel = new FastCharacterPointsPane( //
-        decoratedAttributes, //
-        manager);
+    JPanel panel = new FastCharacterPointsPane(manager);
 
     managersByCardName.put(fastPointPane, manager);
 
@@ -268,7 +248,6 @@ public class NewCharacterDialog extends JDialog {
     String[] items = { //
         randomPointPane, //
         fastPointPane};
-    activeCardName = items[0];
 
     JComboBox<String> comboBox = new JComboBox<String>(items);
     comboBox.addItemListener(evt -> {
@@ -290,6 +269,9 @@ public class NewCharacterDialog extends JDialog {
 
       }
     });
+    // Forces the item listener to be fired.
+    comboBox.setSelectedItem(fastPointPane);
+    comboBox.setSelectedItem(randomPointPane);
     panel.add(comboBox);
 
     return panel;

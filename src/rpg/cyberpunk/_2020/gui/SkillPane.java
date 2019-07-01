@@ -121,7 +121,7 @@ public class SkillPane extends JPanel implements PropertyChangeListener {
           bufferedImage.getScaledInstance(iconHeight, iconHeight, Image.SCALE_SMOOTH));
       JButton button = new JButton(icon);
       button.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
-      button.addActionListener(evt -> skill.increaseLevel());
+      button.addActionListener(evt -> skill.incrementLevel());
       panel.add(button);
     } catch (IOException ex) {
       // TODO (Coul Greer): Add a logger.
@@ -134,7 +134,7 @@ public class SkillPane extends JPanel implements PropertyChangeListener {
           bufferedImage.getScaledInstance(iconHeight, iconHeight, Image.SCALE_SMOOTH));
       JButton button = new JButton(icon);
       button.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
-      button.addActionListener(evt -> skill.decreaseLevel());
+      button.addActionListener(evt -> skill.decrementLevel());
       panel.add(button);
     } catch (IOException ex) {
       // TODO (Coul Greer): Add a logger.
@@ -184,7 +184,7 @@ public class SkillPane extends JPanel implements PropertyChangeListener {
 
     panel.add(new JLabel("Goal", SwingConstants.CENTER), BorderLayout.NORTH);
     JLabel label =
-        new JLabel(Integer.toString(skill.getNeededImprovementPoints()), SwingConstants.CENTER);
+        new JLabel(Integer.toString(skill.getTargetImprovementPoints()), SwingConstants.CENTER);
     panel.add(label);
 
     return panel;

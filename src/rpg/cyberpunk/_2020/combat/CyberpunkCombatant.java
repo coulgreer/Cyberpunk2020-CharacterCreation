@@ -4,28 +4,18 @@ import rpg.cyberpunk._2020.Player;
 import rpg.cyberpunk._2020.stats.CyberpunkAttribute;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Combatant;
-import rpg.general.combat.Weapon;
+import rpg.general.stats.Attribute;
+import rpg.util.Die;
 import rpg.util.Probability;
 
 /**
  * An instance of Combatant that uses Skills from Cyberpunk 2020 in order to get the scores and
  * modifiers for hit, attack, and damage. Weapons can also be manipulated through this instance as
  * well.
- * 
- * @author Coul Greer
  */
 public class CyberpunkCombatant implements Combatant<CyberpunkWeapon> {
-
-  /**
-   * The range modifier used when no range modifier is provided or an error would occur.
-   */
-  public static final int DEFAULT_RANGE_MODIFIER = 0;
-
-  /**
-   * The damage modifier used when no damage modifier is provided or an error would occur.
-   */
-  public static final int DEFAULT_DAMAGE_MODIFIER = 0;
-
+  private static final int defaultRangeModifier = 0;
+  private static final int defaultDamageModifier = 0;
   private static final long serialVersionUID = 1L;
 
   private final Player player;
@@ -47,68 +37,54 @@ public class CyberpunkCombatant implements Combatant<CyberpunkWeapon> {
 
   @Override
   public Probability getTotalDamageChance(CyberpunkWeapon weapon) {
-    return new Probability(weapon.getDamageDice(),
-        weapon.getDamageModifier() + getDamageModifier(weapon));
+    Die die = weapon.getDamageDice();
+    int score = weapon.getDamageModifier() + getDamageModifier(weapon);
+
+    return new Probability(die, score);
   }
 
   @Override
   public Probability getTotalAttackChance(CyberpunkWeapon weapon) {
-    return new Probability(weapon.getHitDice(),
-        weapon.getAttackModifier() + getAttackModifier(weapon));
+    Die die = weapon.getHitDice();
+    int score = weapon.getAttackModifier() + getAttackModifier(weapon);
+
+    return new Probability(die, score);
   }
 
   @Override
   public int getAttackModifier(CyberpunkWeapon weapon) {
-    return player.getSkill(weapon.getSkillName()).getTotalValue();
+    CyberpunkSkill skill = player.getSkill(weapon.getSkillName());
+    return skill.getTotalValue();
   }
 
   @Override
   public int getDamageModifier(CyberpunkWeapon weapon) {
-    switch (weapon.getWeaponType()) {
-      case CyberpunkWeapon.WEAPON_TYPE_UNARMED:
-        return getMiscellaneousDamageModifier(weapon);
-      default:
-        return DEFAULT_DAMAGE_MODIFIER;
-    }
-  }
+    int modifier;
 
-  private int getMiscellaneousDamageModifier(Weapon weapon) {
-    switch (weapon.getSkillName()) {
-      case CyberpunkSkill.MARTIAL_ARTS_AIKIDO:
-        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_AIKIDO).getTotalValue();
-      case CyberpunkSkill.MARTIAL_ARTS_ANIMAL_KUNG_FU:
-        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_ANIMAL_KUNG_FU).getTotalValue();
-      case CyberpunkSkill.MARTIAL_ARTS_BOXING:
-        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_BOXING).getTotalValue();
-      case CyberpunkSkill.MARTIAL_ARTS_CAPOERIA:
-        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_CAPOERIA).getTotalValue();
-      case CyberpunkSkill.MARTIAL_ARTS_CHOI_LI_FUT:
-        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_CHOI_LI_FUT).getTotalValue();
-      case CyberpunkSkill.MARTIAL_ARTS_JUDO:
-        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_JUDO).getTotalValue();
-      case CyberpunkSkill.MARTIAL_ARTS_KARATE:
-        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_KARATE).getTotalValue();
-      case CyberpunkSkill.MARTIAL_ARTS_TAE_KWON_DO:
-        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_TAE_KWON_DO).getTotalValue();
-      case CyberpunkSkill.MARTIAL_ARTS_THAI_KICK_BOXING:
-        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_THAI_KICK_BOXING).getTotalValue();
-      case CyberpunkSkill.MARTIAL_ARTS_WRESTLING:
-        return player.getSkill(CyberpunkSkill.MARTIAL_ARTS_WRESTLING).getTotalValue();
-      default:
-        return DEFAULT_DAMAGE_MODIFIER;
+    boolean isUnarmed = (CyberpunkWeapon.WEAPON_TYPE_UNARMED).equals(weapon.getWeaponType());
+    boolean isAMartialArtSkill = (weapon.getSkillName()).startsWith("Martial Arts:");
+    if (isUnarmed && isAMartialArtSkill) {
+      CyberpunkSkill skill = player.getSkill(weapon.getSkillName());
+      modifier = skill.getTotalValue();
+    } else {
+      modifier = defaultDamageModifier;
     }
+
+    return modifier;
   }
 
   @Override
   public int getRangeModifier(CyberpunkWeapon weapon) {
-    // TODO (Coul Greer): Add a Thrown Weapon type.
-    if (weapon != null //
-        && ThrownWeapon.WEAPON_TYPE_GRENADE.equals(weapon.getWeaponType())) {
+    int modifier;
 
-      return (player.getAttribute(CyberpunkAttribute.BODY_TYPE).getModifier()) * 10;
+    if (CyberpunkWeapon.WEAPON_TYPE_THROWN.equals(weapon.getWeaponType())) {
+      Attribute attribute = player.getAttribute(CyberpunkAttribute.BODY_TYPE);
+      modifier = attribute.getModifier() * 10;
     } else {
-      return DEFAULT_RANGE_MODIFIER;
+      modifier = defaultRangeModifier;
     }
+
+    return modifier;
   }
 
 }

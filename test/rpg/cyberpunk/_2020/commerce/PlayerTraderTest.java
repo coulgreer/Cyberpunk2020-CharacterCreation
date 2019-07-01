@@ -1,73 +1,84 @@
 package rpg.cyberpunk._2020.commerce;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
 import org.junit.Test;
 
-import rpg.general.commerce.Tradeable;
-
 public class PlayerTraderTest {
+  private double money;
 
-	@Test
-	public void testMoneyEqualsEightIfStartingMoneyIsTwentyAndThenTwelveIsSpent() {
-		PlayerTrader trader = new PlayerTrader(20.0);
+  @Before
+  public void setUp() {
+    money = 0.0;
+  }
 
-		trader.buy(12.0);
+  @Test(expected = IllegalArgumentException.class)
+  public void Should_ThrowException_When_BuyingAtAPriceOfNegativeOneTenth() {
+    PlayerTrader trader = new PlayerTrader(money);
 
-		assertEquals(8.0, trader.getMoney(), 0.0);
-	}
+    trader.buy(-0.1);
+  }
 
-	@Test
-	public void testMoneyEqualsTenIfStartingMoneyIsZeroAndThenTenIsAquired() {
-		PlayerTrader trader = new PlayerTrader(0.0);
+  @Test
+  public void Should_ReturnMoneyAsEighty_When_BuyingAtAPriceOfTwenty_While_MoneyIsOneHundred() {
+    PlayerTrader trader = new PlayerTrader(100.0);
 
-		trader.sell(10.0);
+    trader.buy(20.0);
 
-		assertEquals(10.0, trader.getMoney(), 0.0);
-	}
+    assertEquals(80.0, trader.getMoney(), 0.0);
+  }
 
-	@Test
-	public void testCanBuyIfCurrentMoneyIsFiveAndPriceIsFive() {
-		PlayerTrader trader = new PlayerTrader(5.0);
+  @Test(expected = IllegalArgumentException.class)
+  public void Should_ThrowException_When_SellingAtAPriceOfNegativeOneTenth() {
+    PlayerTrader trader = new PlayerTrader(money);
 
-		assertTrue(trader.canBuy(5.0));
-	}
+    trader.sell(-0.1);
+  }
 
-	@Test
-	public void testCannotBuyIfCurrentMoneyIsFiveAndPriceIsSix() {
-		PlayerTrader trader = new PlayerTrader(5.0);
+  @Test
+  public void Should_ReturnMoneyAsOneHundredTwenty_When_SellingAtAPriceOfTwenty_While_MoneyIsOneHundred() {
+    PlayerTrader trader = new PlayerTrader(100.0);
 
-		assertFalse(trader.canBuy(6.0));
-	}
+    trader.sell(20.0);
 
-	@Test
-	public void testCanSellAlways() {
-		PlayerTrader trader = new PlayerTrader();
+    assertEquals(120.0, trader.getMoney(), 0.0);
+  }
 
-		assertTrue(trader.canSell(-5.0));
-		assertTrue(trader.canSell(100.0));
-	}
+  @Test(expected = IllegalArgumentException.class)
+  public void Should_ThrowException_When_CheckingCanBuyAtAPriceOfNegativeOneTenth() {
+    PlayerTrader trader = new PlayerTrader(money);
 
-	@Test
-	public void testBidPriceEqualsTradeableCost() {
-		Tradeable mockTradeable = mock(Tradeable.class);
-		when(mockTradeable.getCost()).thenReturn(10.0);
+    trader.canBuy(-0.1);
+  }
 
-		PlayerTrader trader = new PlayerTrader();
+  @Test
+  public void Should_ReturnCanBuyAsTrue_When_MoneyIsAtLeastPrice_While_MoneyIsOneHundred() {
+    PlayerTrader trader = new PlayerTrader(100.0);
 
-		assertEquals(10.0, trader.getBidPrice(mockTradeable), 0.0);
-	}
+    assertTrue(trader.canBuy(100.0));
+  }
 
-	@Test
-	public void testAskPriceEqualsTradeableCost() {
-		Tradeable mockTradeable = mock(Tradeable.class);
-		when(mockTradeable.getCost()).thenReturn(10.0);
+  @Test
+  public void Should_ReturnCanBuyAsFalse_When_MoneyIsLessThanPrice_While_MoneyIsOneHundred() {
+    PlayerTrader trader = new PlayerTrader(100.0);
 
-		PlayerTrader trader = new PlayerTrader();
+    assertFalse(trader.canBuy(101.0));
+  }
 
-		assertEquals(10.0, trader.getAskPrice(mockTradeable), 0.0);
-	}
+  @Test(expected = IllegalArgumentException.class)
+  public void Should_ThrowException_When_CheckingCanSellAtAPriceOfNegativeOneTenth() {
+    PlayerTrader trader = new PlayerTrader(money);
+
+    trader.canSell(-0.1);
+  }
+
+  @Test
+  public void Should_ReturnCanSellAsTrue_When_PriceIsAtLeastZero_While_MoneyIsOneHundred() {
+    PlayerTrader trader = new PlayerTrader(100.0);
+
+    assertTrue(trader.canSell(1.0));
+  }
 
 }

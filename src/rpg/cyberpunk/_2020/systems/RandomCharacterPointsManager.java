@@ -1,8 +1,10 @@
 package rpg.cyberpunk._2020.systems;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import rpg.cyberpunk._2020.stats.CyberpunkAttribute;
@@ -23,18 +25,43 @@ public class RandomCharacterPointsManager implements CharacterPointsManager {
   private PropertyChangeSupport changeSupport;
 
   /**
-   * Constructs an instance of RandomCharacterPointsManager that rolls a starting amount of points
-   * between {@link CyberpunkAttribute#MIN_LEVEL} multiplied by {@link #independentAttributeCount}
-   * and {@link CyberpunkAttribute#MAX_LEVEL} multiplied by {@link #independentAttributeCount} minus
-   * the minimum amount of points allowed.
+   * Constructs an instance of RandomCharacterPointsManager without any starting Attributes. Rolling
+   * an initial pool of points to be distributed among all managed Attributes.
+   * 
+   * @see #RandomCharacterPointsManager(List)
    */
   public RandomCharacterPointsManager() {
-    attributes = new ArrayList<Attribute>(StatisticFactory.INDEPENDENT_ATTRIBUTE_COUNT);
+    this(Collections.emptyList());
+  }
+
+  /**
+   * Constructs an instance of RandomCharacterPointsManager that rolls a starting amount of points.
+   * Also, wraps all the attributes in the given list as a
+   * {@link RandomCharacterPointsManager.RandomAttribute RandomAttribute}
+   * 
+   * @param attributes the initial list of Attributes to wrap and manage
+   */
+  public RandomCharacterPointsManager(List<Attribute> attributes) {
     changeSupport = new PropertyChangeSupport(this);
+    setAttributes(attributes);
 
     int minPoints = CyberpunkAttribute.MIN_LEVEL * StatisticFactory.INDEPENDENT_ATTRIBUTE_COUNT;
     int maxPoints = CyberpunkAttribute.MAX_LEVEL * StatisticFactory.INDEPENDENT_ATTRIBUTE_COUNT;
     rollPoints(minPoints, maxPoints);
+  }
+
+  private void setAttributes(List<Attribute> attributes) {
+    if (attributes == null) {
+      throw new NullPointerException();
+    } else if (attributes.contains(null)) {
+      throw new IllegalArgumentException("Null values are not allowed to be in attributes");
+    } else {
+      this.attributes = new ArrayList<Attribute>(attributes.size());
+
+      for (Attribute a : attributes) {
+        this.attributes.add(new RandomAttribute(a, this));
+      }
+    }
   }
 
   /**
@@ -43,10 +70,6 @@ public class RandomCharacterPointsManager implements CharacterPointsManager {
    */
   @Override
   public void rollPoints(int minPoints, int maxPoints) {
-    for (Attribute a : attributes) {
-      a.resetLevel();
-    }
-
     points = new ArrayList<Integer>();
     points.add(ThreadLocalRandom.current().nextInt(minPoints, maxPoints + 1));
     availablePoints = points.stream().mapToInt(Integer::intValue).sum();
@@ -56,10 +79,6 @@ public class RandomCharacterPointsManager implements CharacterPointsManager {
 
   @Override
   public void rollPoints(Die die) {
-    for (Attribute a : attributes) {
-      a.resetLevel();
-    }
-
     int dieCount = die.getDieCount();
     int faceCount = die.getFaceCount();
 
@@ -74,7 +93,7 @@ public class RandomCharacterPointsManager implements CharacterPointsManager {
 
   @Override
   public List<Integer> getRolledPoints() {
-    return points;
+    return Collections.unmodifiableList(points);
   }
 
   @Override
@@ -109,7 +128,7 @@ public class RandomCharacterPointsManager implements CharacterPointsManager {
 
   @Override
   public List<Attribute> getAttributes() {
-    return attributes;
+    return Collections.unmodifiableList(attributes);
   }
 
   public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -126,6 +145,113 @@ public class RandomCharacterPointsManager implements CharacterPointsManager {
 
   public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
     changeSupport.removePropertyChangeListener(propertyName, listener);
+  }
+
+  /**
+   * An instance of <code>Attribute</code> that abides by the rules of the Random Character Point
+   * method of getting points at character creation.
+   */
+  public static class RandomAttribute implements Attribute, PropertyChangeListener {
+    private Attribute attribute;
+    private CharacterPointsManager manager;
+
+    /**
+     * Constructs a <code>RandomAttribute</code> that wraps another instance of
+     * <code>Attribute</code> while using a shared manager that keeps track of available points.
+     * 
+     * @param attribute the object that most all functions delegate to
+     * @param manager the tracker used to allow or disallow manipulation of this RandomAttribute's
+     *        level
+     */
+    public RandomAttribute(Attribute attribute, CharacterPointsManager manager) {
+      setAttribute(attribute);
+      setManager(manager);
+    }
+
+    private void setAttribute(Attribute attribute) {
+      if (attribute == null) {
+        throw new NullPointerException();
+      } else {
+        this.attribute = attribute;
+      }
+    }
+
+    private void setManager(CharacterPointsManager manager) {
+      if (manager == null) {
+        throw new NullPointerException();
+      } else {
+        manager.addPropertyChangeListener(PROPERTY_NAME_POINTS, this);
+
+        this.manager = manager;
+      }
+    }
+
+    @Override
+    public String getName() {
+      return attribute.getName();
+    }
+
+    @Override
+    public String getDescription() {
+      return attribute.getDescription();
+    }
+
+    @Override
+    public int getLevel() {
+      return attribute.getLevel();
+    }
+
+    @Override
+    public void incrementLevel() {
+      if (manager.getCurrentlyAvailablePoints() > 0) {
+        attribute.incrementLevel();
+      }
+    }
+
+    @Override
+    public void decrementLevel() {
+      attribute.decrementLevel();
+    }
+
+    @Override
+    public void resetLevel() {
+      attribute.resetLevel();
+    }
+
+    @Override
+    public int getModifier() {
+      return attribute.getModifier();
+    }
+
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+      attribute.addPropertyChangeListener(listener);
+    }
+
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+      attribute.removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+      attribute.addPropertyChangeListener(propertyName, listener);
+    }
+
+    @Override
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+      attribute.removePropertyChangeListener(propertyName, listener);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+      Object source = evt.getSource();
+
+      if (source == manager) {
+        resetLevel();
+      }
+    }
+
   }
 
 }

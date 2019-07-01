@@ -44,9 +44,8 @@ public class FastCharacterPointsPane extends JPanel implements PropertyChangeLis
    * @param manager the observed object used to update the view as well as providing the rolled
    *        points used by JComboBoxes
    */
-  public FastCharacterPointsPane(List<Attribute> attributes, CharacterPointsManager manager) {
+  public FastCharacterPointsPane(CharacterPointsManager manager) {
     super(new BorderLayout());
-    setAttributes(attributes);
     setManager(manager);
 
     comboBoxes = new ArrayList<JComboBox<Integer>>(StatisticFactory.INDEPENDENT_ATTRIBUTE_COUNT);
@@ -54,20 +53,21 @@ public class FastCharacterPointsPane extends JPanel implements PropertyChangeLis
     add(createButtonComponent(), BorderLayout.SOUTH);
   }
 
-  private void setAttributes(List<Attribute> attributes) {
-    if (attributes == null) {
-      throw new NullPointerException();
-    } else {
-      this.attributes = attributes;
-    }
-  }
-
   private void setManager(CharacterPointsManager manager) {
     if (manager == null) {
       throw new NullPointerException();
     } else {
       this.manager = manager;
+      setAttributes(manager.getAttributes());
       manager.addPropertyChangeListener(CharacterPointsManager.PROPERTY_NAME_POINTS, this);
+    }
+  }
+
+  private void setAttributes(List<Attribute> attributes) {
+    if (attributes == null) {
+      throw new NullPointerException();
+    } else {
+      this.attributes = attributes;
     }
   }
 
@@ -153,11 +153,11 @@ public class FastCharacterPointsPane extends JPanel implements PropertyChangeLis
         Integer item = (Integer) evt.getItem();
 
         while (attribute.getLevel() > item) {
-          attribute.decreaseLevel();
+          attribute.decrementLevel();
         }
 
         while (attribute.getLevel() < item) {
-          attribute.increaseLevel();
+          attribute.incrementLevel();
         }
       }
     });

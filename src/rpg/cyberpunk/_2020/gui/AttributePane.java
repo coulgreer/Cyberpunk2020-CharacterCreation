@@ -83,7 +83,7 @@ public class AttributePane extends JPanel implements PropertyChangeListener {
           bufferedImage.getScaledInstance(iconHeight, iconHeight, Image.SCALE_SMOOTH));
       JButton button = new JButton(icon);
       button.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
-      button.addActionListener(evt -> attribute.increaseLevel());
+      button.addActionListener(evt -> attribute.incrementLevel());
       panel.add(button);
     } catch (IOException ex) {
       // TODO (Coul Greer): Add a logger.
@@ -96,7 +96,7 @@ public class AttributePane extends JPanel implements PropertyChangeListener {
           bufferedImage.getScaledInstance(iconHeight, iconHeight, Image.SCALE_SMOOTH));
       JButton button = new JButton(icon);
       button.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
-      button.addActionListener(evt -> attribute.decreaseLevel());
+      button.addActionListener(evt -> attribute.decrementLevel());
       panel.add(button);
     } catch (IOException ex) {
       // TODO (Coul Greer): Add a logger.

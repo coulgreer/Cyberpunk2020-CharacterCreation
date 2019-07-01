@@ -34,14 +34,22 @@ public class RandomCharacterPointsPane extends JPanel implements PropertyChangeL
    * 
    * @param player the owner of all the attributes to have their level's manipulated
    */
-  public RandomCharacterPointsPane(List<Attribute> attributes, CharacterPointsManager manager) {
+  public RandomCharacterPointsPane(CharacterPointsManager manager) {
     super(new BorderLayout());
-    setAttributes(attributes);
     setManager(manager);
 
     add(createCharacterPointContent(), BorderLayout.NORTH);
     add(createAttributeContainer(), BorderLayout.CENTER);
     add(createRollButtonComponent(), BorderLayout.SOUTH);
+  }
+
+  private void setManager(CharacterPointsManager manager) {
+    if (manager == null) {
+      throw new NullPointerException();
+    } else {
+      this.manager = manager;
+      setAttributes(manager.getAttributes());
+    }
   }
 
   private void setAttributes(List<Attribute> attributes) {
@@ -53,14 +61,6 @@ public class RandomCharacterPointsPane extends JPanel implements PropertyChangeL
       for (Attribute a : attributes) {
         a.addPropertyChangeListener(this);
       }
-    }
-  }
-
-  private void setManager(CharacterPointsManager manager) {
-    if (manager == null) {
-      throw new NullPointerException();
-    } else {
-      this.manager = manager;
     }
   }
 

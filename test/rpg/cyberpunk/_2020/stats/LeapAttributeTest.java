@@ -3,47 +3,68 @@ package rpg.cyberpunk._2020.stats;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import rpg.general.stats.Attribute;
 
 public class LeapAttributeTest {
-	private Attribute mockAttribute;
+  private String name;
+  private String description;
+  private Attribute mockAttribute;
 
-	@Before
-	public void setUp() {
-		mockAttribute = mock(Attribute.class);
-		when(mockAttribute.getModifier()).thenReturn(10);
-	}
+  @Before
+  public void setUp() {
+    name = "Name";
+    description = "Description";
+    mockAttribute = mock(Attribute.class);
+  }
 
-	@Test
-	public void testLeapLevelEqualsSevenIfParentAttributeModifierEqualsTen() {
-		LeapAttribute attribute = new LeapAttribute("Leaping", "Attribute for Leaping", mockAttribute);
+  @Test(expected = NullPointerException.class)
+  public void Should_ThrowException_When_NameIsNull() {
+    @SuppressWarnings("unused")
+    LeapAttribute attribute = new LeapAttribute(null, description, mockAttribute);
+  }
 
-		assertEquals(7, attribute.getLevel());
-	}
+  @Test(expected = NullPointerException.class)
+  public void Should_ThrowException_When_DescriptionIsNull() {
+    @SuppressWarnings("unused")
+    LeapAttribute attribute = new LeapAttribute(name, null, mockAttribute);
+  }
 
-	@Test(expected = UnsupportedOperationException.class)
-	public void testExceptionThrownIfIncreaseLevel() {
-		LeapAttribute attribute = new LeapAttribute("Leaping", "Attribute for Leaping", mockAttribute);
+  @Test(expected = NullPointerException.class)
+  public void Should_ThrowException_When_ParentAttributeIsNull() {
+    @SuppressWarnings("unused")
+    LeapAttribute attribute = new LeapAttribute(name, description, null);
+  }
 
-		attribute.increaseLevel();
-	}
+  @Test
+  public void Should_ReturnLevelAsSevenAndModifierAsSeven_When_ParentAttributeModifierIsTen() {
+    when(mockAttribute.getModifier()).thenReturn(10);
+    LeapAttribute attribute = new LeapAttribute(name, description, mockAttribute);
 
-	@Test(expected = UnsupportedOperationException.class)
-	public void testExceptionThrownIfDecreaseLevel() {
-		LeapAttribute attribute = new LeapAttribute("Leaping", "Attribute for Leaping", mockAttribute);
+    assertEquals(7, attribute.getLevel());
+    assertEquals(7, attribute.getModifier());
+  }
 
-		attribute.decreaseLevel();
-	}
+  @Test(expected = UnsupportedOperationException.class)
+  public void Should_ThrowException_When_LevelIncreased() {
+    LeapAttribute attribute = new LeapAttribute(name, description, mockAttribute);
 
-	@Test(expected = UnsupportedOperationException.class)
-	public void testExceptionThrownIfResetLevel() {
-		LeapAttribute attribute = new LeapAttribute("Leaping", "Attribute for Leaping", mockAttribute);
+    attribute.incrementLevel();
+  }
 
-		attribute.resetLevel();
-	}
+  @Test(expected = UnsupportedOperationException.class)
+  public void Should_ThrowException_When_LevelDecreased() {
+    LeapAttribute attribute = new LeapAttribute(name, description, mockAttribute);
+
+    attribute.decrementLevel();
+  }
+
+  @Test(expected = UnsupportedOperationException.class)
+  public void Should_ThrowException_When_LevelReset() {
+    LeapAttribute attribute = new LeapAttribute(name, description, mockAttribute);
+
+    attribute.resetLevel();
+  }
 
 }

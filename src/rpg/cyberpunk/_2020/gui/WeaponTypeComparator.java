@@ -38,7 +38,7 @@ public class WeaponTypeComparator implements Comparator<String> {
 		indexByWeaponType.put(CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, 10);
 		indexByWeaponType.put(CyberpunkWeapon.WEAPON_TYPE_MELEE_WEAPON, 11);
 		indexByWeaponType.put(CyberpunkWeapon.WEAPON_TYPE_BOW, 12);
-		indexByWeaponType.put(CyberpunkWeapon.WEAPON_TYPE_GRENADE, 13);
+		indexByWeaponType.put(CyberpunkWeapon.WEAPON_TYPE_THROWN, 13);
 		indexByWeaponType.put(CyberpunkWeapon.WEAPON_TYPE_EXOTIC, 14);
 		indexByWeaponType.put(CyberpunkWeapon.WEAPON_TYPE_UNARMED, 15);
 	}

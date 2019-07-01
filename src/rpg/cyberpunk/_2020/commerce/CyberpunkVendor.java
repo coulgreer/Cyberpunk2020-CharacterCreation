@@ -250,12 +250,12 @@ public class CyberpunkVendor {
 				new HomogeneousMagazine(Cartridge.NO_AMMUNITION_TYPE, 1), 1, Reliability.VERY_RELIABLE, 750, 1500.0,
 				10.0, shotgunAttachmentPoints));
 		startingInventory.add(
-				new ThrownWeapon("Fragmentation Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0, Concealability.POCKET,
+				new ThrownWeapon("Fragmentation Grenade", ThrownWeapon.WEAPON_TYPE_THROWN, 0, Concealability.POCKET,
 						Availability.POOR, Payload.HIGH_EXPLOSIVES, Reliability.VERY_RELIABLE, 30.0, 0.5));
 		startingInventory
-				.add(new ThrownWeapon("Incendiary Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0, Concealability.POCKET,
+				.add(new ThrownWeapon("Incendiary Grenade", ThrownWeapon.WEAPON_TYPE_THROWN, 0, Concealability.POCKET,
 						Availability.POOR, Payload.WHITE_PHOSPHOROUS, Reliability.VERY_RELIABLE, 30.0, 0.5));
-		startingInventory.add(new ThrownWeapon("Flashbang Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0,
+		startingInventory.add(new ThrownWeapon("Flashbang Grenade", ThrownWeapon.WEAPON_TYPE_THROWN, 0,
 				Concealability.POCKET, Availability.POOR, Payload.FLASHBANG, Reliability.VERY_RELIABLE, 30.0, 0.5));
 		startingInventory.add(new ThrownWeapon("Sonic Grenade",
 				"An experimental type, popular in the EuroThater. Essentially, a mini-voder box, with a 1-second play "
@@ -263,21 +263,21 @@ public class CyberpunkVendor {
 						+ " super- or sub-sonics causes all within a 6m radius to make a Stun Save at +1; if the save is made, "
 						+ "make a Difficult BOD check or suffer deafness and disorientation (-2 all skill rolls) for 40 seconds. "
 						+ "Noise-resistant headphones and various editing cyberaudio options allow you to resist the effects.",
-				CyberpunkWeapon.WEAPON_TYPE_GRENADE, 0, Concealability.POCKET, Availability.POOR,
+				CyberpunkWeapon.WEAPON_TYPE_THROWN, 0, Concealability.POCKET, Availability.POOR,
 				NullProbability.getInstance(), Reliability.VERY_RELIABLE, 30.0, 0.5));
-		startingInventory.add(new ThrownWeapon("Nausea Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0,
+		startingInventory.add(new ThrownWeapon("Nausea Grenade", ThrownWeapon.WEAPON_TYPE_THROWN, 0,
 				Concealability.POCKET, Availability.POOR, Payload.NAUSEA_GAS, Reliability.VERY_RELIABLE, 30.0, 0.5));
-		startingInventory.add(new ThrownWeapon("Teargas Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0,
+		startingInventory.add(new ThrownWeapon("Teargas Grenade", ThrownWeapon.WEAPON_TYPE_THROWN, 0,
 				Concealability.POCKET, Availability.POOR, Payload.TEARGAS, Reliability.VERY_RELIABLE, 30.0, 0.5));
-		startingInventory.add(new ThrownWeapon("Sleep Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0,
+		startingInventory.add(new ThrownWeapon("Sleep Grenade", ThrownWeapon.WEAPON_TYPE_THROWN, 0,
 				Concealability.POCKET, Availability.POOR, Payload.SLEEP_DRUGS, Reliability.VERY_RELIABLE, 30.0, 0.5));
 		startingInventory
-				.add(new ThrownWeapon("Biotoxin I Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0, Concealability.POCKET,
+				.add(new ThrownWeapon("Biotoxin I Grenade", ThrownWeapon.WEAPON_TYPE_THROWN, 0, Concealability.POCKET,
 						Availability.POOR, Payload.BIOTOXIN_I_GAS, Reliability.VERY_RELIABLE, 30.0, 0.5));
 		startingInventory
-				.add(new ThrownWeapon("Biotoxin II Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0, Concealability.POCKET,
+				.add(new ThrownWeapon("Biotoxin II Grenade", ThrownWeapon.WEAPON_TYPE_THROWN, 0, Concealability.POCKET,
 						Availability.POOR, Payload.BIOTOXIN_II_GAS, Reliability.VERY_RELIABLE, 30.0, 0.5));
-		startingInventory.add(new ThrownWeapon("Nerve Gas Grenade", ThrownWeapon.WEAPON_TYPE_GRENADE, 0,
+		startingInventory.add(new ThrownWeapon("Nerve Gas Grenade", ThrownWeapon.WEAPON_TYPE_THROWN, 0,
 				Concealability.POCKET, Availability.POOR, Payload.NERVE_GAS, Reliability.VERY_RELIABLE, 30.0, 0.5));
 		startingInventory.add(new Firearm("Grenade Launchers",
 				"These come from manufacturers worldwide, and may be attached to any assault rifle (under the barrel). "

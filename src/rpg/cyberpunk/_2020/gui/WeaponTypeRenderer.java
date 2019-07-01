@@ -63,7 +63,7 @@ public class WeaponTypeRenderer extends DefaultTableCellRenderer {
 		case CyberpunkWeapon.WEAPON_TYPE_BOW:
 			imageAddress = weaponIconAddress + "bow-512.png";
 			break;
-		case CyberpunkWeapon.WEAPON_TYPE_GRENADE:
+		case CyberpunkWeapon.WEAPON_TYPE_THROWN:
 			imageAddress = weaponIconAddress + "grenade-512.png";
 			break;
 		case CyberpunkWeapon.WEAPON_TYPE_EXOTIC:

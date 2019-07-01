@@ -11,54 +11,44 @@ import rpg.general.stats.Restriction;
  * attribute.
  */
 public class SpecializedSkill implements CyberpunkSkill {
-  private Attribute attribute;
+  private static final int minImprovementPointDelta = 1;
+
+  private Attribute parentAttribute;
   private String name;
   private String description;
   private int baseValue;
+  private int ipValue;
   private int totalValue;
   private int difficultyModifier;
   private int currentImprovementPoints;
-  private int neededImprovementPoints;
   private Restriction restriction;
   private PropertyChangeSupport changeSupport;
 
   /**
-   * Constructs a skill that depends on an attribute.
-   * 
-   * @param attribute the statistic used for calculating total skill level
-   * @param name the identifier for this skill
-   * @param description a blurb giving an overview of what this skill does/is
-   * @param difficultyModifier a modifier used to multiply how many improvement points are needed to
-   *        level
-   * @see rpg.cyberpunk._2020.stats.SpecializedSkill#SpecializedSkill(Attribute, String, String,
-   *      int, Restriction)
-   */
-  public SpecializedSkill(Attribute attribute, String name, String description,
-      int difficultyModifier) {
-    this(attribute, name, description, difficultyModifier, NullRestriction.getInstance());
-  }
-
-  /**
    * Constructs a skill that depends on an attribute and has a restriction.
    * 
-   * @param attribute the statistic used for calculating total skill level
+   * @param parentAttribute the statistic used for calculating total skill level
    * @param name the identifier for this skill
    * @param description a blurb giving an overview of what this skill does/is
    * @param difficultyModifier a modifier used to multiply how many improvement points are needed to
    *        level
    * @param restriction a constraint used to prevent modification of a skill
    */
-  public SpecializedSkill(Attribute attribute, String name, String description,
-      int difficultyModifier, Restriction restriction) {
+  public SpecializedSkill( //
+      Attribute parentAttribute, //
+      String name, String description, //
+      int difficultyModifier, //
+      Restriction restriction) {
+
+    changeSupport = new PropertyChangeSupport(this);
+    baseValue = MIN_LEVEL;
+    ipValue = MIN_LEVEL;
+    currentImprovementPoints = INITIAL_IP;
     setName(name);
     setDescription(description);
     setRestriction(restriction);
-    baseValue = MIN_LEVEL;
     setDifficultyModifier(difficultyModifier);
-    currentImprovementPoints = INITIAL_IP;
-    neededImprovementPoints = INITIAL_IP_GOAL;
-    changeSupport = new PropertyChangeSupport(this);
-    initializeParent(attribute);
+    setParentAttribute(parentAttribute);
   }
 
   private void setName(String name) {
@@ -86,65 +76,64 @@ public class SpecializedSkill implements CyberpunkSkill {
   }
 
   private void setDifficultyModifier(int difficultyModifier) {
-    if (difficultyModifier < MINIMUM_DIFFICULTY_MODIFIER) {
-      throw new IllegalArgumentException(
-          "The field 'difficultyModifier' must be a value greater than "
-              + MINIMUM_DIFFICULTY_MODIFIER + ".");
+    if (difficultyModifier < DEFAULT_DIFFICULTY_MODIFIER) {
+      throw new IllegalArgumentException("modifier =  " + difficultyModifier
+          + "; exclusive min modifier = " + DEFAULT_DIFFICULTY_MODIFIER);
     } else {
       this.difficultyModifier = difficultyModifier;
     }
   }
 
-  private void initializeParent(Attribute attribute) {
-    if (attribute == null) {
+  private void setParentAttribute(Attribute parentAttribute) {
+    if (parentAttribute == null) {
       throw new NullPointerException();
     } else {
-      this.attribute = attribute;
-      attribute.addPropertyChangeListener(Attribute.PROPERTY_NAME_ATTRIBUTE_MODIFIER, this);
-      calculateTotalValue();
+      parentAttribute.addPropertyChangeListener(Attribute.PROPERTY_NAME_ATTRIBUTE_MODIFIER, this);
+      this.parentAttribute = parentAttribute;
+      updateTotalValue();
     }
   }
 
-  private void calculateTotalValue() {
+  private void updateTotalValue() {
     int oldValue = totalValue;
 
-    totalValue = baseValue + attribute.getModifier();
+    totalValue = baseValue + parentAttribute.getModifier();
     changeSupport.firePropertyChange(PROPERTY_NAME_SKILL_VALUE, oldValue, totalValue);
   }
 
   @Override
-  public void increaseLevel() {
-    if (baseValue < MAX_LEVEL && isEnabled()) {
+  public void incrementLevel() {
+    if (baseValue < MAX_LEVEL && !(restriction.isRestricted())) {
       int oldValue = baseValue;
       baseValue++;
-      calculateTotalValue();
+      updateTotalValue();
       changeSupport.firePropertyChange(PROPERTY_NAME_SKILL_LEVEL, oldValue, baseValue);
     }
   }
 
   @Override
-  public void decreaseLevel() {
-    if (baseValue > MIN_LEVEL && isEnabled()) {
+  public void decrementLevel() {
+    if ((baseValue > MIN_LEVEL) && !(restriction.isRestricted())) {
       int oldValue = baseValue;
       baseValue--;
-      calculateTotalValue();
+      updateTotalValue();
       changeSupport.firePropertyChange(PROPERTY_NAME_SKILL_LEVEL, oldValue, baseValue);
     }
   }
 
   @Override
   public void resetLevel() {
-    if (isEnabled()) {
+    if (!(restriction.isRestricted())) {
       int oldValue = baseValue;
       baseValue = MIN_LEVEL;
-      calculateTotalValue();
+      updateTotalValue();
       changeSupport.firePropertyChange(PROPERTY_NAME_SKILL_LEVEL, oldValue, baseValue);
     }
   }
 
   @Override
   public int getLevel() {
-    return baseValue;
+    return baseValue > ipValue ? baseValue : ipValue;
   }
 
   @Override
@@ -163,8 +152,18 @@ public class SpecializedSkill implements CyberpunkSkill {
   }
 
   @Override
+  public int getDifficultyModifier() {
+    return difficultyModifier;
+  }
+
+  @Override
   public void increaseCurrentImprovementPoints(int improvementPoints) {
-    if (isEnabled()) {
+    if (improvementPoints < minImprovementPointDelta) {
+      throw new IllegalArgumentException("improvementPoints = " + improvementPoints
+          + "; min improvementPoints = " + minImprovementPointDelta);
+    }
+
+    if (!restriction.isRestricted()) {
       int oldValue = currentImprovementPoints;
       currentImprovementPoints += improvementPoints;
       checkForLevelUp();
@@ -174,15 +173,38 @@ public class SpecializedSkill implements CyberpunkSkill {
   }
 
   private void checkForLevelUp() {
-    if (currentImprovementPoints >= neededImprovementPoints) {
-      currentImprovementPoints -= neededImprovementPoints;
-      increaseLevel();
-      calculateImprovementPointGoal();
+    while (currentImprovementPoints >= getTargetImprovementPoints() && ipValue < MAX_LEVEL) {
+      ipValue++;
     }
   }
 
-  private void calculateImprovementPointGoal() {
-    neededImprovementPoints = 10 * baseValue * difficultyModifier;
+  /**
+   * If improvementPoints is greater than the current improvement points this skill has then the
+   * skills improvement points are decreased by current improvement points instead.
+   */
+  @Override
+  public void decreaseCurrentImprovementPoints(int improvementPoints) {
+    if (improvementPoints < minImprovementPointDelta) {
+      throw new IllegalArgumentException(
+          "points = " + improvementPoints + "; min = " + minImprovementPointDelta);
+    }
+
+    if (!restriction.isRestricted()) {
+      improvementPoints = improvementPoints <= currentImprovementPoints ? improvementPoints
+          : currentImprovementPoints;
+      int oldValue = currentImprovementPoints;
+      currentImprovementPoints -= improvementPoints;
+      checkForLevelDown();
+      changeSupport.firePropertyChange(PROPERTY_NAME_SKILL_IMPROVEMENT_POINTS, oldValue,
+          currentImprovementPoints);
+    }
+  }
+
+  private void checkForLevelDown() {
+    while (currentImprovementPoints <= calculateTargetImprovementPoints(ipValue - 1)
+        && ipValue > MIN_LEVEL) {
+      ipValue--;
+    }
   }
 
   @Override
@@ -191,16 +213,24 @@ public class SpecializedSkill implements CyberpunkSkill {
   }
 
   @Override
-  public int getNeededImprovementPoints() {
-    return neededImprovementPoints;
+  public int getTargetImprovementPoints() {
+    return calculateTargetImprovementPoints(getLevel());
+  }
+
+  private int calculateTargetImprovementPoints(int level) {
+    if (level == 0) {
+      return INITIAL_IP_GOAL;
+    } else {
+      return 10 * level * difficultyModifier;
+    }
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     Object source = evt.getSource();
 
-    if (attribute == source) {
-      calculateTotalValue();
+    if (parentAttribute == source) {
+      updateTotalValue();
     }
   }
 
@@ -227,6 +257,46 @@ public class SpecializedSkill implements CyberpunkSkill {
   @Override
   public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
     changeSupport.removePropertyChangeListener(propertyName, listener);
+  }
+
+  public static class Builder {
+    private String name;
+    private String description;
+    private int difficultyModifier;
+    private Attribute parentAttribute;
+    private Restriction restriction;
+
+    public Builder(String name, String description) {
+      this.name = name;
+      this.description = description;
+      difficultyModifier = DEFAULT_DIFFICULTY_MODIFIER;
+      parentAttribute = NullAttribute.getInstance();
+      restriction = NullRestriction.getInstance();
+    }
+
+    public Builder withDifficultyOf(int difficultyModifier) {
+      this.difficultyModifier = difficultyModifier;
+
+      return this;
+    }
+
+    public Builder withParent(Attribute parentAttribute) {
+      this.parentAttribute = parentAttribute;
+
+      return this;
+    }
+
+    public Builder withRestriction(Restriction restriction) {
+      this.restriction = restriction;
+
+      return this;
+    }
+
+    public SpecializedSkill build() {
+      return new SpecializedSkill(parentAttribute, name, description, difficultyModifier,
+          restriction);
+    }
+
   }
 
 }

@@ -2,271 +2,225 @@ package rpg.cyberpunk._2020.combat;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
+import java.util.stream.Collectors;
 import rpg.general.combat.BodyLocation;
 
 /**
- * A class that manages if a piece of armor can be worn and then can display the
- * protective score for each body location.
- * 
- * @author Coul Greer
+ * A class that manages if a piece of armor can be worn and then can display the protective score
+ * for each body location.
  */
 public class ArmorManager {
-	/**
-	 * A constant representing how many pieces of hard armor can be placed on a body
-	 * location.
-	 */
-	public static final int MAX_HARD_ARMOR_LAYERS = 1;
+  public static final int NO_STOPPING_POWER_MODIFIER = 0;
+  public static final int VERY_LOW_STOPPING_POWER_MODIFIER = 1;
+  public static final int LOW_STOPPING_POWER_MODIFIER = 2;
+  public static final int AVERAGE_STOPPING_POWER_MODIFIER = 3;
+  public static final int HIGH_STOPPING_POWER_MODIFIER = 4;
+  public static final int VERY_HIGH_STOPPING_POWER_MODIFIER = 5;
 
-	/**
-	 * The maximum amount of armor that can be placed on a body location regardless
-	 * of armor type.
-	 */
-	public static final int MAX_TOTAL_ARMOR_LAYERS = 3;
+  private static final int minLayerCount = 0;
+  private static final int maxLayerCount = 3;
+  private static final int minDurability = 0;
 
-	public static final int NO_STOPPING_POWER_MODIFIER = 0;
-	public static final int VERY_LOW_STOPPING_POWER_MODIFIER = 1;
-	public static final int LOW_STOPPING_POWER_MODIFIER = 2;
-	public static final int AVERAGE_STOPPING_POWER_MODIFIER = 3;
-	public static final int HIGH_STOPPING_POWER_MODIFIER = 4;
-	public static final int VERY_HIGH_STOPPING_POWER_MODIFIER = 5;
+  private List<CyberpunkArmor> armors;
 
-	private int totalEncumbranceValue;
-	private List<CyberpunkArmor> armors;
-	private Map<BodyLocation, List<CyberpunkArmor>> armorsByBodyLocation;
-	private Map<BodyLocation, Integer> stoppingPowerByBodyLocation;
+  /**
+   * Constructs an ArmorManager that initializes the total encumbrance to be 0.
+   */
+  public ArmorManager() {
+    armors = new ArrayList<CyberpunkArmor>();
+  }
 
-	/**
-	 * Constructs an ArmorManager that initializes the total encumbrance to be 0.
-	 */
-	public ArmorManager() {
-		totalEncumbranceValue = 0;
-		armors = new ArrayList<CyberpunkArmor>();
-		initializeLayerTracker();
-		initializeLocalizedDurabilities();
-	}
+  /**
+   * Puts the armor in the manager and updates the data where the armor is covering.
+   * 
+   * @param armor the item to keep track of
+   * @return true, if the armor was accepted into the collection
+   */
+  public boolean add(CyberpunkArmor armor) {
+    if (armor == null) {
+      throw new NullPointerException();
+    }
 
-	private void initializeLayerTracker() {
-		armorsByBodyLocation = new HashMap<BodyLocation, List<CyberpunkArmor>>();
-		BodyLocation[] locations = BodyLocation.values();
-		for (int i = 0; i < locations.length; i++) {
-			armorsByBodyLocation.put(locations[i], new ArrayList<CyberpunkArmor>());
-		}
-	}
+    boolean hasAdded = false;
 
-	private void initializeLocalizedDurabilities() {
-		stoppingPowerByBodyLocation = new HashMap<BodyLocation, Integer>();
-		Iterator<BodyLocation> setIterator = BodyLocation.createIterator();
-		while (setIterator.hasNext()) {
-			stoppingPowerByBodyLocation.put(setIterator.next(), CyberpunkArmor.DEFAULT_STOPPING_POWER);
-		}
-	}
+    if (!isArmorTypeRestricted(armor) && !hasMaxLayers(armor)) {
+      hasAdded = armors.add(armor);
+    }
 
-	/**
-	 * Puts the armor in the manager and updates the data where the armor is
-	 * covering.
-	 * 
-	 * @param armor the item to keep track of
-	 * @return true, if the armor was accepted into the collection
-	 */
-	public boolean add(CyberpunkArmor armor) {
-		boolean hasAdded = false;
+    return hasAdded;
+  }
 
-		if (!isArmorTypeRestricted(armor) && !hasMaxLayers(armor)) {
-			addToLocalArmors(armor);
-			armors.add(armor);
+  private boolean isArmorTypeRestricted(CyberpunkArmor armor) {
+    boolean isRestricted = false;
 
-			updateLocalizedDurabilities();
-			calculateEncumbranceValue();
-			hasAdded = true;
-		}
+    if (isHardArmor(armor)) {
+      Iterator<CyberpunkArmor> iterator = armors.iterator();
+      while (iterator.hasNext() && !isRestricted) {
+        CyberpunkArmor tempArmor = iterator.next();
+        isRestricted = isHardArmor(tempArmor) && isSharingLocation(armor, tempArmor);
+      }
+    }
 
-		return hasAdded;
-	}
+    return isRestricted;
+  }
 
-	private boolean isArmorTypeRestricted(CyberpunkArmor armor) {
-		boolean isRestricted = false;
+  private boolean isHardArmor(CyberpunkArmor armor) {
+    return CyberpunkArmor.ARMOR_TYPE_HARD.equals(armor.getArmorType());
+  }
 
-		if (isHardArmor(armor) && !isRestricted) {
-			Iterator<CyberpunkArmor> iterator = armors.iterator();
-			while (iterator.hasNext() && !isRestricted) {
-				CyberpunkArmor tempArmor = iterator.next();
-				if (isHardArmor(tempArmor) && isSharingLocation(armor, tempArmor)) {
-					isRestricted = true;
-				}
-			}
-		}
+  private boolean isSharingLocation(CyberpunkArmor armor1, CyberpunkArmor armor2) {
+    boolean isSharing = false;
 
-		return isRestricted;
-	}
+    BodyLocation[] locations = BodyLocation.values();
+    for (int i = 0; i < locations.length && !isSharing; i++) {
+      isSharing = armor1.isCovering(locations[i]) && armor2.isCovering(locations[i]);
+    }
 
-	private boolean isHardArmor(CyberpunkArmor armor) {
-		return CyberpunkArmor.ARMOR_TYPE_HARD.equals(armor.getArmorType());
-	}
+    return isSharing;
+  }
 
-	private boolean isSharingLocation(CyberpunkArmor armor1, CyberpunkArmor armor2) {
-		boolean isSharing = false;
+  private boolean hasMaxLayers(CyberpunkArmor armor) {
+    for (BodyLocation location : BodyLocation.values()) {
+      int layerCount = 0;
 
-		BodyLocation[] locations = BodyLocation.values();
-		for (int i = 0; i < locations.length && !isSharing; i++) {
-			isSharing = armor1.isCovering(locations[i]) && armor2.isCovering(locations[i]);
-		}
+      if (armor.isCovering(location)) {
+        layerCount = getLayerCountAt(location);
+      }
 
-		return isSharing;
-	}
+      if (layerCount == maxLayerCount) {
+        return true;
+      }
+    }
 
-	private boolean hasMaxLayers(CyberpunkArmor armor) {
-		Iterator<BodyLocation> iterator = BodyLocation.createIterator();
-		while (iterator.hasNext()) {
-			BodyLocation location = iterator.next();
-			List<CyberpunkArmor> localArmors = armorsByBodyLocation.get(location);
-			if (armor.isCovering(location) && localArmors.size() >= MAX_TOTAL_ARMOR_LAYERS) {
-				return true;
-			}
-		}
-		return false;
-	}
+    return false;
+  }
 
-	private void updateLocalizedDurabilities() {
-		Iterator<BodyLocation> iterator = BodyLocation.createIterator();
-		while (iterator.hasNext()) {
-			BodyLocation location = iterator.next();
-			stoppingPowerByBodyLocation.replace(location, calculateStoppingPower(location));
-		}
-	}
+  private int getLayerCountAt(BodyLocation location) {
+    int layerCount = 0;
 
-	private int calculateStoppingPower(BodyLocation location) {
-		int stoppingPower = 0;
+    for (CyberpunkArmor a : armors) {
+      if (a.isCovering(location)) {
+        layerCount++;
+      }
+    }
 
-		List<CyberpunkArmor> localArmors = armorsByBodyLocation.get(location);
-		for (int i = 0; i < localArmors.size(); i++) {
-			CyberpunkArmor armor = localArmors.get(i);
-			if (i == 0) {
-				stoppingPower = armor.getDurabilityAt(location);
-			} else {
-				int greatestStoppingPower = Math.max(stoppingPower, armor.getDurabilityAt(location));
-				stoppingPower = greatestStoppingPower
-						+ getArmorModifier(stoppingPower, armor.getDurabilityAt(location));
-			}
-		}
+    return layerCount;
+  }
 
-		return stoppingPower;
-	}
+  /**
+   * Takes the armor out of the manager and updates the data where the armor was covering.
+   * 
+   * @param armor the item to take out
+   * @return true, if the armor was taken out of the collection
+   */
+  public boolean remove(CyberpunkArmor armor) {
+    return armors.remove(armor);
+  }
 
-	private int getArmorModifier(int stoppingPower1, int stoppingPower2) {
-		int result = Math.abs(stoppingPower1 - stoppingPower2);
-		if (result <= 4) {
-			return VERY_HIGH_STOPPING_POWER_MODIFIER;
-		} else if (5 <= result && result <= 8) {
-			return HIGH_STOPPING_POWER_MODIFIER;
-		} else if (9 <= result && result <= 14) {
-			return AVERAGE_STOPPING_POWER_MODIFIER;
-		} else if (15 <= result && result <= 20) {
-			return LOW_STOPPING_POWER_MODIFIER;
-		} else if (21 <= result && result <= 26) {
-			return VERY_LOW_STOPPING_POWER_MODIFIER;
-		} else {
-			return NO_STOPPING_POWER_MODIFIER;
-		}
-	}
+  /**
+   * Returns the current durability of all armor pieces combined in the given body location.
+   * 
+   * @param location the area used to get the specific durability value
+   * @return the summation of all armor pieces at the <code>BodyLocation</code>
+   */
+  public int getDurabilityAt(BodyLocation location) {
+    int totalDurability = 0;
+    List<CyberpunkArmor> coveringArmors = //
+        armors.stream() //
+            .filter(a -> a.isCovering(location)) //
+            .collect(Collectors.toList());
 
-	private void addToLocalArmors(CyberpunkArmor armor) {
-		Iterator<BodyLocation> iterator = BodyLocation.createIterator();
-		while (iterator.hasNext()) {
-			BodyLocation location = iterator.next();
-			if (armor.isCovering(location)) {
-				List<CyberpunkArmor> localArmors = armorsByBodyLocation.get(location);
+    for (int i = 0; i < coveringArmors.size(); i++) {
+      int armorDurability = coveringArmors.get(i).getDurabilityAt(location);
 
-				localArmors.add(armor);
-			}
-		}
-	}
+      if (i == 0) {
+        totalDurability = armorDurability;
+      } else if (armorDurability > 0) {
+        int greatestDurability = Math.max(totalDurability, armorDurability);
+        totalDurability = greatestDurability + getDurabilityBonus(totalDurability, armorDurability);
+      }
+    }
 
-	private void calculateEncumbranceValue() {
-		totalEncumbranceValue = totalEncumbranceValue
-				+ getEncumbranceBonus(armorsByBodyLocation.get(BodyLocation.HEAD).size())
-				+ getEncumbranceBonus(armorsByBodyLocation.get(BodyLocation.TORSO).size())
-				+ (getEncumbranceBonus(armorsByBodyLocation.get(BodyLocation.RIGHT_ARM).size())
-						+ getEncumbranceBonus(armorsByBodyLocation.get(BodyLocation.LEFT_ARM).size())) / 2
-				+ (getEncumbranceBonus(armorsByBodyLocation.get(BodyLocation.RIGHT_LEG).size())
-						+ getEncumbranceBonus(armorsByBodyLocation.get(BodyLocation.LEFT_LEG).size())) / 2;
+    return totalDurability;
+  }
 
-		Iterator<CyberpunkArmor> iterator = armors.iterator();
-		while (iterator.hasNext()) {
-			CyberpunkArmor armor = iterator.next();
-			totalEncumbranceValue += armor.getEncumbranceValue();
-		}
-	}
+  private int getDurabilityBonus(int durability1, int durability2) {
+    if (durability1 < minDurability) {
+      throw new IllegalArgumentException(
+          "durability 1 = " + durability1 + "; min = " + minDurability);
+    }
 
-	private int getEncumbranceBonus(int layers) {
-		if (layers <= 1) {
-			return 0;
-		} else if (2 == layers) {
-			return 1;
-		} else if (3 == layers) {
-			return 3;
-		} else {
-			return -1;
-		}
-	}
+    if (durability2 < minDurability) {
+      throw new IllegalArgumentException(
+          "durability 2 = " + durability2 + "; min = " + minDurability);
+    }
 
-	/**
-	 * Takes the armor out of the manager and updates the data where the armor was
-	 * covering.
-	 * 
-	 * @param armor the item to take out
-	 * @return true, if the armor was taken out of the collection
-	 */
-	public boolean remove(CyberpunkArmor armor) {
-		boolean hasRemoved = false;
+    int difference = Math.abs(durability1 - durability2);
 
-		if (armors.contains(armor)) {
-			removeFromLocalArmors(armor);
-			armors.remove(armor);
-			hasRemoved = true;
-		}
+    if (0 <= difference && difference < 5) {
+      return VERY_HIGH_STOPPING_POWER_MODIFIER;
+    } else if (5 <= difference && difference < 9) {
+      return HIGH_STOPPING_POWER_MODIFIER;
+    } else if (9 <= difference && difference < 15) {
+      return AVERAGE_STOPPING_POWER_MODIFIER;
+    } else if (15 <= difference && difference < 21) {
+      return LOW_STOPPING_POWER_MODIFIER;
+    } else if (21 <= difference && difference < 27) {
+      return VERY_LOW_STOPPING_POWER_MODIFIER;
+    } else {
+      return NO_STOPPING_POWER_MODIFIER;
+    }
+  }
 
-		return hasRemoved;
-	}
+  public int getEncumbrancePenalty() {
+    int baseEncumbranceValue = 0;
+    for (CyberpunkArmor a : armors) {
+      baseEncumbranceValue += a.getEncumbranceValue();
+    }
 
-	private void removeFromLocalArmors(CyberpunkArmor armor) {
-		Iterator<BodyLocation> iterator = BodyLocation.createIterator();
-		while (iterator.hasNext()) {
-			BodyLocation location = iterator.next();
-			List<CyberpunkArmor> localArmors = armorsByBodyLocation.get(location);
-			if (armor.isCovering(location) && localArmors.contains(armor)) {
-				localArmors.remove(armor);
-			}
-		}
-	}
+    int bonusEncumbranceValue = 0;
+    for (BodyLocation location : BodyLocation.values()) {
+      bonusEncumbranceValue += getEncumbranceBonusAt(location);
+    }
 
-	/**
-	 * Returns the current durability of all armor pieces combined in the given body
-	 * location.
-	 * 
-	 * @param location the area used to get the specific durability value
-	 * @return the summation of all armor pieces at the <code>BodyLocation</code>
-	 */
-	public int getLocationDurability(BodyLocation location) {
-		return stoppingPowerByBodyLocation.get(location);
-	}
+    return baseEncumbranceValue + bonusEncumbranceValue;
+  }
 
-	public int getEncumbranceValue() {
-		return totalEncumbranceValue;
-	}
+  private int getEncumbranceBonusAt(BodyLocation location) {
+    int layerCount = minLayerCount;
 
-	public double getTotalWeight() {
-		return armors.stream() //
-				.mapToDouble(armor -> armor.getWeight()) //
-				.sum();
-	}
-	
-	public Collection<CyberpunkArmor> createArmorCollection() {
-		return armors;
-	}
-	
+    for (CyberpunkArmor a : armors) {
+      if (a.isCovering(location)) {
+        layerCount++;
+      }
+    }
+
+    return getEncumbranceBonus(layerCount);
+  }
+
+  private int getEncumbranceBonus(int layerCount) {
+    layerCount = layerCount < minLayerCount ? minLayerCount : layerCount;
+
+    if (2 == layerCount) {
+      return 1;
+    } else if (maxLayerCount <= layerCount) {
+      return 3;
+    } else {
+      return 0;
+    }
+  }
+
+  public double getTotalWeight() {
+    return armors.stream() //
+        .mapToDouble(a -> a.getWeight()) //
+        .sum();
+  }
+
+  public Collection<CyberpunkArmor> createArmorCollection() {
+    return Collections.unmodifiableCollection(armors);
+  }
+
 }

@@ -23,7 +23,7 @@ public class Role {
     if (name == null) {
       throw new NullPointerException();
     } else if (name.length() < minLength) {
-      throw new IllegalArgumentException("length: " + name.length() + "; min length: " + minLength);
+      throw new IllegalArgumentException("length = " + name.length() + "; min length = " + minLength);
     } else {
       this.name = name;
     }

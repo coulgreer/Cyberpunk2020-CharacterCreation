@@ -9,7 +9,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -20,7 +22,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import rpg.cyberpunk._2020.Player;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
-import rpg.cyberpunk._2020.combat.HomogeneousMagazine;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Ammunition;
 import rpg.general.combat.AmmunitionContainer;
@@ -221,14 +222,15 @@ public class WeaponPane extends JPanel implements PropertyChangeListener, Select
           "Ammo Selection", JOptionPane.PLAIN_MESSAGE, null, options, null);
 
       Ammunition targetAmmunition = filteredAmmunitionMap.get(result);
-      AmmunitionContainer ammunitionStorage =
-          new HomogeneousMagazine(weapon.getAmmunitionType(), weapon.getAmmunitionCapacity());
-      while (!ammunitionStorage.isFull() && player.getQuantity(targetAmmunition) > 0) {
-        ammunitionStorage.depositAmmunition(targetAmmunition);
+      List<Ammunition> ammunition = new ArrayList<Ammunition>(weapon.getAmmunitionCapacity());
+
+      while (weapon.getAmmunitionCapacity() < weapon.getAmmunitionCount()
+          && player.getQuantity(targetAmmunition) > 0) {
+        ammunition.add(targetAmmunition);
         player.removeFromInventory(targetAmmunition, 1);
       }
 
-      player.reload(slotIndex, ammunitionStorage);
+      player.reload(slotIndex, ammunition);
 
       weaponDetailLabel.setText(generateWeaponDetails());
       updateButtons();

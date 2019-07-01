@@ -31,11 +31,11 @@ public class NullAttribute implements Attribute {
 	}
 
 	@Override
-	public void increaseLevel() {
+	public void incrementLevel() {
 	}
 
 	@Override
-	public void decreaseLevel() {
+	public void decrementLevel() {
 	}
 
 	@Override

@@ -34,7 +34,6 @@ import rpg.cyberpunk._2020.stats.Role;
 import rpg.cyberpunk._2020.stats.StatisticFactory;
 import rpg.cyberpunk._2020.systems.Background;
 import rpg.general.combat.Ammunition;
-import rpg.general.combat.AmmunitionContainer;
 import rpg.general.combat.BodyLocation;
 import rpg.general.combat.Combatant;
 import rpg.general.commerce.Item;
@@ -329,11 +328,11 @@ public class Player {
   }
 
   public void attack(int slot, int shotsFired) {
-    equippedWeapons[slot].fire(shotsFired);
+    equippedWeapons[slot].attack(shotsFired);
   }
 
-  public List<Ammunition> reload(int slot, AmmunitionContainer ammunitionStorage) {
-    List<Ammunition> spareAmmunition = equippedWeapons[slot].reload(ammunitionStorage);
+  public List<Ammunition> reload(int slot, List<Ammunition> ammunition) {
+    List<Ammunition> spareAmmunition = equippedWeapons[slot].reload(ammunition);
     spareAmmunition.stream().forEach(a -> addToInventory(a));
     return spareAmmunition;
   }
@@ -540,11 +539,11 @@ public class Player {
   }
 
   public int getLocationDurability(BodyLocation location) {
-    return armorManager.getLocationDurability(location);
+    return armorManager.getDurabilityAt(location);
   }
 
   public int getEncumbranceValue() {
-    return armorManager.getEncumbranceValue();
+    return armorManager.getEncumbrancePenalty();
   }
 
   public String getFamilyRanking() {

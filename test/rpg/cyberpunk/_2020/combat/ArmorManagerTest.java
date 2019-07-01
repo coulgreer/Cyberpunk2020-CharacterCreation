@@ -5,408 +5,519 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import org.junit.Test;
-
 import rpg.general.combat.BodyLocation;
 
 public class ArmorManagerTest {
 
-	@Test
-	public void testAddingThreeSoftOverlappingArmors() {
-		CyberpunkArmor clothShirt = mock(CyberpunkArmor.class);
-		when(clothShirt.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(clothShirt.getEncumbranceValue()).thenReturn(0);
-		when(clothShirt.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(clothShirt.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.TORSO)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+  @Test(expected = NullPointerException.class)
+  public void Should_ThrowException_When_NullArmorIsAdded() {
+    CyberpunkArmor nullArmor = null;
+    ArmorManager manager = new ArmorManager();
 
-		CyberpunkArmor heavyLeatherJacket = mock(CyberpunkArmor.class);
-		when(heavyLeatherJacket.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(heavyLeatherJacket.getEncumbranceValue()).thenReturn(0);
-		when(heavyLeatherJacket.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(heavyLeatherJacket.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(heavyLeatherJacket.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.TORSO)).thenReturn(4);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(4);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(4);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+    manager.add(nullArmor);
+  }
 
-		CyberpunkArmor kevlarVest = mock(CyberpunkArmor.class);
-		when(kevlarVest.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(kevlarVest.getEncumbranceValue()).thenReturn(0);
-		when(kevlarVest.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(kevlarVest.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(kevlarVest.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(false);
-		when(kevlarVest.isCovering(BodyLocation.LEFT_ARM)).thenReturn(false);
-		when(kevlarVest.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(kevlarVest.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(kevlarVest.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(kevlarVest.getDurabilityAt(BodyLocation.TORSO)).thenReturn(10);
-		when(kevlarVest.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(0);
-		when(kevlarVest.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(0);
-		when(kevlarVest.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(kevlarVest.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+  @Test
+  public void Should_ReturnTrue_When_AddingArmor_While_ManagerHasSpaceForHardArmorAndManagerHasLessThanThreeLayers() {
+    CyberpunkArmor mockArmor = mock(CyberpunkArmor.class);
+    ArmorManager manager = new ArmorManager();
 
-		ArmorManager manager = new ArmorManager();
-		manager.add(clothShirt);
-		manager.add(heavyLeatherJacket);
-		manager.add(kevlarVest);
+    assertTrue(manager.add(mockArmor));
+  }
 
-		assertEquals(0, manager.getLocationDurability(BodyLocation.HEAD));
-		assertEquals(15, manager.getLocationDurability(BodyLocation.TORSO));
-		assertEquals(9, manager.getLocationDurability(BodyLocation.RIGHT_ARM));
-		assertEquals(9, manager.getLocationDurability(BodyLocation.LEFT_ARM));
-		assertEquals(0, manager.getLocationDurability(BodyLocation.RIGHT_LEG));
-		assertEquals(0, manager.getLocationDurability(BodyLocation.LEFT_LEG));
-	}
+  @Test
+  public void Should_ReturnFalse_When_AddingNewArmorThatIsHardAndCoversTheSameLocationsAsTheOldArmor_While_ManagerHasOldArmorThatIsHardAndManagerHasLessThanThreeLayers() {
+    CyberpunkArmor newArmor = mock(CyberpunkArmor.class);
+    when(newArmor.isCovering(BodyLocation.HEAD)).thenReturn(true);
+    when(newArmor.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_HARD);
 
-	@Test
-	public void testMaxAmountOfArmorLayers() {
-		CyberpunkArmor clothShirt = mock(CyberpunkArmor.class);
-		when(clothShirt.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(clothShirt.getEncumbranceValue()).thenReturn(0);
-		when(clothShirt.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(clothShirt.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.TORSO)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+    CyberpunkArmor oldArmor = mock(CyberpunkArmor.class);
+    when(oldArmor.isCovering(BodyLocation.HEAD)).thenReturn(true);
+    when(oldArmor.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_HARD);
 
-		ArmorManager manager = new ArmorManager();
-		for (int i = 0; i < ArmorManager.MAX_TOTAL_ARMOR_LAYERS; i++) {
-			manager.add(clothShirt);
-		}
+    ArmorManager manager = new ArmorManager();
+    manager.add(oldArmor);
 
-		boolean isAdded = manager.add(clothShirt);
+    assertFalse(manager.add(newArmor));
+  }
 
-		assertFalse(isAdded);
-	}
+  @Test
+  public void Should_ReturnFalse_When_AddingNewArmorThatCoversTheSameLocationAsThreeOtherOldArmors_While_ManagerHasOldArmorThatIsSoftAndManagerHasThreeLayers() {
+    CyberpunkArmor newArmor = mock(CyberpunkArmor.class);
+    when(newArmor.isCovering(BodyLocation.HEAD)).thenReturn(true);
+    when(newArmor.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
 
-	@Test
-	public void testMaxAmountOfHardArmorLayers() {
-		CyberpunkArmor flackVest = mock(CyberpunkArmor.class);
-		when(flackVest.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_HARD);
-		when(flackVest.getEncumbranceValue()).thenReturn(1);
-		when(flackVest.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(flackVest.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(flackVest.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(false);
-		when(flackVest.isCovering(BodyLocation.LEFT_ARM)).thenReturn(false);
-		when(flackVest.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(flackVest.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(flackVest.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(flackVest.getDurabilityAt(BodyLocation.TORSO)).thenReturn(20);
-		when(flackVest.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(0);
-		when(flackVest.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(0);
-		when(flackVest.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(flackVest.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+    CyberpunkArmor oldArmor1 = mock(CyberpunkArmor.class);
+    when(oldArmor1.isCovering(BodyLocation.HEAD)).thenReturn(true);
+    when(oldArmor1.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
 
-		ArmorManager manager = new ArmorManager();
-		for (int i = 0; i < ArmorManager.MAX_HARD_ARMOR_LAYERS; i++) {
-			manager.add(flackVest);
-		}
+    CyberpunkArmor oldArmor2 = mock(CyberpunkArmor.class);
+    when(oldArmor2.isCovering(BodyLocation.HEAD)).thenReturn(true);
+    when(oldArmor2.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
 
-		boolean isAdded = manager.add(flackVest);
+    CyberpunkArmor oldArmor3 = mock(CyberpunkArmor.class);
+    when(oldArmor3.isCovering(BodyLocation.HEAD)).thenReturn(true);
+    when(oldArmor3.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
 
-		assertFalse(isAdded);
-	}
+    ArmorManager manager = new ArmorManager();
+    manager.add(oldArmor1);
+    manager.add(oldArmor2);
+    manager.add(oldArmor3);
 
-	@Test
-	public void testEncumbranceBonusOfTwoLayersOfArmor() {
-		CyberpunkArmor clothShirt = mock(CyberpunkArmor.class);
-		when(clothShirt.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(clothShirt.getEncumbranceValue()).thenReturn(0);
-		when(clothShirt.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(clothShirt.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.TORSO)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+    assertFalse(manager.add(newArmor));
+  }
 
-		ArmorManager manager = new ArmorManager();
-		manager.add(clothShirt);
-		manager.add(clothShirt);
+  @Test
+  public void Should_ReturnTrue_When_RemovingArmor_While_ArmorIsTrackedByManager() {
+    CyberpunkArmor mockArmor = mock(CyberpunkArmor.class);
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor);
 
-		assertEquals(2, manager.getEncumbranceValue());
-	}
+    assertTrue(manager.remove(mockArmor));
+  }
 
-	@Test
-	public void testGettingVeryHighStoppingPowerModifier() {
-		CyberpunkArmor clothShirt = mock(CyberpunkArmor.class);
-		when(clothShirt.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(clothShirt.getEncumbranceValue()).thenReturn(0);
-		when(clothShirt.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(clothShirt.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.TORSO)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+  @Test
+  public void Should_ReturnFalse_When_RemovingArmor_While_ArmorIsNotTrackedByManager() {
+    CyberpunkArmor mockArmor = mock(CyberpunkArmor.class);
+    ArmorManager manager = new ArmorManager();
 
-		ArmorManager manager = new ArmorManager();
-		manager.add(clothShirt);
-		manager.add(clothShirt);
+    assertFalse(manager.remove(mockArmor));
+  }
 
-		assertEquals(5, manager.getLocationDurability(BodyLocation.TORSO));
-	}
+  @Test
+  public void Should_ReturnDurabilityAsSix_When_TheDifferenceBetweenTwoArmorsDurabilityIsZero_While_BothArmorsHaveADurabilityOfOneAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
 
-	@Test
-	public void testGettingHighStoppingPowerModifier() {
-		CyberpunkArmor clothShirt = mock(CyberpunkArmor.class);
-		when(clothShirt.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(clothShirt.getEncumbranceValue()).thenReturn(0);
-		when(clothShirt.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(clothShirt.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.TORSO)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
 
-		CyberpunkArmor heavyLeatherJacket = mock(CyberpunkArmor.class);
-		when(heavyLeatherJacket.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(heavyLeatherJacket.getEncumbranceValue()).thenReturn(0);
-		when(heavyLeatherJacket.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(heavyLeatherJacket.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(heavyLeatherJacket.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.TORSO)).thenReturn(5);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(5);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(5);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
 
-		ArmorManager manager = new ArmorManager();
-		manager.add(clothShirt);
-		manager.add(heavyLeatherJacket);
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
 
-		assertEquals(9, manager.getLocationDurability(BodyLocation.TORSO));
-	}
+    assertEquals(6, manager.getDurabilityAt(location));
+  }
 
-	@Test
-	public void testGettingAverageStoppingPowerModifier() {
-		CyberpunkArmor clothShirt = mock(CyberpunkArmor.class);
-		when(clothShirt.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(clothShirt.getEncumbranceValue()).thenReturn(0);
-		when(clothShirt.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(clothShirt.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.TORSO)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+  @Test
+  public void Should_ReturnDurabilityAsSeven_When_TheDifferenceBetweenTwoArmorsDurabilityIsOne_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfTwoAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
 
-		CyberpunkArmor heavyLeatherJacket = mock(CyberpunkArmor.class);
-		when(heavyLeatherJacket.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(heavyLeatherJacket.getEncumbranceValue()).thenReturn(0);
-		when(heavyLeatherJacket.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(heavyLeatherJacket.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(heavyLeatherJacket.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.TORSO)).thenReturn(9);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(9);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(9);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
 
-		ArmorManager manager = new ArmorManager();
-		manager.add(clothShirt);
-		manager.add(heavyLeatherJacket);
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(2);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
 
-		assertEquals(12, manager.getLocationDurability(BodyLocation.TORSO));
-	}
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
 
-	@Test
-	public void testGettingLowStoppingPowerModifier() {
-		CyberpunkArmor clothShirt = mock(CyberpunkArmor.class);
-		when(clothShirt.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(clothShirt.getEncumbranceValue()).thenReturn(0);
-		when(clothShirt.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(clothShirt.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.TORSO)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+    assertEquals(7, manager.getDurabilityAt(location));
+  }
 
-		CyberpunkArmor heavyLeatherJacket = mock(CyberpunkArmor.class);
-		when(heavyLeatherJacket.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(heavyLeatherJacket.getEncumbranceValue()).thenReturn(0);
-		when(heavyLeatherJacket.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(heavyLeatherJacket.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(heavyLeatherJacket.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.TORSO)).thenReturn(15);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(15);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(15);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+  @Test
+  public void Should_ReturnDurabilityAsTen_When_TheDifferenceBetweenTwoArmorsDurabilityIsFour_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfFiveAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
 
-		ArmorManager manager = new ArmorManager();
-		manager.add(clothShirt);
-		manager.add(heavyLeatherJacket);
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
 
-		assertEquals(17, manager.getLocationDurability(BodyLocation.TORSO));
-	}
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(5);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
 
-	@Test
-	public void testGettingVeryLowStoppingPowerModifier() {
-		CyberpunkArmor clothShirt = mock(CyberpunkArmor.class);
-		when(clothShirt.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(clothShirt.getEncumbranceValue()).thenReturn(0);
-		when(clothShirt.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(clothShirt.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.TORSO)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
 
-		CyberpunkArmor heavyLeatherJacket = mock(CyberpunkArmor.class);
-		when(heavyLeatherJacket.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(heavyLeatherJacket.getEncumbranceValue()).thenReturn(0);
-		when(heavyLeatherJacket.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(heavyLeatherJacket.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(heavyLeatherJacket.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.TORSO)).thenReturn(21);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(21);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(21);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+    assertEquals(10, manager.getDurabilityAt(location));
+  }
 
-		ArmorManager manager = new ArmorManager();
-		manager.add(clothShirt);
-		manager.add(heavyLeatherJacket);
+  @Test
+  public void Should_ReturnDurabilityAsTen_When_TheDifferenceBetweenTwoArmorsDurabilityIsFive_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfSixAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
 
-		assertEquals(22, manager.getLocationDurability(BodyLocation.TORSO));
-	}
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
 
-	@Test
-	public void testGettingNoStoppingPowerModifier() {
-		CyberpunkArmor clothShirt = mock(CyberpunkArmor.class);
-		when(clothShirt.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(clothShirt.getEncumbranceValue()).thenReturn(0);
-		when(clothShirt.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(clothShirt.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.TORSO)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(6);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
 
-		CyberpunkArmor heavyLeatherJacket = mock(CyberpunkArmor.class);
-		when(heavyLeatherJacket.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(heavyLeatherJacket.getEncumbranceValue()).thenReturn(0);
-		when(heavyLeatherJacket.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(heavyLeatherJacket.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(heavyLeatherJacket.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(heavyLeatherJacket.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.TORSO)).thenReturn(27);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(27);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(27);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(heavyLeatherJacket.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
 
-		ArmorManager manager = new ArmorManager();
-		manager.add(clothShirt);
-		manager.add(heavyLeatherJacket);
+    assertEquals(10, manager.getDurabilityAt(location));
+  }
 
-		assertEquals(27, manager.getLocationDurability(BodyLocation.TORSO));
-	}
+  @Test
+  public void Should_ReturnDurabilityAsEleven_When_TheDifferenceBetweenTwoArmorsDurabilityIsSix_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfSevenAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
 
-	@Test
-	public void testAddingThenRemovingArmor() {
-		CyberpunkArmor clothShirt = mock(CyberpunkArmor.class);
-		when(clothShirt.getArmorType()).thenReturn(CyberpunkArmor.ARMOR_TYPE_SOFT);
-		when(clothShirt.getEncumbranceValue()).thenReturn(0);
-		when(clothShirt.isCovering(BodyLocation.HEAD)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.TORSO)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
-		when(clothShirt.isCovering(BodyLocation.RIGHT_LEG)).thenReturn(false);
-		when(clothShirt.isCovering(BodyLocation.LEFT_LEG)).thenReturn(false);
-		when(clothShirt.getDurabilityAt(BodyLocation.HEAD)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.TORSO)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_ARM)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.RIGHT_LEG)).thenReturn(0);
-		when(clothShirt.getDurabilityAt(BodyLocation.LEFT_LEG)).thenReturn(0);
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
 
-		ArmorManager manager = new ArmorManager();
-		manager.add(clothShirt);
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(7);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
 
-		assertTrue(manager.remove(clothShirt));
-	}
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(11, manager.getDurabilityAt(location));
+  }
+
+  @Test
+  public void Should_ReturnDurabilityAsThirteen_When_TheDifferenceBetweenTwoArmorsDurabilityIsEight_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfNineAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(9);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(13, manager.getDurabilityAt(location));
+  }
+
+  @Test
+  public void Should_ReturnDurabilityAsThirteen_When_TheDifferenceBetweenTwoArmorsDurabilityIsNine_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfTenAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(10);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(13, manager.getDurabilityAt(location));
+  }
+
+  @Test
+  public void Should_ReturnDurabilityAsFourteen_When_TheDifferenceBetweenTwoArmorsDurabilityIsTen_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfElevenAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(11);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(14, manager.getDurabilityAt(location));
+  }
+
+  @Test
+  public void Should_ReturnDurabilityAsEighteen_When_TheDifferenceBetweenTwoArmorsDurabilityIsFourteen_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfFifteenAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(15);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(18, manager.getDurabilityAt(location));
+  }
+
+  @Test
+  public void Should_ReturnDurabilityAsEighteen_When_TheDifferenceBetweenTwoArmorsDurabilityIsFifteen_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfSixteenAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(16);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(18, manager.getDurabilityAt(location));
+  }
+
+  @Test
+  public void Should_ReturnDurabilityAsNineteen_When_TheDifferenceBetweenTwoArmorsDurabilityIsSixteen_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfSeventeenAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(17);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(19, manager.getDurabilityAt(location));
+  }
+
+  @Test
+  public void Should_ReturnDurabilityAsTwentyThree_When_TheDifferenceBetweenTwoArmorsDurabilityIsTwenty_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfTwentyOneAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(21);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(23, manager.getDurabilityAt(location));
+  }
+
+  @Test
+  public void Should_ReturnDurabilityAsTwentyThree_When_TheDifferenceBetweenTwoArmorsDurabilityIsTwentyOne_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfTwentyTwoAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(22);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(23, manager.getDurabilityAt(location));
+  }
+
+  @Test
+  public void Should_ReturnDurabilityAsTwentyFour_When_TheDifferenceBetweenTwoArmorsDurabilityIsTwentyTwo_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfTwentyThreeAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(23);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(24, manager.getDurabilityAt(location));
+  }
+
+  @Test
+  public void Should_ReturnDurabilityAsTwentyEight_When_TheDifferenceBetweenTwoArmorsDurabilityIsTwentySix_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfTwentySevenAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(27);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(28, manager.getDurabilityAt(location));
+  }
+
+  @Test
+  public void Should_ReturnDurabilityAsTwentyEight_When_TheDifferenceBetweenTwoArmorsDurabilityIsTwentySeven_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfTwentyEightAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(28);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(28, manager.getDurabilityAt(location));
+  }
+
+  @Test
+  public void Should_ReturnDurabilityAsTwentyNine_When_TheDifferenceBetweenTwoArmorsDurabilityIsTwentyEight_While_OneArmorHasADurabilityOfOneAndTheOtherArmorHasADurabilityOfTwentyNineAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(29);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(29, manager.getDurabilityAt(location));
+  }
+
+  @Test
+  public void Should_ReturnDurabilityAsOne_When_OneArmorHasDurabilityOfOneAndAnotherArmorHasDurabilityOfZeroAndTheyCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getDurabilityAt(location)).thenReturn(1);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getDurabilityAt(location)).thenReturn(0);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(1, manager.getDurabilityAt(location));
+  }
+
+  @Test
+  public void Should_ReturnEncumbrancePenaltyAsZero_When_ThereAreZeroArmorsLayered() {
+    ArmorManager manager = new ArmorManager();
+
+    assertEquals(0, manager.getEncumbrancePenalty());
+  }
+
+  @Test
+  public void Should_ReturnEncumbrancePenaltyAsZero_When_ThereIsOneArmorLayered_While_ArmorHasABaseEncumbranceOfZeroAndCoversAtLeastOneLocation() {
+    CyberpunkArmor mockArmor = mock(CyberpunkArmor.class);
+    when(mockArmor.isCovering(BodyLocation.HEAD)).thenReturn(true);
+    when(mockArmor.getEncumbranceValue()).thenReturn(0);
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor);
+
+    assertEquals(0, manager.getEncumbrancePenalty());
+  }
+
+  @Test
+  public void Should_ReturnEncumbrancePenaltyAsOne_When_ThereAreTwoArmorsLayered_While_BothArmorsHaveABaseEncumbranceOfZeroAndCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+    when(mockArmor1.getEncumbranceValue()).thenReturn(0);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+    when(mockArmor2.getEncumbranceValue()).thenReturn(0);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(1, manager.getEncumbrancePenalty());
+  }
+
+  @Test
+  public void Should_ReturnEncumbrancePenaltyAsThree_When_ThereAreThreeArmorsLayered_While_AllArmorsHaveABaseEncumbranceOfZeroAndCoverTheSameLocation() {
+    BodyLocation location = BodyLocation.HEAD;
+
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.isCovering(location)).thenReturn(true);
+    when(mockArmor1.getEncumbranceValue()).thenReturn(0);
+
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.isCovering(location)).thenReturn(true);
+    when(mockArmor2.getEncumbranceValue()).thenReturn(0);
+
+    CyberpunkArmor mockArmor3 = mock(CyberpunkArmor.class);
+    when(mockArmor3.isCovering(location)).thenReturn(true);
+    when(mockArmor3.getEncumbranceValue()).thenReturn(0);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+    manager.add(mockArmor3);
+
+    assertEquals(3, manager.getEncumbrancePenalty());
+  }
+
+  @Test
+  public void Should_ReturnEncumbrancePenaltyAsFour_When_TwoArmorsAreEquipped_While_OneArmorCoversTorsoRightLegLeftLegWithAnEncumbranceValueOfTwoAndAnotherArmorCoversTorsoAndWithEncumbranceValueOfOne() {
+    CyberpunkArmor mockShirt = mock(CyberpunkArmor.class);
+    when(mockShirt.isCovering(BodyLocation.TORSO)).thenReturn(true);
+    when(mockShirt.isCovering(BodyLocation.RIGHT_ARM)).thenReturn(true);
+    when(mockShirt.isCovering(BodyLocation.LEFT_ARM)).thenReturn(true);
+    when(mockShirt.getEncumbranceValue()).thenReturn(2);
+
+    CyberpunkArmor mockVest = mock(CyberpunkArmor.class);
+    when(mockVest.isCovering(BodyLocation.TORSO)).thenReturn(true);
+    when(mockVest.getEncumbranceValue()).thenReturn(1);
+
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockShirt);
+    manager.add(mockVest);
+
+    assertEquals(4, manager.getEncumbrancePenalty());
+  }
+
+  @Test
+  public void Should_ReturnWeightAsTwo_When_TwoArmorsAreEquipped_While_BothArmorsWeighOne() {
+    CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
+    when(mockArmor1.getWeight()).thenReturn(1.0);
+    CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
+    when(mockArmor2.getWeight()).thenReturn(1.0);
+    ArmorManager manager = new ArmorManager();
+    manager.add(mockArmor1);
+    manager.add(mockArmor2);
+
+    assertEquals(2.0, manager.getTotalWeight(), 0.0);
+  }
+
 }
