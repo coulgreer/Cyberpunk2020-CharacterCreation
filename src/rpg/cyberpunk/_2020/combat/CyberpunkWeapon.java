@@ -2,6 +2,7 @@ package rpg.cyberpunk._2020.combat;
 
 import java.util.Objects;
 import org.apache.commons.text.WordUtils;
+import rpg.general.combat.Ammunition.Type;
 import rpg.general.combat.Weapon;
 import rpg.util.Die;
 
@@ -14,7 +15,7 @@ import rpg.util.Die;
  *
  */
 public abstract class CyberpunkWeapon implements Weapon {
-  
+
   /**
    * A collection of values used to represent the availability rating of a weapon.
    */
@@ -201,9 +202,15 @@ public abstract class CyberpunkWeapon implements Weapon {
   public static final String WEAPON_TYPE_EXOTIC = "Exotic Weapon";
   public static final String WEAPON_TYPE_UNARMED = "Unarmed";
 
-  public static final String AMMUNITION_TYPE_RECHARGABLE_BATTERY = "Recahargable Batterypack";
-  public static final String AMMUNITION_TYPE_DRUGS = "Drugs";
-  public static final String AMMUNITION_TYPE_STUN = "Stun";
+  public static final Type CARTRIDGE = new Type("Cartridge");
+  public static final Type SHELL = new Type("Shell");
+  public static final Type ARROW = new Type("Arrow");
+  public static final Type QUARREL = new Type("Quarrel");
+  public static final Type NEEDLE = new Type("Needle");
+  public static final Type PELLET = new Type("Pellet");
+  public static final Type GRENADE = new Type("Grenade");
+  public static final Type CANISTER = new Type("Canister");
+  public static final Type ENERGY = new Type("Energy");
 
   private static final long serialVersionUID = 1L;
 

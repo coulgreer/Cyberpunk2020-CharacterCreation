@@ -1,6 +1,7 @@
 package rpg.general.combat;
 
 import java.util.List;
+import rpg.general.combat.Ammunition.Type;
 
 /**
  * Allows an object to store and use ammunition while also getting the amount of ammunition that can
@@ -49,5 +50,5 @@ public interface Shootable extends Weaponizable {
    * 
    * @return the type of ammunition that is stored
    */
-  public String getAmmunitionType();
+  public Type getAmmunitionType();
 }

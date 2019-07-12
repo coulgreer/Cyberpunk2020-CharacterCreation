@@ -1,12 +1,13 @@
 package rpg.cyberpunk._2020.combat;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Ammunition;
+import rpg.general.combat.Ammunition.Type;
 import rpg.general.combat.AmmunitionContainer;
 import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
@@ -181,8 +182,8 @@ public class Bow extends CyberpunkWeapon {
       throw new NullPointerException();
     } else {
       this.attachmentPoints = attachmentPoints;
-      this.attachmentsByAttachmentPoint =
-          attachmentPoints.stream().collect(Collectors.toMap(str -> str, x -> null));
+      this.attachmentsByAttachmentPoint = attachmentPoints.stream() //
+          .collect(HashMap::new, (m, str) -> m.put(str, null), HashMap::putAll);
     }
   }
 
@@ -246,7 +247,7 @@ public class Bow extends CyberpunkWeapon {
   }
 
   @Override
-  public String getAmmunitionType() {
+  public Type getAmmunitionType() {
     return ammunitionContainer.getAmmunitionType();
   }
 

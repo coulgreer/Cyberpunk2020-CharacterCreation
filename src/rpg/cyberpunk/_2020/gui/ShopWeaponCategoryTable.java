@@ -237,7 +237,7 @@ public class ShopWeaponCategoryTable extends JTable {
 			case DAMAGE_INDEX:
 				return new Probability(weapon.getDamageDice(), weapon.getDamageModifier());
 			case AMMO_INDEX:
-				return weapon.getAmmunitionType();
+				return weapon.getAmmunitionType().getName();
 			case NUMBER_OF_SHOTS_INDEX:
 				return weapon.getAmmunitionCapacity();
 			case RATE_OF_FIRE_INDEX:

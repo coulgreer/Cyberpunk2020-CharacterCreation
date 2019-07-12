@@ -213,7 +213,7 @@ public class WeaponPane extends JPanel implements PropertyChangeListener, Select
   private void reloadWeapon() {
     Map<String, Ammunition> filteredAmmunitionMap =
         new HashSet<>(player.createCarriedAmmunitionCollection()).stream() //
-            .filter(ammunition -> weapon.getAmmunitionType().equals(ammunition.getAmmunitionType())) //
+            .filter(ammunition -> weapon.getAmmunitionType().equals(ammunition.getType())) //
             .collect(Collectors.toMap(Ammunition::getName, Function.identity()));
     Object[] options = filteredAmmunitionMap.keySet().toArray();
 

@@ -5,8 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Ammunition;
+import rpg.general.combat.Ammunition.Type;
 import rpg.general.combat.AmmunitionContainer;
 import rpg.general.combat.EmptyAmmunitionContainer;
+import rpg.general.combat.Weapon;
 import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
 import rpg.util.Probability;
@@ -229,8 +231,8 @@ public class ThrownWeapon extends CyberpunkWeapon {
   }
 
   @Override
-  public String getAmmunitionType() {
-    return CyberpunkWeapon.NO_AMMUNITION_TYPE;
+  public Type getAmmunitionType() {
+    return Weapon.NO_AMMUNITION_TYPE;
   }
 
   @Override

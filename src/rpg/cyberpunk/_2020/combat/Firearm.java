@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Ammunition;
+import rpg.general.combat.Ammunition.Type;
 import rpg.general.combat.AmmunitionContainer;
 import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
@@ -326,7 +327,7 @@ public class Firearm extends CyberpunkWeapon {
   }
 
   @Override
-  public String getAmmunitionType() {
+  public Type getAmmunitionType() {
     return ammunitionContainer.getAmmunitionType();
   }
 

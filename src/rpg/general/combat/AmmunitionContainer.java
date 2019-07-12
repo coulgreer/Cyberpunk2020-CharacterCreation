@@ -2,6 +2,7 @@ package rpg.general.combat;
 
 import java.io.Serializable;
 import java.util.List;
+import rpg.general.combat.Ammunition.Type;
 
 /**
  * An interface that handles Ammunition when used in the context of being inside a weapon. Allows
@@ -54,7 +55,7 @@ public interface AmmunitionContainer extends Serializable {
    * 
    * @return the type of ammunition that is stored
    */
-  public String getAmmunitionType();
+  public Type getAmmunitionType();
 
   /**
    * @return <code>true</code>, if no ammunition is being stored

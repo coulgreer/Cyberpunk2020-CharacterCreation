@@ -1,98 +1,116 @@
 package rpg.cyberpunk._2020.combat;
 
 import java.util.Objects;
-
 import rpg.general.combat.Ammunition;
 import rpg.util.Probability;
 
 /**
- * An ammunition that uses a payload in order to get derived stats such as
- * damage and description.
- * 
- * @author Coul Greer
+ * An ammunition that uses a payload in order to get derived stats such as damage and description.
  */
 public class LaunchedGrenade implements Ammunition {
-	public static final String AMMUNITION_TYPE_40MM = "40mm";
+  private static final double minWeight = 0.0;
+  private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+  public static final Type _40MM = new Type("40mm");
 
-	private double weight;
-	private double cost;
-	private String ammunitionType;
-	private Payload load;
+  private Type type;
+  private Payload load;
+  private double weight;
 
-	/**
-	 * Constructs a basic grenade for use in launcher type weapons.
-	 * 
-	 * @param ammunitionType the caliber used to check if this ammunition is
-	 *                       compatible with a weapon
-	 * @param load           the contents inside this ammunition to give the damage
-	 *                       and effects
-	 * @param cost           the amount of money needed to obtain this ammunition
-	 * @param weight         the heaviness of this ammunition
-	 */
-	public LaunchedGrenade(String ammunitionType, Payload load, double cost, double weight) {
-		this.ammunitionType = ammunitionType;
-		this.load = load;
-		this.cost = cost;
-		this.weight = weight;
-	}
+  /**
+   * Constructs a basic grenade for use in launcher type weapons.
+   * 
+   * @param type the caliber used to check if this ammunition is compatible with a weapon
+   * @param load the contents inside this ammunition to give the damage and effects
+   * @param cost the amount of money needed to obtain this ammunition
+   * @param weight the heaviness of this ammunition
+   */
+  public LaunchedGrenade(Type type, Payload load, double weight) {
+    setType(type);
+    setPayLoad(load);
+    setWeight(weight);
+  }
 
-	@Override
-	public String getName() {
-		return ammunitionType + " " + load.toString() + " grenade";
-	}
+  private void setType(Type type) {
+    if (type == null) {
+      throw new NullPointerException();
+    } else {
+      this.type = type;
+    }
+  }
 
-	@Override
-	public String getDescription() {
-		return load.getEffects();
-	}
+  private void setPayLoad(Payload load) {
+    if (load == null) {
+      throw new NullPointerException();
+    } else {
+      this.load = load;
+    }
+  }
 
-	@Override
-	public double getWeight() {
-		return weight;
-	}
+  private void setWeight(double weight) {
+    if (weight < minWeight) {
+      throw new IllegalArgumentException("weight = " + weight + "; min = " + minWeight);
+    } else {
+      this.weight = weight;
+    }
+  }
 
-	@Override
-	public double getCost() {
-		return cost;
-	}
+  @Override
+  public String getName() {
+    return type.getName() + " " + load.getName().getValue() + " grenade";
+  }
 
-	@Override
-	public String getAmmunitionType() {
-		return ammunitionType;
-	}
+  @Override
+  public String getDescription() {
+    return load.getEffects();
+  }
 
-	@Override
-	public Probability getDamage() {
-		return load.getDamge();
-	}
+  @Override
+  public double getWeight() {
+    return weight;
+  }
 
-	protected Payload getPayload() {
-		return load;
-	}
+  @Override
+  public double getCost() {
+    return load.getCost();
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (o == this) {
-			return true;
-		}
+  @Override
+  public Type getType() {
+    return type;
+  }
 
-		if (o == null) {
-			return false;
-		}
+  @Override
+  public Probability getDamage() {
+    return load.getDamge();
+  }
 
-		if (!(o instanceof LaunchedGrenade)) {
-			return false;
-		}
+  protected Payload getPayload() {
+    return load;
+  }
 
-		LaunchedGrenade grenade = (LaunchedGrenade) o;
-		return getPayload().equals(grenade.getPayload()) && getAmmunitionType().equals(grenade.getAmmunitionType());
-	}
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(getPayload(), getAmmunitionType());
-	}
+    if (o == null) {
+      return false;
+    }
+
+    if (!(o instanceof LaunchedGrenade)) {
+      return false;
+    }
+
+    LaunchedGrenade grenade = (LaunchedGrenade) o;
+    return getPayload().equals(grenade.getPayload()) //
+        && getType().equals(grenade.getType());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getPayload(), getType());
+  }
 
 }

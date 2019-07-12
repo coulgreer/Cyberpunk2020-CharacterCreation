@@ -1,7 +1,7 @@
 package rpg.general.combat;
 
 import java.util.List;
-import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
+import rpg.general.combat.Ammunition.Type;
 
 /**
  * An instance of AmmunitionContainer that models itself after the Null Object pattern. There is no
@@ -40,8 +40,8 @@ public class EmptyAmmunitionContainer implements AmmunitionContainer {
   }
 
   @Override
-  public String getAmmunitionType() {
-    return CyberpunkWeapon.NO_AMMUNITION_TYPE;
+  public Type getAmmunitionType() {
+    return Weapon.NO_AMMUNITION_TYPE;
   }
 
   @Override

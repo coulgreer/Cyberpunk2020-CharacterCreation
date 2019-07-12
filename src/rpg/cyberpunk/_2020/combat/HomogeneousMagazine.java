@@ -5,26 +5,27 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import rpg.general.combat.Ammunition;
+import rpg.general.combat.Ammunition.Type;
 import rpg.general.combat.AmmunitionContainer;
 
 public class HomogeneousMagazine implements AmmunitionContainer {
   private static final long serialVersionUID = 1L;
 
-  private String ammunitionType;
+  private Type type;
   private int capacity;
   private Deque<Ammunition> ammunition;
 
-  public HomogeneousMagazine(String ammunitionType, int capacity) {
+  public HomogeneousMagazine(Type type, int capacity) {
     ammunition = new ArrayDeque<>();
-    setAmmunitionType(ammunitionType);
+    setAmmunitionType(type);
     setAmmunitionCapacity(capacity);
   }
 
-  private void setAmmunitionType(String ammunitionType) {
-    if (ammunitionType == null) {
+  private void setAmmunitionType(Type type) {
+    if (type == null) {
       throw new NullPointerException();
     } else {
-      this.ammunitionType = ammunitionType;
+      this.type = type;
     }
   }
 
@@ -64,11 +65,7 @@ public class HomogeneousMagazine implements AmmunitionContainer {
   }
 
   private boolean isCompatibleAmmunitionType(Ammunition cartridge) {
-    if (cartridge == null) {
-      return false;
-    }
-
-    return (cartridge.getAmmunitionType()).equals(getAmmunitionType());
+    return (getAmmunitionType()).equals(cartridge.getType());
   }
 
   private boolean isCompatibleAmmunition(Ammunition cartridge) {
@@ -80,8 +77,8 @@ public class HomogeneousMagazine implements AmmunitionContainer {
   }
 
   @Override
-  public String getAmmunitionType() {
-    return ammunitionType;
+  public Type getAmmunitionType() {
+    return type;
   }
 
   @Override

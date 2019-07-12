@@ -15,6 +15,15 @@ public class Probability implements Comparable<Probability>, Serializable {
   private int modifier;
 
   /**
+   * Constructs an instance of Probability with a modifier of {@value #defaultModifier}.
+   * 
+   * @param die the provider of the range of possible outcomes
+   */
+  public Probability(Die die) {
+    this(die, defaultModifier);
+  }
+
+  /**
    * Constructs an object that has a die notation data structure and a flat modifier.
    * 
    * @param die the amount of sides and the amount of objects with those sides that represent a set

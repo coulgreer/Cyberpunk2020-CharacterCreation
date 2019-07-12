@@ -166,7 +166,7 @@ public class ShopAmmunitionCategoryTable extends JTable {
 			case NAME_INDEX:
 				return box.getName();
 			case TYPE_INDEX:
-				return ammunition.getAmmunitionType();
+				return ammunition.getType().getName();
 			case DAMAGE_INDEX:
 				return ammunition.getDamage();
 			case COST_INDEX:

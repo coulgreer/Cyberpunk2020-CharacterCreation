@@ -239,7 +239,7 @@ public class InventoryWeaponTable extends JTable {
         case DAMAGE_INDEX:
           return combatant.getTotalDamageChance(weapon);
         case AMMO_INDEX:
-          return weapon.getAmmunitionType();
+          return weapon.getAmmunitionType().getName();
         case NUMBER_OF_SHOTS_INDEX:
           return weapon.getAmmunitionCount() + " / " + weapon.getAmmunitionCapacity();
         case RATE_OF_FIRE_INDEX:

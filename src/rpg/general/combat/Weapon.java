@@ -1,7 +1,7 @@
 package rpg.general.combat;
 
 import java.util.Iterator;
-
+import rpg.general.combat.Ammunition.Type;
 import rpg.general.commerce.Item;
 import rpg.util.Die;
 
@@ -13,7 +13,7 @@ import rpg.util.Die;
 public interface Weapon extends Item, Shootable {
 	public static final String NO_WEAPON_TYPE = "None";
 	public static final String NO_SKILL_NAME = "None";
-	public static final String NO_AMMUNITION_TYPE = "None";
+	public static final Type NO_AMMUNITION_TYPE = new Type("None");
 
 	/**
 	 * Gets the category that this <code>Weapon</code> belongs to.

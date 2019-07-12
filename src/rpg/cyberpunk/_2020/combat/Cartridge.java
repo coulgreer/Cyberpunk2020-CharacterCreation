@@ -1,8 +1,10 @@
 package rpg.cyberpunk._2020.combat;
 
+import java.io.Serializable;
 import java.util.Objects;
 import rpg.general.combat.Ammunition;
 import rpg.util.Die;
+import rpg.util.Name;
 import rpg.util.Probability;
 
 /**
@@ -12,31 +14,172 @@ import rpg.util.Probability;
  * damage modifiers and armor penetration.
  */
 public class Cartridge implements Ammunition {
-  public static final String AMMUNITION_TYPE_5MM = "5mm";
-  public static final String AMMUNITION_TYPE_6MM = "6mm";
-  public static final String AMMUNITION_TYPE_9MM = "9mm";
-  public static final String AMMUNITION_TYPE_10MM = "10mm";
-  public static final String AMMUNITION_TYPE_11MM = "11mm";
-  public static final String AMMUNITION_TYPE_12MM = "12mm";
-  public static final String AMMUNITION_TYPE_556 = "5.56";
-  public static final String AMMUNITION_TYPE_762 = "7.62";
-  public static final String AMMUNITION_TYPE_20MM = "20mm";
+
+  /**
+   * A representation of the size and by extension the damage that an <code>Ammunition</code> can
+   * use.
+   */
+  public static class Caliber implements Serializable {
+    public static final Caliber _5MM = new Caliber( //
+        new Type("5mm"), //
+        new Probability( //
+            new Die(1, 6)), //
+        0.1);
+    public static final Caliber _6MM = new Caliber( //
+        new Type("6mm"), //
+        new Probability( //
+            new Die(1, 6), //
+            1),
+        0.16);
+    public static final Caliber _9MM = new Caliber( //
+        new Type("9mm"), //
+        new Probability( //
+            new Die(2, 6), //
+            1),
+        0.24);
+    public static final Caliber _10MM = new Caliber( //
+        new Type("10mm"), //
+        new Probability( //
+            new Die(2, 6), //
+            3),
+        0.32);
+    public static final Caliber _11MM = new Caliber( //
+        new Type("11mm"), //
+        new Probability( //
+            new Die(3, 6)), //
+        0.4);
+    public static final Caliber _12MM = new Caliber( //
+        new Type("12mm"), //
+        new Probability( //
+            new Die(4, 6), //
+            1),
+        0.6);
+    public static final Caliber _556 = new Caliber( //
+        new Type("5.56"), //
+        new Probability( //
+            new Die(5, 6)), //
+        0.7);
+    public static final Caliber _762 = new Caliber( //
+        new Type("7.62"), //
+        new Probability( //
+            new Die(6, 6), //
+            2),
+        1.3);
+    public static final Caliber _20MM = new Caliber( //
+        new Type("20mm"), //
+        new Probability( //
+            new Die(4, 10)), //
+        75);
+
+    private static final long serialVersionUID = 1L;
+    private static final double minCost = 0.0;
+
+    private Type type;
+    private Probability damage;
+    private double cost;
+
+    /**
+     * Constructs a new instance of a caliber with at least a cost of {@value #minCost}.
+     * 
+     * @param type the size of the caliber
+     * @param damage the potential amount of hit points lost
+     * @param cost the base monetary value
+     */
+    public Caliber(Type type, Probability damage, double cost) {
+      setType(type);
+      setDamage(damage);
+      setCost(cost);
+    }
+
+    private void setType(Type type) {
+      if (type == null) {
+        throw new NullPointerException();
+      } else {
+        this.type = type;
+      }
+    }
+
+    private void setDamage(Probability damage) {
+      if (damage == null) {
+        throw new NullPointerException();
+      } else {
+        this.damage = damage;
+      }
+    }
+
+    private void setCost(double cost) {
+      if (cost < minCost) {
+        throw new IllegalArgumentException("cost = " + cost + "; min = " + minCost);
+      } else {
+        this.cost = cost;
+      }
+    }
+
+    /**
+     * @return the size of this Cartridge reprented as an instance of <code>Type</code>
+     */
+    public Type getType() {
+      return type;
+    }
+
+    /**
+     * @return the potential amount of hit points lost
+     */
+    public Probability getDamage() {
+      return damage;
+    }
+
+    /**
+     * @return the monetary value
+     */
+    public double getCost() {
+      return cost;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (o == this) {
+        return true;
+      }
+
+      if (o == null) {
+        return false;
+      }
+
+      if (!(o instanceof Caliber)) {
+        return false;
+      }
+
+      Caliber caliber = (Caliber) o;
+      return (getType().equals(caliber.getType())) //
+          && (getDamage().equals(caliber.getDamage())) //
+          && (getCost() == caliber.getCost());
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(getType(), getDamage(), getCost());
+    }
+  }
 
   /**
    * The part of the cartridge that determines what the material used for the cartridge is made of.
-   * The default material being the caseless value.
+   * The default material being the caseless variant.
    */
-  public static enum CaseMaterial {
-    CASELESS( //
-        "Caseless", //
+  public static class CaseMaterial implements Serializable {
+    public static final CaseMaterial CASELESS = new CaseMaterial( //
+        new Name("Caseless"), //
         "The powder is the casing of the projectile.", //
-        1.0), //
-    COPPER( //
-        "Copper", //
+        1.0);
+    public static final CaseMaterial COPPER = new CaseMaterial( //
+        new Name("Copper"), //
         "A basic copper case for older weapons.", //
         2.0);
 
-    private String name;
+    private static final long serialVersionUID = 1L;
+    private static final double minCostMultiplier = 0.0;
+
+    private Name name;
     private String description;
     private double costMultiplier;
 
@@ -48,37 +191,81 @@ public class Cartridge implements Ammunition {
      * @param description a blurb used to give an idea of what the case material is made of
      * @param costMultiplier the amount to multiply the base cost of a cartridge by
      */
-    CaseMaterial(String name, String description, double costMultiplier) {
-      this.name = name;
-      this.description = description;
-      this.costMultiplier = costMultiplier;
+    public CaseMaterial(Name name, String description, double costMultiplier) {
+      setName(name);
+      setDescription(description);
+      setCostMultiplier(costMultiplier);
+    }
+
+    private void setName(Name name) {
+      if (name == null) {
+        throw new NullPointerException();
+      } else {
+        this.name = name;
+      }
+    }
+
+    private void setDescription(String description) {
+      if (description == null) {
+        throw new NullPointerException();
+      } else {
+        this.description = description;
+      }
+    }
+
+    private void setCostMultiplier(double costMultiplier) {
+      if (costMultiplier < minCostMultiplier) {
+        throw new IllegalArgumentException(
+            "cost multiplier = " + costMultiplier + "; min = " + minCostMultiplier);
+      } else {
+        this.costMultiplier = costMultiplier;
+      }
     }
 
     /**
-     * Returns the identifier of this case material.
-     * 
      * @return the identifier of this case material
      */
     public String getName() {
-      return name;
+      return name.getValue();
     }
 
     /**
-     * Returns the blurb giving an idea of what the case material is made of.
-     * 
-     * @return the blurb giving an idea of what the case material is made of
+     * @return the blurb representing what the case material is made of
      */
     public String getDescription() {
       return description;
     }
 
     /**
-     * Returns the value to multiply the base cost of a <code>Cartridge</code> by.
-     * 
-     * @return the value to multiply the base cost of a <code>Cartridge</code> by
+     * @return the value to multiply the base cost by
      */
     public double getCostMultiplier() {
       return costMultiplier;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (o == this) {
+        return true;
+      }
+
+      if (o == null) {
+        return false;
+      }
+
+      if (!(o instanceof CaseMaterial)) {
+        return false;
+      }
+
+      CaseMaterial material = (CaseMaterial) o;
+      return (getName().equals(material.getName())) //
+          && (getDescription().equals(material.getDescription())) //
+          && (getCostMultiplier() == material.getCostMultiplier());
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(getName(), getDescription(), getCostMultiplier());
     }
   }
 
@@ -86,19 +273,19 @@ public class Cartridge implements Ammunition {
    * The part of the cartridge that dictates the damage modifier and the armor penetration. Also,
    * modifies the base cost of a cartridge.
    */
-  public static enum Bullet {
-    SOFT_POINT( //
-        "Soft Point", //
+  public static class Bullet implements Serializable {
+    public static final Bullet SOFT_POINT = new Bullet( //
+        new Name("Soft Point"), //
         "These are the standard bullets that all guns fire.", //
-        1.0), //
-    ARMOR_PIERCING( //
-        "Armor Piercing", //
+        1.0);
+    public static final Bullet ARMOR_PIERCING = new Bullet( //
+        new Name("Armor Piercing"), //
         "AP bullets have a steel jacket or core meant to penetrate various forms of armor. The"
             + " effects are armor SP x1/2 and penetrating damage x1/2 as well. This is because"
             + " such bullets have little or no expansion, and therefore reduce true damage.",
-        3.0), //
-    HOLLOW_POINT( //
-        "Hollow Point", //
+        3.0);
+    public static final Bullet HOLLOW_POINT = new Bullet( //
+        new Name("Hollow Point"), //
         "Special hollow-nosed ammo made of soft, quickly mushrooming lead. When these rounds hit"
             + " armor, the lead flattens bluntly and does mostly bruising damage. However, when"
             + " these rounds hit flesh, the lead squashes out to cause a massive wound cavity. In"
@@ -106,7 +293,10 @@ public class Cartridge implements Ammunition {
             + " penetrates is x1.5.",
         1.125);
 
-    private String name;
+    private static final long serialVersionUID = 1L;
+    private static final double minCostMultiplier = 0.0;
+
+    private Name name;
     private String description;
     private double costMultiplier;
 
@@ -118,24 +308,45 @@ public class Cartridge implements Ammunition {
      * @param description a blurb used to give an idea of what the bullet does when damaging
      * @param costMultiplier the amount to multiply the base cost of a cartridge by
      */
-    Bullet(String name, String description, double costMultiplier) {
-      this.name = name;
-      this.description = description;
-      this.costMultiplier = costMultiplier;
+    public Bullet(Name name, String description, double costMultiplier) {
+      setName(name);
+      setDescription(description);
+      setCostMultiplier(costMultiplier);
+    }
+
+    private void setName(Name name) {
+      if (name == null) {
+        throw new NullPointerException();
+      } else {
+        this.name = name;
+      }
+    }
+
+    private void setDescription(String description) {
+      if (description == null) {
+        throw new NullPointerException();
+      } else {
+        this.description = description;
+      }
+    }
+
+    private void setCostMultiplier(double costMultiplier) {
+      if (costMultiplier < minCostMultiplier) {
+        throw new IllegalArgumentException(
+            "cost multiplier = " + costMultiplier + "; min = " + minCostMultiplier);
+      } else {
+        this.costMultiplier = costMultiplier;
+      }
     }
 
     /**
-     * Returns the identifier of the bullet used by this <code>Cartridge</code>
-     * 
-     * @return the identifier of the bullet used by this <code>Cartridge</code>
+     * @return the identifier of the bullet
      */
     public String getName() {
-      return name;
+      return name.getValue();
     }
 
     /**
-     * Returns a blurb giving the multipliers used in damage manipulation.
-     * 
      * @return a blurb giving the multipliers used in damage manipulation
      */
     public String getDescription() {
@@ -143,23 +354,44 @@ public class Cartridge implements Ammunition {
     }
 
     /**
-     * Returns the value to multiply the base cost of a <code>Cartridge</code> by.
-     * 
      * @return the value to multiply the base cost of a <code>Cartridge</code> by
      */
     public double getCostMultiplier() {
       return costMultiplier;
     }
+
+    @Override
+    public boolean equals(Object o) {
+      if (o == this) {
+        return true;
+      }
+
+      if (o == null) {
+        return false;
+      }
+
+      if (!(o instanceof Bullet)) {
+        return false;
+      }
+
+      Bullet bullet = (Bullet) o;
+      return (getName().equals(bullet.getName())) //
+          && (getDescription().equals(bullet.getDescription())) //
+          && (getCostMultiplier() == bullet.getCostMultiplier());
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(getName(), getDescription(), getCostMultiplier());
+    }
   }
 
-  private static final long serialVersionUID = 1L;
-  private static final double minCost = 0.0;
   private static final double minWeight = 0.0;
+  private static final long serialVersionUID = 1L;
 
-  private String caliber;
+  private Caliber caliber;
   private Bullet bullet;
   private CaseMaterial caseMaterial;
-  private double baseCost;
   private double weight;
 
   /**
@@ -171,24 +403,20 @@ public class Cartridge implements Ammunition {
    *        <code>CyberpunkWeapon</code> that expects this caliber of cartridge
    * @param bullet the delegate used to get the damage modifiers and multiply the cost
    * @param caseMaterial a modifier to cost of this cartridge
-   * @param baseCost the value that is multiplied by the <code>Bullet</code> and
-   *        <code>CaseMaterial</code>
    * @param weight the heaviness of a cartridge
-   * @throws IllegalArgumentException if baseCost is less than {@value #minCost}
    * @throws IllegalArgumentException if weight is less than {@value #minWeight}
    */
   public Cartridge( //
-      String caliber, Bullet bullet, CaseMaterial caseMaterial, //
-      double baseCost, double weight) {
+      Caliber caliber, Bullet bullet, CaseMaterial caseMaterial, //
+      double weight) {
 
     setCaliber(caliber);
     setBullet(bullet);
     setCaseMaterial(caseMaterial);
-    setCost(baseCost);
     setWeight(weight);
   }
 
-  private void setCaliber(String caliber) {
+  private void setCaliber(Caliber caliber) {
     if (caliber == null) {
       throw new NullPointerException();
     } else {
@@ -212,14 +440,6 @@ public class Cartridge implements Ammunition {
     }
   }
 
-  private void setCost(double baseCost) {
-    if (baseCost < minCost) {
-      throw new IllegalArgumentException("cost: " + baseCost + "; min cost: " + minCost);
-    } else {
-      this.baseCost = baseCost;
-    }
-  }
-
   private void setWeight(double weight) {
     if (weight < minWeight) {
       throw new IllegalArgumentException("weight: " + weight + "; min weight: " + minWeight);
@@ -230,12 +450,12 @@ public class Cartridge implements Ammunition {
 
   @Override
   public String getName() {
-    return caseMaterial.getName() + " " + caliber + " " + bullet.getName();
+    return caseMaterial.getName() + " " + caliber.getType().getName() + " " + bullet.getName();
   }
 
   @Override
   public String getDescription() {
-    return "A " + caliber + " cartridge with a " + bullet.getName() + " bullet and a "
+    return "A " + caliber.getType() + " cartridge with a " + bullet.getName() + " bullet and a "
         + caseMaterial.getName() + "case./n/n   " //
         + "Bullet: " + bullet.getDescription() + "/n   " //
         + "Case Mat.: " + caseMaterial.getDescription();
@@ -243,7 +463,7 @@ public class Cartridge implements Ammunition {
 
   @Override
   public double getCost() {
-    return (baseCost * bullet.getCostMultiplier() * caseMaterial.getCostMultiplier());
+    return (caliber.getCost() * bullet.getCostMultiplier() * caseMaterial.getCostMultiplier());
   }
 
   @Override
@@ -252,54 +472,17 @@ public class Cartridge implements Ammunition {
   }
 
   @Override
-  public String getAmmunitionType() {
-    return caliber;
+  public Type getType() {
+    return caliber.getType();
   }
 
   @Override
   public Probability getDamage() {
-    Die die = null;
-    int modifier = 0;
+    return caliber.getDamage();
+  }
 
-    switch (caliber) {
-      case AMMUNITION_TYPE_5MM:
-        die = new Die(1, 6);
-        break;
-      case AMMUNITION_TYPE_6MM:
-        die = new Die(1, 6);
-        modifier = 1;
-        break;
-      case AMMUNITION_TYPE_9MM:
-        die = new Die(2, 6);
-        modifier = 1;
-        break;
-      case AMMUNITION_TYPE_10MM:
-        die = new Die(2, 6);
-        modifier = 3;
-        break;
-      case AMMUNITION_TYPE_11MM:
-        die = new Die(3, 6);
-        break;
-      case AMMUNITION_TYPE_12MM:
-        die = new Die(4, 6);
-        modifier = 1;
-        break;
-      case AMMUNITION_TYPE_556:
-        die = new Die(5, 6);
-        break;
-      case AMMUNITION_TYPE_762:
-        die = new Die(6, 6);
-        modifier = 2;
-        break;
-      case AMMUNITION_TYPE_20MM:
-        die = new Die(4, 10);
-        break;
-      default:
-        die = new Die(0, 1);
-        break;
-    }
-
-    return new Probability(die, modifier);
+  protected Caliber getCaliber() {
+    return caliber;
   }
 
   protected Bullet getBullet() {
@@ -325,13 +508,13 @@ public class Cartridge implements Ammunition {
     }
 
     Cartridge cartridge = (Cartridge) o;
-    return getAmmunitionType().equals(cartridge.getAmmunitionType())
-        && getBullet().equals(cartridge.getBullet())
-        && getCaseMaterial().equals(cartridge.getCaseMaterial());
+    return (getCaliber().equals(cartridge.getCaliber())) //
+        && (getBullet().equals(cartridge.getBullet())) //
+        && (getCaseMaterial().equals(cartridge.getCaseMaterial()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getAmmunitionType(), getBullet(), getCaseMaterial());
+    return Objects.hash(getType(), getBullet(), getCaseMaterial());
   }
 }
