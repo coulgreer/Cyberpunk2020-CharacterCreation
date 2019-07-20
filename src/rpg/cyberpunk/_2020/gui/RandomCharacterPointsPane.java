@@ -81,7 +81,7 @@ public class RandomCharacterPointsPane extends JPanel implements PropertyChangeL
     JPanel panel = new JPanel(new GridLayout(0, 3));
 
     for (Attribute a : attributes) {
-      panel.add(new AttributePane(a));
+      panel.add(new AttributePane.Spinner(a));
     }
 
     return panel;

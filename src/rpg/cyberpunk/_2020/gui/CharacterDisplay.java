@@ -21,6 +21,7 @@ public class CharacterDisplay extends JTabbedPane {
   public CharacterDisplay(Player player) {
     CyberpunkVendor vendor = new CyberpunkVendor(new VendorTrader());
 
+    addTab("Bio", new BiographyTab(player));
     addTab("Skill", new SkillTab(player));
     addTab("Equipment", new EquipmentTab(player));
     addTab("Inventory", new InventoryTab(player, vendor));

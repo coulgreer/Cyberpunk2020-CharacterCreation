@@ -3,18 +3,13 @@ package rpg.cyberpunk._2020.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ItemEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import rpg.cyberpunk._2020.stats.StatisticFactory;
@@ -33,7 +28,6 @@ public class FastCharacterPointsPane extends JPanel implements PropertyChangeLis
   private CharacterPointsManager manager;
   private List<Attribute> attributes;
   private JLabel pointLabel;
-  private List<JComboBox<Integer>> comboBoxes;
 
   /**
    * Constructs an instance of FastCharacterPointsPane that sets the attributes and manager as well
@@ -48,7 +42,6 @@ public class FastCharacterPointsPane extends JPanel implements PropertyChangeLis
     super(new BorderLayout());
     setManager(manager);
 
-    comboBoxes = new ArrayList<JComboBox<Integer>>(StatisticFactory.INDEPENDENT_ATTRIBUTE_COUNT);
     add(createContent(), BorderLayout.CENTER);
     add(createButtonComponent(), BorderLayout.SOUTH);
   }
@@ -98,71 +91,11 @@ public class FastCharacterPointsPane extends JPanel implements PropertyChangeLis
   private Container createAttributeContainer() {
     JPanel panel = new JPanel(new GridLayout(0, 3));
 
-    for (Attribute a : attributes) {
-      JPanel p = new JPanel();
-      p.add(createAttributeEditorContainer(a));
-      panel.add(p);
+    for (int i = 0; i < attributes.size(); i++) {
+      panel.add(new AttributePane.ComboBox.Builder(attributes.get(i), manager) //
+          .withDefaultIndex(i) //
+          .build());
     }
-
-    return panel;
-  }
-
-  private Container createAttributeEditorContainer(Attribute attribute) {
-    JPanel panel = new JPanel(new BorderLayout());
-
-    panel.add( //
-        createTitleComponent( //
-            attribute.getName(), new Font("San Serif", Font.BOLD, 12), //
-            null, null), //
-        BorderLayout.NORTH);
-    panel.add( //
-        createAttributeEditorComponent( //
-            attribute, //
-            manager.getRolledPoints()), //
-        BorderLayout.CENTER);
-
-    return panel;
-  }
-
-  private Component createTitleComponent( //
-      String title, Font titleFont, //
-      String subtitle, Font subtitleFont) {
-
-    JPanel panel = new JPanel();
-    panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-
-    JLabel titleLabel = new JLabel(title);
-    titleLabel.setFont(titleFont);
-    titleLabel.setAlignmentX(CENTER_ALIGNMENT);
-    panel.add(titleLabel);
-
-    JLabel subtitleLabel = new JLabel(subtitle);
-    subtitleLabel.setFont(subtitleFont);
-    subtitleLabel.setAlignmentX(CENTER_ALIGNMENT);
-    panel.add(subtitleLabel);
-
-    return panel;
-  }
-
-  private Component createAttributeEditorComponent(Attribute attribute, List<Integer> items) {
-    JPanel panel = new JPanel();
-
-    JComboBox<Integer> cb = new JComboBox<Integer>(items.toArray(new Integer[0]));
-    cb.addItemListener(evt -> {
-      if (evt.getStateChange() == ItemEvent.SELECTED) {
-        Integer item = (Integer) evt.getItem();
-
-        while (attribute.getLevel() > item) {
-          attribute.decrementLevel();
-        }
-
-        while (attribute.getLevel() < item) {
-          attribute.incrementLevel();
-        }
-      }
-    });
-    comboBoxes.add(cb);
-    panel.add(cb);
 
     return panel;
   }
@@ -179,22 +112,12 @@ public class FastCharacterPointsPane extends JPanel implements PropertyChangeLis
     return panel;
   }
 
-  private void update() {
-    Integer[] items = manager.getRolledPoints().toArray(new Integer[0]);
-    for (int i = 0; i < items.length; i++) {
-      JComboBox<Integer> cb = comboBoxes.get(i);
-      cb.setModel(new DefaultComboBoxModel<Integer>(items));
-      cb.setSelectedIndex(i);
-    }
-
-    pointLabel.setText(getPointText());
-  }
-
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     Object source = evt.getSource();
+
     if (manager == source) {
-      update();
+      pointLabel.setText(getPointText());
     }
   }
 

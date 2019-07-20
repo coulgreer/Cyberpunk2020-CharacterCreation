@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import rpg.Gender;
 import rpg.cyberpunk._2020.combat.AikidoFightingStyleFactory;
 import rpg.cyberpunk._2020.combat.AnimalKungFuFightingStyleFactory;
 import rpg.cyberpunk._2020.combat.ArmorManager;
@@ -39,6 +40,7 @@ import rpg.general.combat.Combatant;
 import rpg.general.commerce.Item;
 import rpg.general.commerce.Trader;
 import rpg.general.stats.Attribute;
+import rpg.util.Name;
 import rpg.util.Probability;
 
 public class Player {
@@ -67,6 +69,8 @@ public class Player {
    */
   public static final int SECONDARY_SLOT = 1;
 
+  private static final int MIN_AGE = 16;
+
   private PropertyChangeSupport changeSupport;
   private Inventory pocketInventory = new BottomlessInventory();
   private Role role;
@@ -77,6 +81,9 @@ public class Player {
   private ArmorManager armorManager;
   private Map<String, Map<String, Attribute>> attributesByNameByType;
   private Map<String, Map<String, CyberpunkSkill>> skillsByNameByCategoryName;
+  private Name alias;
+  private int age;
+  private Gender gender;
   private Background background;
   private List<String> pickupSkillNames;
 
@@ -91,6 +98,9 @@ public class Player {
     attributesByNameByType = StatisticFactory.createAttributesByNameByType();
     skillsByNameByCategoryName = StatisticFactory.createSkillByNameByCategoryName(
         attributesByNameByType.get(StatisticFactory.INDEPENDENT_ATTRIBUTE), this);
+    alias = new Name("UNKNOWN");
+    age = MIN_AGE;
+    gender = Gender.MALE;
     background = new Background();
     pickupSkillNames = Collections.emptyList();
   }
@@ -544,6 +554,42 @@ public class Player {
 
   public int getEncumbranceValue() {
     return armorManager.getEncumbrancePenalty();
+  }
+
+  public Name getAlias() {
+    return alias;
+  }
+
+  public void setAlias(Name alias) {
+    if (alias == null) {
+      throw new NullPointerException();
+    } else {
+      this.alias = alias;
+    }
+  }
+
+  public int getAge() {
+    return age;
+  }
+
+  public void setAge(int age) {
+    if (age < MIN_AGE) {
+      throw new IllegalArgumentException("age = " + age + "; min = " + MIN_AGE);
+    } else {
+      this.age = age;
+    }
+  }
+
+  public Gender getGender() {
+    return gender;
+  }
+
+  public void setGender(Gender gender) {
+    if (gender == null) {
+      throw new NullPointerException();
+    } else {
+      this.gender = gender;
+    }
   }
 
   public String getFamilyRanking() {
