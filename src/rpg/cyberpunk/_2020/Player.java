@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,15 @@ public class Player {
   public static final String PROPERTY_NAME_EQUIPMENT_ARMOR = "Equipment: Armor";
   public static final String PROPERTY_NAME_ROLE = "Role";
   public static final String PROPERTY_NAME_PICKUP_SKILL = "Pickup Skill";
+  public static final String PROPERTY_NAME_AGE = "Age";
+  public static final String PROPERTY_NAME_GENDER = "Gender";
+  public static final String PROPERTY_NAME_EYES = "Eyes";
+  public static final String PROPERTY_NAME_HEIGHT = "Height";
+  public static final String PROPERTY_NAME_HAIR = "Hair";
+  public static final String PROPERTY_NAME_SKIN_TONE = "Skin Tone";
+  public static final String PROPERTY_NAME_WEIGHT = "Weight";
+  public static final String PROPERTY_NAME_SIBLINGS = "Siblings";
+  public static final String PROPERTY_NAME_LIFE_EVENT = "Life Event";
 
   /**
    * A constant representing the index of the primary weapon slot.
@@ -69,7 +79,7 @@ public class Player {
    */
   public static final int SECONDARY_SLOT = 1;
 
-  private static final int MIN_AGE = 16;
+  public static final int MIN_AGE = 16;
 
   private PropertyChangeSupport changeSupport;
   private Inventory pocketInventory = new BottomlessInventory();
@@ -81,10 +91,29 @@ public class Player {
   private ArmorManager armorManager;
   private Map<String, Map<String, Attribute>> attributesByNameByType;
   private Map<String, Map<String, CyberpunkSkill>> skillsByNameByCategoryName;
+
+  // Basic Info
   private Name alias;
   private int age;
   private Gender gender;
+
+  // Characteristics
+  private String eyes;
+  private String height;
+  private String hair;
+  private String skinTone;
+  private String weight;
+
+  // Motivations
+  private String personalityTrait;
+  private String valuedPerson;
+  private String valuedConcept;
+  private String feelingsTowardOthers;
+  private String valuedPosession;
+
   private Background background;
+  private Map<Integer, String> eventsByAge;
+
   private List<String> pickupSkillNames;
 
   public Player() {
@@ -98,10 +127,27 @@ public class Player {
     attributesByNameByType = StatisticFactory.createAttributesByNameByType();
     skillsByNameByCategoryName = StatisticFactory.createSkillByNameByCategoryName(
         attributesByNameByType.get(StatisticFactory.INDEPENDENT_ATTRIBUTE), this);
+
     alias = new Name("UNKNOWN");
     age = MIN_AGE;
     gender = Gender.MALE;
+
+    eyes = "";
+    height = "";
+    hair = "";
+    skinTone = "";
+    weight = "";
+
+    personalityTrait = "";
+    valuedPerson = "";
+    valuedConcept = "";
+    feelingsTowardOthers = "";
+    valuedPosession = "";
+
     background = new Background();
+    eventsByAge = new HashMap<Integer, String>();
+    eventsByAge.put(MIN_AGE, "N/A");
+
     pickupSkillNames = Collections.emptyList();
   }
 
@@ -576,7 +622,22 @@ public class Player {
     if (age < MIN_AGE) {
       throw new IllegalArgumentException("age = " + age + "; min = " + MIN_AGE);
     } else {
+      int oldValue = this.age;
+      int tempAge = this.age;
+
+      while (tempAge < age) {
+        tempAge++;
+        eventsByAge.put(tempAge, "N/A");
+      }
+
+      while (tempAge > age) {
+        eventsByAge.remove(tempAge);
+        tempAge--;
+      }
+
       this.age = age;
+
+      changeSupport.firePropertyChange(PROPERTY_NAME_AGE, oldValue, age);
     }
   }
 
@@ -588,7 +649,145 @@ public class Player {
     if (gender == null) {
       throw new NullPointerException();
     } else {
+      Gender oldValue = this.gender;
       this.gender = gender;
+
+      changeSupport.firePropertyChange(PROPERTY_NAME_GENDER, oldValue, gender);
+    }
+  }
+
+  public String getEyes() {
+    return eyes;
+  }
+
+  public void setEyes(String eyes) {
+    if (eyes == null) {
+      throw new NullPointerException();
+    } else {
+      String oldValue = this.eyes;
+      this.eyes = eyes;
+
+      changeSupport.firePropertyChange(PROPERTY_NAME_EYES, oldValue, eyes);
+    }
+  }
+
+  public String getHeight() {
+    return height;
+  }
+
+  public void setHeight(String height) {
+    if (height == null) {
+      throw new NullPointerException();
+    } else {
+      String oldValue = this.height;
+      this.height = height;
+
+      changeSupport.firePropertyChange(PROPERTY_NAME_HEIGHT, oldValue, height);
+    }
+  }
+
+  public String getHair() {
+    return hair;
+  }
+
+  public void setHair(String hair) {
+    if (hair == null) {
+      throw new NullPointerException();
+    } else {
+      String oldValue = this.hair;
+      this.hair = hair;
+
+      changeSupport.firePropertyChange(PROPERTY_NAME_HAIR, oldValue, hair);
+    }
+  }
+
+  public String getSkinTone() {
+    return skinTone;
+  }
+
+  public void setSkinTone(String skinTone) {
+    if (skinTone == null) {
+      throw new NullPointerException();
+    } else {
+      String oldValue = skinTone;
+      this.skinTone = skinTone;
+
+      changeSupport.firePropertyChange(PROPERTY_NAME_SKIN_TONE, oldValue, skinTone);
+    }
+  }
+
+  public String getWeight() {
+    return weight;
+  }
+
+  public void setWeight(String weight) {
+    if (weight == null) {
+      throw new NullPointerException();
+    } else {
+      String oldValue = weight;
+      this.weight = weight;
+
+      changeSupport.firePropertyChange(PROPERTY_NAME_WEIGHT, oldValue, weight);
+    }
+  }
+
+  public String getPersonalityTrait() {
+    return personalityTrait;
+  }
+
+  public void setPersonalityTrait(String personalityTrait) {
+    if (personalityTrait == null) {
+      throw new NullPointerException();
+    } else {
+      this.personalityTrait = personalityTrait;
+    }
+  }
+
+  public String getValuedPerson() {
+    return valuedPerson;
+  }
+
+  public void setValuedPerson(String valuedPerson) {
+    if (valuedPerson == null) {
+      throw new NullPointerException();
+    } else {
+      this.valuedPerson = valuedPerson;
+    }
+  }
+
+  public String getValuedConcept() {
+    return valuedConcept;
+  }
+
+  public void setValuedConcept(String valuedConcept) {
+    if (valuedConcept == null) {
+      throw new NullPointerException();
+    } else {
+      this.valuedConcept = valuedConcept;
+    }
+  }
+
+  public String getFeelingsTowardOthers() {
+    return feelingsTowardOthers;
+  }
+
+  public void setFeelingsTowardOthers(String feelingsTowardOthers) {
+    if (feelingsTowardOthers == null) {
+      throw new NullPointerException();
+    } else {
+      this.feelingsTowardOthers = feelingsTowardOthers;
+    }
+  }
+
+  public String getValuedPosession() {
+    return valuedPosession;
+  }
+
+  public void setValuedPosession(String valuedPosession) {
+    if (valuedPosession == null) {
+      throw new NullPointerException();
+    } else {
+      this.valuedPosession = valuedPosession;
     }
   }
 
@@ -661,7 +860,26 @@ public class Player {
   }
 
   public void setSiblings(List<Sibling> siblings) {
+    List<Sibling> oldValue = background.getSiblings();
+
     background.setSiblings(siblings);
+    changeSupport.firePropertyChange(PROPERTY_NAME_SIBLINGS, oldValue, siblings);
+  }
+
+  public Map<Integer, String> getEventsByAge() {
+    return Collections.unmodifiableMap(eventsByAge);
+  }
+
+  public void updateEvent(int age, String lifeEvent) {
+    if (age < MIN_AGE) {
+      throw new IllegalArgumentException("age = " + age + "; min = " + MIN_AGE);
+    } else if (lifeEvent == null) {
+      throw new NullPointerException();
+    } else {
+      String oldValue = eventsByAge.replace(age, lifeEvent);
+
+      changeSupport.firePropertyChange(PROPERTY_NAME_LIFE_EVENT, oldValue, lifeEvent);
+    }
   }
 
   public Role getRole() {

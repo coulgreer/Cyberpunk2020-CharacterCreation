@@ -1,26 +1,12 @@
 package rpg.cyberpunk._2020;
 
 import org.apache.commons.text.WordUtils;
+import rpg.Gender;
 
 /**
  * A Value Object that represents a sibling to the player. Purely used to transfer data to the UI.
  */
 public final class Sibling {
-  /**
-   * Representation of the sex of a Sibling.
-   */
-  public enum Sex {
-    MALE, FEMALE;
-
-    @Override
-    public String toString() {
-      String str = name();
-
-      str = str.replace("_", " ");
-      str = WordUtils.capitalizeFully(str);
-      return str;
-    }
-  }
 
   /**
    * Representation of the relative age of the Player.
@@ -39,7 +25,7 @@ public final class Sibling {
   }
 
   private String name;
-  private Sex sex;
+  private Gender gender;
   private RelativeAge age;
   private String relationship;
 
@@ -47,13 +33,13 @@ public final class Sibling {
    * Constructs an instance of Sibling that holds the data for name, sex, age, and relationship.
    * 
    * @param name the name of the Sibling
-   * @param sex the data representing the sex of the Sibling
+   * @param gender the data representing the gender of the Sibling
    * @param age the age relative to the Player
    * @param relationship the representation of the relationship related towards the Player
    */
-  public Sibling(String name, Sex sex, RelativeAge age, String relationship) {
+  public Sibling(String name, Gender gender, RelativeAge age, String relationship) {
     setName(name);
-    setSex(sex);
+    setGender(gender);
     setAge(age);
     setRelationship(relationship);
   }
@@ -68,11 +54,11 @@ public final class Sibling {
     }
   }
 
-  private void setSex(Sex sex) {
-    if (sex == null) {
+  private void setGender(Gender gender) {
+    if (gender == null) {
       throw new NullPointerException();
     } else {
-      this.sex = sex;
+      this.gender = gender;
     }
   }
 
@@ -100,10 +86,10 @@ public final class Sibling {
   }
 
   /**
-   * @return the sex of this Sibling represented as a String
+   * @return the gender of this Sibling represented as a String
    */
-  public String getSex() {
-    return sex.toString();
+  public Gender getGender() {
+    return gender;
   }
 
   /**

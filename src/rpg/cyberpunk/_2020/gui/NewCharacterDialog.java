@@ -34,10 +34,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import rpg.Gender;
 import rpg.cyberpunk._2020.Player;
 import rpg.cyberpunk._2020.Sibling;
 import rpg.cyberpunk._2020.Sibling.RelativeAge;
-import rpg.cyberpunk._2020.Sibling.Sex;
 import rpg.cyberpunk._2020.stats.CyberpunkAttribute;
 import rpg.cyberpunk._2020.stats.Role;
 import rpg.cyberpunk._2020.stats.RoleFactory;
@@ -680,11 +680,15 @@ public class NewCharacterDialog extends JDialog {
 
               for (Map<String, Object> propertiesByName : propertiesByNameByJPanel.values()) {
                 String siblingName = (String) propertiesByName.get(name);
-                Sex siblingSex = (Sex) propertiesByName.get(sex);
+                Gender siblingGender = (Gender) propertiesByName.get(sex);
                 RelativeAge siblingAge = (RelativeAge) propertiesByName.get(age);
                 String siblingRelationship = (String) propertiesByName.get(relationship);
 
-                siblings.add(new Sibling(siblingName, siblingSex, siblingAge, siblingRelationship));
+                siblings.add(new Sibling( //
+                    siblingName, //
+                    siblingGender, //
+                    siblingAge, //
+                    siblingRelationship));
               }
               player.setSiblings(siblings);
               switchCardTo(rolePane);
@@ -839,9 +843,9 @@ public class NewCharacterDialog extends JDialog {
             "Sex", new Font("Serif", Font.PLAIN, 24), //
             "Roll or choose one.", new Font("Serif", Font.PLAIN, 12)));
 
-    Sex[] items = {Sex.MALE, Sex.FEMALE};
+    Gender[] items = Gender.values();
     propertiesByName.put(sex, items[0]);
-    JComboBox<Sex> comboBox = new JComboBox<Sex>(items);
+    JComboBox<Gender> comboBox = new JComboBox<Gender>(items);
     comboBox.addItemListener(evt -> {
       if (evt.getStateChange() == ItemEvent.SELECTED) {
         propertiesByName.replace(sex, evt.getItem());
