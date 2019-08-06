@@ -3,8 +3,6 @@ package rpg.cyberpunk._2020.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import rpg.cyberpunk._2020.Player;
@@ -13,7 +11,7 @@ import rpg.cyberpunk._2020.Player;
  * An instance of JPanel that sets up a panel for armor, primary weapon, and secondary weapon from a
  * Player to be displayed.
  */
-public class EquipmentTab extends JPanel implements PropertyChangeListener {
+public class EquipmentTab extends JPanel {
   private static final long serialVersionUID = 1L;
 
   private Player player;
@@ -78,12 +76,6 @@ public class EquipmentTab extends JPanel implements PropertyChangeListener {
     } else if (selected == secondaryWeaponPanel) {
       player.unequip(Player.SECONDARY_SLOT);
     }
-  }
-
-  @Override
-  public void propertyChange(PropertyChangeEvent evt) {
-    // TODO Auto-generated method stub
-
   }
 
 }

@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import javafx.collections.ObservableList;
 import rpg.Gender;
 import rpg.cyberpunk._2020.combat.AikidoFightingStyleFactory;
 import rpg.cyberpunk._2020.combat.AnimalKungFuFightingStyleFactory;
@@ -31,10 +33,10 @@ import rpg.cyberpunk._2020.combat.WrestlingFightingStyleFactory;
 import rpg.cyberpunk._2020.commerce.BottomlessInventory;
 import rpg.cyberpunk._2020.commerce.Inventory;
 import rpg.cyberpunk._2020.commerce.PlayerTrader;
+import rpg.cyberpunk._2020.stats.CyberpunkAttribute;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.cyberpunk._2020.stats.Role;
 import rpg.cyberpunk._2020.stats.StatisticFactory;
-import rpg.cyberpunk._2020.systems.Background;
 import rpg.general.combat.Ammunition;
 import rpg.general.combat.BodyLocation;
 import rpg.general.combat.Combatant;
@@ -58,7 +60,7 @@ public class Player {
   public static final String PROPERTY_NAME_EQUIPMENT_WEAPON = "Equipment: Weapon";
   public static final String PROPERTY_NAME_EQUIPMENT_ARMOR = "Equipment: Armor";
   public static final String PROPERTY_NAME_ROLE = "Role";
-  public static final String PROPERTY_NAME_PICKUP_SKILL = "Pickup Skill";
+  public static final String PROPERTY_NAME_CAREER_SKILL = "Career Skill";
   public static final String PROPERTY_NAME_AGE = "Age";
   public static final String PROPERTY_NAME_GENDER = "Gender";
   public static final String PROPERTY_NAME_EYES = "Eyes";
@@ -66,8 +68,9 @@ public class Player {
   public static final String PROPERTY_NAME_HAIR = "Hair";
   public static final String PROPERTY_NAME_SKIN_TONE = "Skin Tone";
   public static final String PROPERTY_NAME_WEIGHT = "Weight";
-  public static final String PROPERTY_NAME_SIBLINGS = "Siblings";
   public static final String PROPERTY_NAME_LIFE_EVENT = "Life Event";
+
+  public static final int MIN_AGE = 16;
 
   /**
    * A constant representing the index of the primary weapon slot.
@@ -79,7 +82,7 @@ public class Player {
    */
   public static final int SECONDARY_SLOT = 1;
 
-  public static final int MIN_AGE = 16;
+  private static final int PRIMARY_LANGUAGE_BONUS = 8;
 
   private PropertyChangeSupport changeSupport;
   private Inventory pocketInventory = new BottomlessInventory();
@@ -92,29 +95,15 @@ public class Player {
   private Map<String, Map<String, Attribute>> attributesByNameByType;
   private Map<String, Map<String, CyberpunkSkill>> skillsByNameByCategoryName;
 
-  // Basic Info
   private Name alias;
-  private int age;
-  private Gender gender;
-
-  // Characteristics
-  private String eyes;
-  private String height;
-  private String hair;
-  private String skinTone;
-  private String weight;
-
-  // Motivations
-  private String personalityTrait;
-  private String valuedPerson;
-  private String valuedConcept;
-  private String feelingsTowardOthers;
-  private String valuedPosession;
-
+  private Characteristics characteristics;
+  private String primaryLanguage;
+  private Motivations motivations;
   private Background background;
-  private Map<Integer, String> eventsByAge;
+  private Map<Age, String> eventsByAge;
+  private String backstory;
 
-  private List<String> pickupSkillNames;
+  private List<String> careerSkillNames;
 
   public Player() {
     changeSupport = new PropertyChangeSupport(this);
@@ -129,26 +118,15 @@ public class Player {
         attributesByNameByType.get(StatisticFactory.INDEPENDENT_ATTRIBUTE), this);
 
     alias = new Name("UNKNOWN");
-    age = MIN_AGE;
-    gender = Gender.MALE;
-
-    eyes = "";
-    height = "";
-    hair = "";
-    skinTone = "";
-    weight = "";
-
-    personalityTrait = "";
-    valuedPerson = "";
-    valuedConcept = "";
-    feelingsTowardOthers = "";
-    valuedPosession = "";
-
+    characteristics = new Characteristics();
+    primaryLanguage = "";
+    motivations = new Motivations();
     background = new Background();
-    eventsByAge = new HashMap<Integer, String>();
-    eventsByAge.put(MIN_AGE, "N/A");
+    eventsByAge = new HashMap<Age, String>();
+    eventsByAge.put(new Age(MIN_AGE), "N/A");
+    backstory = "";
 
-    pickupSkillNames = Collections.emptyList();
+    careerSkillNames = Collections.emptyList();
   }
 
   public void buy(CyberpunkWeapon weapon, double price) {
@@ -309,12 +287,7 @@ public class Player {
   }
 
   public Attribute getAttribute(String name) {
-    Iterator<Map<String, Attribute>> iterator = attributesByNameByType.values() //
-        .iterator();
-
-    while (iterator.hasNext()) {
-      Map<String, Attribute> attributesByName = iterator.next();
-
+    for (Map<String, Attribute> attributesByName : attributesByNameByType.values()) {
       if (attributesByName.containsKey(name)) {
         return attributesByName.get(name);
       }
@@ -324,27 +297,55 @@ public class Player {
   }
 
   public Iterator<Attribute> createAttributeByTypeIterator(String type) {
-    return attributesByNameByType.get(type).values() //
+    return attributesByNameByType //
+        .get(type) //
+        .values() //
         .iterator();
   }
 
   public CyberpunkSkill getSkill(String name) {
-    Iterator<Map<String, CyberpunkSkill>> iterator = skillsByNameByCategoryName.values() //
-        .iterator();
-
-    while (iterator.hasNext()) {
-      Map<String, CyberpunkSkill> skillsByName = iterator.next();
-
+    for (Map<String, CyberpunkSkill> skillsByName : skillsByNameByCategoryName.values()) {
       if (skillsByName.containsKey(name)) {
         return skillsByName.get(name);
       }
     }
 
-    throw new NoSuchElementException("A skill with the name " + name + " does not exist.");
+    return null;
   }
 
   public Iterator<Map.Entry<String, Map<String, CyberpunkSkill>>> createSkillCategoryIterator() {
-    return skillsByNameByCategoryName.entrySet().iterator();
+    // TODO (Coul Greer): Think about moving this kind of immutable nested Map into the factor. Use
+    // Collections and its 'unmodifiable' methods as an example.
+    Map<String, Map<String, CyberpunkSkill>> immutablekillsByNameByCategoryName =
+        new HashMap<String, Map<String, CyberpunkSkill>>();
+
+    for (String key : skillsByNameByCategoryName.keySet()) {
+      Map<String, CyberpunkSkill> skillsByName = skillsByNameByCategoryName.get(key);
+      immutablekillsByNameByCategoryName.put(key, Collections.unmodifiableMap(skillsByName));
+    }
+
+    return Collections.unmodifiableMap(immutablekillsByNameByCategoryName) //
+        .entrySet() //
+        .iterator();
+  }
+
+  public Iterator<CyberpunkSkill> createLanguageIterator() {
+    // TODO (Coul Greer): Think about moving CP Attribute names and CP Skill names to the
+    // StatisticFactory class. Since the StatisticFactory creates all Attributes and Skills it may
+    // make sense to make it the hub for object to object constants since not all Attributes or
+    // Skills needs to know the name of all other Statistics of its kind.
+
+    Map<String, CyberpunkSkill> skillsByName =
+        skillsByNameByCategoryName.get(CyberpunkAttribute.INTELLIGENCE);
+
+    Map<String, CyberpunkSkill> filteredSkillsByName = skillsByName.entrySet() //
+        .stream() //
+        .filter(entry -> entry.getKey().startsWith(StatisticFactory.LANGUAGE_IDENTIFIER)) //
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+    return filteredSkillsByName //
+        .values() //
+        .iterator();
   }
 
   public Probability getTotalAttackChance(int slot) {
@@ -614,181 +615,196 @@ public class Player {
     }
   }
 
-  public int getAge() {
-    return age;
+  public Age getAge() {
+    return characteristics.getAge();
   }
 
-  public void setAge(int age) {
-    if (age < MIN_AGE) {
-      throw new IllegalArgumentException("age = " + age + "; min = " + MIN_AGE);
+  public void setAge(Age age) {
+    Age oldValue = characteristics.getAge();
+    int tempAge = oldValue.toInt();
+
+    while (tempAge < age.toInt()) {
+      tempAge++;
+      eventsByAge.put(new Age(tempAge), "N/A");
+    }
+
+    while (tempAge > age.toInt()) {
+      eventsByAge.remove(new Age(tempAge));
+      tempAge--;
+    }
+
+    characteristics.setAge(age);
+    changeSupport.firePropertyChange(PROPERTY_NAME_AGE, oldValue, age);
+  }
+
+  public String getPrimaryLanguage() {
+    return primaryLanguage;
+  }
+
+  public void setPrimaryLanguage(String primaryLanguage) {
+    if (primaryLanguage == null) {
+      throw new NullPointerException();
+    } else if (!hasLanguage(primaryLanguage)) {
+      throw new NoSuchElementException();
     } else {
-      int oldValue = this.age;
-      int tempAge = this.age;
+      reallocateLanguagePointsTo(primaryLanguage);
+      this.primaryLanguage = primaryLanguage;
+    }
+  }
 
-      while (tempAge < age) {
-        tempAge++;
-        eventsByAge.put(tempAge, "N/A");
+  private boolean hasLanguage(String name) {
+    Iterator<CyberpunkSkill> iterator = createLanguageIterator();
+
+    while (iterator.hasNext()) {
+      CyberpunkSkill skill = iterator.next();
+      if (skill.getName().equals(name)) {
+        return true;
       }
+    }
 
-      while (tempAge > age) {
-        eventsByAge.remove(tempAge);
-        tempAge--;
+    return false;
+  }
+
+  // TODO (Coul Greer): Maybe only allow this at character creation. This can currently result in
+  // a user decrementing a level and then switching prime languages which inflates the points they
+  // can spend or have. This will then result in the user only being refunded part of the Language
+  // Bonus but still getting the full bonus for the new language.
+  private void reallocateLanguagePointsTo(String primaryLanguage) {
+    CyberpunkSkill oldSkill = getSkill(this.primaryLanguage);
+    if (oldSkill != null) {
+      refundLanguagePointsFrom(oldSkill);
+    }
+
+    CyberpunkSkill newSkill = getSkill(primaryLanguage);
+    if (newSkill != null) {
+      allocateLanguagePointsTo(newSkill);
+    }
+  }
+
+  private void refundLanguagePointsFrom(CyberpunkSkill skill) {
+    if (skill == null) {
+      throw new NullPointerException();
+    } else {
+      for (int i = 0; i < PRIMARY_LANGUAGE_BONUS; i++) {
+        skill.decrementLevel();
       }
+    }
+  }
 
-      this.age = age;
-
-      changeSupport.firePropertyChange(PROPERTY_NAME_AGE, oldValue, age);
+  private void allocateLanguagePointsTo(CyberpunkSkill skill) {
+    if (skill == null) {
+      throw new NullPointerException();
+    } else {
+      for (int i = 0; i < PRIMARY_LANGUAGE_BONUS; i++) {
+        skill.incrementLevel();
+      }
     }
   }
 
   public Gender getGender() {
-    return gender;
+    return characteristics.getGender();
   }
 
   public void setGender(Gender gender) {
-    if (gender == null) {
-      throw new NullPointerException();
-    } else {
-      Gender oldValue = this.gender;
-      this.gender = gender;
+    Gender oldValue = characteristics.getGender();
+    characteristics.setGender(gender);
 
-      changeSupport.firePropertyChange(PROPERTY_NAME_GENDER, oldValue, gender);
-    }
+    changeSupport.firePropertyChange(PROPERTY_NAME_GENDER, oldValue, gender);
   }
 
   public String getEyes() {
-    return eyes;
+    return characteristics.getEyes();
   }
 
   public void setEyes(String eyes) {
-    if (eyes == null) {
-      throw new NullPointerException();
-    } else {
-      String oldValue = this.eyes;
-      this.eyes = eyes;
+    String oldValue = characteristics.getEyes();
+    characteristics.setEyes(eyes);
 
-      changeSupport.firePropertyChange(PROPERTY_NAME_EYES, oldValue, eyes);
-    }
+    changeSupport.firePropertyChange(PROPERTY_NAME_EYES, oldValue, eyes);
   }
 
   public String getHeight() {
-    return height;
+    return characteristics.getHeight();
   }
 
   public void setHeight(String height) {
-    if (height == null) {
-      throw new NullPointerException();
-    } else {
-      String oldValue = this.height;
-      this.height = height;
+    String oldValue = characteristics.getHeight();
+    characteristics.setHeight(height);
 
-      changeSupport.firePropertyChange(PROPERTY_NAME_HEIGHT, oldValue, height);
-    }
+    changeSupport.firePropertyChange(PROPERTY_NAME_HEIGHT, oldValue, height);
   }
 
   public String getHair() {
-    return hair;
+    return characteristics.getHair();
   }
 
   public void setHair(String hair) {
-    if (hair == null) {
-      throw new NullPointerException();
-    } else {
-      String oldValue = this.hair;
-      this.hair = hair;
+    String oldValue = characteristics.getHair();
+    characteristics.setHair(hair);
 
-      changeSupport.firePropertyChange(PROPERTY_NAME_HAIR, oldValue, hair);
-    }
+    changeSupport.firePropertyChange(PROPERTY_NAME_HAIR, oldValue, hair);
   }
 
   public String getSkinTone() {
-    return skinTone;
+    return characteristics.getSkinTone();
   }
 
   public void setSkinTone(String skinTone) {
-    if (skinTone == null) {
-      throw new NullPointerException();
-    } else {
-      String oldValue = skinTone;
-      this.skinTone = skinTone;
+    String oldValue = characteristics.getSkinTone();
+    characteristics.setSkinTone(skinTone);
 
-      changeSupport.firePropertyChange(PROPERTY_NAME_SKIN_TONE, oldValue, skinTone);
-    }
+    changeSupport.firePropertyChange(PROPERTY_NAME_SKIN_TONE, oldValue, skinTone);
   }
 
   public String getWeight() {
-    return weight;
+    return characteristics.getWeight();
   }
 
   public void setWeight(String weight) {
-    if (weight == null) {
-      throw new NullPointerException();
-    } else {
-      String oldValue = weight;
-      this.weight = weight;
+    String oldValue = characteristics.getWeight();
+    characteristics.setWeight(weight);
 
-      changeSupport.firePropertyChange(PROPERTY_NAME_WEIGHT, oldValue, weight);
-    }
+    changeSupport.firePropertyChange(PROPERTY_NAME_WEIGHT, oldValue, weight);
   }
 
   public String getPersonalityTrait() {
-    return personalityTrait;
+    return motivations.getPersonalityTrait();
   }
 
   public void setPersonalityTrait(String personalityTrait) {
-    if (personalityTrait == null) {
-      throw new NullPointerException();
-    } else {
-      this.personalityTrait = personalityTrait;
-    }
+    motivations.setPersonalityTrait(personalityTrait);
   }
 
   public String getValuedPerson() {
-    return valuedPerson;
+    return motivations.getValuedPerson();
   }
 
   public void setValuedPerson(String valuedPerson) {
-    if (valuedPerson == null) {
-      throw new NullPointerException();
-    } else {
-      this.valuedPerson = valuedPerson;
-    }
+    motivations.setValuedPerson(valuedPerson);
   }
 
   public String getValuedConcept() {
-    return valuedConcept;
+    return motivations.getValuedConcept();
   }
 
   public void setValuedConcept(String valuedConcept) {
-    if (valuedConcept == null) {
-      throw new NullPointerException();
-    } else {
-      this.valuedConcept = valuedConcept;
-    }
+    motivations.setValuedConcept(valuedConcept);
   }
 
   public String getFeelingsTowardOthers() {
-    return feelingsTowardOthers;
+    return motivations.getFeelingsTowardOthers();
   }
 
   public void setFeelingsTowardOthers(String feelingsTowardOthers) {
-    if (feelingsTowardOthers == null) {
-      throw new NullPointerException();
-    } else {
-      this.feelingsTowardOthers = feelingsTowardOthers;
-    }
+    motivations.setFeelingsTowardOthers(feelingsTowardOthers);
   }
 
   public String getValuedPosession() {
-    return valuedPosession;
+    return motivations.getValuedPosession();
   }
 
   public void setValuedPosession(String valuedPosession) {
-    if (valuedPosession == null) {
-      throw new NullPointerException();
-    } else {
-      this.valuedPosession = valuedPosession;
-    }
+    motivations.setValuedPosession(valuedPosession);
   }
 
   public String getFamilyRanking() {
@@ -855,23 +871,32 @@ public class Player {
     background.setChildhoodEnvironment(childhoodEnvironment);
   }
 
-  public List<Sibling> getSiblings() {
+  public ObservableList<Sibling> getSiblings() {
     return background.getSiblings();
   }
 
-  public void setSiblings(List<Sibling> siblings) {
-    List<Sibling> oldValue = background.getSiblings();
-
-    background.setSiblings(siblings);
-    changeSupport.firePropertyChange(PROPERTY_NAME_SIBLINGS, oldValue, siblings);
+  public void addAll(Collection<Sibling> collection) {
+    background.addAll(collection);
   }
 
-  public Map<Integer, String> getEventsByAge() {
+  public void addSibling(Sibling sibling) {
+    background.addSibling(sibling);
+  }
+
+  public void removeSibling(Sibling sibling) {
+    background.removeSibling(sibling);
+  }
+
+  public void clearSiblings() {
+    background.clear();
+  }
+
+  public Map<Age, String> getEventsByAge() {
     return Collections.unmodifiableMap(eventsByAge);
   }
 
-  public void updateEvent(int age, String lifeEvent) {
-    if (age < MIN_AGE) {
+  public void updateEvent(Age age, String lifeEvent) {
+    if (age.toInt() < MIN_AGE) {
       throw new IllegalArgumentException("age = " + age + "; min = " + MIN_AGE);
     } else if (lifeEvent == null) {
       throw new NullPointerException();
@@ -879,6 +904,18 @@ public class Player {
       String oldValue = eventsByAge.replace(age, lifeEvent);
 
       changeSupport.firePropertyChange(PROPERTY_NAME_LIFE_EVENT, oldValue, lifeEvent);
+    }
+  }
+
+  public String getBackstory() {
+    return backstory;
+  }
+
+  public void setBackstory(String backstory) {
+    if (backstory == null) {
+      this.backstory = "";
+    } else {
+      this.backstory = backstory;
     }
   }
 
@@ -893,24 +930,20 @@ public class Player {
     changeSupport.firePropertyChange(PROPERTY_NAME_ROLE, oldValue, role);
   }
 
-  public List<String> getPickupSkillNames() {
-    return pickupSkillNames;
+  public List<String> getCareerSkillNames() {
+    return careerSkillNames;
   }
 
-  public void setPickupSkillNames(List<String> pickupSkillNames) {
-    int minLength = 1;
-    List<String> oldValue = pickupSkillNames;
+  public void setCareerSkillNames(List<String> careerSkillNames) {
+    List<String> oldValue = careerSkillNames;
 
-    if (pickupSkillNames == null) {
+    if (careerSkillNames == null) {
       throw new NullPointerException();
-    } else if (pickupSkillNames.size() < minLength) {
-      throw new IllegalArgumentException(
-          "length: " + pickupSkillNames.size() + "; min length: " + minLength);
     } else {
-      this.pickupSkillNames = pickupSkillNames;
+      this.careerSkillNames = careerSkillNames;
     }
 
-    changeSupport.firePropertyChange(PROPERTY_NAME_PICKUP_SKILL, oldValue, pickupSkillNames);
+    changeSupport.firePropertyChange(PROPERTY_NAME_CAREER_SKILL, oldValue, careerSkillNames);
   }
 
   public void addPropertyChangeListener(PropertyChangeListener listener) {

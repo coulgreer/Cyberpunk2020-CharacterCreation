@@ -95,8 +95,8 @@ public final class Sibling {
   /**
    * @return the relative age to the Player represented as a String
    */
-  public String getAge() {
-    return age.toString();
+  public RelativeAge getAge() {
+    return age;
   }
 
   /**

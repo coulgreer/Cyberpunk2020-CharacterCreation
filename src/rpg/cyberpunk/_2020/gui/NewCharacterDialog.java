@@ -676,7 +676,7 @@ public class NewCharacterDialog extends JDialog {
         createNavigationComponent( //
             "<<= Previous", evt -> switchCardTo(childhoodEnvironmentPane), //
             "Next =>>", evt -> {
-              List<Sibling> siblings = new ArrayList<Sibling>(maxNumberOfSiblings);
+              player.clearSiblings();
 
               for (Map<String, Object> propertiesByName : propertiesByNameByJPanel.values()) {
                 String siblingName = (String) propertiesByName.get(name);
@@ -684,13 +684,12 @@ public class NewCharacterDialog extends JDialog {
                 RelativeAge siblingAge = (RelativeAge) propertiesByName.get(age);
                 String siblingRelationship = (String) propertiesByName.get(relationship);
 
-                siblings.add(new Sibling( //
+                player.addSibling(new Sibling( //
                     siblingName, //
                     siblingGender, //
                     siblingAge, //
                     siblingRelationship));
               }
-              player.setSiblings(siblings);
               switchCardTo(rolePane);
             }), //
         BorderLayout.SOUTH);
@@ -984,14 +983,14 @@ public class NewCharacterDialog extends JDialog {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
           String item = (String) evt.getItem();
           pickupSkillNames.set(index, item);
-          player.setPickupSkillNames(pickupSkillNames);
+          player.setCareerSkillNames(pickupSkillNames);
         }
       });
       comboBox.setEnabled(items.length > 1);
 
       comboBoxPane.add(comboBox);
     }
-    player.setPickupSkillNames(pickupSkillNames);
+    player.setCareerSkillNames(pickupSkillNames);
 
     panel.add(comboBoxPane);
     JScrollPane scrollPane = new JScrollPane(panel);

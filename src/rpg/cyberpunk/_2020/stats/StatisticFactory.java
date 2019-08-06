@@ -11,6 +11,7 @@ import rpg.general.stats.Attribute;
  * A factory object used to create a set of Skills and Attributes from Cyberpunk 2020.
  */
 public class StatisticFactory {
+  public static final String LANGUAGE_IDENTIFIER = "Known Language:";
   public static final String INDEPENDENT_ATTRIBUTE = "Independent";
   public static final int INDEPENDENT_ATTRIBUTE_COUNT = 9;
   public static final String DEPENDENT_ATTRIBUTE = "Dependent";

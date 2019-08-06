@@ -1,8 +1,10 @@
-package rpg.cyberpunk._2020.systems;
+package rpg.cyberpunk._2020;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import rpg.cyberpunk._2020.Sibling;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * A simple POJO used to store data pertaining to a Player's background.
@@ -16,7 +18,7 @@ public class Background {
   private boolean hasFamilyTragedy;
   private String familyTragedy;
   private String childhoodEnvironment;
-  private List<Sibling> siblings;
+  private ObservableList<Sibling> siblings;
 
   /**
    * Constructs an instance of Background that initializes all String fields as "" and boolean
@@ -32,7 +34,7 @@ public class Background {
     hasFamilyTragedy = false;
     familyTragedy = "";
     childhoodEnvironment = "";
-    siblings = Collections.emptyList();
+    siblings = FXCollections.observableArrayList(new ArrayList<Sibling>());
   }
 
   /**
@@ -150,14 +152,24 @@ public class Background {
   /**
    * @return a copy of the siblings a Player has
    */
-  public List<Sibling> getSiblings() {
-    return Collections.unmodifiableList(siblings);
+  public ObservableList<Sibling> getSiblings() {
+    return FXCollections.unmodifiableObservableList(siblings);
   }
 
-  /**
-   * @param siblings a collection of the siblings a Player has
-   */
-  public void setSiblings(List<Sibling> siblings) {
-    this.siblings = siblings;
+  public void addAll(Collection<Sibling> collection) {
+    siblings.addAll(collection);
   }
+
+  public void addSibling(Sibling sibling) {
+    siblings.add(sibling);
+  }
+
+  public void removeSibling(Sibling sibling) {
+    siblings.remove(sibling);
+  }
+
+  public void clear() {
+    siblings.clear();
+  }
+
 }
