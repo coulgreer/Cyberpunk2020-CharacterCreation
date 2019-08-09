@@ -98,7 +98,11 @@ public class LeapAttribute implements Attribute, PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (parentAttribute == evt.getSource()) {
+      int oldValue = value;
       value = calculateLevel();
+
+      changeSupport.firePropertyChange(PROPERTY_NAME_ATTRIBUTE_LEVEL, oldValue, value);
+      changeSupport.firePropertyChange(PROPERTY_NAME_ATTRIBUTE_MODIFIER, oldValue, value);
     }
   }
 

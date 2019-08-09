@@ -37,7 +37,7 @@ import rpg.cyberpunk._2020.Sibling;
 import rpg.cyberpunk._2020.Sibling.RelativeAge;
 import rpg.cyberpunk._2020.stats.CyberpunkAttribute;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
-import rpg.general.stats.Attribute;
+import rpg.util.Measurement;
 import rpg.util.Name;
 
 /**
@@ -262,35 +262,26 @@ public class BiographyTab extends JPanel {
     c.setBorder(BorderFactory.createMatteBorder(borderWidth, 0, 0, borderWidth, Color.BLACK));
     panel.add(c);
 
-    c = createDerivedAttributeContainer( //
-        player.getAttribute(CyberpunkAttribute.RUN));
+    c = new MeasurementPane( //
+        player.getAttribute(CyberpunkAttribute.RUN), //
+        Measurement.Type.LENGTH, //
+        Measurement.Unit.METER);
     c.setBorder(BorderFactory.createMatteBorder(borderWidth, 0, 0, borderWidth, Color.BLACK));
     panel.add(c);
 
-    c = createDerivedAttributeContainer( //
-        player.getAttribute(CyberpunkAttribute.LEAP));
+    c = new MeasurementPane( //
+        player.getAttribute(CyberpunkAttribute.LEAP), //
+        Measurement.Type.LENGTH, //
+        Measurement.Unit.METER);
     c.setBorder(BorderFactory.createMatteBorder(borderWidth, 0, 0, borderWidth, Color.BLACK));
     panel.add(c);
 
-    c = createDerivedAttributeContainer( //
-        player.getAttribute(CyberpunkAttribute.CARRY));
+    c = new MeasurementPane( //
+        player.getAttribute(CyberpunkAttribute.CARRY), //
+        Measurement.Type.MASS, //
+        Measurement.Unit.KILOGRAM);
     c.setBorder(BorderFactory.createMatteBorder(borderWidth, 0, 0, 0, Color.BLACK));
     panel.add(c);
-
-    return panel;
-  }
-
-  private JComponent createDerivedAttributeContainer(Attribute attribute) {
-    JPanel panel = new JPanel(new BorderLayout());
-
-    JLabel titleLabel = new JLabel(attribute.getName());
-    titleLabel.setFont(AttributePane.DEFAULT_FONT);
-    titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-    panel.add(titleLabel, BorderLayout.WEST);
-
-    JLabel valueLabel = new JLabel(Integer.toString(attribute.getModifier()));
-    valueLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-    panel.add(valueLabel, BorderLayout.CENTER);
 
     return panel;
   }

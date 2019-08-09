@@ -1,6 +1,7 @@
 package rpg.util;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * An identifier used when referencing an object.
@@ -50,6 +51,11 @@ public class Name implements Serializable {
 
     Name name = (Name) o;
     return getValue().equals(name.getValue());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(getValue());
   }
 
 }
