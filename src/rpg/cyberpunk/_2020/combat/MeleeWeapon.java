@@ -12,6 +12,7 @@ import rpg.general.combat.EmptyAmmunitionContainer;
 import rpg.general.combat.Weapon;
 import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
+import rpg.util.Measurement;
 import rpg.util.Probability;
 
 /**
@@ -19,10 +20,8 @@ import rpg.util.Probability;
  * ammunition.
  */
 public class MeleeWeapon extends CyberpunkWeapon {
-  private static final int minRateOfFire = 1;
-  private static final int minRangeModifier = 0;
-  private static final double minWeight = 0.0;
-  private static final double minCost = 0.0;
+  private static final int MIN_RATE_OF_FIRE = 1;
+  private static final double MIN_COST = 0.0;
   private static final long serialVersionUID = 1L;
 
   private String weaponName;
@@ -36,9 +35,9 @@ public class MeleeWeapon extends CyberpunkWeapon {
   private boolean isEdged;
   private AmmunitionContainer ammunitionContainer;
   private Reliability reliability;
-  private int rangeModifier;
+  private Measurement rangeModifier;
   private double cost;
-  private double weight;
+  private Measurement weight;
   private Set<String> attachmentPoints;
   private Map<String, WeaponAttachment> attachments;
 
@@ -49,8 +48,8 @@ public class MeleeWeapon extends CyberpunkWeapon {
       Concealability concealability, Availability availability, //
       Probability damage, boolean isEdged, //
       Reliability reliability, //
-      int rangeModifier, //
-      double cost, double weight, //
+      Measurement rangeModifier, //
+      double cost, Measurement weight, //
       Set<String> attachmentPoints) {
 
     setWeaponName(weaponName);
@@ -134,18 +133,17 @@ public class MeleeWeapon extends CyberpunkWeapon {
     }
   }
 
-  private void setRangeModifier(int rangeModifier) {
-    if (rangeModifier < minRangeModifier) {
-      throw new IllegalArgumentException(
-          "range modifier = " + rangeModifier + "; min = " + minRangeModifier);
+  private void setRangeModifier(Measurement rangeModifier) {
+    if (rangeModifier == null) {
+      throw new NullPointerException();
     } else {
       this.rangeModifier = rangeModifier;
     }
   }
 
   private void setCost(double cost) {
-    if (cost < minCost) {
-      throw new IllegalArgumentException("cost = " + cost + "; min = " + minCost);
+    if (cost < MIN_COST) {
+      throw new IllegalArgumentException("cost = " + cost + "; min = " + MIN_COST);
     } else {
       this.cost = cost;
     }
@@ -160,9 +158,9 @@ public class MeleeWeapon extends CyberpunkWeapon {
     }
   }
 
-  private void setWeight(double weight) {
-    if (weight < minWeight) {
-      throw new IllegalArgumentException("weight = " + weight + "; min = " + minWeight);
+  private void setWeight(Measurement weight) {
+    if (weight == null) {
+      throw new NullPointerException();
     } else {
       this.weight = weight;
     }
@@ -220,7 +218,7 @@ public class MeleeWeapon extends CyberpunkWeapon {
 
   @Override
   public int getRateOfFire() {
-    return minRateOfFire;
+    return MIN_RATE_OF_FIRE;
   }
 
   @Override
@@ -239,7 +237,7 @@ public class MeleeWeapon extends CyberpunkWeapon {
   }
 
   @Override
-  public int getRangeModifier() {
+  public Measurement getRangeModifier() {
     return rangeModifier;
   }
 
@@ -254,7 +252,7 @@ public class MeleeWeapon extends CyberpunkWeapon {
   }
 
   @Override
-  public double getWeight() {
+  public Measurement getWeight() {
     return weight;
   }
 

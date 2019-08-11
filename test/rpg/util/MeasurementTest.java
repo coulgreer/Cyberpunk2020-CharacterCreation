@@ -27,12 +27,6 @@ public class MeasurementTest {
     Measurement m = new Measurement(null, amount, mockUnit);
   }
 
-  @SuppressWarnings("unused")
-  @Test(expected = IllegalArgumentException.class)
-  public void Given_AmountIsNegativeOneTenth_When_AnInstanceOfMeasurementIsCreated_Then_AnExceptionIsThrown() {
-    Measurement m = new Measurement(type, -0.1, mockUnit);
-  }
-
   @Test
   public void Given_AmountIsZero_When_AnInstanceOfMeasurementIsCreated_Then_AmountIsZero() {
     Measurement m = new Measurement(type, 0.0, mockUnit);
@@ -156,6 +150,77 @@ public class MeasurementTest {
     Measurement m2 = new Measurement(type, amount, mockUnit);
 
     assertTrue(m1.equals(m2));
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void Given_MeasurementOneIsNullAndMeasurementIsNotNull_When_AddingTwoMeasurements_Then_AnExceptionIsThrown() {
+    Measurement m1 = null;
+    Measurement m2 = new Measurement(type, amount, mockUnit);
+
+    Measurement.add(m1, m2);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void Given_MeasurementOneIsNotNullAndMeasurementIsNull_When_AddingTwoMeasurements_Then_AnExceptionIsThrown() {
+    Measurement m1 = new Measurement(type, amount, mockUnit);
+    Measurement m2 = null;
+
+    Measurement.add(m1, m2);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void Given_MeasurementOneAndMeasuremenTwoAreOfDifferentTypes_When_AddingTwoMeasurements_Then_AnExceptionIsThrown() {
+    Measurement m1 = new Measurement(Measurement.Type.LENGTH, amount, mockUnit);
+    Measurement m2 = new Measurement(Measurement.Type.MASS, amount, mockUnit);;
+
+    Measurement.add(m1, m2);
+  }
+
+  @Test
+  public void Given_BothMeasurementsAreOfTheSameUnitAndMeasurementOneHasAnAmountOfFiveAndMeasurementTwoHasAnAmountOfFive_When_AddingTwoMeasurements_Then_TheResultingMeasurementAmountIsTen() {
+    double amount = 5.0;
+    when(mockUnit.getConversionFactor()).thenReturn(1.0);
+    when(mockUnit.getType()).thenReturn(type);
+    Measurement m1 = new Measurement(type, amount, mockUnit);
+    Measurement m2 = new Measurement(type, amount, mockUnit);
+    Measurement result = Measurement.add(m1, m2);
+
+    assertEquals(10.0, result.getAmount(), 0.0);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void Given_MeasurementOneIsNullAndMeasurementIsNotNull_When_SubtractingTwoMeasurements_Then_AnExceptionIsThrown() {
+    Measurement m1 = null;
+    Measurement m2 = new Measurement(type, amount, mockUnit);
+
+    Measurement.subtract(m1, m2);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void Given_MeasurementOneIsNotNullAndMeasurementIsNull_When_SubtractingTwoMeasurements_Then_AnExceptionIsThrown() {
+    Measurement m1 = new Measurement(type, amount, mockUnit);
+    Measurement m2 = null;
+
+    Measurement.subtract(m1, m2);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void Given_MeasurementOneAndMeasuremenTwoAreOfDifferentTypes_When_SubtractingTwoMeasurements_Then_AnExceptionIsThrown() {
+    Measurement m1 = new Measurement(Measurement.Type.LENGTH, amount, mockUnit);
+    Measurement m2 = new Measurement(Measurement.Type.MASS, amount, mockUnit);;
+
+    Measurement.subtract(m1, m2);
+  }
+
+  @Test
+  public void Given_BothMeasurementsAreOfTheSameUnitAndMeasurementOneHasAnAmountOfFiveAndMeasurementTwoHasAnAmountOfThree_When_SubtractingTwoMeasurements_Then_TheResultingMeasurementAmountIsTwo() {
+    when(mockUnit.getConversionFactor()).thenReturn(1.0);
+    when(mockUnit.getType()).thenReturn(type);
+    Measurement m1 = new Measurement(type, 5.0, mockUnit);
+    Measurement m2 = new Measurement(type, 3.0, mockUnit);
+    Measurement result = Measurement.subtract(m1, m2);
+
+    assertEquals(2.0, result.getAmount(), 0.0);
   }
 
 }

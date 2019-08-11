@@ -10,6 +10,7 @@ import rpg.cyberpunk._2020.combat.CyberpunkArmor;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 import rpg.general.combat.Ammunition;
 import rpg.general.commerce.Item;
+import rpg.util.Measurement;
 
 public class BottomlessInventoryTest {
 
@@ -67,22 +68,22 @@ public class BottomlessInventoryTest {
 
     assertTrue(inventory.contains(mockAmmunition));
   }
-  
+
   @Test(expected = NullPointerException.class)
   public void Should_ThrowException_When_NullItemIsAdded() {
     Item nullItem = null;
     BottomlessInventory inventory = new BottomlessInventory();
-    
+
     inventory.addItem(nullItem);
   }
-  
+
   @Test
   public void Should_ReturnContainsAsTrue_When_ItemIsAdded() {
     Item mockItem = mock(Item.class);
     BottomlessInventory inventory = new BottomlessInventory();
-    
+
     inventory.addItem(mockItem);
-    
+
     assertTrue(inventory.contains(mockItem));
   }
   // add(Item) tests --end
@@ -120,7 +121,7 @@ public class BottomlessInventoryTest {
     CyberpunkArmor mockArmor = mock(CyberpunkArmor.class);
     BottomlessInventory inventory = new BottomlessInventory();
     inventory.add(mockArmor);
-    
+
     inventory.remove(mockArmor);
 
     assertFalse(inventory.contains(mockArmor));
@@ -130,7 +131,7 @@ public class BottomlessInventoryTest {
   public void Should_ThrowException_When_NullAmmunitionIsRemoved() {
     Ammunition nullAmmunition = null;
     BottomlessInventory inventory = new BottomlessInventory();
-    
+
     inventory.remove(nullAmmunition);
   }
 
@@ -139,27 +140,27 @@ public class BottomlessInventoryTest {
     Ammunition mockAmmunition = mock(Ammunition.class);
     BottomlessInventory inventory = new BottomlessInventory();
     inventory.add(mockAmmunition);
-    
+
     inventory.remove(mockAmmunition);
 
     assertFalse(inventory.contains(mockAmmunition));
   }
-  
+
   @Test(expected = NullPointerException.class)
   public void Should_ThrowException_When_ItemIsRemoved() {
     Item nullItem = null;
     BottomlessInventory inventory = new BottomlessInventory();
-    
+
     inventory.removeItem(nullItem);
   }
-  
+
   @Test
   public void Should_ReturnContainsAsFalse_When_ItemIsRemoved_WhileItemIsInInventory() {
     Item mockInventory = mock(Item.class);
     BottomlessInventory inventory = new BottomlessInventory();
-    
+
     inventory.removeItem(mockInventory);
-    
+
     assertFalse(inventory.contains(mockInventory));
   }
   // remove(Item) tests --end
@@ -177,17 +178,30 @@ public class BottomlessInventoryTest {
   @Test
   public void Should_ReturnTotalWeightAsSummedWeightOfAllItems_When_AllItemsAreContainedInInventory() {
     CyberpunkWeapon mockWeapon = mock(CyberpunkWeapon.class);
-    when(mockWeapon.getWeight()).thenReturn(4.0);
+    when(mockWeapon.getWeight()) //
+        .thenReturn(new Measurement( //
+            Measurement.Type.MASS, //
+            4.0, //
+            Measurement.Unit.KILOGRAM));
     CyberpunkArmor mockArmor = mock(CyberpunkArmor.class);
-    when(mockArmor.getWeight()).thenReturn(3.0);
+    when(mockArmor.getWeight()) //
+        .thenReturn(new Measurement( //
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM));
     Ammunition mockAmmunition = mock(Ammunition.class);
-    when(mockAmmunition.getWeight()).thenReturn(2.0);
+    when(mockAmmunition.getWeight()) //
+        .thenReturn(new Measurement( //
+            Measurement.Type.MASS, //
+            2.0, //
+            Measurement.Unit.KILOGRAM));
     BottomlessInventory inventory = new BottomlessInventory();
     inventory.add(mockWeapon);
     inventory.add(mockArmor);
     inventory.add(mockAmmunition);
 
-    assertEquals(9.0, inventory.getTotalWeight(), 0.0);
+    Measurement weight = inventory.getTotalWeight();
+    assertEquals(9.0, weight.getAmount(), 0.0);
   }
 
 }

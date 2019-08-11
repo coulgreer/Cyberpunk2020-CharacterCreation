@@ -1,16 +1,16 @@
 package rpg.util;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-// TODO (Coul Greer): Use this class when displaying data from weapons and other items on a table.
-// Create a custom Measurement renderer that takes in Measurement instances.
 /**
  * A value object used to keep track of different types of measurements such as: Length and Mass.
  * Also, keeps track of the measurement's unit and the value amount when using the provided unit of
  * measurement.
  */
-public class Measurement implements Comparable<Measurement> {
-  public static final double MIN_AMOUNT = 0.0;
+public class Measurement implements Serializable, Comparable<Measurement> {
+
+  private static final long serialVersionUID = 1L;
 
   /**
    * The types of measurement used to help with calculations of unit/measurement to its respective
@@ -28,7 +28,7 @@ public class Measurement implements Comparable<Measurement> {
    * provides a name to display as well as a conversion factor used to get the unit to the base unit
    * so that the Measurement can be converted and used in calculations.
    */
-  public static class Unit {
+  public static class Unit implements Serializable {
     public static final Unit METER = new Unit(Type.LENGTH, new Name("m"), 1.0);
     public static final Unit MILLIMETER = new Unit(Type.LENGTH, new Name("mm"), 0.001);
     public static final Unit KILOMETER = new Unit(Type.LENGTH, new Name("km"), 1000.0);
@@ -37,6 +37,7 @@ public class Measurement implements Comparable<Measurement> {
     public static final Unit GRAM = new Unit(Type.MASS, new Name("g"), 1000.0);
 
     private static final double MIN_CONVERSION_FACTOR = 0.0;
+    private static final long serialVersionUID = 1L;
 
     private Type type;
     private Name name;
@@ -132,6 +133,56 @@ public class Measurement implements Comparable<Measurement> {
 
   }
 
+  /**
+   * Adds two measurements together using the first measurements units. Both measurements must be of
+   * the same type.
+   * 
+   * @param m1 a measurement used to add to another measurement. Also, provides the unit to convert
+   *        the result to.
+   * @param m2 a measurement used to add to another measurement
+   * @return the result of adding two values together
+   */
+  public static Measurement add(Measurement m1, Measurement m2) {
+    if (m1 == null || m2 == null) {
+      throw new NullPointerException();
+    } else if (!(m1.getType().equals(m2.getType()))) {
+      throw new IllegalArgumentException("Both measurements are not of the same type. Type 1: "
+          + m1.getType() + "; Type 2: " + m2.getType());
+    }
+
+    m2 = m2.convertTo(m1.getUnit());
+
+    return new Measurement(//
+        m1.getType(), //
+        m1.getAmount() + m2.getAmount(), //
+        m1.getUnit());
+  }
+
+  /**
+   * Subtracts two measurements using the first measurements units. Both measurements must be of the
+   * same type.
+   * 
+   * @param m1 a measurement used to subtract to another measurement. Also, provides the unit to
+   *        convert the result to.
+   * @param m2 a measurement used to subtract to another measurement
+   * @return the result of subtracting two values together
+   */
+  public static Measurement subtract(Measurement m1, Measurement m2) {
+    if (m1 == null || m2 == null) {
+      throw new NullPointerException();
+    } else if (!(m1.getType().equals(m2.getType()))) {
+      throw new IllegalArgumentException("Both measurements are not of the same type. Type 1: "
+          + m1.getType() + "; Type 2: " + m2.getType());
+    }
+
+    m2 = m2.convertTo(m1.getUnit());
+
+    return new Measurement( //
+        m1.getType(), //
+        m1.getAmount() - m2.getAmount(), //
+        m1.getUnit());
+  }
+
   private Type type;
   private double amount;
   private Unit unit;
@@ -158,11 +209,7 @@ public class Measurement implements Comparable<Measurement> {
   }
 
   private void setAmount(double amount) {
-    if (amount < MIN_AMOUNT) {
-      throw new IllegalArgumentException("value = " + amount + "; min = " + MIN_AMOUNT);
-    } else {
-      this.amount = amount;
-    }
+    this.amount = amount;
   }
 
   private void setUnit(Unit unit) {

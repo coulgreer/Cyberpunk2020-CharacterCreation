@@ -2,20 +2,20 @@ package rpg.cyberpunk._2020.combat;
 
 import java.util.Objects;
 import rpg.general.combat.Ammunition;
+import rpg.util.Measurement;
 import rpg.util.Probability;
 
 /**
  * An ammunition that uses a payload in order to get derived stats such as damage and description.
  */
 public class LaunchedGrenade implements Ammunition {
-  private static final double minWeight = 0.0;
   private static final long serialVersionUID = 1L;
 
   public static final Type _40MM = new Type("40mm");
 
   private Type type;
   private Payload load;
-  private double weight;
+  private Measurement weight;
 
   /**
    * Constructs a basic grenade for use in launcher type weapons.
@@ -25,7 +25,7 @@ public class LaunchedGrenade implements Ammunition {
    * @param cost the amount of money needed to obtain this ammunition
    * @param weight the heaviness of this ammunition
    */
-  public LaunchedGrenade(Type type, Payload load, double weight) {
+  public LaunchedGrenade(Type type, Payload load, Measurement weight) {
     setType(type);
     setPayLoad(load);
     setWeight(weight);
@@ -47,9 +47,9 @@ public class LaunchedGrenade implements Ammunition {
     }
   }
 
-  private void setWeight(double weight) {
-    if (weight < minWeight) {
-      throw new IllegalArgumentException("weight = " + weight + "; min = " + minWeight);
+  private void setWeight(Measurement weight) {
+    if (weight == null) {
+      throw new NullPointerException();
     } else {
       this.weight = weight;
     }
@@ -66,7 +66,7 @@ public class LaunchedGrenade implements Ammunition {
   }
 
   @Override
-  public double getWeight() {
+  public Measurement getWeight() {
     return weight;
   }
 

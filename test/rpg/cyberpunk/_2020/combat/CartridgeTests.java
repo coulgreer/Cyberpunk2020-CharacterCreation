@@ -10,20 +10,24 @@ import org.junit.Test;
 import rpg.cyberpunk._2020.combat.Cartridge.Bullet;
 import rpg.cyberpunk._2020.combat.Cartridge.Caliber;
 import rpg.cyberpunk._2020.combat.Cartridge.CaseMaterial;
+import rpg.util.Measurement;
 
 public class CartridgeTests {
 
   private Caliber mockCaliber;
   private Bullet mockBullet;
   private CaseMaterial mockCaseMaterial;
-  private double weight;
+  private Measurement weight;
 
   @Before
   public void setUp() {
     mockCaliber = mock(Caliber.class);
     mockBullet = mock(Bullet.class);
     mockCaseMaterial = mock(CaseMaterial.class);
-    weight = 0.0;
+    weight = new Measurement( //
+        Measurement.Type.MASS, //
+        0.0, //
+        Measurement.Unit.KILOGRAM);
   }
 
   @SuppressWarnings("unused")
@@ -45,9 +49,9 @@ public class CartridgeTests {
   }
 
   @SuppressWarnings("unused")
-  @Test(expected = IllegalArgumentException.class)
-  public void Should_ThrowException_When_WeightIsLessThanZero() {
-    Cartridge cartridge = new Cartridge(mockCaliber, mockBullet, mockCaseMaterial, -1.0);
+  @Test(expected = NullPointerException.class)
+  public void Should_ThrowException_When_WeightIsNull() {
+    Cartridge cartridge = new Cartridge(mockCaliber, mockBullet, mockCaseMaterial, null);
   }
 
   @Test

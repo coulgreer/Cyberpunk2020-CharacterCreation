@@ -81,7 +81,7 @@ public class InventoryArmorTable extends JTable {
 		case InventoryArmorTableModel.COST_INDEX:
 			return new USCurrencyRenderer();
 		case InventoryArmorTableModel.WEIGHT_INDEX:
-			return new MetricWeightRenderer();
+			return new MeasurementRenderer();
 		default:
 			return super.getCellRenderer(rowIndex, columnIndex);
 		}

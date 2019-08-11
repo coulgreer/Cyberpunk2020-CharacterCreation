@@ -11,6 +11,7 @@ import rpg.general.combat.Ammunition.Type;
 import rpg.general.combat.AmmunitionContainer;
 import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
+import rpg.util.Measurement;
 import rpg.util.Probability;
 
 /**
@@ -21,8 +22,6 @@ import rpg.util.Probability;
 public class Bow extends CyberpunkWeapon {
   private static final int minAttackCount = 1;
   private static final int minRateOfFire = 1;
-  private static final int minRangeModifier = 0;
-  private static final double minWeight = 0.0;
   private static final double minCost = 0.0;
   private static final long serialVersionUID = 1L;
 
@@ -37,9 +36,9 @@ public class Bow extends CyberpunkWeapon {
   private AmmunitionContainer ammunitionContainer;
   private int rateOfFire;
   private Reliability reliability;
-  private int rangeModifier;
+  private Measurement rangeModifier;
   private double cost;
-  private double weight;
+  private Measurement weight;
   private Set<String> attachmentPoints;
   private Map<String, WeaponAttachment> attachmentsByAttachmentPoint;
 
@@ -66,8 +65,8 @@ public class Bow extends CyberpunkWeapon {
       int weaponAccuracy, //
       Concealability concealability, Availability availability, //
       Probability damage, AmmunitionContainer ammunitionContainer, int rateOfFire, //
-      Reliability reliability, int rangeModifier, //
-      double cost, double weight, //
+      Reliability reliability, Measurement rangeModifier, //
+      double cost, Measurement weight, //
       Set<String> attachmentPoints) {
 
     setWeaponName(weaponName);
@@ -152,10 +151,9 @@ public class Bow extends CyberpunkWeapon {
     }
   }
 
-  private void setRangeModifier(int rangeModifier) {
-    if (rangeModifier < minRangeModifier) {
-      throw new IllegalArgumentException(
-          "range modifier = " + rangeModifier + "; min = " + minRangeModifier);
+  private void setRangeModifier(Measurement rangeModifier) {
+    if (rangeModifier == null) {
+      throw new NullPointerException();
     } else {
       this.rangeModifier = rangeModifier;
     }
@@ -169,9 +167,9 @@ public class Bow extends CyberpunkWeapon {
     }
   }
 
-  private void setWeight(double weight) {
-    if (weight < minWeight) {
-      throw new IllegalArgumentException("weight = " + weight + "; min = " + minWeight);
+  private void setWeight(Measurement weight) {
+    if (weight == null) {
+      throw new NullPointerException();
     } else {
       this.weight = weight;
     }
@@ -267,7 +265,7 @@ public class Bow extends CyberpunkWeapon {
   }
 
   @Override
-  public int getRangeModifier() {
+  public Measurement getRangeModifier() {
     return rangeModifier;
   }
 
@@ -282,7 +280,7 @@ public class Bow extends CyberpunkWeapon {
   }
 
   @Override
-  public double getWeight() {
+  public Measurement getWeight() {
     return weight;
   }
 

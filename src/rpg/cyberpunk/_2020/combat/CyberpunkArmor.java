@@ -9,6 +9,7 @@ import java.util.Map;
 import rpg.general.combat.BodyLocation;
 import rpg.general.combat.Protective;
 import rpg.general.commerce.Item;
+import rpg.util.Measurement;
 
 /**
  * This class creates armor that a player can equip for protection as well as be bought and stored.
@@ -81,13 +82,12 @@ public class CyberpunkArmor implements Protective, Item {
   private static final int minStoppingPower = 0;
   private static final int minEncumbranceValue = 0;
   private static final double minCost = 0.0;
-  private static final double minWeight = 0.0;
   private static final long serialVersionUID = 1L;
 
   private String name;
   private String description;
   private double cost;
-  private double weight;
+  private Measurement weight;
   private Map<BodyLocation, Durability> localizedDurabilities;
   private String armorType;
   private int stoppingPower;
@@ -110,7 +110,7 @@ public class CyberpunkArmor implements Protective, Item {
       String name, String description, //
       Iterator<BodyLocation> coveredLocationIterator, //
       String armorType, int stoppingPower, int encumbranceValue, //
-      double cost, double weight) {
+      double cost, Measurement weight) {
 
     setName(name);
     setDescription(description);
@@ -183,9 +183,9 @@ public class CyberpunkArmor implements Protective, Item {
     }
   }
 
-  private void setWeight(double weight) {
-    if (weight < minWeight) {
-      throw new IllegalArgumentException("weight = " + weight + "; min = " + minWeight);
+  private void setWeight(Measurement weight) {
+    if (weight == null) {
+      throw new NullPointerException();
     } else {
       this.weight = weight;
     }
@@ -207,7 +207,7 @@ public class CyberpunkArmor implements Protective, Item {
   }
 
   @Override
-  public double getWeight() {
+  public Measurement getWeight() {
     return weight;
   }
 

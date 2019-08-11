@@ -7,6 +7,7 @@ import rpg.cyberpunk._2020.combat.CyberpunkArmor;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 import rpg.general.combat.Ammunition;
 import rpg.general.commerce.Item;
+import rpg.util.Measurement;
 
 /**
  * An Inventory without any limit to its storage. This includes weight and Item count.
@@ -167,8 +168,18 @@ public class BottomlessInventory implements Inventory {
   }
 
   @Override
-  public double getTotalWeight() {
-    return items.stream().mapToDouble(i -> i.getWeight()).sum();
+  public Measurement getTotalWeight() {
+    Measurement.Unit unit = Measurement.Unit.KILOGRAM;
+    double amount = items.stream() //
+        .mapToDouble(i -> i //
+            .getWeight() //
+            .convertTo(unit) //
+            .getAmount()) //
+        .sum();
+    return new Measurement( //
+        Measurement.Type.MASS, //
+        amount, //
+        unit);
   }
 
   @Override

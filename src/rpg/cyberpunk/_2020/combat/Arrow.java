@@ -3,6 +3,7 @@ package rpg.cyberpunk._2020.combat;
 import java.io.Serializable;
 import java.util.Objects;
 import rpg.general.combat.Ammunition;
+import rpg.util.Measurement;
 import rpg.util.Name;
 import rpg.util.NullProbability;
 import rpg.util.Probability;
@@ -19,7 +20,10 @@ public class Arrow implements Ammunition {
   /**
    * The default weight of a single arrow.
    */
-  public static final double WEIGHT = 0.05;
+  public static final Measurement WEIGHT = new Measurement( //
+      Measurement.Type.MASS, //
+      0.05, //
+      Measurement.Unit.KILOGRAM);
 
   /**
    * The part of an <code>Arrow</code> that determines the cost, description, and modifies the
@@ -156,7 +160,7 @@ public class Arrow implements Ammunition {
   }
 
   @Override
-  public double getWeight() {
+  public Measurement getWeight() {
     return WEIGHT;
   }
 

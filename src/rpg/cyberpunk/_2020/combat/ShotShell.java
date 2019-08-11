@@ -3,6 +3,7 @@ package rpg.cyberpunk._2020.combat;
 import java.io.Serializable;
 import java.util.Objects;
 import rpg.general.combat.Ammunition;
+import rpg.util.Measurement;
 import rpg.util.Name;
 import rpg.util.Probability;
 
@@ -16,7 +17,10 @@ public class ShotShell implements Ammunition {
   /**
    * The default weight of a single shot shell.
    */
-  public static final double WEIGHT = 0.05;
+  public static final Measurement WEIGHT = new Measurement( //
+      Measurement.Type.MASS, //
+      0.05, //
+      Measurement.Unit.KILOGRAM);
 
   /**
    * The part of the ShotShell that provides the base cost of this ammunition and gives a blurb of
@@ -215,7 +219,7 @@ public class ShotShell implements Ammunition {
   }
 
   @Override
-  public double getWeight() {
+  public Measurement getWeight() {
     return WEIGHT;
   }
 

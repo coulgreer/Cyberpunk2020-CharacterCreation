@@ -75,7 +75,7 @@ public class InventoryItemTable extends JTable {
 		case InventoryItemTableModel.COST_INDEX:
 			return new USCurrencyRenderer();
 		case InventoryItemTableModel.WEIGHT_INDEX:
-			return new MetricWeightRenderer();
+			return new MeasurementRenderer();
 		default:
 			return super.getCellRenderer(rowIndex, columnIndex);
 		}

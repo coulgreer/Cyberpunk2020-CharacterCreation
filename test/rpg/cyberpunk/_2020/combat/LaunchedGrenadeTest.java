@@ -6,17 +6,21 @@ import static org.mockito.Mockito.mock;
 import org.junit.Before;
 import org.junit.Test;
 import rpg.general.combat.Ammunition.Type;
+import rpg.util.Measurement;
 
 public class LaunchedGrenadeTest {
   private Type mockType;
   private Payload mockLoad;
-  private double weight;
+  private Measurement weight;
 
   @Before
   public void setUp() {
     mockType = mock(Type.class);
     mockLoad = mock(Payload.class);
-    weight = 0.0;
+    weight = new Measurement( //
+        Measurement.Type.MASS, //
+        0.0, //
+        Measurement.Unit.KILOGRAM);
   }
 
   @SuppressWarnings("unused")
@@ -32,9 +36,9 @@ public class LaunchedGrenadeTest {
   }
 
   @SuppressWarnings("unused")
-  @Test(expected = IllegalArgumentException.class)
-  public void Should_ThrowException_When_WeightIsNegativeOneTenth() {
-    LaunchedGrenade grenade = new LaunchedGrenade(mockType, mockLoad, -0.1);
+  @Test(expected = NullPointerException.class)
+  public void Should_ThrowException_When_WeightIsNullh() {
+    LaunchedGrenade grenade = new LaunchedGrenade(mockType, mockLoad, null);
   }
 
 

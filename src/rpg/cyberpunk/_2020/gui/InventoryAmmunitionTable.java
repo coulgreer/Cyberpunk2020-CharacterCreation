@@ -16,6 +16,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import rpg.cyberpunk._2020.Player;
 import rpg.general.combat.Ammunition;
+import rpg.util.Measurement;
 
 /**
  * An instance of JTable that uses a <code>InventoryAmmunitionTableModel</code>.
@@ -77,7 +78,7 @@ public class InventoryAmmunitionTable extends JTable {
       case InventoryAmmunitionTableModel.COST_INDEX:
         return new USCurrencyRenderer();
       case InventoryAmmunitionTableModel.WEIGHT_INDEX:
-        return new MetricWeightRenderer();
+        return new MeasurementRenderer();
       default:
         return super.getCellRenderer(rowIndex, columnIndex);
     }
@@ -177,7 +178,11 @@ public class InventoryAmmunitionTable extends JTable {
         case COST_INDEX:
           return ammunition.getCost() * quantity;
         case WEIGHT_INDEX:
-          return ammunition.getWeight() * quantity;
+          Measurement weight = ammunition.getWeight();
+          return new Measurement( //
+              weight.getType(), //
+              weight.getAmount() * quantity, //
+              weight.getUnit());
         case QUANTITY_INDEX:
           return quantity;
         case OBJECT_INDEX:

@@ -11,6 +11,7 @@ import rpg.general.combat.Ammunition.Type;
 import rpg.general.combat.AmmunitionContainer;
 import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
+import rpg.util.Measurement;
 import rpg.util.NullProbability;
 import rpg.util.Probability;
 
@@ -19,11 +20,9 @@ import rpg.util.Probability;
  * combatant wielding the weapon to determine accuracy buy not range.
  */
 public class Firearm extends CyberpunkWeapon {
-  private static final int minAttackCount = 1;
-  private static final int minRateOfFire = 1;
-  private static final int minRangeModifier = 0;
-  private static final double minWeight = 0.0;
-  private static final double minCost = 0.0;
+  private static final int MIN_ATTACK_COUNT = 1;
+  private static final int MIN_RATE_OF_FIRE = 1;
+  private static final double MIN_COST = 0.0;
   private static final long serialVersionUID = 1L;
 
   private String weaponName;
@@ -36,9 +35,9 @@ public class Firearm extends CyberpunkWeapon {
   private AmmunitionContainer ammunitionContainer;
   private int rateOfFire;
   private Reliability reliability;
-  private int rangeModifier;
+  private Measurement rangeModifier;
   private double cost;
-  private double weight;
+  private Measurement weight;
   private Set<String> attachmentPoints;
   private Map<String, WeaponAttachment> attachments;
 
@@ -63,7 +62,7 @@ public class Firearm extends CyberpunkWeapon {
    * @param attachmentPoints a set of points where modifiers can be attached to this weapon
    * 
    * @see #Firearm(String, String, String, String, int, Concealability, Availability,
-   *      AmmunitionContainer, int, Reliability, int, double, double, Set)
+   *      AmmunitionContainer, int, Reliability, Measurement, double, Measurement, Set)
    */
   public Firearm( //
       String weaponName, String description, //
@@ -72,8 +71,8 @@ public class Firearm extends CyberpunkWeapon {
       Concealability concealability, Availability availability, //
       AmmunitionContainer ammunitionContainer, int rateOfFire, //
       Reliability reliability, //
-      int rangeModifier, //
-      double cost, double weight, //
+      Measurement rangeModifier, //
+      double cost, Measurement weight, //
       Set<String> attachmentPoints) {
 
     this(weaponName, description, weaponType, parseSkillFromWeaponType(weaponType), weaponAccuracy,
@@ -132,8 +131,8 @@ public class Firearm extends CyberpunkWeapon {
       Concealability concealability, Availability availability, //
       AmmunitionContainer ammunitionContainer, int rateOfFire, //
       Reliability reliability, //
-      int rangeModifier, //
-      double cost, double weight, //
+      Measurement rangeModifier, //
+      double cost, Measurement weight, //
       Set<String> attachmentPoints) {
 
     setWeaponName(weaponName);
@@ -209,9 +208,9 @@ public class Firearm extends CyberpunkWeapon {
   }
 
   private void setRateOfFire(int rateOfFire) {
-    if (rateOfFire < minRateOfFire) {
+    if (rateOfFire < MIN_RATE_OF_FIRE) {
       throw new IllegalArgumentException(
-          "rate of fire = " + rateOfFire + "; min = " + minRateOfFire);
+          "rate of fire = " + rateOfFire + "; min = " + MIN_RATE_OF_FIRE);
     } else {
       this.rateOfFire = rateOfFire;
     }
@@ -225,26 +224,25 @@ public class Firearm extends CyberpunkWeapon {
     }
   }
 
-  private void setRangeModifier(int rangeModifier) {
-    if (rangeModifier < minRangeModifier) {
-      throw new IllegalArgumentException(
-          "range modifier = " + rangeModifier + "; min = " + minRangeModifier);
+  private void setRangeModifier(Measurement rangeModifier) {
+    if (rangeModifier == null) {
+      throw new NullPointerException();
     } else {
       this.rangeModifier = rangeModifier;
     }
   }
 
   private void setCost(double cost) {
-    if (cost < minCost) {
-      throw new IllegalArgumentException("cost = " + cost + "; min = " + minCost);
+    if (cost < MIN_COST) {
+      throw new IllegalArgumentException("cost = " + cost + "; min = " + MIN_COST);
     } else {
       this.cost = cost;
     }
   }
 
-  private void setWeight(double weight) {
-    if (weight < minWeight) {
-      throw new IllegalArgumentException("weight = " + weight + "; min = " + minWeight);
+  private void setWeight(Measurement weight) {
+    if (weight == null) {
+      throw new NullPointerException();
     } else {
       this.weight = weight;
     }
@@ -290,13 +288,13 @@ public class Firearm extends CyberpunkWeapon {
    * Also, does not allow for <code>attackCount</code> to be greater than the amount of ammunition
    * available.
    * 
-   * @throws IllegalArgumentException if attackCount is less than {@value #minAttackCount}
+   * @throws IllegalArgumentException if attackCount is less than {@value #MIN_ATTACK_COUNT}
    */
   @Override
   public boolean attack(int attackCount) {
-    if (attackCount < minAttackCount) {
+    if (attackCount < MIN_ATTACK_COUNT) {
       throw new IllegalArgumentException(
-          "attack count = " + attackCount + "; min = " + minAttackCount);
+          "attack count = " + attackCount + "; min = " + MIN_ATTACK_COUNT);
     }
 
     attackCount = attackCount > getAmmunitionCount() ? getAmmunitionCount() : attackCount;
@@ -360,7 +358,7 @@ public class Firearm extends CyberpunkWeapon {
   }
 
   @Override
-  public int getRangeModifier() {
+  public Measurement getRangeModifier() {
     return rangeModifier;
   }
 
@@ -375,7 +373,7 @@ public class Firearm extends CyberpunkWeapon {
   }
 
   @Override
-  public double getWeight() {
+  public Measurement getWeight() {
     return weight;
   }
 

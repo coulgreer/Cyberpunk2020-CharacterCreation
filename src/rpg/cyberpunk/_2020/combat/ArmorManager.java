@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import rpg.general.combat.BodyLocation;
+import rpg.util.Measurement;
 
 /**
  * A class that manages if a piece of armor can be worn and then can display the protective score
@@ -213,10 +214,18 @@ public class ArmorManager {
     }
   }
 
-  public double getTotalWeight() {
-    return armors.stream() //
-        .mapToDouble(a -> a.getWeight()) //
+  public Measurement getTotalWeight() {
+    Measurement.Unit unit = Measurement.Unit.KILOGRAM;
+    double totalAmount = armors.stream() //
+        .mapToDouble(a -> a //
+            .getWeight() //
+            .convertTo(unit) //
+            .getAmount()) //
         .sum();
+    return new Measurement( //
+        Measurement.Type.MASS, //
+        totalAmount, //
+        unit);
   }
 
   public Collection<CyberpunkArmor> createArmorCollection() {

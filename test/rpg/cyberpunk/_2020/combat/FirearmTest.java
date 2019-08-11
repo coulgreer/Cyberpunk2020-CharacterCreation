@@ -14,6 +14,7 @@ import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Concealability;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Reliability;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.AmmunitionContainer;
+import rpg.util.Measurement;
 
 public class FirearmTest {
   private String weaponName;
@@ -25,9 +26,9 @@ public class FirearmTest {
   private AmmunitionContainer mockAmmunitionContainer;
   private int rateOfFire;
   private Reliability reliability;
-  private int range;
+  private Measurement range;
   private double cost;
-  private double weight;
+  private Measurement weight;
   private Set<String> attachmentPoints;
 
   @Before
@@ -41,9 +42,15 @@ public class FirearmTest {
     mockAmmunitionContainer = mock(AmmunitionContainer.class);
     rateOfFire = 2;
     reliability = Reliability.VERY_RELIABLE;
-    range = 30;
+    range = new Measurement( //
+        Measurement.Type.LENGTH, //
+        30, //
+        Measurement.Unit.METER);
     cost = 10.0;
-    weight = 0.5;
+    weight = new Measurement( //
+        Measurement.Type.MASS, //
+        0.5, //
+        Measurement.Unit.KILOGRAM);
     attachmentPoints = new HashSet<String>();
   }
 
@@ -214,8 +221,8 @@ public class FirearmTest {
         attachmentPoints);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void Should_ThrowException_When_RangeModifierIsNegativeOne() {
+  @Test(expected = NullPointerException.class)
+  public void Should_ThrowException_When_RangeModifierIsNull() {
     @SuppressWarnings("unused")
     Firearm weapon = new Firearm( //
         weaponName, description, //
@@ -224,41 +231,9 @@ public class FirearmTest {
         concealability, availability, //
         mockAmmunitionContainer, rateOfFire, //
         reliability, //
-        -1, //
+        null, //
         cost, weight, //
         attachmentPoints);
-  }
-
-  @Test
-  public void Should_ReturnRangeModifierAsZero_When_RangeModifierIsZero() {
-    Firearm weapon = new Firearm( //
-        weaponName, description, //
-        CyberpunkWeapon.WEAPON_TYPE_LIGHT_PISTOL, //
-        weaponAccuracy, //
-        concealability, availability, //
-        mockAmmunitionContainer, rateOfFire, //
-        reliability, //
-        0, //
-        cost, weight, //
-        attachmentPoints);
-
-    assertEquals(0, weapon.getRangeModifier());
-  }
-
-  @Test
-  public void Should_ReturnRangeModifierAsOne_When_RangeModifierIsOne() {
-    Firearm weapon = new Firearm( //
-        weaponName, description, //
-        CyberpunkWeapon.WEAPON_TYPE_LIGHT_PISTOL, //
-        weaponAccuracy, //
-        concealability, availability, //
-        mockAmmunitionContainer, rateOfFire, //
-        reliability, //
-        1, //
-        cost, weight, //
-        attachmentPoints);
-
-    assertEquals(1, weapon.getRangeModifier());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -308,8 +283,8 @@ public class FirearmTest {
     assertEquals(0.1, weapon.getCost(), 0.0);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void Should_ThrowException_When_WeightIsNegativeOneTenth() {
+  @Test(expected = NullPointerException.class)
+  public void Should_ThrowException_When_WeightIsNull() {
     @SuppressWarnings("unused")
     Firearm weapon = new Firearm( //
         weaponName, description, //
@@ -319,40 +294,8 @@ public class FirearmTest {
         mockAmmunitionContainer, rateOfFire, //
         reliability, //
         range, //
-        cost, -0.1, //
+        cost, null, //
         attachmentPoints);
-  }
-
-  @Test
-  public void Should_ReturnWeightAsZero_When_WeightIsZero() {
-    Firearm weapon = new Firearm( //
-        weaponName, description, //
-        CyberpunkWeapon.WEAPON_TYPE_LIGHT_PISTOL, //
-        weaponAccuracy, //
-        concealability, availability, //
-        mockAmmunitionContainer, rateOfFire, //
-        reliability, //
-        range, //
-        cost, 0.0, //
-        attachmentPoints);
-
-    assertEquals(0.0, weapon.getWeight(), 0.0);
-  }
-
-  @Test
-  public void Should_ReturnWeightAsOneTenth_When_WeightIsOneTenth() {
-    Firearm weapon = new Firearm( //
-        weaponName, description, //
-        CyberpunkWeapon.WEAPON_TYPE_LIGHT_PISTOL, //
-        weaponAccuracy, //
-        concealability, availability, //
-        mockAmmunitionContainer, rateOfFire, //
-        reliability, //
-        range, //
-        cost, 0.1, //
-        attachmentPoints);
-
-    assertEquals(0.1, weapon.getWeight(), 0.0);
   }
 
   @Test(expected = NullPointerException.class)

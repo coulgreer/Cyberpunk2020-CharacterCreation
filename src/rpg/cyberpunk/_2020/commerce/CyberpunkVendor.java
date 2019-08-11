@@ -36,6 +36,7 @@ import rpg.general.combat.Weapon;
 import rpg.general.commerce.Item;
 import rpg.general.commerce.Trader;
 import rpg.util.Die;
+import rpg.util.Measurement;
 import rpg.util.NullProbability;
 import rpg.util.Probability;
 
@@ -44,9 +45,6 @@ import rpg.util.Probability;
  * <p>
  * Unless otherwise mentioned, passing a <code>null</code> parameter into any method of a
  * <code>CyberpunkVendor</code> will cause a <code>NullPointerException</code> to be thrown.
- * 
- * @author Coul Greer
- *
  */
 public class CyberpunkVendor {
   private Trader trader;
@@ -87,9 +85,15 @@ public class CyberpunkVendor {
             8), //
         2, //
         Reliability.STANDARD, //
-        50, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            50, //
+            Measurement.Unit.METER), //
         75.0, //
-        0.5, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM), //
         lightPistolAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Dai Lung Cybermag 15", //
@@ -103,9 +107,15 @@ public class CyberpunkVendor {
             10), //
         2, //
         Reliability.UNRELIABLE, //
-        50, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            50, //
+            Measurement.Unit.METER), //
         50.0, //
-        0.5, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM), //
         lightPistolAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Federated Arms X-22", //
@@ -119,9 +129,15 @@ public class CyberpunkVendor {
             10), //
         2, //
         Reliability.STANDARD, //
-        50, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            50, //
+            Measurement.Unit.METER), //
         150.0, //
-        0.5, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM), //
         lightPistolAttachmentPoints));
 
     // Medium Pistols
@@ -137,9 +153,15 @@ public class CyberpunkVendor {
             10), //
         2, //
         Reliability.VERY_RELIABLE, //
-        50, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            50, //
+            Measurement.Unit.METER), //
         250.0, //
-        1.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         lightPistolAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Dai Lung Streetmaster", //
@@ -153,9 +175,15 @@ public class CyberpunkVendor {
             12), //
         2, //
         Reliability.UNRELIABLE, //
-        50, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            50, //
+            Measurement.Unit.METER), //
         250.0, //
-        1.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         lightPistolAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Federated Arms X-9mm", //
@@ -169,9 +197,15 @@ public class CyberpunkVendor {
             12), //
         2, //
         Reliability.STANDARD, //
-        50, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            50, //
+            Measurement.Unit.METER), //
         300.0, //
-        1.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         lightPistolAttachmentPoints));
 
     // Heavy Pistols
@@ -187,9 +221,15 @@ public class CyberpunkVendor {
             8), //
         2, //
         Reliability.UNRELIABLE, //
-        50, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            50, //
+            Measurement.Unit.METER), //
         350.0, //
-        1.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         lightPistolAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Sternmeyer Type 35", //
@@ -204,9 +244,15 @@ public class CyberpunkVendor {
             8), //
         2, //
         Reliability.VERY_RELIABLE, //
-        50, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            50, //
+            Measurement.Unit.METER), //
         400.0, //
-        1.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         lightPistolAttachmentPoints));
 
     // Very Heavy Pistols
@@ -222,9 +268,15 @@ public class CyberpunkVendor {
             8), //
         1, //
         Reliability.STANDARD, //
-        50, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            50, //
+            Measurement.Unit.METER), //
         450.0, //
-        3.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         lightPistolAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Colt AMT Model 2000", //
@@ -239,9 +291,15 @@ public class CyberpunkVendor {
             8), //
         1, //
         Reliability.VERY_RELIABLE, //
-        50, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            50, //
+            Measurement.Unit.METER), //
         500.0, //
-        3.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         lightPistolAttachmentPoints));
 
     // Light Submachineguns
@@ -263,9 +321,15 @@ public class CyberpunkVendor {
             30), //
         35, //
         Reliability.VERY_RELIABLE, //
-        150, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            150, //
+            Measurement.Unit.METER), //
         475.0, //
-        3.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         lightSMGAttachmentPoints));
     startingInventory.add(new Firearm( //
         "H&K MP-2013", //
@@ -280,9 +344,15 @@ public class CyberpunkVendor {
             35), //
         32, //
         Reliability.STANDARD, //
-        150, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            150, //
+            Measurement.Unit.METER), //
         475.0, //
-        3.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         lightSMGAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Fed. Arms Tech Assault II", //
@@ -297,9 +367,15 @@ public class CyberpunkVendor {
             50), //
         25, //
         Reliability.STANDARD, //
-        150, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            150, //
+            Measurement.Unit.METER), //
         400.0, //
-        3.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         lightSMGAttachmentPoints));
 
     // Medium Submachineguns
@@ -315,9 +391,15 @@ public class CyberpunkVendor {
             40), //
         20, //
         Reliability.VERY_RELIABLE, //
-        200, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            200, //
+            Measurement.Unit.METER), //
         500.0, //
-        3.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         lightSMGAttachmentPoints));
     startingInventory.add(new Firearm( //
         "H&K MPK-9", //
@@ -331,9 +413,15 @@ public class CyberpunkVendor {
             35), //
         25, //
         Reliability.STANDARD, //
-        200, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            200, //
+            Measurement.Unit.METER), //
         520.0, //
-        3.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         lightSMGAttachmentPoints));
 
     // Heavy Submachineguns
@@ -350,9 +438,15 @@ public class CyberpunkVendor {
             30), //
         15, //
         Reliability.VERY_RELIABLE, //
-        200, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            200, //
+            Measurement.Unit.METER), //
         500.0, //
-        3.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         lightSMGAttachmentPoints));
     startingInventory.add(new Firearm( //
         "H&K MPK-11", //
@@ -368,9 +462,15 @@ public class CyberpunkVendor {
             30), //
         20, //
         Reliability.STANDARD, //
-        200, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            200, //
+            Measurement.Unit.METER), //
         700.0, //
-        3.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         lightSMGAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Ingram MAC 14", //
@@ -384,9 +484,15 @@ public class CyberpunkVendor {
             20), //
         10, //
         Reliability.STANDARD, //
-        200, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            200, //
+            Measurement.Unit.METER), //
         650.0, //
-        3.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         lightSMGAttachmentPoints));
 
     // Assault Rifles
@@ -407,9 +513,15 @@ public class CyberpunkVendor {
             35), //
         30, //
         Reliability.STANDARD, //
-        400, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            400, //
+            Measurement.Unit.METER), //
         450.0, //
-        3.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         assaultRifleAttachmentPoints));
     startingInventory.add(new Firearm( //
         "AKR-20 Medium Assault", //
@@ -424,9 +536,15 @@ public class CyberpunkVendor {
             30), //
         30, //
         Reliability.STANDARD, //
-        400, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            400, //
+            Measurement.Unit.METER), //
         500.0, //
-        3.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         assaultRifleAttachmentPoints));
     startingInventory.add(new Firearm( //
         "FN-RAL Heavy Assault Rifle", //
@@ -440,9 +558,15 @@ public class CyberpunkVendor {
             30), //
         30, //
         Reliability.VERY_RELIABLE, //
-        400, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            400, //
+            Measurement.Unit.METER), //
         600.0, //
-        3.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         assaultRifleAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Kalishnikov A-80 Hvy. Rifle", //
@@ -456,9 +580,15 @@ public class CyberpunkVendor {
             35), //
         25, //
         Reliability.STANDARD, //
-        400, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            400, //
+            Measurement.Unit.METER), //
         550.0, //
-        3.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         assaultRifleAttachmentPoints));
 
     // Shotguns
@@ -480,9 +610,15 @@ public class CyberpunkVendor {
             20), //
         10, //
         Reliability.STANDARD, //
-        50, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            50, //
+            Measurement.Unit.METER), //
         900.0, //
-        3.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Sternmeyer Stakeout 10", //
@@ -496,9 +632,15 @@ public class CyberpunkVendor {
             10), //
         2, //
         Reliability.STANDARD, //
-        50, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            50, //
+            Measurement.Unit.METER), //
         450.0, //
-        0.5, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
 
     // TODO Actually make attachment points for all weapon types.
@@ -506,7 +648,8 @@ public class CyberpunkVendor {
     startingInventory.add(new Firearm( //
         "Barrett-Arasaka Light 20mm", //
         "The cyberpsycho hunter's favorite. Almost 2 meters long, this \"cannon\" fires a depleted" //
-            + " uranium shell at supersonic speeds. Heavy AP sub-caliber penetrator damages armor 2pts/hit.", //
+            + " uranium shell at supersonic speeds. Heavy AP sub-caliber penetrator damages armor"
+            + " 2pts/hit.", //
         CyberpunkWeapon.WEAPON_TYPE_HEAVY_WEAPON, //
         0, //
         Concealability.CANNOT_HIDE, //
@@ -516,9 +659,15 @@ public class CyberpunkVendor {
             10), //
         1, //
         Reliability.VERY_RELIABLE, //
-        450, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            450, //
+            Measurement.Unit.METER), //
         2000.0, //
-        25.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            25.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Scorpion 16 Missile Launcher", //
@@ -533,9 +682,15 @@ public class CyberpunkVendor {
             1), //
         1, //
         Reliability.VERY_RELIABLE, //
-        1000, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            1000, //
+            Measurement.Unit.METER), //
         3000.0, //
-        10.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            10.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Militech Arms RPG-A", //
@@ -550,9 +705,15 @@ public class CyberpunkVendor {
             1), //
         1, //
         Reliability.VERY_RELIABLE, //
-        750, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            750, //
+            Measurement.Unit.METER), //
         1500.0, //
-        10.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            10.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new ThrownWeapon( //
         "Fragmentation Grenade", //
@@ -563,7 +724,10 @@ public class CyberpunkVendor {
         Payload.HIGH_EXPLOSIVES, //
         Reliability.VERY_RELIABLE, //
         30.0, //
-        0.5));
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
     startingInventory.add(new ThrownWeapon( //
         "Incendiary Grenade", //
         ThrownWeapon.WEAPON_TYPE_THROWN, //
@@ -573,7 +737,10 @@ public class CyberpunkVendor {
         Payload.WHITE_PHOSPHOROUS, //
         Reliability.VERY_RELIABLE, //
         30.0, //
-        0.5));
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
     startingInventory.add(new ThrownWeapon( //
         "Flashbang Grenade", //
         ThrownWeapon.WEAPON_TYPE_THROWN, //
@@ -583,7 +750,10 @@ public class CyberpunkVendor {
         Payload.FLASHBANG, //
         Reliability.VERY_RELIABLE, //
         30.0, //
-        0.5));
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
     startingInventory.add(new ThrownWeapon( //
         "Sonic Grenade", //
         "An experimental type, popular in the EuroThater. Essentially, a mini-voder box, with a"
@@ -600,7 +770,10 @@ public class CyberpunkVendor {
         NullProbability.getInstance(), //
         Reliability.VERY_RELIABLE, //
         30.0, //
-        0.5));
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
     startingInventory.add(new ThrownWeapon( //
         "Nausea Grenade", //
         ThrownWeapon.WEAPON_TYPE_THROWN, //
@@ -610,7 +783,10 @@ public class CyberpunkVendor {
         Payload.NAUSEA_GAS, //
         Reliability.VERY_RELIABLE, //
         30.0, //
-        0.5));
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
     startingInventory.add(new ThrownWeapon( //
         "Teargas Grenade", //
         ThrownWeapon.WEAPON_TYPE_THROWN, //
@@ -620,7 +796,10 @@ public class CyberpunkVendor {
         Payload.TEARGAS, //
         Reliability.VERY_RELIABLE, //
         30.0, //
-        0.5));
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
     startingInventory.add(new ThrownWeapon( //
         "Sleep Grenade", //
         ThrownWeapon.WEAPON_TYPE_THROWN, //
@@ -630,7 +809,10 @@ public class CyberpunkVendor {
         Payload.SLEEP_DRUGS, //
         Reliability.VERY_RELIABLE, //
         30.0, //
-        0.5));
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
     startingInventory.add(new ThrownWeapon( //
         "Biotoxin I Grenade", //
         ThrownWeapon.WEAPON_TYPE_THROWN, //
@@ -640,7 +822,10 @@ public class CyberpunkVendor {
         Payload.BIOTOXIN_I_GAS, //
         Reliability.VERY_RELIABLE, //
         30.0, //
-        0.5));
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
     startingInventory.add(new ThrownWeapon( //
         "Biotoxin II Grenade", //
         ThrownWeapon.WEAPON_TYPE_THROWN, //
@@ -650,7 +835,10 @@ public class CyberpunkVendor {
         Payload.BIOTOXIN_II_GAS, //
         Reliability.VERY_RELIABLE, //
         30.0, //
-        0.5));
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
     startingInventory.add(new ThrownWeapon( //
         "Nerve Gas Grenade", //
         ThrownWeapon.WEAPON_TYPE_THROWN, //
@@ -660,7 +848,10 @@ public class CyberpunkVendor {
         Payload.NERVE_GAS, //
         Reliability.VERY_RELIABLE, //
         30.0, //
-        0.5));
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
     startingInventory.add(new Firearm( //
         "Grenade Launchers", //
         "These come from manufacturers worldwide, // and may be attached to any assault rifle"
@@ -674,9 +865,15 @@ public class CyberpunkVendor {
             1), //
         1, //
         Reliability.STANDARD, //
-        225, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            225, //
+            Measurement.Unit.METER), //
         150.0, //
-        1.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new Firearm( //
         "C-6 \"Flatfire\" Plastic Explosive", //
@@ -690,9 +887,15 @@ public class CyberpunkVendor {
             1), //
         1, //
         Reliability.VERY_RELIABLE, //
-        0, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            0, //
+            Measurement.Unit.METER), //
         100.0, //
-        1.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     // TODO Add mines to the vendor inventory.
     // TODO Add flamethrower reloads and let ammunition decide the damage allowing
@@ -710,9 +913,15 @@ public class CyberpunkVendor {
             10), //
         1, //
         Reliability.STANDARD, //
-        50, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            50, //
+            Measurement.Unit.METER), //
         1500.0, //
-        32.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            32.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
 
     // Exotic Weapons
@@ -731,9 +940,15 @@ public class CyberpunkVendor {
             10), //
         2, //
         Reliability.VERY_RELIABLE, //
-        20, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            20, //
+            Measurement.Unit.METER), //
         400.0, //
-        2.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            2.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new ExoticFirearm( //
         "Militech Electronics LaserCannon", //
@@ -750,9 +965,15 @@ public class CyberpunkVendor {
             20), //
         2, //
         Reliability.UNRELIABLE, //
-        200, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            200, //
+            Measurement.Unit.METER), //
         8000.0, //
-        3.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Avante P-1135 Needlegun", //
@@ -768,9 +989,15 @@ public class CyberpunkVendor {
             15), //
         2, //
         Reliability.STANDARD, //
-        40, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            40, //
+            Measurement.Unit.METER), //
         200.0, //
-        1.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Enertex AKM Power Squirt", //
@@ -785,9 +1012,15 @@ public class CyberpunkVendor {
             50), //
         1, //
         Reliability.VERY_RELIABLE, //
-        10, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            10, //
+            Measurement.Unit.METER), //
         15.0, //
-        1.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new Firearm( //
         "Nelspot \"Wombat\" Airpistol", //
@@ -802,9 +1035,15 @@ public class CyberpunkVendor {
             20), //
         2, //
         Reliability.UNRELIABLE, //
-        40, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            40, //
+            Measurement.Unit.METER), //
         200.0, //
-        1.0, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new ExoticFirearm( //
         "Militech Electronics Taser", //
@@ -820,9 +1059,15 @@ public class CyberpunkVendor {
             10), //
         1, //
         Reliability.STANDARD, //
-        10, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            10, //
+            Measurement.Unit.METER), //
         60.0, //
-        0.5, //
+        new Measurement(//
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new Bow( //
         "EagleTech \"Tomcat\" Compound Bow", //
@@ -837,9 +1082,14 @@ public class CyberpunkVendor {
             12), //
         1, //
         Reliability.VERY_RELIABLE, //
-        150, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            150.0, //
+            Measurement.Unit.METER), //
         150.0, //
-        3.0, //
+        new Measurement(Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new Bow( //
         "EagleTech \"Stryker\" Crossbow", //
@@ -855,9 +1105,15 @@ public class CyberpunkVendor {
             12), //
         1, //
         Reliability.VERY_RELIABLE, //
-        50, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            50.0, //
+            Measurement.Unit.METER), //
         220.0, //
-        3.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
 
     // Melee Weapons
@@ -874,9 +1130,15 @@ public class CyberpunkVendor {
             new Die(2, 6)), //
         true, //
         Reliability.VERY_RELIABLE, //
-        1, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            1.0, //
+            Measurement.Unit.METER), //
         200.0, //
-        0.5, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new MeleeWeapon( //
         "Kendachi MonoKatana", //
@@ -891,9 +1153,15 @@ public class CyberpunkVendor {
             new Die(4, 6)), //
         true, //
         Reliability.VERY_RELIABLE, //
-        1, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            1.0, //
+            Measurement.Unit.METER), //
         600.0, //
-        1.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new MeleeWeapon( //
         "SPM-1 Battleglove", //
@@ -909,9 +1177,15 @@ public class CyberpunkVendor {
             new Die(2, 6)), //
         false, //
         Reliability.VERY_RELIABLE, //
-        1, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            1.0, //
+            Measurement.Unit.METER), //
         900.0, //
-        1.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
 
     startingInventory.add(new MeleeWeapon( //
@@ -926,9 +1200,15 @@ public class CyberpunkVendor {
             new Die(1, 6)), //
         false, //
         Reliability.VERY_RELIABLE, //
-        1, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            1.0, //
+            Measurement.Unit.METER), //
         0.0, //
-        1.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new MeleeWeapon( //
         "Knife", //
@@ -941,9 +1221,15 @@ public class CyberpunkVendor {
         new Probability(new Die(1, 6)), //
         true, //
         Reliability.VERY_RELIABLE, //
-        1, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            1.0, //
+            Measurement.Unit.METER), //
         20.0, //
-        0.5, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new MeleeWeapon( //
         "Sword", //
@@ -958,9 +1244,15 @@ public class CyberpunkVendor {
             2), //
         true, //
         Reliability.VERY_RELIABLE, //
-        1, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            1.0, //
+            Measurement.Unit.METER), //
         200.0, //
-        1.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new MeleeWeapon( //
         "Axe", //
@@ -975,9 +1267,15 @@ public class CyberpunkVendor {
             3), //
         true, //
         Reliability.VERY_RELIABLE, //
-        1, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            1.0, //
+            Measurement.Unit.METER), //
         20.0, //
-        0.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new MeleeWeapon( //
         "Nunchaku", //
@@ -991,9 +1289,15 @@ public class CyberpunkVendor {
             new Die(3, 6)), //
         false, //
         Reliability.VERY_RELIABLE, //
-        1, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            1.0, //
+            Measurement.Unit.METER), //
         15.0, //
-        0.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new MeleeWeapon( //
         "Naginata", //
@@ -1007,9 +1311,15 @@ public class CyberpunkVendor {
             new Die(3, 6)), //
         false, //
         Reliability.VERY_RELIABLE, //
-        2, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            2.0, //
+            Measurement.Unit.METER), //
         100.0, //
-        0.5, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     // TODO (Coul Greer): Add a Thrown Weapon type.
     startingInventory.add(new ThrownWeapon( //
@@ -1023,7 +1333,10 @@ public class CyberpunkVendor {
             new Die(1, 6, 3)), //
         Reliability.VERY_RELIABLE, //
         3.0, //
-        0.5));
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
     startingInventory.add(new MeleeWeapon( //
         "Switchblade", //
         "", //
@@ -1036,9 +1349,15 @@ public class CyberpunkVendor {
             new Die(1, 6, 2)), //
         true, //
         Reliability.VERY_RELIABLE, //
-        1, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            1.0, //
+            Measurement.Unit.METER), //
         15.0, //
-        0.5, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new MeleeWeapon( //
         "Brass knuckles", //
@@ -1053,9 +1372,15 @@ public class CyberpunkVendor {
             2), //
         false, //
         Reliability.VERY_RELIABLE, //
-        1, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            1.0, //
+            Measurement.Unit.METER), //
         10.0, //
-        0.5, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new MeleeWeapon( //
         "Sledgehammer", //
@@ -1069,9 +1394,15 @@ public class CyberpunkVendor {
             0), //
         false, //
         Reliability.VERY_RELIABLE, //
-        1, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            1.0, //
+            Measurement.Unit.METER), //
         20.0, //
-        5.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            5.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
     startingInventory.add(new MeleeWeapon( //
         "Chainsaw", //
@@ -1085,9 +1416,15 @@ public class CyberpunkVendor {
             new Die(4, 6)), //
         true, //
         Reliability.VERY_RELIABLE, //
-        2, //
+        new Measurement( //
+            Measurement.Type.LENGTH, //
+            2.0, //
+            Measurement.Unit.METER), //
         80.0, //
-        5.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            5.0, //
+            Measurement.Unit.KILOGRAM), //
         shotgunAttachmentPoints));
   }
 
@@ -1099,106 +1436,306 @@ public class CyberpunkVendor {
     BodyLocation bodySuit[] = {BodyLocation.HEAD, BodyLocation.TORSO, BodyLocation.LEFT_ARM,
         BodyLocation.RIGHT_ARM, BodyLocation.LEFT_LEG, BodyLocation.RIGHT_LEG};
 
-    startingInventory.add(new CyberpunkArmor("Generic Chic Pants",
+    startingInventory.add(new CyberpunkArmor( //
+        "Generic Chic Pants", //
         "This is the standard Streetwear, made up of colorful modular components in many colors."
             + " Belts, coats, sashes, boots predominate.",
-        Arrays.stream(pants).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 20.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("Generic Chic Top",
+        Arrays.stream(pants).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        20.0, //
+        new Measurement( //
+            Measurement.Type.MASS, 0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Generic Chic Top",
         "This is the standard Streetwear, made up of colorful modular components in many colors."
             + " Belts, coats, sashes, boots predominate.",
-        Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 15.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("Generic Chic Jacket",
+        Arrays.stream(shirt).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        15.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Generic Chic Jacket",
         "This is the standard Streetwear, made up of colorful modular components in many colors."
             + " Belts, coats, sashes, boots predominate.",
-        Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 35.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("Leisurewear Pants",
-        "This is the equivalent of 21st century athletic wear."
-            + " Padded fleece, corporate and athletic logos.",
-        Arrays.stream(pants).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 40.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("Leisurewear Top",
-        "This is the equivalent of 21st century athletic wear."
-            + " Padded fleece, corporate and athletic logos.",
-        Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 30.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("Leisurewear Jacket",
-        "This is the equivalent of 21st century athletic wear."
-            + " Padded fleece, corporate and athletic logos.",
-        Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 70.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("Businesswear Pants",
-        "This is the equivalent of the standard business suit; understated colors, pinstripes, real leather shoes etc."
-            + " Wool and other natural fabrics are considered the proper outfitting for the up and coming Corp.",
-        Arrays.stream(pants).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 60.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("Businesswear Top",
-        "This is the equivalent of the standard business suit; understated colors, pinstripes, real leather shoes etc."
-            + " Wool and other natural fabrics are considered the proper outfitting for the up and coming Corp.",
-        Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 45.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("Businesswear Jacket",
-        "This is the equivalent of the standard business suit; understated colors, pinstripes, real leather shoes etc."
-            + " Wool and other natural fabrics are considered the proper outfitting for the up and coming Corp.",
-        Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 105.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("High Fashion Pants",
-        "Sophisticated and expensive dressing for the upper class."
-            + " Designer labels like Miyake, Si-fui Yan, and Anne Calvin.",
-        Arrays.stream(pants).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 80.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("High Fashion Top",
-        "Sophisticated and expensive dressing for the upper class."
-            + " Designer labels like Miyake, Si-fui Yan, and Anne Calvin.",
-        Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 60.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("High Fashion Jacket",
-        "Sophisticated and expensive dressing for the upper class."
-            + " Designer labels like Miyake, Si-fui Yan, and Anne Calvin.",
-        Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 140.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("Urban Flash Pants",
-        "Video jackets, colorshift fabrics, cammo, leathers, metal spikes, Logowear, jeans, leather skirts, boots."
-            + " The wildest and most utterly chilled in cyberfashion.",
-        Arrays.stream(pants).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 40.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("Urban Flash Top",
-        "Video jackets, colorshift fabrics, cammo, leathers, metal spikes, Logowear, jeans, leather skirts, boots."
-            + " The wildest and most utterly chilled in cyberfashion.",
-        Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 30.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("Urban Flash Jacket",
-        "Video jackets, colorshift fabrics, cammo, leathers, metal spikes, Logowear, jeans, leather skirts, boots."
-            + " The wildest and most utterly chilled in cyberfashion.",
-        Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, 70.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("Heavy leather jacket",
-        "Good for road rash, stopping knives, etc. A good .38 slug will probably rip you to bits, however.",
-        Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 4, 0, 50.0, 1.0));
-    startingInventory.add(new CyberpunkArmor("Heavy leather pants",
-        "Good for road rash, stopping knives, etc. A good .38 slug will probably rip you to bits, however.",
-        Arrays.stream(pants).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 4, 0, 50.0, 1.0));
-    startingInventory.add(new CyberpunkArmor("Kevlar vest",
+        Arrays.stream(shirt).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        35.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Leisurewear Pants",
+        "This is the equivalent of 21st century athletic wear. Padded fleece, corporate and"
+            + " athletic logos.",
+        Arrays.stream(pants).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        40.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Leisurewear Top",
+        "This is the equivalent of 21st century athletic wear. Padded fleece, corporate and"
+            + " athletic logos.",
+        Arrays.stream(shirt).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        30.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Leisurewear Jacket",
+        "This is the equivalent of 21st century athletic wear. Padded fleece, corporate and"
+            + " athletic logos.",
+        Arrays.stream(shirt).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        70.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Businesswear Pants",
+        "This is the equivalent of the standard business suit; understated colors, pinstripes, real"
+            + " leather shoes etc. Wool and other natural fabrics are considered the proper"
+            + " outfitting for the up and coming Corp.",
+        Arrays.stream(pants).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        60.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Businesswear Top",
+        "This is the equivalent of the standard business suit; understated colors, pinstripes, real"
+            + " leather shoes etc. Wool and other natural fabrics are considered the proper"
+            + " outfitting for the up and coming Corp.",
+        Arrays.stream(shirt).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        45.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Businesswear Jacket",
+        "This is the equivalent of the standard business suit; understated colors, pinstripes, real"
+            + " leather shoes etc. Wool and other natural fabrics are considered the proper"
+            + " outfitting for the up and coming Corp.",
+        Arrays.stream(shirt).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        105.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "High Fashion Pants",
+        "Sophisticated and expensive dressing for the upper class. Designer labels like Miyake,"
+            + " Si-fui Yan, and Anne Calvin.",
+        Arrays.stream(pants).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        80.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "High Fashion Top",
+        "Sophisticated and expensive dressing for the upper class. Designer labels like Miyake,"
+            + " Si-fui Yan, and Anne Calvin.",
+        Arrays.stream(shirt).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        60.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "High Fashion Jacket",
+        "Sophisticated and expensive dressing for the upper class. Designer labels like Miyake,"
+            + " Si-fui Yan, and Anne Calvin.",
+        Arrays.stream(shirt).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        140.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Urban Flash Pants",
+        "Video jackets, colorshift fabrics, cammo, leathers, metal spikes, Logowear, jeans, leather"
+            + " skirts, boots. The wildest and most utterly chilled in cyberfashion.",
+        Arrays.stream(pants).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        40.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Urban Flash Top",
+        "Video jackets, colorshift fabrics, cammo, leathers, metal spikes, Logowear, jeans, leather"
+            + " skirts, boots. The wildest and most utterly chilled in cyberfashion.",
+        Arrays.stream(shirt).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        30.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Urban Flash Jacket",
+        "Video jackets, colorshift fabrics, cammo, leathers, metal spikes, Logowear, jeans, leather"
+            + " skirts, boots. The wildest and most utterly chilled in cyberfashion.",
+        Arrays.stream(shirt).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 0, 0, //
+        70.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Heavy leather jacket",
+        "Good for road rash, stopping knives, etc. A good .38 slug will probably rip you to bits,"
+            + " however.",
+        Arrays.stream(shirt).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 4, 0, //
+        50.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Heavy leather pants",
+        "Good for road rash, stopping knives, etc. A good .38 slug will probably rip you to bits,"
+            + " however.",
+        Arrays.stream(pants).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 4, 0, //
+        50.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Kevlar vest",
         "Can be worn unnoticably under most street clothes. Will stop most rounds up to a .45 ACP.",
-        Arrays.stream(vest).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 10, 0, 90.0, 1.0));
-    startingInventory.add(new CyberpunkArmor("Light Kevlar armor jacket",
-        "Personal protection for the fashion conscious, these lightweight Kevlar jackets have nylon coverings that resemble normal jackets.",
-        Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 14, 0, 150.0, 3.0));
-    startingInventory.add(new CyberpunkArmor("Medium Kevlar armor jacket",
-        "Personal protection for the fashion conscious, these lightweight Kevlar jackets have nylon coverings that resemble normal jackets.",
-        Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 18, 1, 200.0, 3.0));
-    startingInventory.add(new CyberpunkArmor("Heavy Kevlar armor jacket",
-        "Personal protection for the fashion conscious, these lightweight Kevlar jackets have nylon coverings that resemble normal jackets.",
-        Arrays.stream(shirt).iterator(), CyberpunkArmor.ARMOR_TYPE_SOFT, 20, 2, 250.0, 3.0));
-    startingInventory.add(new CyberpunkArmor("Steel helmet",
-        "Heavy duty protection for the head, standard for most military."
-            + " Some are made of steel, others of kevlar and high impact plastics."
-            + " Most (90%) have face shields with 1/2 the SP level as the rest of the helmet.",
-        Arrays.stream(headgear).iterator(), CyberpunkArmor.ARMOR_TYPE_HARD, 14, 0, 20.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("Nylon helmet",
-        "Heavy duty protection for the head, standard for most military."
-            + " Some are made of steel, others of kevlar and high impact plastics."
-            + " Most (90%) have face shields with 1/2 the SP level as the rest of the helmet.",
-        Arrays.stream(headgear).iterator(), CyberpunkArmor.ARMOR_TYPE_HARD, 20, 0, 100.0, 0.5));
-    startingInventory.add(new CyberpunkArmor("Flack vest",
-        "Standard protection for combat soldiers, the flack vest is designed to stop small arms fire, grenade shrapnel, but only slow up assault rifle rounds.",
-        Arrays.stream(vest).iterator(), CyberpunkArmor.ARMOR_TYPE_HARD, 20, 1, 200.0, 3.0));
-    startingInventory.add(new CyberpunkArmor("Flack pants",
-        "Standard protection for combat soldiers, the flack vest is designed to stop small arms fire, grenade shrapnel, but only slow up assault rifle rounds.",
-        Arrays.stream(pants).iterator(), CyberpunkArmor.ARMOR_TYPE_HARD, 20, 1, 200.0, 3.0));
-    startingInventory.add(new CyberpunkArmor("Doorgunner's vest",
-        "Heavy duty protection for stationary positions, like machinegun nests, helicopter doors, etc.",
-        Arrays.stream(vest).iterator(), CyberpunkArmor.ARMOR_TYPE_HARD, 25, 3, 250.0, 4.0));
-    startingInventory.add(new CyberpunkArmor("MetalGear", "Laminated expoxide plate armor."
-        + " Bulky and designed in modular sections, with helmet, arm & leg coverings, torso and back clamshell",
-        Arrays.stream(bodySuit).iterator(), CyberpunkArmor.ARMOR_TYPE_HARD, 25, 2, 600.0, 8.0));
+        Arrays.stream(vest).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 10, 0, //
+        90.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Light Kevlar armor jacket",
+        "Personal protection for the fashion conscious, these lightweight Kevlar jackets have nylon"
+            + " coverings that resemble normal jackets.",
+        Arrays.stream(shirt).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 14, 0, //
+        150.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Medium Kevlar armor jacket",
+        "Personal protection for the fashion conscious, these lightweight Kevlar jackets have nylon"
+            + " coverings that resemble normal jackets.",
+        Arrays.stream(shirt).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 18, 1, //
+        200.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Heavy Kevlar armor jacket",
+        "Personal protection for the fashion conscious, these lightweight Kevlar jackets have nylon"
+            + " coverings that resemble normal jackets.",
+        Arrays.stream(shirt).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_SOFT, 20, 2, //
+        250.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Steel helmet",
+        "Heavy duty protection for the head, standard for most military. Some are made of steel,"
+            + " others of kevlar and high impact plastics. Most (90%) have face shields with 1/2"
+            + " the SP level as the rest of the helmet.",
+        Arrays.stream(headgear).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_HARD, 14, 0, //
+        20.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Nylon helmet",
+        "Heavy duty protection for the head, standard for most military. Some are made of steel,"
+            + " others of kevlar and high impact plastics. Most (90%) have face shields with 1/2"
+            + " the SP level as the rest of the helmet.",
+        Arrays.stream(headgear).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_HARD, 20, 0, //
+        100.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            0.5, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Flack vest",
+        "Standard protection for combat soldiers, the flack vest is designed to stop small arms"
+            + " fire, grenade shrapnel, but only slow up assault rifle rounds.",
+        Arrays.stream(vest).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_HARD, 20, 1, //
+        200.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Flack pants",
+        "Standard protection for combat soldiers, the flack vest is designed to stop small arms"
+            + " fire, grenade shrapnel, but only slow up assault rifle rounds.",
+        Arrays.stream(pants).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_HARD, 20, 1, //
+        200.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            3.0, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "Doorgunner's vest",
+        "Heavy duty protection for stationary positions, like machinegun nests, helicopter doors,"
+            + " etc.",
+        Arrays.stream(vest).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_HARD, 25, 3, //
+        250.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            4.0, //
+            Measurement.Unit.KILOGRAM)));
+    startingInventory.add(new CyberpunkArmor( //
+        "MetalGear", //
+        "Laminated expoxide plate armor. Bulky and designed in modular sections, with helmet, arm"
+            + " & leg coverings, torso and back clamshell",
+        Arrays.stream(bodySuit).iterator(), //
+        CyberpunkArmor.ARMOR_TYPE_HARD, 25, 2, //
+        600.0, //
+        new Measurement( //
+            Measurement.Type.MASS, //
+            8.0, //
+            Measurement.Unit.KILOGRAM)));
   }
 
   private void addAmmunitionToVendor() {
@@ -1253,7 +1790,10 @@ public class CyberpunkVendor {
                 caliber, //
                 bullet, //
                 material, //
-                AmmunitionBox.WEIGHT / ammoPerBox), //
+                new Measurement( //
+                    AmmunitionBox.WEIGHT.getType(), //
+                    AmmunitionBox.WEIGHT.getAmount() / ammoPerBox, //
+                    AmmunitionBox.WEIGHT.getUnit())), //
             ammoPerBox));
       }
     }

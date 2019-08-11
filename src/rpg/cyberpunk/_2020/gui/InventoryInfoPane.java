@@ -46,7 +46,7 @@ public class InventoryInfoPane extends JPanel implements PropertyChangeListener 
 	}
 
 	private String generateFormattedWeight(Player player) {
-		return String.format("Current Inventory Weight: %01.2f", player.getTotalWeight());
+		return "Current Inventory Weight: " + player.getTotalWeight();
 	}
 
 	@Override

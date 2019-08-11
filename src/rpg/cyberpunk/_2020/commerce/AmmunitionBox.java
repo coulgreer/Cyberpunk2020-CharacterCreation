@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.SerializationUtils;
 import rpg.general.combat.Ammunition;
+import rpg.util.Measurement;
 
 /**
  * An instance of <code>Box</code> that allows the storage of only one type of ammunition. The type
@@ -13,8 +14,12 @@ public class AmmunitionBox implements Box<Ammunition> {
   /**
    * The default weight of an AmmunitionBox.
    */
-  public static final double WEIGHT = 0.5;
-  private static final int minQuantity = 1;
+  public static final Measurement WEIGHT = new Measurement( //
+      Measurement.Type.MASS, //
+      0.5, //
+      Measurement.Unit.KILOGRAM);
+
+  private static final int MIN_QUANTITY = 1;
   private static final long serialVersionUID = 1L;
 
   private Ammunition ammunition;
@@ -40,8 +45,8 @@ public class AmmunitionBox implements Box<Ammunition> {
   }
 
   private void setQuantity(int quantity) {
-    if (quantity < minQuantity) {
-      throw new IllegalArgumentException("quantity = " + quantity + "; min = " + minQuantity);
+    if (quantity < MIN_QUANTITY) {
+      throw new IllegalArgumentException("quantity = " + quantity + "; min = " + MIN_QUANTITY);
     } else {
       list = new ArrayList<Ammunition>();
 
@@ -62,8 +67,12 @@ public class AmmunitionBox implements Box<Ammunition> {
   }
 
   @Override
-  public double getWeight() {
-    return ammunition.getWeight() * getQuantity();
+  public Measurement getWeight() {
+    Measurement weight = ammunition.getWeight();
+    return new Measurement( //
+        weight.getType(), //
+        weight.getAmount() * getQuantity(), //
+        weight.getUnit());
   }
 
   @Override

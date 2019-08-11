@@ -11,24 +11,27 @@ import rpg.general.combat.EmptyAmmunitionContainer;
 import rpg.general.combat.Weapon;
 import rpg.general.combat.WeaponAttachment;
 import rpg.util.Die;
+import rpg.util.Measurement;
 import rpg.util.Probability;
 
 /**
  * A Cyberpunk weapon that determines its range based on the weight of the weapon and the combatant
- * wielding it. Uses the athletics skill to determine the bonus for accuracy from the wielding
- * combatant
+ * wielding it. Uses the athletics skill to determine the bonus for accuracy provided by the
+ * wielding combatant.
  */
 public class ThrownWeapon extends CyberpunkWeapon {
-  private static final int ammunitionCapacity = 1;
-  private static final int rateOfFire = 1;
-  private static final double minWeight = 0.0;
-  private static final double minCost = 0.0;
 
   /**
    * The minimum weight amount allowed without suffering a range penalty.
    */
-  public static final int WEIGHT_THRESHOLD = 1;
+  public static final Measurement WEIGHT_THRESHOLD = new Measurement( //
+      Measurement.Type.MASS, //
+      1.0, //
+      Measurement.Unit.KILOGRAM);
 
+  private static final int AMMUNITION_CAPACITY = 1;
+  private static final int RATE_OF_FIRE = 1;
+  private static final double MIN_COST = 0.0;
   private static final long serialVersionUID = 1L;
 
   private String weaponName;
@@ -41,9 +44,9 @@ public class ThrownWeapon extends CyberpunkWeapon {
   private Probability damage;
   private AmmunitionContainer ammunitionContainer;
   private Reliability reliability;
-  private int rangeModifier;
+  private Measurement rangeModifier;
   private double cost;
-  private double weight;
+  private Measurement weight;
 
   /**
    * Constructs a thrown weapon with a payload. The payload is used to get the damage and
@@ -62,7 +65,7 @@ public class ThrownWeapon extends CyberpunkWeapon {
    */
   public ThrownWeapon(String weaponName, String weaponType, int weaponAccuracy,
       Concealability concealability, Availability availability, Payload load,
-      Reliability reliability, double cost, double weight) {
+      Reliability reliability, double cost, Measurement weight) {
 
     this(weaponName, load.getEffects(), weaponType, weaponAccuracy, concealability, availability,
         load.getDamge(), reliability, cost, weight);
@@ -86,7 +89,7 @@ public class ThrownWeapon extends CyberpunkWeapon {
    */
   public ThrownWeapon(String weaponName, String description, String weaponType, int weaponAccuracy,
       Concealability concealability, Availability availability, Probability damage,
-      Reliability reliability, double cost, double weight) {
+      Reliability reliability, double cost, Measurement weight) {
 
     setWeaponName(weaponName);
     setDescription(description);
@@ -158,28 +161,31 @@ public class ThrownWeapon extends CyberpunkWeapon {
     }
   }
 
-  private void setWeight(double weight) {
-    if (weight < minWeight) {
-      throw new IllegalArgumentException("weight = " + weight + "; min = " + minWeight);
+  private void setWeight(Measurement weight) {
+    if (weight == null) {
+      throw new NullPointerException();
     } else {
       this.weight = weight;
       this.rangeModifier = calculateRange(weight);
     }
   }
 
-  private int calculateRange(double weight) {
+  private Measurement calculateRange(Measurement weight) {
     int modifier = 0;
 
-    if (weight > WEIGHT_THRESHOLD) {
-      modifier = ((int) Math.round(weight) - WEIGHT_THRESHOLD) * (-10);
+    if (weight.compareTo(WEIGHT_THRESHOLD) == -1) {
+      modifier = ((int) Measurement.subtract(weight, WEIGHT_THRESHOLD).getAmount()) * (-10);
     }
 
-    return modifier;
+    return new Measurement( //
+        Measurement.Type.LENGTH, //
+        modifier, //
+        Measurement.Unit.METER);
   }
 
   private void setCost(double cost) {
-    if (cost < minCost) {
-      throw new IllegalArgumentException("cost = " + cost + "; min = " + minCost);
+    if (cost < MIN_COST) {
+      throw new IllegalArgumentException("cost = " + cost + "; min = " + MIN_COST);
     } else {
       this.cost = cost;
     }
@@ -217,17 +223,17 @@ public class ThrownWeapon extends CyberpunkWeapon {
 
   @Override
   public int getAmmunitionCount() {
-    return ammunitionCapacity;
+    return AMMUNITION_CAPACITY;
   }
 
   @Override
   public int getAmmunitionCapacity() {
-    return ammunitionCapacity;
+    return AMMUNITION_CAPACITY;
   }
 
   @Override
   public int getRateOfFire() {
-    return rateOfFire;
+    return RATE_OF_FIRE;
   }
 
   @Override
@@ -251,7 +257,7 @@ public class ThrownWeapon extends CyberpunkWeapon {
   }
 
   @Override
-  public int getRangeModifier() {
+  public Measurement getRangeModifier() {
     return rangeModifier;
   }
 
@@ -266,7 +272,7 @@ public class ThrownWeapon extends CyberpunkWeapon {
   }
 
   @Override
-  public double getWeight() {
+  public Measurement getWeight() {
     return weight;
   }
 

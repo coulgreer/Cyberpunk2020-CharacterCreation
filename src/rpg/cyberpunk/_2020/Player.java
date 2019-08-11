@@ -43,6 +43,7 @@ import rpg.general.combat.Combatant;
 import rpg.general.commerce.Item;
 import rpg.general.commerce.Trader;
 import rpg.general.stats.Attribute;
+import rpg.util.Measurement;
 import rpg.util.Name;
 import rpg.util.Probability;
 
@@ -372,15 +373,15 @@ public class Player {
     return equippedWeapons[slot].getDamageModifier();
   }
 
-  public int getRangeScore(int slot) {
+  public Measurement getRangeScore(int slot) {
     return combatant.getRangeScore(equippedWeapons[slot]);
   }
 
-  public int getPlayerRangeModifier(int slot) {
+  public Measurement getPlayerRangeModifier(int slot) {
     return combatant.getRangeModifier(equippedWeapons[slot]);
   }
 
-  public int getWeaponRangeModifier(int slot) {
+  public Measurement getWeaponRangeModifier(int slot) {
     return equippedWeapons[slot].getRangeModifier();
   }
 
@@ -475,7 +476,7 @@ public class Player {
   }
 
   public void addToInventory(CyberpunkWeapon weapon) {
-    double oldWeight = getTotalWeight();
+    Measurement oldWeight = getTotalWeight();
 
     if (!CyberpunkWeapon.WEAPON_TYPE_UNARMED.equals(weapon.getWeaponType())) {
       pocketInventory.add(weapon);
@@ -487,7 +488,7 @@ public class Player {
   }
 
   public void addToInventory(CyberpunkArmor armor) {
-    double oldWeight = getTotalWeight();
+    Measurement oldWeight = getTotalWeight();
 
     pocketInventory.add(armor);
 
@@ -497,7 +498,7 @@ public class Player {
   }
 
   public void addToInventory(Ammunition ammunition) {
-    double oldWeight = getTotalWeight();
+    Measurement oldWeight = getTotalWeight();
 
     pocketInventory.add(ammunition);
 
@@ -508,7 +509,7 @@ public class Player {
   }
 
   public void removeFromInventory(CyberpunkWeapon weapon, int quantity) {
-    double oldWeight = getTotalWeight();
+    Measurement oldWeight = getTotalWeight();
 
     if (!CyberpunkWeapon.WEAPON_TYPE_UNARMED.equals(weapon.getWeaponType())) {
       for (int i = 0; i < quantity; i++) {
@@ -522,7 +523,7 @@ public class Player {
   }
 
   public void removeFromInventory(CyberpunkArmor armor, int quantity) {
-    double oldWeight = getTotalWeight();
+    Measurement oldWeight = getTotalWeight();
 
     for (int i = 0; i < quantity; i++) {
       pocketInventory.remove(armor);
@@ -534,7 +535,7 @@ public class Player {
   }
 
   public void removeFromInventory(Ammunition ammunition, int quantity) {
-    double oldWeight = getTotalWeight();
+    Measurement oldWeight = getTotalWeight();
 
     for (int i = 0; i < quantity; i++) {
       pocketInventory.remove(ammunition);
@@ -547,7 +548,7 @@ public class Player {
   }
 
   public void removeFromInventory(Item item, int quantity) {
-    double oldWeight = getTotalWeight();
+    Measurement oldWeight = getTotalWeight();
 
     for (int i = 0; i < quantity; i++) {
       pocketInventory.removeItem(item);
@@ -589,10 +590,14 @@ public class Player {
     return armorManager.createArmorCollection();
   }
 
-  public double getTotalWeight() {
-    return pocketInventory.getTotalWeight() //
-        + equippedWeapons[PRIMARY_SLOT].getWeight() + equippedWeapons[SECONDARY_SLOT].getWeight() //
-        + armorManager.getTotalWeight();
+  public Measurement getTotalWeight() {
+    Measurement equippedWeaponWeight = Measurement.add( //
+        equippedWeapons[PRIMARY_SLOT].getWeight(), //
+        equippedWeapons[SECONDARY_SLOT].getWeight());
+    Measurement storedWeight = Measurement.add( //
+        pocketInventory.getTotalWeight(), //
+        armorManager.getTotalWeight());
+    return Measurement.add(equippedWeaponWeight, storedWeight);
   }
 
   public int getLocationDurability(BodyLocation location) {

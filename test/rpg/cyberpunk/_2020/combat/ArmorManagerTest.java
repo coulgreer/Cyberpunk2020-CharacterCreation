@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.junit.Test;
 import rpg.general.combat.BodyLocation;
+import rpg.util.Measurement;
 
 public class ArmorManagerTest {
 
@@ -510,14 +511,23 @@ public class ArmorManagerTest {
   @Test
   public void Should_ReturnWeightAsTwo_When_TwoArmorsAreEquipped_While_BothArmorsWeighOne() {
     CyberpunkArmor mockArmor1 = mock(CyberpunkArmor.class);
-    when(mockArmor1.getWeight()).thenReturn(1.0);
+    when(mockArmor1.getWeight()) //
+        .thenReturn(new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM));
     CyberpunkArmor mockArmor2 = mock(CyberpunkArmor.class);
-    when(mockArmor2.getWeight()).thenReturn(1.0);
+    when(mockArmor2.getWeight()) //
+        .thenReturn(new Measurement( //
+            Measurement.Type.MASS, //
+            1.0, //
+            Measurement.Unit.KILOGRAM));
     ArmorManager manager = new ArmorManager();
     manager.add(mockArmor1);
     manager.add(mockArmor2);
 
-    assertEquals(2.0, manager.getTotalWeight(), 0.0);
+    Measurement weight = manager.getTotalWeight();
+    assertEquals(2.0, weight.getAmount(), 0.0);
   }
 
 }

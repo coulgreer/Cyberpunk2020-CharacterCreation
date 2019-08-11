@@ -6,6 +6,7 @@ import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Combatant;
 import rpg.general.stats.Attribute;
 import rpg.util.Die;
+import rpg.util.Measurement;
 import rpg.util.Probability;
 
 /**
@@ -14,8 +15,8 @@ import rpg.util.Probability;
  * well.
  */
 public class CyberpunkCombatant implements Combatant<CyberpunkWeapon> {
-  private static final int defaultRangeModifier = 0;
-  private static final int defaultDamageModifier = 0;
+  private static final int DEFAULT_RANGE_MODIFIER = 0;
+  private static final int DEFAULT_DAMAGE_MODIFIER = 0;
   private static final long serialVersionUID = 1L;
 
   private final Player player;
@@ -31,8 +32,8 @@ public class CyberpunkCombatant implements Combatant<CyberpunkWeapon> {
   }
 
   @Override
-  public int getRangeScore(CyberpunkWeapon weapon) {
-    return weapon.getRangeModifier() + getRangeModifier(weapon);
+  public Measurement getRangeScore(CyberpunkWeapon weapon) {
+    return Measurement.add(weapon.getRangeModifier(), getRangeModifier(weapon));
   }
 
   @Override
@@ -67,24 +68,27 @@ public class CyberpunkCombatant implements Combatant<CyberpunkWeapon> {
       CyberpunkSkill skill = player.getSkill(weapon.getSkillName());
       modifier = skill.getTotalValue();
     } else {
-      modifier = defaultDamageModifier;
+      modifier = DEFAULT_DAMAGE_MODIFIER;
     }
 
     return modifier;
   }
 
   @Override
-  public int getRangeModifier(CyberpunkWeapon weapon) {
+  public Measurement getRangeModifier(CyberpunkWeapon weapon) {
     int modifier;
 
     if (CyberpunkWeapon.WEAPON_TYPE_THROWN.equals(weapon.getWeaponType())) {
       Attribute attribute = player.getAttribute(CyberpunkAttribute.BODY_TYPE);
       modifier = attribute.getModifier() * 10;
     } else {
-      modifier = defaultRangeModifier;
+      modifier = DEFAULT_RANGE_MODIFIER;
     }
 
-    return modifier;
+    return new Measurement( //
+        Measurement.Type.LENGTH, //
+        modifier, //
+        Measurement.Unit.KILOGRAM);
   }
 
 }

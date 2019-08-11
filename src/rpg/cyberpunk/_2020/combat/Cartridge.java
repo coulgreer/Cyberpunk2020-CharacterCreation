@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import rpg.general.combat.Ammunition;
 import rpg.util.Die;
+import rpg.util.Measurement;
 import rpg.util.Name;
 import rpg.util.Probability;
 
@@ -386,13 +387,12 @@ public class Cartridge implements Ammunition {
     }
   }
 
-  private static final double minWeight = 0.0;
   private static final long serialVersionUID = 1L;
 
   private Caliber caliber;
   private Bullet bullet;
   private CaseMaterial caseMaterial;
-  private double weight;
+  private Measurement weight;
 
   /**
    * Constructs a Cartridge with a given caliber used by <code>CyberpunkWeapon</code>s to determine
@@ -408,7 +408,7 @@ public class Cartridge implements Ammunition {
    */
   public Cartridge( //
       Caliber caliber, Bullet bullet, CaseMaterial caseMaterial, //
-      double weight) {
+      Measurement weight) {
 
     setCaliber(caliber);
     setBullet(bullet);
@@ -440,9 +440,9 @@ public class Cartridge implements Ammunition {
     }
   }
 
-  private void setWeight(double weight) {
-    if (weight < minWeight) {
-      throw new IllegalArgumentException("weight: " + weight + "; min weight: " + minWeight);
+  private void setWeight(Measurement weight) {
+    if (weight == null) {
+      throw new NullPointerException();
     } else {
       this.weight = weight;
     }
@@ -467,7 +467,7 @@ public class Cartridge implements Ammunition {
   }
 
   @Override
-  public double getWeight() {
+  public Measurement getWeight() {
     return weight;
   }
 

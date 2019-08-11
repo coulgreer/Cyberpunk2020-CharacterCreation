@@ -34,6 +34,11 @@ public class Name implements Serializable {
   public String getValue() {
     return name;
   }
+  
+  @Override
+  public String toString() {
+    return name;
+  }
 
   @Override
   public boolean equals(Object o) {

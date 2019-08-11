@@ -12,6 +12,7 @@ import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Availability;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Concealability;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon.Reliability;
 import rpg.general.combat.AmmunitionContainer;
+import rpg.util.Measurement;
 import rpg.util.Probability;
 
 public class BowTest {
@@ -24,9 +25,9 @@ public class BowTest {
   private AmmunitionContainer mockAmmunitionContainer;
   private int rateOfFire;
   private Reliability reliability;
-  private int rangeModifier;
+  private Measurement rangeModifier;
   private double cost;
-  private double weight;
+  private Measurement weight;
   private Set<String> attachmentPoints;
 
   @Before
@@ -40,9 +41,15 @@ public class BowTest {
     mockAmmunitionContainer = mock(AmmunitionContainer.class);
     rateOfFire = 1;
     reliability = Reliability.STANDARD;
-    rangeModifier = 0;
+    rangeModifier = new Measurement( //
+        Measurement.Type.LENGTH, //
+        0, //
+        Measurement.Unit.METER);
     cost = 0.0;
-    weight = 1.0;
+    weight = new Measurement( //
+        Measurement.Type.MASS, //
+        1.0, //
+        Measurement.Unit.KILOGRAM);
     // TODO (Coul Greer): Actually initialize the proceeding field properly.
     attachmentPoints = Collections.emptySet();
   }
@@ -164,15 +171,15 @@ public class BowTest {
         attachmentPoints);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void Should_ThrowException_When_RangeModifierIsNegativeOne() {
+  @Test(expected = NullPointerException.class)
+  public void Should_ThrowException_When_RangeModifierIsNull() {
     @SuppressWarnings("unused")
     Bow bow = new Bow( //
         weaponName, description, //
         weaponAccuracy, //
         concealability, availability, //
         mockDamage, mockAmmunitionContainer, rateOfFire, //
-        reliability, -1, //
+        reliability, null, //
         cost, weight, //
         attachmentPoints);
   }
@@ -190,8 +197,8 @@ public class BowTest {
         attachmentPoints);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void Should_ThrowException_When_WeightIsNegativeOneTenth() {
+  @Test(expected = NullPointerException.class)
+  public void Should_ThrowException_When_WeightIsNull() {
     @SuppressWarnings("unused")
     Bow bow = new Bow( //
         weaponName, description, //
@@ -199,7 +206,7 @@ public class BowTest {
         concealability, availability, //
         mockDamage, mockAmmunitionContainer, rateOfFire, //
         reliability, rangeModifier, //
-        cost, -0.1, //
+        cost, null, //
         attachmentPoints);
   }
 

@@ -10,12 +10,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import rpg.general.combat.BodyLocation;
+import rpg.util.Measurement;
 
 public class CyberpunkArmorTest {
   private String name;
   private String description;
   private double cost;
-  private double weight;
+  private Measurement weight;
   private List<BodyLocation> areCovered;
   private Iterator<BodyLocation> iterator;
   private String armorType;
@@ -27,7 +28,10 @@ public class CyberpunkArmorTest {
     name = "Name";
     description = "Description";
     cost = 1.0;
-    weight = 0.0;
+    weight = new Measurement( //
+        Measurement.Type.MASS, //
+        0.0, //
+        Measurement.Unit.KILOGRAM);
     areCovered = Collections.emptyList();
     iterator = areCovered.iterator();
     armorType = CyberpunkArmor.ARMOR_TYPE_SOFT;
@@ -105,14 +109,14 @@ public class CyberpunkArmorTest {
         -0.1, weight);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void Should_ThrowException_When_WeightIsNegativeOneTenth() {
+  @Test(expected = NullPointerException.class)
+  public void Should_ThrowException_When_WeightIsNull() {
     @SuppressWarnings("unused")
     CyberpunkArmor armor = new CyberpunkArmor( //
         name, description, //
         iterator, //
         armorType, stoppingPower, encumbranceValue, //
-        cost, -0.1);
+        cost, null);
   }
 
   @Test(expected = IllegalArgumentException.class)

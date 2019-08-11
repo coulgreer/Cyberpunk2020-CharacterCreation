@@ -79,11 +79,11 @@ public class InventoryWeaponTable extends JTable {
       case InventoryWeaponTableModel.TYPE_INDEX:
         return new WeaponTypeRenderer();
       case InventoryWeaponTableModel.RANGE_INDEX:
-        return new MetricDistanceRenderer();
+        return new MeasurementRenderer();
       case InventoryWeaponTableModel.COST_INDEX:
         return new USCurrencyRenderer();
       case InventoryWeaponTableModel.WEIGHT_INDEX:
-        return new MetricWeightRenderer();
+        return new MeasurementRenderer();
       case ShopWeaponTableModel.DAMAGE_INDEX:
         return new DamageRenderer();
       default:
