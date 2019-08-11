@@ -273,7 +273,7 @@ public class Measurement implements Serializable, Comparable<Measurement> {
 
   @Override
   public String toString() {
-    return amount + unit.getName().getValue();
+    return amount + " " + unit.getName().getValue();
   }
 
   @Override

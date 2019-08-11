@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DecimalFormat;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -65,13 +66,15 @@ public class MeasurementPane extends JPanel implements PropertyChangeListener {
   }
 
   private Component createDataComponent() {
-    dataLabel = new JLabel(createMeasurement().toString(), SwingConstants.RIGHT);
+    dataLabel = new JLabel(createFormattedMeasurement(), SwingConstants.RIGHT);
     dataLabel.setFont(DEFAULT_FONT);
     return dataLabel;
   }
 
-  private Measurement createMeasurement() {
-    return new Measurement(type, attribute.getModifier(), unit);
+  private String createFormattedMeasurement() {
+    Measurement m = new Measurement(type, attribute.getModifier(), unit);
+    DecimalFormat df = new DecimalFormat("#.##");
+    return df.format(m.getAmount()) + m.getUnit().getName();
   }
 
   @Override
@@ -79,7 +82,7 @@ public class MeasurementPane extends JPanel implements PropertyChangeListener {
     Object source = evt.getSource();
 
     if (source == attribute) {
-      dataLabel.setText(createMeasurement().toString());
+      dataLabel.setText(createFormattedMeasurement());
     }
   }
 
