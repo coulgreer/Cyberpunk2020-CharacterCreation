@@ -1,4 +1,4 @@
-package rpg.cyberpunk._2020.gui;
+package rpg.cyberpunk._2020.gui.items;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,6 +22,8 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import rpg.cyberpunk._2020.Player;
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
+import rpg.cyberpunk._2020.gui.Selectable;
+import rpg.cyberpunk._2020.gui.SelectionMediator;
 import rpg.general.combat.BodyLocation;
 
 /**

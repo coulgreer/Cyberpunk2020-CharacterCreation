@@ -1,4 +1,4 @@
-package rpg.cyberpunk._2020.gui;
+package rpg.cyberpunk._2020.gui.items;
 
 import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;

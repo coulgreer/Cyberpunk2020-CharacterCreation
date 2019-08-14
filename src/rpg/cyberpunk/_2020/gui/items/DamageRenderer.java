@@ -1,4 +1,4 @@
-package rpg.cyberpunk._2020.gui;
+package rpg.cyberpunk._2020.gui.items;
 
 import javax.swing.table.DefaultTableCellRenderer;
 

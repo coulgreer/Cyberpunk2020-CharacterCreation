@@ -32,6 +32,7 @@ import rpg.cyberpunk._2020.Age;
 import rpg.cyberpunk._2020.Player;
 import rpg.cyberpunk._2020.Sibling;
 import rpg.cyberpunk._2020.Sibling.RelativeAge;
+import rpg.cyberpunk._2020.gui.stats.AttributePane;
 import rpg.cyberpunk._2020.stats.CyberpunkAttribute;
 import rpg.util.Measurement;
 import rpg.util.Name;

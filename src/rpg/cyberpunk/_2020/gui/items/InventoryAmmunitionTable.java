@@ -1,4 +1,4 @@
-package rpg.cyberpunk._2020.gui;
+package rpg.cyberpunk._2020.gui.items;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -15,6 +15,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import rpg.cyberpunk._2020.Player;
+import rpg.cyberpunk._2020.gui.MeasurementRenderer;
+import rpg.cyberpunk._2020.gui.USCurrencyRenderer;
 import rpg.general.combat.Ammunition;
 import rpg.util.Measurement;
 

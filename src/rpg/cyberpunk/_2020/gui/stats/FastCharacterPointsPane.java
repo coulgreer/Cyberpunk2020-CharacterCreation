@@ -1,4 +1,4 @@
-package rpg.cyberpunk._2020.gui;
+package rpg.cyberpunk._2020.gui.stats;
 
 import java.awt.BorderLayout;
 import java.awt.Component;

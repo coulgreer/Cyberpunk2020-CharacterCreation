@@ -4,6 +4,10 @@ import javax.swing.JTabbedPane;
 import rpg.cyberpunk._2020.Player;
 import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
 import rpg.cyberpunk._2020.commerce.VendorTrader;
+import rpg.cyberpunk._2020.gui.items.EquipmentTab;
+import rpg.cyberpunk._2020.gui.items.InventoryTab;
+import rpg.cyberpunk._2020.gui.items.ShopTab;
+import rpg.cyberpunk._2020.gui.stats.SkillTab;
 
 /**
  * A tabbed panel used to hold all other panels that a user can navigate to. Used to keep other

@@ -1,4 +1,4 @@
-package rpg.cyberpunk._2020.gui;
+package rpg.cyberpunk._2020.gui.items;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -22,6 +22,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import rpg.cyberpunk._2020.Player;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
+import rpg.cyberpunk._2020.gui.Selectable;
+import rpg.cyberpunk._2020.gui.SelectionMediator;
 import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.general.combat.Ammunition;
 import rpg.general.combat.AmmunitionContainer;
@@ -163,7 +165,7 @@ public class WeaponPane extends JPanel implements PropertyChangeListener, Select
         + " \u2022 " + weapon.getConcealability() //
         + " \u2022 " + weapon.getAvailability() //
         + " \u2022 " + player.getTotalDamageChance(slotIndex) //
-        + " \u2022 " + weapon.getAmmunitionType() //
+        + " \u2022 " + weapon.getAmmunitionType().getName() //
         + " \u2022 " + weapon.getAmmunitionCount() + " / " + weapon.getAmmunitionCapacity() //
         + " \u2022 " + weapon.getRateOfFire() //
         + " \u2022 " + weapon.getReliability();
@@ -210,6 +212,7 @@ public class WeaponPane extends JPanel implements PropertyChangeListener, Select
     return weapon.getAmmunitionCapacity() > AmmunitionContainer.EMPTY;
   }
 
+  // TODO (Coul Greer): There is a bug with reloading weapons. The display does not update.
   private void reloadWeapon() {
     Map<String, Ammunition> filteredAmmunitionMap =
         new HashSet<>(player.createCarriedAmmunitionCollection()).stream() //

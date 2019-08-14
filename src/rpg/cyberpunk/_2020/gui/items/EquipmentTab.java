@@ -1,4 +1,4 @@
-package rpg.cyberpunk._2020.gui;
+package rpg.cyberpunk._2020.gui.items;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import rpg.cyberpunk._2020.Player;
+import rpg.cyberpunk._2020.gui.SelectionMediator;
 
 /**
  * An instance of JPanel that sets up a panel for armor, primary weapon, and secondary weapon from a

@@ -1,4 +1,4 @@
-package rpg.cyberpunk._2020.gui;
+package rpg.cyberpunk._2020.gui.items;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -16,10 +16,10 @@ import rpg.cyberpunk._2020.Player;
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
 import rpg.cyberpunk._2020.combat.CyberpunkWeapon;
 import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
-import rpg.cyberpunk._2020.gui.InventoryAmmunitionTable.InventoryAmmunitionTableModel;
-import rpg.cyberpunk._2020.gui.InventoryArmorTable.InventoryArmorTableModel;
-import rpg.cyberpunk._2020.gui.InventoryItemTable.InventoryItemTableModel;
-import rpg.cyberpunk._2020.gui.InventoryWeaponTable.InventoryWeaponTableModel;
+import rpg.cyberpunk._2020.gui.items.InventoryAmmunitionTable.InventoryAmmunitionTableModel;
+import rpg.cyberpunk._2020.gui.items.InventoryArmorTable.InventoryArmorTableModel;
+import rpg.cyberpunk._2020.gui.items.InventoryItemTable.InventoryItemTableModel;
+import rpg.cyberpunk._2020.gui.items.InventoryWeaponTable.InventoryWeaponTableModel;
 import rpg.general.combat.Ammunition;
 import rpg.general.commerce.Item;
 

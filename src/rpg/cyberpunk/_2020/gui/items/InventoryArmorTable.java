@@ -1,8 +1,12 @@
-package rpg.cyberpunk._2020.gui;
+package rpg.cyberpunk._2020.gui.items;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -12,33 +16,33 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-
+import rpg.cyberpunk._2020.Player;
 import rpg.cyberpunk._2020.combat.CyberpunkArmor;
-import rpg.cyberpunk._2020.commerce.CyberpunkVendor;
+import rpg.cyberpunk._2020.gui.MeasurementRenderer;
+import rpg.cyberpunk._2020.gui.USCurrencyRenderer;
 import rpg.general.combat.BodyLocation;
 
 /**
- * A table that displays a collection of armor that a player can buy.
- * 
- * @author Coul Greer
+ * A table that displays a set of armor that is owned by the given player.
  */
-public class ShopArmorCategoryTable extends JTable {
+public class InventoryArmorTable extends JTable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructs a table using a set of armor provided by a vendor.
+	 * Constructs a table used to display a player's collection of armor held in
+	 * their inventory.
 	 * 
-	 * @param vendor the owner of the set of armor displayed on the table
+	 * @param player the owner of the displayed inventory
 	 */
-	public ShopArmorCategoryTable(CyberpunkVendor vendor) {
-		super(new ShopArmorTableModel(vendor));
+	public InventoryArmorTable(Player player) {
+		super(new InventoryArmorTableModel(player));
 
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(getModel());
 		setRowSorter(sorter);
 
 		setRowHeight(ArmorCoveringRenderer.ICON_HEIGHT);
-		getColumnModel().removeColumn(getColumnModel().getColumn(ShopArmorTableModel.OBJECT_INDEX));
-		getColumnModel().getColumn(ShopArmorTableModel.COVERS_INDEX)
+		getColumnModel().removeColumn(getColumnModel().getColumn(InventoryArmorTableModel.OBJECT_INDEX));
+		getColumnModel().getColumn(InventoryArmorTableModel.COVERS_INDEX)
 				.setPreferredWidth(ArmorCoveringRenderer.ICON_HEIGHT);
 
 		getTableHeader().setReorderingAllowed(false);
@@ -66,7 +70,7 @@ public class ShopArmorCategoryTable extends JTable {
 		Color primaryColor = Color.WHITE;
 		Color secondaryColor = new Color(220, 220, 220); // gainsboro
 
-		if (!getSelectionBackground().equals(component.getBackground())) {
+		if (!component.getBackground().equals(getSelectionBackground())) {
 			component.setBackground(row % 2 == 0 ? secondaryColor : primaryColor);
 		}
 	}
@@ -74,20 +78,21 @@ public class ShopArmorCategoryTable extends JTable {
 	@Override
 	public TableCellRenderer getCellRenderer(int rowIndex, int columnIndex) {
 		switch (convertColumnIndexToModel(columnIndex)) {
-		case ShopArmorTableModel.COVERS_INDEX:
+		case InventoryArmorTableModel.COVERS_INDEX:
 			return new ArmorCoveringRenderer();
-		case ShopArmorTableModel.COST_INDEX:
+		case InventoryArmorTableModel.COST_INDEX:
 			return new USCurrencyRenderer();
+		case InventoryArmorTableModel.WEIGHT_INDEX:
+			return new MeasurementRenderer();
 		default:
 			return super.getCellRenderer(rowIndex, columnIndex);
 		}
 	}
 
 	/**
-	 * The underlying model used by a table that displays a <code>Vendor</code>'s
-	 * <code>CyberpunkArmor</code> stock.
+	 * The underlying model used by a table that displays a player's armor stock.
 	 */
-	public static class ShopArmorTableModel extends AbstractTableModel {
+	public static class InventoryArmorTableModel extends AbstractTableModel implements PropertyChangeListener {
 		/**
 		 * The index of the column used to hold the icon showing what body locations are
 		 * covered.
@@ -121,39 +126,47 @@ public class ShopArmorCategoryTable extends JTable {
 		public static final int COST_INDEX = 5;
 
 		/**
-		 * The index of the column used to hold the object representing an armor.
+		 * The index of the column used to hold the weight of a weapon.
 		 */
-		public static final int OBJECT_INDEX = 6;
+		public static final int WEIGHT_INDEX = 6;
 
 		/**
-		 * A collection of the names of the table headers.
+		 * The index of the column used to hold the quantity of a weapon.
 		 */
+		public static final int QUANTITY_INDEX = 7;
+
+		/**
+		 * The index of the column used to hold the object representing an armor.
+		 */
+		public static final int OBJECT_INDEX = 8;
+
 		private static final String[] columnNames = { //
 				"", //
 				"Name", //
 				"Type", //
-				"SP", //
+				"SP (Avg / Max)", //
 				"EV", //
 				"Cost", //
+				"Wt.", //
+				"Qty.", //
 				"Object" };
 
 		private static final long serialVersionUID = 1L;
 
+		private Player player;
 		private Set<CyberpunkArmor> armorSet;
 
 		/**
-		 * Creates a model that uses a set of armor provided by a vendor to populate the
+		 * Creates a model that uses a set of armor provided by a player to populate the
 		 * table view.
 		 * 
-		 * @param vendor the provider of the armor that populate the table view
+		 * @param player the provider of the armor that populate the table view
 		 */
-		public ShopArmorTableModel(CyberpunkVendor vendor) {
-			this.armorSet = vendor.getStoredArmors();
-		}
+		public InventoryArmorTableModel(Player player) {
+			this.player = player;
+			this.armorSet = new HashSet<CyberpunkArmor>(player.createCarriedArmorCollection());
 
-		@Override
-		public int getColumnCount() {
-			return columnNames.length;
+			player.addPropertyChangeListener(Player.PROPERTY_NAME_INVENTORY_ARMOR_MANIPULATED, this);
 		}
 
 		@Override
@@ -165,6 +178,7 @@ public class ShopArmorCategoryTable extends JTable {
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			List<CyberpunkArmor> rows = new ArrayList<>(armorSet);
 			CyberpunkArmor armor = rows.get(rowIndex);
+			int quantity = player.getQuantity(armor);
 
 			switch (columnIndex) {
 			case COVERS_INDEX:
@@ -174,11 +188,15 @@ public class ShopArmorCategoryTable extends JTable {
 			case TYPE_INDEX:
 				return armor.getArmorType();
 			case STOPPING_POWER_INDEX:
-				return armor.getProtectionScore();
+				return getAverageDurability(armor) + "/" + armor.getProtectionScore();
 			case ENCUMBRANCE_VALUE_INDEX:
 				return armor.getEncumbranceValue();
 			case COST_INDEX:
 				return armor.getCost();
+			case QUANTITY_INDEX:
+				return quantity;
+			case WEIGHT_INDEX:
+				return armor.getWeight();
 			case OBJECT_INDEX:
 				return armor;
 			default:
@@ -249,6 +267,25 @@ public class ShopArmorCategoryTable extends JTable {
 					&& armor.isCovering(BodyLocation.TORSO);
 		}
 
+		private int getAverageDurability(CyberpunkArmor armor) {
+			Iterator<BodyLocation> iterator = BodyLocation.createIterator();
+			int average = 0;
+			int elementCount = 0;
+
+			while (iterator.hasNext()) {
+				average += armor.getDurabilityAt(iterator.next());
+				elementCount++;
+			}
+			average = average / elementCount;
+
+			return average;
+		}
+
+		@Override
+		public int getColumnCount() {
+			return columnNames.length;
+		}
+
 		@Override
 		public String getColumnName(int columnIndex) {
 			return columnNames[columnIndex];
@@ -260,11 +297,15 @@ public class ShopArmorCategoryTable extends JTable {
 		}
 
 		@Override
-		public Class<?> getColumnClass(int columnIndex) {
-			Object value = getRowCount() > 0 ? getValueAt(0, columnIndex) : null;
+		public void propertyChange(PropertyChangeEvent evt) {
+			Object source = evt.getSource();
 
-			return value == null ? Object.class : value.getClass();
+			if (source == player) {
+				armorSet = new HashSet<CyberpunkArmor>(player.createCarriedArmorCollection());
+				fireTableDataChanged();
+			}
 		}
+
 	}
 
 }

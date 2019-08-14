@@ -38,6 +38,8 @@ import rpg.Gender;
 import rpg.cyberpunk._2020.Player;
 import rpg.cyberpunk._2020.Sibling;
 import rpg.cyberpunk._2020.Sibling.RelativeAge;
+import rpg.cyberpunk._2020.gui.stats.FastCharacterPointsPane;
+import rpg.cyberpunk._2020.gui.stats.RandomCharacterPointsPane;
 import rpg.cyberpunk._2020.stats.CyberpunkAttribute;
 import rpg.cyberpunk._2020.stats.Role;
 import rpg.cyberpunk._2020.stats.RoleFactory;
