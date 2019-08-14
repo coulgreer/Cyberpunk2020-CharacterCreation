@@ -1,10 +1,14 @@
 package rpg.cyberpunk._2020.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -15,11 +19,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -31,10 +37,9 @@ import rpg.general.stats.Attribute;
  * A JPanel that listens to an <code>Attribute</code> and allows the manipulation of its level.
  */
 public abstract class AttributePane extends JPanel {
-  public static final Font DEFAULT_FONT = new Font("Serif", Font.PLAIN, 16);
+  public static final Font DEFAULT_FONT = new Font("Serif", Font.PLAIN, 20);
 
   private static final String DEFAULT_CONSTRAINT = BorderLayout.NORTH;
-  private static final int ICON_HEIGHT = 16;
   private static final long serialVersionUID = 1L;
 
   private Attribute attribute;
@@ -112,23 +117,29 @@ public abstract class AttributePane extends JPanel {
       super(attribute, font, constraint);
 
       attribute.addPropertyChangeListener(this);
-      JPanel editorParentPanel = new JPanel(new GridBagLayout());
-      editorParentPanel.add(createEditorContainer());
-      super.add(editorParentPanel, BorderLayout.CENTER);
+
+      JPanel panel = new JPanel(new GridBagLayout());
+      GridBagConstraints gc = new GridBagConstraints();
+      gc.anchor = GridBagConstraints.LINE_END;
+      panel.add(createEditorComponent(font), gc);
+      super.add(panel, BorderLayout.CENTER);
     }
 
-    private Container createEditorContainer() {
-      JPanel panel = new JPanel(new BorderLayout());
+    private JComponent createEditorComponent(Font font) {
+      JPanel panel = new JPanel(new GridLayout(0, 2));
+      panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
       valueLabel = new JLabel(getValueText());
-      valueLabel.setFont(new Font("Serif", Font.PLAIN, 24));
-      panel.add(valueLabel, BorderLayout.WEST);
-      panel.add(createButtonContainer(), BorderLayout.EAST);
+      valueLabel.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
+      valueLabel.setFont(font);
+      panel.add(valueLabel);
+
+      panel.add(createButtonContainer());
 
       return panel;
     }
 
-    private Container createButtonContainer() {
+    private JComponent createButtonContainer() {
       JPanel panel = new JPanel();
       panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 
@@ -146,9 +157,14 @@ public abstract class AttributePane extends JPanel {
       JButton button = null;
 
       try {
+        Font f = valueLabel.getFont();
+        FontMetrics fm = valueLabel.getFontMetrics(f);
+
         BufferedImage bufferedImage = ImageIO.read(new File(fileName));
-        ImageIcon icon = new ImageIcon(
-            bufferedImage.getScaledInstance(ICON_HEIGHT, ICON_HEIGHT, Image.SCALE_SMOOTH));
+        ImageIcon icon = new ImageIcon(bufferedImage.getScaledInstance( //
+            fm.getHeight() / 2, //
+            fm.getHeight() / 2, //
+            Image.SCALE_SMOOTH));
         button = new JButton(icon);
         button.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
         button.addActionListener(listener);
@@ -197,7 +213,7 @@ public abstract class AttributePane extends JPanel {
 
       setDefaultIndex(defaultIndex);
       setManager(manager);
-      super.add(createEditorContainer(), BorderLayout.CENTER);
+      super.add(createEditorContainer(font), BorderLayout.CENTER);
     }
 
     private void setDefaultIndex(int defaultIndex) {
@@ -217,7 +233,7 @@ public abstract class AttributePane extends JPanel {
       }
     }
 
-    private Container createEditorContainer() {
+    private Container createEditorContainer(Font font) {
       List<Integer> items = manager.getRolledPoints();
 
       if (items.contains(null)) {
@@ -226,6 +242,7 @@ public abstract class AttributePane extends JPanel {
         JPanel panel = new JPanel();
 
         comboBox = new JComboBox<Integer>(items.toArray(new Integer[0]));
+        comboBox.setFont(font);
         comboBox.addItemListener(evt -> {
           if (evt.getStateChange() == ItemEvent.SELECTED) {
             Integer item = (Integer) evt.getItem();

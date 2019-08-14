@@ -12,8 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -29,14 +27,12 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 import rpg.Gender;
 import rpg.cyberpunk._2020.Age;
 import rpg.cyberpunk._2020.Player;
 import rpg.cyberpunk._2020.Sibling;
 import rpg.cyberpunk._2020.Sibling.RelativeAge;
 import rpg.cyberpunk._2020.stats.CyberpunkAttribute;
-import rpg.cyberpunk._2020.stats.CyberpunkSkill;
 import rpg.util.Measurement;
 import rpg.util.Name;
 
@@ -44,13 +40,13 @@ import rpg.util.Name;
  * A panel that displays the data that makes up a player's background and main attributes.
  */
 public class BiographyTab extends JPanel {
+  private static final int CATEGORY_PADDING = 12;
   private static final long serialVersionUID = 1L;
 
   private Player player;
   private JTextField aliasTextField;
   private JTextField ageTextField;
   private JComboBox<Gender> genderComboBox;
-  private JComboBox<String> languageComboBox;
   private JTextField eyeTextField;
   private JTextField heightTextField;
   private JTextField hairTextField;
@@ -75,7 +71,10 @@ public class BiographyTab extends JPanel {
     super(new BorderLayout());
     setPlayer(player);
 
-    add(createContentComponent(), BorderLayout.CENTER);
+    initializeDataComponents();
+    JComponent c = createContentComponent();
+    c.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
+    add(c, BorderLayout.CENTER);
     add(createUpdateComponent(), BorderLayout.SOUTH);
   }
 
@@ -87,47 +86,124 @@ public class BiographyTab extends JPanel {
     }
   }
 
-  private Component createContentComponent() {
+  private void initializeDataComponents() {
+    aliasTextField = new JTextField(player.getAlias().getValue());
+    ageTextField = new JTextField(Integer.toString( //
+        player.getAge() //
+            .toInt()));
+    genderComboBox = new JComboBox<Gender>(Gender.values());
+
+    eyeTextField = new JTextField("Eyes Placeholder");
+    heightTextField = new JTextField("Height Placeholder");
+    hairTextField = new JTextField("Hair Placeholder");
+    skinToneTextField = new JTextField("Skin Placeholder");
+    weightTextField = new JTextField("Weight Placeholder");
+
+    personalityComboBox = new JComboBox<String>(new String[] { //
+        "Shy and secretive", //
+        "Rebellious, antisocial, violent", //
+        "Arrogant, proud and aloof", //
+        "Moody, rash and headstrong", //
+        "Picky, fussy and nervous", //
+        "Stable and serious", //
+        "Silly and fluffheaded", //
+        "Sneaky and deceptive", //
+        "Intellectual and detached", //
+        "Friendly and outgoing"});
+    valuedPersonComboBox = new JComboBox<String>(new String[] { //
+        "A parent", //
+        "Brother or sister", //
+        "Lover", //
+        "Friend", //
+        "Yourself", //
+        "A pet", //
+        "Teacher or mentor", //
+        "Public figure", //
+        "A personal hero", //
+        "No one"});
+    valuedConceptComboBox = new JComboBox<String>(new String[] { //
+        "Money", //
+        "Honor", //
+        "Your word", //
+        "Honestly", //
+        "Knowledge", //
+        "Vengeance", //
+        "Love", //
+        "Power", //
+        "Having a good time", //
+        "Friendship"});
+    feelingsTowardOthersComboBox = new JComboBox<String>(new String[] { //
+        "Neutral", //
+        "I like almost everyone", //
+        "I hate almost everyone", //
+        "People are tools", //
+        "Everyone is a valuable individual", //
+        "People are obstacles to be destroyed", //
+        "People are untrustworthy", //
+        "Wipe 'em all out", //
+        "People are wonderful"});
+    valuedPosessionComboBox = new JComboBox<String>(new String[] { //
+        "A weapon", //
+        "A tool", //
+        "A piece of clothing", //
+        "A photograph", //
+        "A book or diary", //
+        "A recording", //
+        "A musical instrument", //
+        "A piece of jewelry", //
+        "A toy", //
+        "A letter"});
+
+    backstoryTextArea = new JTextArea(10, 0);
+    backstoryTextArea.setLineWrap(true);
+    backstoryTextArea.setWrapStyleWord(true);
+  }
+
+  private JComponent createContentComponent() {
     JPanel panel = new JPanel(new GridLayout(0, 2));
+    int paddingWidth = 3;
+    int dividerWidth = 1;
 
-    JComponent statComponent = createStatComponent();
-    statComponent.setBorder(BorderFactory.createCompoundBorder( //
-        BorderFactory.createEmptyBorder(3, 4, 3, 0), //
-        BorderFactory.createMatteBorder(0, 0, 0, 1, Color.BLACK)));
-    panel.add(statComponent);
+    JComponent c = createEssentialInfoComponent();
+    c.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(0, 0, 0, dividerWidth, Color.BLACK), //
+        BorderFactory.createEmptyBorder(0, 0, 0, paddingWidth)));
+    panel.add(c);
 
-    JScrollPane backgroundScrollPane = new JScrollPane(createBackgroundView());
-    backgroundScrollPane.setBorder(BorderFactory.createCompoundBorder( //
-        BorderFactory.createEmptyBorder(3, 0, 3, 4), //
-        BorderFactory.createMatteBorder(0, 1, 0, 0, Color.BLACK)));
-    panel.add(backgroundScrollPane);
+    JScrollPane scrollPane = new JScrollPane(createOptionalInfoComponent());
+    scrollPane.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(0, dividerWidth, 0, 0, Color.BLACK), //
+        BorderFactory.createEmptyBorder(0, paddingWidth, 0, 0)));
+    panel.add(scrollPane);
 
     return panel;
   }
 
-  private JComponent createStatComponent() {
+  private JComponent createEssentialInfoComponent() {
     JPanel panel = new JPanel(new GridLayout(2, 0));
 
-    panel.add(createDetailStatComponent());
-    panel.add(createParentComponent("ATTRIBUTES", createAttributeComponent()));
+    JComponent c = createEssentialBiographyComponent();
+    c.setBorder(BorderFactory.createEmptyBorder(0, 0, CATEGORY_PADDING, 0));
+    panel.add(c);
+    panel.add(createCategoryComponent("ATTRIBUTES", createAttributeComponent()));
 
     return panel;
   }
 
-  private Component createDetailStatComponent() {
+  private JComponent createEssentialBiographyComponent() {
     JPanel panel = new JPanel(new BorderLayout());
 
-    panel.add(createPictureComponent(), BorderLayout.CENTER);
+    panel.add(createPortraitComponent(), BorderLayout.CENTER);
     panel.add(createBasicInfoComponent(), BorderLayout.SOUTH);
 
     return panel;
   }
 
-  private Component createPictureComponent() {
+  private Component createPortraitComponent() {
     JPanel panel = new JPanel();
 
     // TODO (Coul Greer): Add the ability for user to provide a picture as well as a default picture
-    // if one was not provided.
+    // if one was not provided. Also, use a custom border to beautify the portrait.
     try {
       BufferedImage bufferedImage = ImageIO.read(new File("img/default_portrait.png"));
       ImageIcon icon = new ImageIcon(bufferedImage.getScaledInstance(250, 250, Image.SCALE_SMOOTH));
@@ -143,36 +219,42 @@ public class BiographyTab extends JPanel {
   }
 
   private Component createBasicInfoComponent() {
+    int paddingWidth = 3;
+    int dividerWidth = 1;
     JPanel panel = new JPanel(new GridLayout(1, 0));
+    panel.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
 
-    Border divider = BorderFactory.createMatteBorder(0, 0, 0, 1, Color.BLACK);
-
-    aliasTextField = new JTextField(player.getAlias().getValue());
-    JComponent p = createInfoComponent( //
+    JComponent c = createTitledInfoComponent( //
         "Alias", //
         aliasTextField);
-    p.setBorder(divider);
-    panel.add(p);
+    c.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(0, 0, 0, dividerWidth, Color.BLACK), //
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth)));
+    panel.add(c);
 
-    ageTextField = new JTextField(Integer.toString( //
-        player.getAge() //
-            .toInt()));
-    p = createInfoComponent( //
+    c = createTitledInfoComponent( //
         "Age", //
         ageTextField);
-    p.setBorder(divider);
-    panel.add(p);
+    c.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(0, 0, 0, dividerWidth, Color.BLACK), //
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth)));
+    panel.add(c);
 
-    genderComboBox = new JComboBox<Gender>(Gender.values());
-    p = createInfoComponent( //
+    c = createTitledInfoComponent( //
         "Gender", //
         genderComboBox);
-    panel.add(p);
+    c.setBorder(
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth));
+    panel.add(c);
 
     return panel;
   }
 
-  private JComponent createInfoComponent(String title, Component dataComponent) {
+  private JComponent createTitledInfoComponent(String title, Component dataComponent) {
     JPanel panel = new JPanel(new BorderLayout());
 
     JLabel titleLabel = new JLabel(title, SwingConstants.LEFT);
@@ -185,7 +267,7 @@ public class BiographyTab extends JPanel {
     return panel;
   }
 
-  private JComponent createParentComponent(String title, Component dataComponent) {
+  private JComponent createCategoryComponent(String title, Component dataComponent) {
     JPanel panel = new JPanel(new BorderLayout());
 
     panel.add(createCategoryTitleComponent(title), BorderLayout.NORTH);
@@ -205,165 +287,210 @@ public class BiographyTab extends JPanel {
     panel.setBorder(BorderFactory.createEmptyBorder(3, 5, 3, 5));
 
     JComponent c;
-    int borderWidth = 2;
+    int gridBorderWidth = 2;
+    int paddingWidth = 6;
+    Font font = new Font("Serif", Font.PLAIN, 16);
 
     // Row 1
     c = new AttributePane.Spinner( //
         player.getAttribute(CyberpunkAttribute.INTELLIGENCE), //
+        font, //
         BorderLayout.WEST);
-    c.setBorder(BorderFactory.createMatteBorder(0, 0, 0, borderWidth, Color.BLACK));
+    c.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(0, 0, 0, gridBorderWidth, Color.BLACK), //
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth)));
     panel.add(c);
 
     c = new AttributePane.Spinner( //
         player.getAttribute(CyberpunkAttribute.REFLEXES), //
+        font, //
         BorderLayout.WEST);
-    c.setBorder(BorderFactory.createMatteBorder(0, 0, 0, borderWidth, Color.BLACK));
+    c.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(0, 0, 0, gridBorderWidth, Color.BLACK), //
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth)));
     panel.add(c);
 
     c = new AttributePane.Spinner( //
         player.getAttribute(CyberpunkAttribute.TECHNICAL_ABILITY), //
+        font, //
         BorderLayout.WEST);
-    c.setBorder(BorderFactory.createMatteBorder(0, 0, 0, borderWidth, Color.BLACK));
+    c.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(0, 0, 0, gridBorderWidth, Color.BLACK), //
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth)));
     panel.add(c);
 
-    panel.add(new AttributePane.Spinner( //
+    c = new AttributePane.Spinner( //
         player.getAttribute(CyberpunkAttribute.COOL), //
-        BorderLayout.WEST));
+        font, //
+        BorderLayout.WEST);
+    c.setBorder(
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth));
+    panel.add(c);
 
     // Row 2
     c = new AttributePane.Spinner( //
         player.getAttribute(CyberpunkAttribute.ATTRACTIVENESS), //
+        font, //
         BorderLayout.WEST);
-    c.setBorder(BorderFactory.createMatteBorder(borderWidth, 0, 0, borderWidth, Color.BLACK));
+    c.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(gridBorderWidth, 0, 0, gridBorderWidth, Color.BLACK), //
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth)));
     panel.add(c);
 
     c = new AttributePane.Spinner( //
         player.getAttribute(CyberpunkAttribute.LUCK), //
+        font, //
         BorderLayout.WEST);
-    c.setBorder(BorderFactory.createMatteBorder(borderWidth, 0, 0, borderWidth, Color.BLACK));
+    c.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(gridBorderWidth, 0, 0, gridBorderWidth, Color.BLACK), //
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth)));
     panel.add(c);
 
     c = new AttributePane.Spinner( //
         player.getAttribute(CyberpunkAttribute.MOVEMENT_ALLOWANCE), //
+        font, //
         BorderLayout.WEST);
-    c.setBorder(BorderFactory.createMatteBorder(borderWidth, 0, 0, borderWidth, Color.BLACK));
+    c.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(gridBorderWidth, 0, 0, gridBorderWidth, Color.BLACK), //
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth)));
     panel.add(c);
 
     c = new AttributePane.Spinner( //
         player.getAttribute(CyberpunkAttribute.BODY_TYPE), //
+        font, //
         BorderLayout.WEST);
-    c.setBorder(BorderFactory.createMatteBorder(borderWidth, 0, 0, 0, Color.BLACK));
+    c.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(gridBorderWidth, 0, 0, 0, Color.BLACK), //
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth)));
     panel.add(c);
 
     // Row 3
     c = new AttributePane.Spinner( //
         player.getAttribute(CyberpunkAttribute.EMPATHY), //
+        font, //
         BorderLayout.WEST);
-    c.setBorder(BorderFactory.createMatteBorder(borderWidth, 0, 0, borderWidth, Color.BLACK));
+    c.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(gridBorderWidth, 0, 0, gridBorderWidth, Color.BLACK), //
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth)));
     panel.add(c);
 
     c = new MeasurementPane( //
         player.getAttribute(CyberpunkAttribute.RUN), //
         Measurement.Type.LENGTH, //
         Measurement.Unit.METER);
-    c.setBorder(BorderFactory.createMatteBorder(borderWidth, 0, 0, borderWidth, Color.BLACK));
+    c.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(gridBorderWidth, 0, 0, gridBorderWidth, Color.BLACK), //
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth)));
     panel.add(c);
 
     c = new MeasurementPane( //
         player.getAttribute(CyberpunkAttribute.LEAP), //
         Measurement.Type.LENGTH, //
         Measurement.Unit.METER);
-    c.setBorder(BorderFactory.createMatteBorder(borderWidth, 0, 0, borderWidth, Color.BLACK));
+    c.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(gridBorderWidth, 0, 0, gridBorderWidth, Color.BLACK), //
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth)));
     panel.add(c);
 
     c = new MeasurementPane( //
         player.getAttribute(CyberpunkAttribute.CARRY), //
         Measurement.Type.MASS, //
         Measurement.Unit.KILOGRAM);
-    c.setBorder(BorderFactory.createMatteBorder(borderWidth, 0, 0, 0, Color.BLACK));
+    c.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createMatteBorder(gridBorderWidth, 0, 0, 0, Color.BLACK), //
+        BorderFactory.createEmptyBorder(paddingWidth, paddingWidth, paddingWidth, paddingWidth)));
     panel.add(c);
 
     return panel;
   }
 
-  private Component createBackgroundView() {
+  private Component createOptionalInfoComponent() {
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 
-    JComponent languageComponent = createParentComponent("LANGUAGE", createLanguageComponent());
-    languageComponent.setBorder(BorderFactory.createCompoundBorder( //
-        BorderFactory.createEmptyBorder(3, 3, 6, 3), //
-        BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK)));
-    panel.add(languageComponent);
-
     JComponent characteristicsComponent =
-        createParentComponent("CHARACTERISTICS", createCharacteristicsComponent());
+        createCategoryComponent("CHARACTERISTICS", createCharacteristicsComponent());
     characteristicsComponent.setBorder(BorderFactory.createCompoundBorder( //
         BorderFactory.createEmptyBorder(6, 3, 6, 3), //
         BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK)));
     panel.add(characteristicsComponent);
 
-    JComponent siblingsComponent = createParentComponent("SIBLINGS", createSiblingComponent());
+    JComponent siblingsComponent = createCategoryComponent("SIBLINGS", createSiblingComponent());
     siblingsComponent.setBorder(BorderFactory.createCompoundBorder( //
         BorderFactory.createEmptyBorder(6, 3, 6, 3), //
         BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK)));
     panel.add(siblingsComponent);
 
     JComponent motivationComponent =
-        createParentComponent("MOTIVATIONS", createMotivationComponent());
+        createCategoryComponent("MOTIVATIONS", createMotivationComponent());
     motivationComponent.setBorder(BorderFactory.createCompoundBorder( //
         BorderFactory.createEmptyBorder(6, 3, 6, 3), //
         BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK)));
     panel.add(motivationComponent);
 
     JComponent lifeEventComponent =
-        createParentComponent("LIFE EVENTS", createLifeEventComponent());
+        createCategoryComponent("LIFE EVENTS", createLifeEventComponent());
     lifeEventComponent.setBorder(BorderFactory.createCompoundBorder( //
         BorderFactory.createEmptyBorder(6, 3, 6, 3), //
         BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK)));
     panel.add(lifeEventComponent);
 
-    JComponent backstoryComponent = createParentComponent("BACKSTORY", createBackstoryComponent());
+    JComponent backstoryComponent =
+        createCategoryComponent("BACKSTORY", createBackstoryComponent());
     backstoryComponent.setBorder(BorderFactory.createEmptyBorder(0, 3, 12, 3));
     panel.add(backstoryComponent);
 
     return panel;
   }
 
-  // TODO (Coul Greer): Think about only allowing the changing of the primaryLanguage at character
-  // creation. This helps the flow of points and reduces the need for overhead.
-  private Component createLanguageComponent() {
-    JPanel panel = new JPanel();
-
-    Iterable<CyberpunkSkill> iterable = () -> player.createLanguageIterator();
-    List<String> languages = StreamSupport //
-        .stream(iterable.spliterator(), false) //
-        .map(CyberpunkSkill::getName) //
-        .collect(Collectors.toList());
-    String[] languageOptions = languages.toArray(new String[0]);
-    languageComboBox = new JComboBox<String>(languageOptions);
-    panel.add(createInfoComponent("Primary Language", languageComboBox));
-
-    return panel;
-  }
-
   private Component createCharacteristicsComponent() {
+    int paddingWidth = 3;
     JPanel panel = new JPanel(new GridLayout(0, 3));
+    panel.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
 
-    eyeTextField = new JTextField("Eyes Placeholder");
-    panel.add(createInfoComponent("Eyes", eyeTextField));
+    JComponent c = createTitledInfoComponent("Eyes", eyeTextField);
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c);
 
-    heightTextField = new JTextField("Height Placeholder");
-    panel.add(createInfoComponent("Height", heightTextField));
+    c = createTitledInfoComponent("Height", heightTextField);
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c);
 
-    hairTextField = new JTextField("Hair Placeholder");
-    panel.add(createInfoComponent("Hair", hairTextField));
+    c = createTitledInfoComponent("Hair", hairTextField);
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c);
 
-    skinToneTextField = new JTextField("Skin Placeholder");
-    panel.add(createInfoComponent("Skin Tone", skinToneTextField));
+    c = createTitledInfoComponent("Skin Tone", skinToneTextField);
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c);
 
-    weightTextField = new JTextField("Weight Placeholder");
-    panel.add(createInfoComponent("Weight", weightTextField));
+    c = createTitledInfoComponent("Weight", weightTextField);
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c);
 
     return panel;
   }
@@ -411,76 +538,48 @@ public class BiographyTab extends JPanel {
   }
 
   private Component createMotivationComponent() {
-    JPanel panel = new JPanel(new GridLayout(0, 1, 0, 6));
+    JPanel panel = new JPanel(new GridLayout(0, 1));
+    int paddingWidth = 6;
 
-    String[] personalityOptions = { //
-        "Shy and secretive", //
-        "Rebellious, antisocial, violent", //
-        "Arrogant, proud and aloof", //
-        "Moody, rash and headstrong", //
-        "Picky, fussy and nervous", //
-        "Stable and serious", //
-        "Silly and fluffheaded", //
-        "Sneaky and deceptive", //
-        "Intellectual and detached", //
-        "Friendly and outgoing"};
-    personalityComboBox = new JComboBox<String>(personalityOptions);
-    panel.add(createInfoComponent("Personality Traits", personalityComboBox));
+    JComponent c = createTitledInfoComponent("Personality Traits", personalityComboBox);
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c);
 
-    String[] valuedPersonOptions = { //
-        "A parent", //
-        "Brother or sister", //
-        "Lover", //
-        "Friend", //
-        "Yourself", //
-        "A pet", //
-        "Teacher or mentor", //
-        "Public figure", //
-        "A personal hero", //
-        "No one"};
-    valuedPersonComboBox = new JComboBox<String>(valuedPersonOptions);
-    panel.add(createInfoComponent("Valued Person", valuedPersonComboBox));
+    c = createTitledInfoComponent("Valued Person", valuedPersonComboBox);
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c);
 
-    String[] valuedConceptOptions = { //
-        "Money", //
-        "Honor", //
-        "Your word", //
-        "Honestly", //
-        "Knowledge", //
-        "Vengeance", //
-        "Love", //
-        "Power", //
-        "Having a good time", //
-        "Friendship"};
-    valuedConceptComboBox = new JComboBox<String>(valuedConceptOptions);
-    panel.add(createInfoComponent("Valued Concept", valuedConceptComboBox));
+    c = createTitledInfoComponent("Valued Concept", valuedConceptComboBox);
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c);
 
-    String[] feelingsTowardOthersOptions = { //
-        "Neutral", //
-        "I like almost everyone", //
-        "I hate almost everyone", //
-        "People are tools", //
-        "Everyone is a valuable individual", //
-        "People are obstacles to be destroyed", //
-        "People are untrustworthy", //
-        "Wipe 'em all out", //
-        "People are wonderful"};
-    feelingsTowardOthersComboBox = new JComboBox<String>(feelingsTowardOthersOptions);
-    panel.add(createInfoComponent("Feelings Towards Others", feelingsTowardOthersComboBox));
+    c = createTitledInfoComponent("Feelings Towards Others", feelingsTowardOthersComboBox);
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c);
 
-    String[] valuedPosessionOptions = { //
-        "A weapon", //
-        "A tool", //
-        "A piece of clothing", //
-        "A photograph", //
-        "A book or diary", //
-        "A recording", //
-        "A musical instrument", //
-        "A piece of jewelry", //
-        "A toy", //
-        "A letter"};
-    valuedPosessionComboBox = new JComboBox<String>(valuedPosessionOptions);
-    panel.add(createInfoComponent("Valued Posession", valuedPosessionComboBox));
+    c = createTitledInfoComponent("Valued Posession", valuedPosessionComboBox);
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth * 2, //
+        paddingWidth));
+    panel.add(c);
 
     return panel;
   }
@@ -488,14 +587,10 @@ public class BiographyTab extends JPanel {
   private Component createLifeEventComponent() {
     lifeEventTable = new LifeEventTable(player);
     JScrollPane scrollPane = new JScrollPane(lifeEventTable);
-
     return scrollPane;
   }
 
   private Component createBackstoryComponent() {
-    backstoryTextArea = new JTextArea(10, 0);
-    backstoryTextArea.setLineWrap(true);
-    backstoryTextArea.setWrapStyleWord(true);
     backstoryTextArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     return backstoryTextArea;
   }
@@ -537,7 +632,6 @@ public class BiographyTab extends JPanel {
     }
 
     player.setGender((Gender) genderComboBox.getSelectedItem());
-    player.setPrimaryLanguage((String) languageComboBox.getSelectedItem());
     player.setEyes(eyeTextField.getText());
     player.setHeight(heightTextField.getText());
     player.setHair(hairTextField.getText());
