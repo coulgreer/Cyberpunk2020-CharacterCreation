@@ -7,8 +7,9 @@ import java.util.Objects;
  * An identifier used when referencing an object.
  */
 public class Name implements Serializable {
+  public static final int MIN_NAME_LENGTH = 1;
+  
   private static final long serialVersionUID = 1L;
-  private static final int minNameLength = 1;
 
   private String name;
 
@@ -24,8 +25,8 @@ public class Name implements Serializable {
   private void setName(String name) {
     if (name == null) {
       throw new NullPointerException();
-    } else if (name.length() < minNameLength) {
-      throw new IllegalArgumentException("length = " + name.length() + "; min = " + minNameLength);
+    } else if (name.length() < MIN_NAME_LENGTH) {
+      throw new IllegalArgumentException("length = " + name.length() + "; min = " + MIN_NAME_LENGTH);
     } else {
       this.name = name;
     }
