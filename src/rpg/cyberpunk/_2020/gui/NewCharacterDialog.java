@@ -148,7 +148,7 @@ public class NewCharacterDialog extends JDialog {
 
   private void setPlayer(Player player) {
     if (player == null) {
-      throw new NullPointerException();
+      this.player = new Player();
     } else {
       this.player = player;
     }
