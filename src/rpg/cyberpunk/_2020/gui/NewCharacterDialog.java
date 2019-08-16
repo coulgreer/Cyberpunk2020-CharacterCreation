@@ -6,7 +6,9 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -34,6 +37,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import rpg.Gender;
+import rpg.cyberpunk._2020.Age;
 import rpg.cyberpunk._2020.Player;
 import rpg.cyberpunk._2020.Sibling;
 import rpg.cyberpunk._2020.Sibling.RelativeAge;
@@ -63,6 +67,7 @@ public class NewCharacterDialog extends JDialog {
   private static final Font SUBTITLE2_FONT = new Font("Serif", Font.PLAIN, 12);
 
   // Card Names
+  private static final String ESSENTIAL_INFO_PANE = "Essential Info Pane";
   private static final String CHARACTER_POINT_PANE = "Character Point Pane";
   private static final String RANDOM_POINT_PANE = "Random Points";
   private static final String FAST_POINT_PANE = "Fast Points";
@@ -82,6 +87,12 @@ public class NewCharacterDialog extends JDialog {
   private Map<String, CharacterPointsManager> managersByCardName;
   private String activePointManagerName;
 
+  // Essential
+  private JLabel portraitLabel;
+  private JTextField aliasTextField;
+  private JTextField ageTextField;
+  private JComboBox<Gender> genderComboBox;
+
   // Motivations
   private JComboBox<String> familyRankingComboBox;
   private JRadioButton[] parentStatusRadioButtons;
@@ -94,10 +105,10 @@ public class NewCharacterDialog extends JDialog {
   private int siblingCount;
   private JRadioButton[] siblingCountRadioButtons;
   private Map<Integer, JPanel> siblingPanelsByInteger;
-  private Map<Integer, JTextField> nameTextFieldsByInteger;
-  private Map<Integer, JComboBox<Gender>> genderComboBoxesByInteger;
-  private Map<Integer, JComboBox<RelativeAge>> ageComboBoxesByInteger;
-  private Map<Integer, JComboBox<String>> relationshipComboBoxesByInteger;
+  private Map<Integer, JTextField> siblingNameTextFieldsByInteger;
+  private Map<Integer, JComboBox<Gender>> siblingGenderComboBoxesByInteger;
+  private Map<Integer, JComboBox<RelativeAge>> siblingAgeComboBoxesByInteger;
+  private Map<Integer, JComboBox<String>> siblingRelationshipComboBoxesByInteger;
 
   // Roles
   private JComboBox<Role> roleComboBox;
@@ -119,6 +130,10 @@ public class NewCharacterDialog extends JDialog {
     super(owner, title, modal);
     setPlayer(player);
 
+    initializeAlias();
+    initializeAge();
+    initializeGender();
+    initializePortrait();
     initializeFamilyRanking();
     initializeParentStatus();
     initializeParentTragedy();
@@ -139,8 +154,32 @@ public class NewCharacterDialog extends JDialog {
     }
   }
 
+  private void initializeAlias() {
+    aliasTextField = new JTextField("UNKNOWN");
+  }
+
+  private void initializeAge() {
+    ageTextField = new JTextField(Integer.toString(Player.MIN_AGE));
+  }
+
+  private void initializeGender() {
+    genderComboBox = new JComboBox<Gender>(Gender.values());
+    genderComboBox.addItemListener(evt -> {
+      if (evt.getStateChange() == ItemEvent.SELECTED) {
+        Gender item = (Gender) evt.getItem();
+        player.setGender(item);
+      }
+    });
+
+    genderComboBox.setSelectedIndex(0);
+  }
+
+  private void initializePortrait() {
+    portraitLabel = new JLabel("PLACEHOLDER PORTRAIT");
+  }
+
   private void initializeFamilyRanking() {
-    String[] items = { //
+    familyRankingComboBox = new JComboBox<String>(new String[] { //
         "Corporate Executive", //
         "Corporate Manager", //
         "Corporate Technician", //
@@ -150,9 +189,7 @@ public class NewCharacterDialog extends JDialog {
         "Crime Lord", //
         "Combat Zone Poor", //
         "Urban Homeless", //
-        "Arcology Family"};
-
-    familyRankingComboBox = new JComboBox<String>(items);
+        "Arcology Family"});
     familyRankingComboBox.addItemListener(evt -> {
       if (evt.getStateChange() == ItemEvent.SELECTED) {
         String item = (String) evt.getItem();
@@ -160,7 +197,7 @@ public class NewCharacterDialog extends JDialog {
       }
     });
 
-    player.setFamilyRanking(items[0]);
+    familyRankingComboBox.setSelectedIndex(0);
   }
 
   private void initializeParentStatus() {
@@ -185,7 +222,7 @@ public class NewCharacterDialog extends JDialog {
   }
 
   private void initializeParentTragedy() {
-    String[] items = { //
+    parentTragedyComboBox = new JComboBox<String>(new String[] { //
         "Your parent(s) died in warfare.", //
         "Your parent(s) died in an accident.", //
         "Your parent(s) were murdered.", //
@@ -195,9 +232,7 @@ public class NewCharacterDialog extends JDialog {
         "You were left with relatives for safekeeping.", //
         "You grew up on the Street and never had parents.", //
         "Your parent(s) gave you up for adoption.", //
-        "Your parent(s) sold you for money."};
-
-    parentTragedyComboBox = new JComboBox<String>(items);
+        "Your parent(s) sold you for money."});
     parentTragedyComboBox.addItemListener(evt -> {
       if (evt.getStateChange() == ItemEvent.SELECTED) {
         String item = (String) evt.getItem();
@@ -205,7 +240,7 @@ public class NewCharacterDialog extends JDialog {
       }
     });
 
-    player.setParentTragedy(items[0]);
+    parentTragedyComboBox.setSelectedIndex(0);
   }
 
   private void initializeFamilyStatus() {
@@ -232,7 +267,7 @@ public class NewCharacterDialog extends JDialog {
   }
 
   private void initializeFamilyTragedy() {
-    String[] items = { //
+    familyTragedyComboBox = new JComboBox<String>(new String[] { //
         "Family lost everything through betrayal.", //
         "Family lost everything through bad management.", //
         "Family exiled or otherwise driven from their original home/nation/corporation.", //
@@ -244,9 +279,7 @@ public class NewCharacterDialog extends JDialog {
         "Your family was scattered to the winds due to misfortune.", //
         "Your family is cursed with a hereditary feud that has lasted for generations.", //
         "You are the inheritor of a family debt; you must honor this debt before moving on with"
-            + " your life."};
-
-    familyTragedyComboBox = new JComboBox<String>(items);
+            + " your life."});
     familyTragedyComboBox.addItemListener(evt -> {
       if (evt.getStateChange() == ItemEvent.SELECTED) {
         String item = (String) evt.getItem();
@@ -254,11 +287,11 @@ public class NewCharacterDialog extends JDialog {
       }
     });
 
-    player.setFamilyTragedy(items[0]);
+    familyTragedyComboBox.setSelectedIndex(0);
   }
 
   private void initializeChildhoodEnvironment() {
-    String[] items = { //
+    childhoodEnvironmentComboBox = new JComboBox<String>(new String[] { //
         "Spent on the Street, with no adult supervision.", //
         "Spent in a safe Corporate Sububia.", //
         "In a Nomad Pack moving from town to town.", //
@@ -268,9 +301,7 @@ public class NewCharacterDialog extends JDialog {
         "In a small village or town far from the City.", //
         "In a large arcoloty city.", //
         "In an aquatic Pirate Pack.", //
-        "In a Corporate controlled Farm or Research Facility."};
-
-    childhoodEnvironmentComboBox = new JComboBox<String>(items);
+        "In a Corporate controlled Farm or Research Facility."});
     childhoodEnvironmentComboBox.addItemListener(evt -> {
       if (evt.getStateChange() == ItemEvent.SELECTED) {
         String item = (String) evt.getItem();
@@ -278,7 +309,7 @@ public class NewCharacterDialog extends JDialog {
       }
     });
 
-    player.setChildhoodEnvironment(items[0]);
+    childhoodEnvironmentComboBox.setSelectedIndex(0);
   }
 
   private void initializeSiblings() {
@@ -289,16 +320,16 @@ public class NewCharacterDialog extends JDialog {
 
   private void initializeSiblingsPanels() {
     siblingPanelsByInteger = new HashMap<Integer, JPanel>();
-    nameTextFieldsByInteger = new HashMap<Integer, JTextField>();
-    genderComboBoxesByInteger = new HashMap<Integer, JComboBox<Gender>>();
-    ageComboBoxesByInteger = new HashMap<Integer, JComboBox<RelativeAge>>();
-    relationshipComboBoxesByInteger = new HashMap<Integer, JComboBox<String>>();
+    siblingNameTextFieldsByInteger = new HashMap<Integer, JTextField>();
+    siblingGenderComboBoxesByInteger = new HashMap<Integer, JComboBox<Gender>>();
+    siblingAgeComboBoxesByInteger = new HashMap<Integer, JComboBox<RelativeAge>>();
+    siblingRelationshipComboBoxesByInteger = new HashMap<Integer, JComboBox<String>>();
 
     for (int i = 0; i < 5; i++) {
       final Integer key = new Integer(i);
       JPanel p = new JPanel();
 
-      JTextField nameTextField = new JTextField(20);
+      JTextField nameTextField = new JTextField("UNKNOWN");
       p.add(createNameComponent(nameTextField));
 
       Gender[] genderOptions = Gender.values();
@@ -309,20 +340,19 @@ public class NewCharacterDialog extends JDialog {
       JComboBox<RelativeAge> ageComboBox = new JComboBox<RelativeAge>(ageOptions);
       p.add(createAgeComponent(ageComboBox));
 
-      String[] relationshipOptions = { //
+      JComboBox<String> relationshipComboBox = new JComboBox<String>(new String[] { //
           "Sibling dislikes you.", //
           "Sibling likes you.", //
           "Sibling neutral.", //
           "They worship you.", //
-          "They hate you."};
-      JComboBox<String> relationshipComboBox = new JComboBox<String>(relationshipOptions);
+          "They hate you."});
       p.add(createRelationshipComponent(relationshipComboBox));
 
       siblingPanelsByInteger.put(key, p);
-      nameTextFieldsByInteger.put(key, nameTextField);
-      genderComboBoxesByInteger.put(key, genderComboBox);
-      ageComboBoxesByInteger.put(key, ageComboBox);
-      relationshipComboBoxesByInteger.put(key, relationshipComboBox);
+      siblingNameTextFieldsByInteger.put(key, nameTextField);
+      siblingGenderComboBoxesByInteger.put(key, genderComboBox);
+      siblingAgeComboBoxesByInteger.put(key, ageComboBox);
+      siblingRelationshipComboBoxesByInteger.put(key, relationshipComboBox);
     }
   }
 
@@ -422,22 +452,6 @@ public class NewCharacterDialog extends JDialog {
     }
   }
 
-  private void initializeContentPane() {
-    contentPane = new JPanel(new CardLayout());
-
-    contentPane.add(createCharacterPointContainer(), CHARACTER_POINT_PANE);
-    contentPane.add(createFamilyRankingContainer(), FAMILY_RANKING_PANE);
-    contentPane.add(createParentStatusContainer(), PARENT_PANE);
-    contentPane.add(createParentTragedyContainer(), PARENT_TRAGEDY_PANE);
-    contentPane.add(createFamilyStatusContainer(), FAMILY_STATUS_PANE);
-    contentPane.add(createFamilyTragedyContainer(), FAMILY_TRAGEDY_PANE);
-    contentPane.add(createChildhoodEnvironmentContainer(), CHILDHOOD_ENVIRONMENT_PANE);
-    contentPane.add(createSiblingsContainer(), SIBLINGS_PANE);
-    contentPane.add(createRoleContainer(), ROLE_PANE);
-
-    setContentPane(contentPane);
-  }
-
   private void initializeRoles() {
     Iterator<String> nameIterator = RoleFactory.createNameIterator();
 
@@ -491,6 +505,55 @@ public class NewCharacterDialog extends JDialog {
     comboBoxesByRole.put(role, comboBoxes);
   }
 
+  private void initializeContentPane() {
+    contentPane = new JPanel(new CardLayout());
+
+    contentPane.add(createEssentialInfoContainer(), ESSENTIAL_INFO_PANE);
+    contentPane.add(createCharacterPointContainer(), CHARACTER_POINT_PANE);
+    contentPane.add(createFamilyRankingContainer(), FAMILY_RANKING_PANE);
+    contentPane.add(createParentStatusContainer(), PARENT_PANE);
+    contentPane.add(createParentTragedyContainer(), PARENT_TRAGEDY_PANE);
+    contentPane.add(createFamilyStatusContainer(), FAMILY_STATUS_PANE);
+    contentPane.add(createFamilyTragedyContainer(), FAMILY_TRAGEDY_PANE);
+    contentPane.add(createChildhoodEnvironmentContainer(), CHILDHOOD_ENVIRONMENT_PANE);
+    contentPane.add(createSiblingsContainer(), SIBLINGS_PANE);
+    contentPane.add(createRoleContainer(), ROLE_PANE);
+
+    setContentPane(contentPane);
+  }
+
+  private JComponent createEssentialInfoContainer() {
+    JPanel panel = new JPanel(new BorderLayout());
+
+    panel.add( //
+        createTitleComponent( //
+            "ESSENTIAL INFO", TITLE1_FONT, //
+            "Provide the basic info.", SUBTITLE1_FONT), //
+        BorderLayout.NORTH);
+
+    panel.add(createEssentialInfoComponent(), BorderLayout.CENTER);
+
+    panel.add( //
+        createNavigationComponent( //
+            "<<= Previous", null, //
+            "Next =>>", evt -> {
+              if (!hasValidAlias()) {
+                JOptionPane.showMessageDialog( //
+                    this, //
+                    "Make sure the alias is at least one character long.");
+              } else if (!hasValidAge()) {
+                JOptionPane.showMessageDialog( //
+                    this, //
+                    "Make sure the age is a number over " + Player.MIN_AGE);
+              } else {
+                switchCardTo(FAMILY_RANKING_PANE);
+              }
+            }),
+        BorderLayout.SOUTH);
+
+    return panel;
+  }
+
   private Component createTitleComponent( //
       String title, Font titleFont, //
       String subtitle, Font subtitleFont) {
@@ -509,6 +572,96 @@ public class NewCharacterDialog extends JDialog {
     panel.add(subtitleLabel);
 
     return panel;
+  }
+
+  private JComponent createEssentialInfoComponent() {
+    JPanel panel = new JPanel(new GridLayout(0, 2));
+
+    panel.add(createPortraitComponent());
+    panel.add(createEssentialTextInfoComponent());
+
+    return panel;
+  }
+
+  private JComponent createPortraitComponent() {
+    JPanel panel = new JPanel(new GridBagLayout());
+
+    panel.add(portraitLabel);
+
+    return panel;
+  }
+
+  private JComponent createEssentialTextInfoComponent() {
+    int paddingWidth = 6;
+    JPanel panel = new JPanel(new GridBagLayout());
+    panel.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 1.0;
+
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    JComponent c = createLabeledComponent("Alias", aliasTextField);
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c, gbc);
+
+    gbc.gridy = 1;
+    c = createLabeledComponent("Age", ageTextField);
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c, gbc);
+
+    gbc.gridy = 2;
+    c = createLabeledComponent("Gender", genderComboBox);
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c, gbc);
+
+    return panel;
+  }
+
+  private JComponent createLabeledComponent(String title, JComponent component) {
+    JPanel panel = new JPanel(new BorderLayout());
+
+    JLabel label = new JLabel(title);
+    label.setFont(TITLE2_FONT);
+    panel.add(label, BorderLayout.NORTH);
+
+    component.setFont(TITLE2_FONT);
+    panel.add(component, BorderLayout.CENTER);
+
+    return panel;
+  }
+
+  private boolean hasValidAlias() {
+    String txt = aliasTextField.getText();
+    return txt.length() >= Name.MIN_NAME_LENGTH;
+  }
+
+  private boolean hasValidAge() {
+    String txt = ageTextField.getText();
+
+    if (!txt.matches("\\d+")) {
+      return false;
+    } else if (Player.MIN_AGE > Integer.parseInt(txt)) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   private JComponent createNavigationComponent(Action prevAction, Action nextAction) {
@@ -557,7 +710,7 @@ public class NewCharacterDialog extends JDialog {
 
     panel.add( //
         createNavigationComponent( //
-            "<<= Previous", null, //
+            "<<= Previous", evt -> switchCardTo(ESSENTIAL_INFO_PANE), //
             "Next =>>", evt -> {
               CharacterPointsManager manager = managersByCardName.get(activePointManagerName);
               if (!manager.isValid()) {
@@ -984,7 +1137,7 @@ public class NewCharacterDialog extends JDialog {
 
   private boolean hasValidSiblingNames() {
     for (int i = 0; i < siblingCount; i++) {
-      String txt = nameTextFieldsByInteger //
+      String txt = siblingNameTextFieldsByInteger //
           .get(new Integer(i)) //
           .getText();
 
@@ -1002,7 +1155,7 @@ public class NewCharacterDialog extends JDialog {
     panel.add( //
         createTitleComponent( //
             "ROLES", TITLE1_FONT, //
-            "The core of CYBERPUNK Role-playing", SUBTITLE2_FONT),
+            "The core of CYBERPUNK Role-playing", SUBTITLE1_FONT),
         BorderLayout.NORTH);
 
     panel.add(createRoleComponent(), BorderLayout.CENTER);
@@ -1063,12 +1216,18 @@ public class NewCharacterDialog extends JDialog {
   }
 
   private void updatePlayer() {
+    String str = aliasTextField.getText();
+    player.setAlias(new Name(str));
+
+    str = ageTextField.getText();
+    player.setAge(new Age(Integer.parseInt(str)));
+
     for (int i = 0; i < siblingCount; i++) {
       final Integer key = new Integer(i);
-      JTextField nameTextField = nameTextFieldsByInteger.get(key);
-      JComboBox<Gender> genderComboBox = genderComboBoxesByInteger.get(key);
-      JComboBox<RelativeAge> ageComboBox = ageComboBoxesByInteger.get(key);
-      JComboBox<String> relationshipComboBox = relationshipComboBoxesByInteger.get(key);
+      JTextField nameTextField = siblingNameTextFieldsByInteger.get(key);
+      JComboBox<Gender> genderComboBox = siblingGenderComboBoxesByInteger.get(key);
+      JComboBox<RelativeAge> ageComboBox = siblingAgeComboBoxesByInteger.get(key);
+      JComboBox<String> relationshipComboBox = siblingRelationshipComboBoxesByInteger.get(key);
 
       player.addSibling(new Sibling( //
           nameTextField.getText(), //

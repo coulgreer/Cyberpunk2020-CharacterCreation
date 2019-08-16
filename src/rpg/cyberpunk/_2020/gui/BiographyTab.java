@@ -87,6 +87,7 @@ public class BiographyTab extends JPanel {
     }
   }
 
+  // TODO (Coul Greer): Sync the essential data with the results of creating a new character.
   private void initializeDataComponents() {
     aliasTextField = new JTextField(player.getAlias().getValue());
     ageTextField = new JTextField(Integer.toString( //
@@ -195,7 +196,7 @@ public class BiographyTab extends JPanel {
     JPanel panel = new JPanel(new BorderLayout());
 
     panel.add(createPortraitComponent(), BorderLayout.CENTER);
-    panel.add(createBasicInfoComponent(), BorderLayout.SOUTH);
+    panel.add(createEssentialTextInfoComponent(), BorderLayout.SOUTH);
 
     return panel;
   }
@@ -219,7 +220,7 @@ public class BiographyTab extends JPanel {
     return panel;
   }
 
-  private Component createBasicInfoComponent() {
+  private Component createEssentialTextInfoComponent() {
     int paddingWidth = 3;
     int dividerWidth = 1;
     JPanel panel = new JPanel(new GridLayout(1, 0));
