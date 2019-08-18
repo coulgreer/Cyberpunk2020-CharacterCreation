@@ -53,6 +53,7 @@ import rpg.cyberpunk._2020.systems.RandomCharacterPointsManager;
 import rpg.general.stats.Attribute;
 import rpg.util.Die;
 import rpg.util.Name;
+import rpg.util.RandomNumberGenerator;
 
 /**
  * An instance of JDialog that takes inputs from various cards that allows a <code>Player</code> to
@@ -61,6 +62,9 @@ import rpg.util.Name;
 public class NewCharacterDialog extends JDialog {
   private static final long serialVersionUID = 1L;
 
+  private static final int MAX_SIBLING_COUNT = 7;
+
+  // Fonts
   private static final Font TITLE1_FONT = new Font("Serif", Font.PLAIN, 30);
   private static final Font SUBTITLE1_FONT = new Font("Serif", Font.PLAIN, 16);
   private static final Font TITLE2_FONT = new Font("Serif", Font.PLAIN, 18);
@@ -319,40 +323,81 @@ public class NewCharacterDialog extends JDialog {
   }
 
   private void initializeSiblingsPanels() {
+    int paddingWidth = 6;
     siblingPanelsByInteger = new HashMap<Integer, JPanel>();
     siblingNameTextFieldsByInteger = new HashMap<Integer, JTextField>();
     siblingGenderComboBoxesByInteger = new HashMap<Integer, JComboBox<Gender>>();
     siblingAgeComboBoxesByInteger = new HashMap<Integer, JComboBox<RelativeAge>>();
     siblingRelationshipComboBoxesByInteger = new HashMap<Integer, JComboBox<String>>();
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < MAX_SIBLING_COUNT; i++) {
       final Integer key = new Integer(i);
-      JPanel p = new JPanel();
+      JPanel p = new JPanel(new GridBagLayout());
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.fill = GridBagConstraints.HORIZONTAL;
+      gbc.weightx = 1.0;
+      gbc.gridy = 0;
 
+      gbc.gridx = 0;
       JTextField nameTextField = new JTextField("UNKNOWN");
-      p.add(createNameComponent(nameTextField));
+      JComponent c = createNameComponent(nameTextField);
+      c.setBorder(BorderFactory.createEmptyBorder( //
+          paddingWidth, //
+          paddingWidth, //
+          paddingWidth, //
+          paddingWidth));
+      p.add(c, gbc);
+      siblingNameTextFieldsByInteger.put(key, nameTextField);
 
-      Gender[] genderOptions = Gender.values();
-      JComboBox<Gender> genderComboBox = new JComboBox<Gender>(genderOptions);
-      p.add(createGenderComponent(genderComboBox));
+      gbc.gridx = 1;
+      JComboBox<Gender> genderComboBox = new JComboBox<Gender>(Gender.values());
+      c = createGenderComponent(genderComboBox);
+      c.setBorder(BorderFactory.createEmptyBorder( //
+          paddingWidth, //
+          paddingWidth, //
+          paddingWidth, //
+          paddingWidth));
+      p.add(c, gbc);
+      siblingGenderComboBoxesByInteger.put(key, genderComboBox);
 
-      RelativeAge[] ageOptions = RelativeAge.values();
+      gbc.gridx = 2;
+      RelativeAge[] ageOptions = new RelativeAge[] { //
+          RelativeAge.OLDER, //
+          RelativeAge.YOUNGER, //
+          RelativeAge.TWIN};
+      Map<Integer, Integer> weightsByAgeIndex = new HashMap<Integer, Integer>(ageOptions.length);
+      weightsByAgeIndex.put(0, 5);
+      weightsByAgeIndex.put(1, 4);
+      weightsByAgeIndex.put(2, 1);
       JComboBox<RelativeAge> ageComboBox = new JComboBox<RelativeAge>(ageOptions);
-      p.add(createAgeComponent(ageComboBox));
+      c = createAgeComponent( //
+          ageComboBox, //
+          weightsByAgeIndex);
+      c.setBorder(BorderFactory.createEmptyBorder( //
+          paddingWidth, //
+          paddingWidth, //
+          paddingWidth, //
+          paddingWidth));
+      p.add(c, gbc);
+      siblingAgeComboBoxesByInteger.put(key, ageComboBox);
 
+      gbc.gridx = 3;
       JComboBox<String> relationshipComboBox = new JComboBox<String>(new String[] { //
           "Sibling dislikes you.", //
           "Sibling likes you.", //
           "Sibling neutral.", //
           "They worship you.", //
           "They hate you."});
-      p.add(createRelationshipComponent(relationshipComboBox));
+      c = createRelationshipComponent(relationshipComboBox);
+      c.setBorder(BorderFactory.createEmptyBorder( //
+          paddingWidth, //
+          paddingWidth, //
+          paddingWidth, //
+          paddingWidth));
+      p.add(c, gbc);
+      siblingRelationshipComboBoxesByInteger.put(key, relationshipComboBox);
 
       siblingPanelsByInteger.put(key, p);
-      siblingNameTextFieldsByInteger.put(key, nameTextField);
-      siblingGenderComboBoxesByInteger.put(key, genderComboBox);
-      siblingAgeComboBoxesByInteger.put(key, ageComboBox);
-      siblingRelationshipComboBoxesByInteger.put(key, relationshipComboBox);
     }
   }
 
@@ -377,12 +422,24 @@ public class NewCharacterDialog extends JDialog {
         createTitleComponent( //
             "Sex", TITLE2_FONT, //
             "Roll or choose one.", SUBTITLE2_FONT));
+
     panel.add(comboBox);
+
+    JButton button = new JButton("Roll");
+    button.setAlignmentX(Component.CENTER_ALIGNMENT);
+    button.addActionListener(evt -> {
+      int randomNum = ThreadLocalRandom.current().nextInt(0, comboBox.getItemCount());
+      comboBox.setSelectedIndex(randomNum);
+    });
+    panel.add(button);
 
     return panel;
   }
 
-  private JComponent createAgeComponent(JComboBox<RelativeAge> comboBox) {
+  private JComponent createAgeComponent( //
+      JComboBox<RelativeAge> comboBox, //
+      Map<Integer, Integer> weightsByIndex) {
+
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 
@@ -390,7 +447,16 @@ public class NewCharacterDialog extends JDialog {
         createTitleComponent( //
             "Relative Age", TITLE2_FONT, //
             "Roll or choose one.", SUBTITLE2_FONT));
+
     panel.add(comboBox);
+
+    JButton button = new JButton("Roll");
+    button.setAlignmentX(Component.CENTER_ALIGNMENT);
+    button.addActionListener(evt -> {
+      int index = RandomNumberGenerator.getRandomWeightedIntegerFrom(weightsByIndex);
+      comboBox.setSelectedIndex(index);
+    });
+    panel.add(button);
 
     return panel;
   }
@@ -403,13 +469,22 @@ public class NewCharacterDialog extends JDialog {
         createTitleComponent( //
             "Relationship", TITLE2_FONT, //
             "Roll or choose one.", SUBTITLE2_FONT));
+
     panel.add(comboBox);
+
+    JButton button = new JButton("Roll");
+    button.setAlignmentX(Component.CENTER_ALIGNMENT);
+    button.addActionListener(evt -> {
+      int randomNum = ThreadLocalRandom.current().nextInt(0, comboBox.getItemCount());
+      comboBox.setSelectedIndex(randomNum);
+    });
+    panel.add(button);
 
     return panel;
   }
 
   private void initializeSiblingsRadioButtons() {
-    siblingCountRadioButtons = new JRadioButton[8];
+    siblingCountRadioButtons = new JRadioButton[MAX_SIBLING_COUNT + 1];
 
     siblingCountRadioButtons[0] = new JRadioButton("1 Sibling");
     siblingCountRadioButtons[0].addItemListener(evt -> setSiblingCount(1));
@@ -546,7 +621,7 @@ public class NewCharacterDialog extends JDialog {
                     this, //
                     "Make sure the age is a number over " + Player.MIN_AGE);
               } else {
-                switchCardTo(FAMILY_RANKING_PANE);
+                switchCardTo(CHARACTER_POINT_PANE);
               }
             }),
         BorderLayout.SOUTH);
@@ -747,7 +822,8 @@ public class NewCharacterDialog extends JDialog {
     cards.add(createRandomPointManager(attributes), RANDOM_POINT_PANE);
     cards.add(createFastPointManager(attributes), FAST_POINT_PANE);
     // TODO (Coul Greer): Create a component that allows the user to assign character points using
-    // the cinematic method.
+    // the cinematic method. This will allow the user to manual tell the manager how many points
+    // they can spend.
 
     return cards;
   }
@@ -880,16 +956,16 @@ public class NewCharacterDialog extends JDialog {
     panel.add(createRadioButtonContainer(parentStatusRadioButtons));
 
     JButton button = new JButton("Roll");
+    Map<Integer, Integer> weightsByIndex =
+        new HashMap<Integer, Integer>(parentStatusRadioButtons.length);
+    weightsByIndex.put(0, 6);
+    weightsByIndex.put(1, 4);
     button.addActionListener(evt -> {
-      int randomNum = ThreadLocalRandom.current().nextInt(0, 10);
+      int index = RandomNumberGenerator.getRandomWeightedIntegerFrom(weightsByIndex);
 
-      if (0 <= randomNum && randomNum <= 6) {
-        parentStatusRadioButtons[0].setSelected(true);
-      } else if (7 <= randomNum && randomNum <= 9) {
-        parentStatusRadioButtons[1].setSelected(true);
-      }
+      parentStatusRadioButtons[index].setSelected(true);
     });
-    button.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+    button.setAlignmentX(Component.CENTER_ALIGNMENT);
     panel.add(button);
 
     return panel;
@@ -988,16 +1064,17 @@ public class NewCharacterDialog extends JDialog {
     panel.add(createRadioButtonContainer(familyStatusRadioButtons));
 
     JButton button = new JButton("Roll");
-    button.addActionListener(evt -> {
-      int randomNum = ThreadLocalRandom.current().nextInt(0, 10);
 
-      if (0 <= randomNum && randomNum <= 6) {
-        familyStatusRadioButtons[0].setSelected(true);
-      } else if (7 <= randomNum && randomNum <= 9) {
-        familyStatusRadioButtons[1].setSelected(true);
-      }
+    Map<Integer, Integer> weightsByIndex =
+        new HashMap<Integer, Integer>(familyStatusRadioButtons.length);
+    weightsByIndex.put(0, 6);
+    weightsByIndex.put(1, 4);
+    button.addActionListener(evt -> {
+      int index = RandomNumberGenerator.getRandomWeightedIntegerFrom(weightsByIndex);
+
+      familyStatusRadioButtons[index].setSelected(true);
     });
-    button.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+    button.setAlignmentX(Component.CENTER_ALIGNMENT);
     panel.add(button);
 
     return panel;
@@ -1118,8 +1195,36 @@ public class NewCharacterDialog extends JDialog {
   private JComponent createSiblingsComponent() {
     JPanel panel = new JPanel(new BorderLayout());
 
-    panel.add(createRadioButtonContainer(siblingCountRadioButtons), BorderLayout.NORTH);
+    panel.add(createSiblingRadioButtonContainer(), BorderLayout.NORTH);
     panel.add(createSiblingForumContainer(), BorderLayout.CENTER);
+
+    return panel;
+  }
+
+  private Container createSiblingRadioButtonContainer() {
+    JPanel panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+
+    panel.add(createRadioButtonContainer(siblingCountRadioButtons));
+
+    JButton button = new JButton("Roll");
+    Map<Integer, Integer> weightsByIndex =
+        new HashMap<Integer, Integer>(siblingCountRadioButtons.length);
+    weightsByIndex.put(0, 1);
+    weightsByIndex.put(1, 1);
+    weightsByIndex.put(2, 1);
+    weightsByIndex.put(3, 1);
+    weightsByIndex.put(4, 1);
+    weightsByIndex.put(5, 1);
+    weightsByIndex.put(6, 1);
+    weightsByIndex.put(7, 3);
+    button.addActionListener(evt -> {
+      int index = RandomNumberGenerator.getRandomWeightedIntegerFrom(weightsByIndex);
+
+      siblingCountRadioButtons[index].setSelected(true);
+    });
+    button.setAlignmentX(Component.CENTER_ALIGNMENT);
+    panel.add(button);
 
     return panel;
   }
