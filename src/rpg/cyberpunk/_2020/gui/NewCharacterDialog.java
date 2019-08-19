@@ -36,6 +36,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.SwingConstants;
 import rpg.Gender;
 import rpg.cyberpunk._2020.Age;
 import rpg.cyberpunk._2020.Player;
@@ -539,6 +540,7 @@ public class NewCharacterDialog extends JDialog {
     }
 
     roleComboBox = new JComboBox<Role>(roles.toArray(new Role[0]));
+    roleComboBox.setFont(TITLE2_FONT);
     roleComboBox.addActionListener(evt -> player.setRole((Role) roleComboBox.getSelectedItem()));
     roleComboBox.setRenderer(new ListCellRenderer<Role>() {
 
@@ -1303,9 +1305,10 @@ public class NewCharacterDialog extends JDialog {
       JPanel p = new JPanel();
       p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
 
-      for (JComboBox<String> cb : comboBoxes) {
+      for (int j = 0; j < comboBoxes.size(); j++) {
+        JComboBox<String> cb = comboBoxes.get(j);
         cb.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-        p.add(cb);
+        p.add(createRoleSkillContainer("Option " + (j + 1) + ":", cb));
       }
 
       panel.add(p, r.getName());
@@ -1316,6 +1319,25 @@ public class NewCharacterDialog extends JDialog {
       CardLayout layout = (CardLayout) panel.getLayout();
       layout.show(panel, r.getName());
     });
+
+    return panel;
+  }
+
+  private Container createRoleSkillContainer(String title, JComboBox<String> comboBox) {
+    int paddingWidth = 3;
+    JPanel panel = new JPanel(new GridLayout(0, 2));
+
+    JLabel label = new JLabel(title, SwingConstants.RIGHT);
+    label.setFont(SUBTITLE2_FONT);
+    panel.add(label);
+
+    comboBox.setFont(SUBTITLE2_FONT);
+    comboBox.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(comboBox);
 
     return panel;
   }

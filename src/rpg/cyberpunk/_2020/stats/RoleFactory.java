@@ -336,16 +336,16 @@ public class RoleFactory {
             skillNameOptions);
         break;
       case CORPORATE:
-        skillNameOptions.add(Arrays.asList(CyberpunkSkill.AUTHORITY));
+        skillNameOptions.add(Arrays.asList(CyberpunkSkill.RESOURCES));
         skillNameOptions.add(Arrays.asList(CyberpunkSkill.AWARENESS));
-        skillNameOptions.add(Arrays.asList(CyberpunkSkill.HANDGUN));
         skillNameOptions.add(Arrays.asList(CyberpunkSkill.HUMAN_PERCEPTION));
-        skillNameOptions.add(Arrays.asList(CyberpunkSkill.ATHLETICS));
         skillNameOptions.add(Arrays.asList(CyberpunkSkill.EDUCATION));
-        skillNameOptions.add(Arrays.asList(CyberpunkSkill.BRAWLING));
-        skillNameOptions.add(Arrays.asList(CyberpunkSkill.MELEE));
-        skillNameOptions.add(Arrays.asList(CyberpunkSkill.INTERROGATION));
-        skillNameOptions.add(Arrays.asList(CyberpunkSkill.STREETWISE));
+        skillNameOptions.add(Arrays.asList(CyberpunkSkill.LIBRARY_SEARCH));
+        skillNameOptions.add(Arrays.asList(CyberpunkSkill.SOCIAL));
+        skillNameOptions.add(Arrays.asList(CyberpunkSkill.PERSUASION));
+        skillNameOptions.add(Arrays.asList(CyberpunkSkill.STOCK_MARKET));
+        skillNameOptions.add(Arrays.asList(CyberpunkSkill.WARDROBE_AND_STYLE));
+        skillNameOptions.add(Arrays.asList(CyberpunkSkill.PERSONAL_GROOMING));
 
         role = new Role( //
             CORPORATE,
