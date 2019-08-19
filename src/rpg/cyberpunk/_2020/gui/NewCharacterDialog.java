@@ -691,7 +691,7 @@ public class NewCharacterDialog extends JDialog {
     panel.add(c, gbc);
 
     gbc.gridy = 1;
-    c = createLabeledComponent("Age", ageTextField);
+    c = createAgeComponent();
     c.setBorder(BorderFactory.createEmptyBorder( //
         paddingWidth, //
         paddingWidth, //
@@ -720,6 +720,28 @@ public class NewCharacterDialog extends JDialog {
 
     component.setFont(TITLE2_FONT);
     panel.add(component, BorderLayout.CENTER);
+
+    return panel;
+  }
+
+  private JComponent createAgeComponent() {
+    JPanel panel = new JPanel(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.gridy = 0;
+
+    gbc.gridx = 0;
+    gbc.weightx = 1.0;
+    panel.add(createLabeledComponent("Age", ageTextField), gbc);
+
+    gbc.gridx = 1;
+    gbc.weightx = 0.0;
+    JButton button = new JButton("Roll");
+    button.addActionListener(evt -> {
+      int result = (int) RandomNumberGenerator.getRandomDoubleFrom(new Die(2, 6));
+      ageTextField.setText(Integer.toString(Player.MIN_AGE + result));
+    });
+    panel.add(button, gbc);
 
     return panel;
   }
