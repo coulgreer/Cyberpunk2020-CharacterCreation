@@ -2,6 +2,7 @@ package rpg.cyberpunk._2020.gui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
@@ -9,7 +10,6 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -83,6 +82,7 @@ public class NewCharacterDialog extends JDialog {
   private static final String FAMILY_TRAGEDY_PANE = "Family Tragedy Pane";
   private static final String CHILDHOOD_ENVIRONMENT_PANE = "Childhood Environment Pane";
   private static final String SIBLINGS_PANE = "Siblings Pane";
+  private static final String MOTIVATION_PANE = "Motivation Pane";
   private static final String ROLE_PANE = "Role Pane";
 
   private Player player;
@@ -98,7 +98,7 @@ public class NewCharacterDialog extends JDialog {
   private JTextField ageTextField;
   private JComboBox<Gender> genderComboBox;
 
-  // Motivations
+  // Family Background
   private JComboBox<String> familyRankingComboBox;
   private JRadioButton[] parentStatusRadioButtons;
   private JComboBox<String> parentTragedyComboBox;
@@ -114,6 +114,13 @@ public class NewCharacterDialog extends JDialog {
   private Map<Integer, JComboBox<Gender>> siblingGenderComboBoxesByInteger;
   private Map<Integer, JComboBox<RelativeAge>> siblingAgeComboBoxesByInteger;
   private Map<Integer, JComboBox<String>> siblingRelationshipComboBoxesByInteger;
+
+  // Motivations
+  private JComboBox<String> personalityComboBox;
+  private JComboBox<String> valuedPersonComboBox;
+  private JComboBox<String> valuedConceptComboBox;
+  private JComboBox<String> feelingsTowardOthersComboBox;
+  private JComboBox<String> valuedPosessionComboBox;
 
   // Roles
   private JComboBox<Role> roleComboBox;
@@ -146,6 +153,7 @@ public class NewCharacterDialog extends JDialog {
     initializeFamilyTragedy();
     initializeChildhoodEnvironment();
     initializeSiblings();
+    initializeMotivations();
     initializeRoles();
 
     initializeContentPane();
@@ -406,10 +414,12 @@ public class NewCharacterDialog extends JDialog {
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 
-    panel.add( //
-        createTitleComponent( //
-            "Name", TITLE2_FONT, //
-            null, null));
+    JLabel label = new JLabel("Name");
+    label.setFont(TITLE2_FONT);
+    label.setAlignmentX(CENTER_ALIGNMENT);
+    panel.add(label);
+
+    textField.setFont(TITLE2_FONT);
     panel.add(textField);
 
     return panel;
@@ -528,6 +538,69 @@ public class NewCharacterDialog extends JDialog {
     }
   }
 
+  // TODO(Coul Greer): Further initialize the motivation comboBoxes. Put each comboBox in its own
+  // method where it has an item listener and sets the initial set value.
+  private void initializeMotivations() {
+    personalityComboBox = new JComboBox<String>(new String[] { //
+        "Shy and secretive", //
+        "Rebellious, antisocial, violent", //
+        "Arrogant, proud and aloof", //
+        "Moody, rash and headstrong", //
+        "Picky, fussy and nervous", //
+        "Stable and serious", //
+        "Silly and fluffheaded", //
+        "Sneaky and deceptive", //
+        "Intellectual and detached", //
+        "Friendly and outgoing"});
+
+    valuedPersonComboBox = new JComboBox<String>(new String[] { //
+        "A parent", //
+        "Brother or sister", //
+        "Lover", //
+        "Friend", //
+        "Yourself", //
+        "A pet", //
+        "Teacher or mentor", //
+        "Public figure", //
+        "A personal hero", //
+        "No one"});
+
+    valuedConceptComboBox = new JComboBox<String>(new String[] { //
+        "Money", //
+        "Honor", //
+        "Your word", //
+        "Honestly", //
+        "Knowledge", //
+        "Vengeance", //
+        "Love", //
+        "Power", //
+        "Having a good time", //
+        "Friendship"});
+
+    feelingsTowardOthersComboBox = new JComboBox<String>(new String[] { //
+        "Neutral", //
+        "I like almost everyone", //
+        "I hate almost everyone", //
+        "People are tools", //
+        "Everyone is a valuable individual", //
+        "People are obstacles to be destroyed", //
+        "People are untrustworthy", //
+        "Wipe 'em all out", //
+        "People are wonderful"});
+
+    valuedPosessionComboBox = new JComboBox<String>(new String[] { //
+        "A weapon", //
+        "A tool", //
+        "A piece of clothing", //
+        "A photograph", //
+        "A book or diary", //
+        "A recording", //
+        "A musical instrument", //
+        "A piece of jewelry", //
+        "A toy", //
+        "A letter"});
+  }
+
   private void initializeRoles() {
     Iterator<String> nameIterator = RoleFactory.createNameIterator();
 
@@ -594,44 +667,96 @@ public class NewCharacterDialog extends JDialog {
     contentPane.add(createFamilyTragedyContainer(), FAMILY_TRAGEDY_PANE);
     contentPane.add(createChildhoodEnvironmentContainer(), CHILDHOOD_ENVIRONMENT_PANE);
     contentPane.add(createSiblingsContainer(), SIBLINGS_PANE);
+    contentPane.add(createMotivationContainer(), MOTIVATION_PANE);
     contentPane.add(createRoleContainer(), ROLE_PANE);
 
     setContentPane(contentPane);
   }
 
-  private JComponent createEssentialInfoContainer() {
+  private Container createEssentialInfoContainer() {
+    JButton nextButton = new JButton("Next =>>");
+    nextButton.addActionListener(evt -> {
+      if (!hasValidAlias()) {
+        JOptionPane.showMessageDialog( //
+            this, //
+            "Make sure the alias is at least one character long.");
+      } else if (!hasValidAge()) {
+        JOptionPane.showMessageDialog( //
+            this, //
+            "Make sure the age is a number over " + Player.MIN_AGE);
+      } else {
+        switchCardTo(CHARACTER_POINT_PANE);
+      }
+    });
+
+    return createNavigatableContainer( //
+        "ESSENTIAL INFO", TITLE1_FONT, //
+        "Provide the basic info.", SUBTITLE1_FONT, //
+        createEssentialInfoContent(), //
+        null, nextButton);
+  }
+
+
+  private Container createNavigatableContainer( //
+      String title, Font titleFont, //
+      String subtitle, Font subtitleFont, //
+      JComponent component, //
+      JButton leftButton, JButton rightButton) {
+
+    int paddingWidth = 3;
+    int dividerHeight = 1;
     JPanel panel = new JPanel(new BorderLayout());
+    panel.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
 
-    panel.add( //
-        createTitleComponent( //
-            "ESSENTIAL INFO", TITLE1_FONT, //
-            "Provide the basic info.", SUBTITLE1_FONT), //
-        BorderLayout.NORTH);
+    JComponent titleComponent = createTitleComponent( //
+        title, titleFont, //
+        subtitle, subtitleFont);
+    titleComponent.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createEmptyBorder( //
+            paddingWidth, //
+            paddingWidth, //
+            0, //
+            paddingWidth), //
+        BorderFactory.createMatteBorder( //
+            0, //
+            0, //
+            dividerHeight, //
+            0, //
+            Color.BLACK)));
+    panel.add(titleComponent, BorderLayout.NORTH);
 
-    panel.add(createEssentialInfoComponent(), BorderLayout.CENTER);
+    component.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(component, BorderLayout.CENTER);
 
-    panel.add( //
-        createNavigationComponent( //
-            "<<= Previous", null, //
-            "Next =>>", evt -> {
-              if (!hasValidAlias()) {
-                JOptionPane.showMessageDialog( //
-                    this, //
-                    "Make sure the alias is at least one character long.");
-              } else if (!hasValidAge()) {
-                JOptionPane.showMessageDialog( //
-                    this, //
-                    "Make sure the age is a number over " + Player.MIN_AGE);
-              } else {
-                switchCardTo(CHARACTER_POINT_PANE);
-              }
-            }),
-        BorderLayout.SOUTH);
+    JComponent naviComponent = createNavigationComponent( //
+        leftButton, //
+        rightButton);
+    naviComponent.setBorder(BorderFactory.createCompoundBorder( //
+        BorderFactory.createEmptyBorder( //
+            0, //
+            paddingWidth, //
+            paddingWidth, //
+            paddingWidth), //
+        BorderFactory.createMatteBorder( //
+            dividerHeight, //
+            0, //
+            0, //
+            0, //
+            Color.BLACK)));
+    panel.add(naviComponent, BorderLayout.SOUTH);
 
     return panel;
   }
 
-  private Component createTitleComponent( //
+  private JComponent createTitleComponent( //
       String title, Font titleFont, //
       String subtitle, Font subtitleFont) {
 
@@ -651,7 +776,7 @@ public class NewCharacterDialog extends JDialog {
     return panel;
   }
 
-  private JComponent createEssentialInfoComponent() {
+  private JComponent createEssentialInfoContent() {
     JPanel panel = new JPanel(new GridLayout(0, 2));
 
     panel.add(createPortraitComponent());
@@ -736,6 +861,7 @@ public class NewCharacterDialog extends JDialog {
 
     gbc.gridx = 1;
     gbc.weightx = 0.0;
+    gbc.anchor = GridBagConstraints.SOUTH;
     JButton button = new JButton("Roll");
     button.addActionListener(evt -> {
       int result = (int) RandomNumberGenerator.getRandomDoubleFrom(new Die(2, 6));
@@ -763,69 +889,44 @@ public class NewCharacterDialog extends JDialog {
     }
   }
 
-  private JComponent createNavigationComponent(Action prevAction, Action nextAction) {
+  private JComponent createNavigationComponent(JButton rightButton, JButton leftButton) {
     JPanel panel = new JPanel();
 
-    panel.add(new JButton(prevAction));
-    panel.add(new JButton(nextAction));
-
-    return panel;
-  }
-
-  private JComponent createNavigationComponent( //
-      String prevText, ActionListener prevListener, //
-      String nextText, ActionListener nextListener) {
-
-    JPanel panel = new JPanel();
-
-    panel.add(createNavigationButton(prevText, prevListener));
-    panel.add(createNavigationButton(nextText, nextListener));
-
-    return panel;
-  }
-
-  private JButton createNavigationButton(String text, ActionListener listener) {
-    JButton button = new JButton(text);
-
-    if (listener == null) {
-      button.setEnabled(false);
-    } else {
-      button.addActionListener(listener);
+    if (!(rightButton == null)) {
+      panel.add(rightButton);
     }
 
-    return button;
+    if (!(leftButton == null)) {
+      panel.add(leftButton);
+    }
+
+    return panel;
   }
 
   private Container createCharacterPointContainer() {
-    JPanel panel = new JPanel(new BorderLayout());
+    JButton prevButton = new JButton("<<= Previous");
+    prevButton.addActionListener(evt -> switchCardTo(ESSENTIAL_INFO_PANE));
 
-    panel.add( //
-        createTitleComponent( //
-            "CHARACTER POINTS (CP)", TITLE1_FONT, //
-            "Select a method of acquiring CP.", SUBTITLE1_FONT), //
-        BorderLayout.NORTH);
+    JButton nextButton = new JButton("Next =>>");
+    nextButton.addActionListener(evt -> {
+      CharacterPointsManager manager = managersByCardName.get(activePointManagerName);
+      if (!manager.isValid()) {
+        JOptionPane.showMessageDialog( //
+            contentPane, //
+            "Make sure all points are appropriately spent.");
+      } else {
+        switchCardTo(FAMILY_RANKING_PANE);
+      }
+    });
 
-    panel.add(createCharacterPointContent(), BorderLayout.CENTER);
-
-    panel.add( //
-        createNavigationComponent( //
-            "<<= Previous", evt -> switchCardTo(ESSENTIAL_INFO_PANE), //
-            "Next =>>", evt -> {
-              CharacterPointsManager manager = managersByCardName.get(activePointManagerName);
-              if (!manager.isValid()) {
-                JOptionPane.showMessageDialog( //
-                    contentPane, //
-                    "Make sure all points are appropriately spent.");
-              } else {
-                switchCardTo(FAMILY_RANKING_PANE);
-              }
-            }),
-        BorderLayout.SOUTH);
-
-    return panel;
+    return createNavigatableContainer( //
+        "CHARACTER POINTS (CP)", TITLE1_FONT, //
+        "Select a method of acquiring CP.", SUBTITLE1_FONT, //
+        createCharacterPointContent(), //
+        prevButton, nextButton);
   }
 
-  private Component createCharacterPointContent() {
+  private JComponent createCharacterPointContent() {
     JPanel panel = new JPanel(new BorderLayout());
 
     Container cards = createMethodCards();
@@ -906,32 +1007,25 @@ public class NewCharacterDialog extends JDialog {
   }
 
   private Container createFamilyRankingContainer() {
-    JPanel panel = new JPanel(new BorderLayout());
+    JButton prevButton = new JButton( //
+        new SwitchToCardAction( //
+            "<<= Previous", null, //
+            null, null, //
+            contentPane, CHARACTER_POINT_PANE));
+    JButton nextButton = new JButton( //
+        new SwitchToCardAction( //
+            "Next =>>", null, //
+            null, null, //
+            contentPane, PARENT_PANE));
 
-    panel.add( //
-        createTitleComponent( //
-            "FAMILY RANKING", TITLE1_FONT, //
-            "Choose one or roll.", SUBTITLE1_FONT), //
-        BorderLayout.NORTH);
-
-    panel.add(createFamilyRankingComponent(), BorderLayout.CENTER);
-
-    panel.add( //
-        createNavigationComponent( //
-            new SwitchToCardAction( //
-                "<<= Previous", null, //
-                null, null, //
-                contentPane, CHARACTER_POINT_PANE), //
-            new SwitchToCardAction( //
-                "Next =>>", null, //
-                null, null, //
-                contentPane, PARENT_PANE)), //
-        BorderLayout.SOUTH);
-
-    return panel;
+    return createNavigatableContainer( //
+        "FAMILY RANKING", TITLE1_FONT, //
+        "Choose one or roll.", SUBTITLE1_FONT, //
+        createFamilyRankingContent(), //
+        prevButton, nextButton);
   }
 
-  private JComponent createFamilyRankingComponent() {
+  private JComponent createFamilyRankingContent() {
     JPanel panel = new JPanel();
 
     panel.add(familyRankingComboBox);
@@ -949,31 +1043,25 @@ public class NewCharacterDialog extends JDialog {
   }
 
   private Container createParentStatusContainer() {
-    JPanel panel = new JPanel(new BorderLayout());
-
     ButtonGroup group = new ButtonGroup();
     for (JRadioButton rb : parentStatusRadioButtons) {
       group.add(rb);
     }
 
-    panel.add( //
-        createTitleComponent( //
-            "PARENTS", TITLE1_FONT, //
-            "Choose one or roll.", SUBTITLE1_FONT), //
-        BorderLayout.NORTH);
+    JButton prevButton = new JButton("<<= Previous");
+    prevButton.addActionListener(evt -> switchCardTo(FAMILY_RANKING_PANE));
 
-    panel.add(createParentStatusComponent(), BorderLayout.CENTER);
+    JButton nextButton = new JButton("Next =>>");
+    nextButton.addActionListener(evt -> switchCardTo(group));
 
-    panel.add( //
-        createNavigationComponent( //
-            "<<= Previous", evt -> switchCardTo(FAMILY_RANKING_PANE), //
-            "Next =>>", evt -> switchCardTo(group)), //
-        BorderLayout.SOUTH);
-
-    return panel;
+    return createNavigatableContainer( //
+        "PARENTS", TITLE1_FONT, //
+        "Choose one or roll.", SUBTITLE1_FONT, //
+        createParentStatusContent(), //
+        prevButton, nextButton);
   }
 
-  private JComponent createParentStatusComponent() {
+  private JComponent createParentStatusContent() {
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 
@@ -1019,32 +1107,26 @@ public class NewCharacterDialog extends JDialog {
   }
 
   private Container createParentTragedyContainer() {
-    JPanel panel = new JPanel(new BorderLayout());
+    JButton prevButton = new JButton( //
+        new SwitchToCardAction( //
+            "<<= Previous", null, //
+            null, null, //
+            contentPane, PARENT_PANE));
 
-    panel.add( //
-        createTitleComponent( //
-            "PARENT TRAGEDY", TITLE1_FONT, //
-            "Choose one or roll.", SUBTITLE1_FONT), //
-        BorderLayout.NORTH);
+    JButton nextButton = new JButton(//
+        new SwitchToCardAction( //
+            "Next =>>", null, //
+            null, null, //
+            contentPane, FAMILY_STATUS_PANE));
 
-    panel.add(createParentTragedyComponent(), BorderLayout.CENTER);
-
-    panel.add( //
-        createNavigationComponent( //
-            new SwitchToCardAction( //
-                "<<= Previous", null, //
-                null, null, //
-                contentPane, PARENT_PANE), //
-            new SwitchToCardAction( //
-                "Next =>>", null, //
-                null, null, //
-                contentPane, FAMILY_STATUS_PANE)),
-        BorderLayout.SOUTH);
-
-    return panel;
+    return createNavigatableContainer( //
+        "PARENT TRAGEDY", TITLE1_FONT, //
+        "Choose one or roll.", SUBTITLE1_FONT, //
+        createParentTragedyContent(), //
+        prevButton, nextButton);
   }
 
-  private JComponent createParentTragedyComponent() {
+  private JComponent createParentTragedyContent() {
     JPanel panel = new JPanel();
 
     panel.add(parentTragedyComboBox);
@@ -1057,31 +1139,25 @@ public class NewCharacterDialog extends JDialog {
   }
 
   private Container createFamilyStatusContainer() {
-    JPanel panel = new JPanel(new BorderLayout());
-
     ButtonGroup group = new ButtonGroup();
     for (JRadioButton rb : familyStatusRadioButtons) {
       group.add(rb);
     }
 
-    panel.add( //
-        createTitleComponent( //
-            "FAMILY STATUS", TITLE1_FONT, //
-            "Choose one or roll.", SUBTITLE1_FONT), //
-        BorderLayout.NORTH);
+    JButton prevButton = new JButton("<<= Previous");
+    prevButton.addActionListener(evt -> switchCardTo(PARENT_PANE));
 
-    panel.add(createFamilyStatusComponent(), BorderLayout.CENTER);
+    JButton nextButton = new JButton("Next =>>");
+    nextButton.addActionListener(evt -> switchCardTo(group));
 
-    panel.add( //
-        createNavigationComponent( //
-            "<<= Previous", evt -> switchCardTo(PARENT_PANE), //
-            "Next =>>", evt -> switchCardTo(group)), //
-        BorderLayout.SOUTH);
-
-    return panel;
+    return createNavigatableContainer( //
+        "FAMILY STATUS", TITLE1_FONT, //
+        "Choose one or roll.", SUBTITLE1_FONT, //
+        createFamilyStatusContent(), //
+        prevButton, nextButton);
   }
 
-  private JComponent createFamilyStatusComponent() {
+  private JComponent createFamilyStatusContent() {
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 
@@ -1105,32 +1181,26 @@ public class NewCharacterDialog extends JDialog {
   }
 
   private Container createFamilyTragedyContainer() {
-    JPanel panel = new JPanel(new BorderLayout());
+    JButton prevButton = new JButton( //
+        new SwitchToCardAction( //
+            "<<= Previous", null, //
+            null, null, //
+            contentPane, FAMILY_STATUS_PANE));
 
-    panel.add( //
-        createTitleComponent( //
-            "FAMILY TRAGEDY", TITLE1_FONT, //
-            "Choose one or roll.", SUBTITLE1_FONT), //
-        BorderLayout.NORTH);
+    JButton nextButton = new JButton( //
+        new SwitchToCardAction( //
+            "Next =>>", null, //
+            null, null, //
+            contentPane, CHILDHOOD_ENVIRONMENT_PANE));
 
-    panel.add(createFamilyTragedyComponent(), BorderLayout.CENTER);
-
-    panel.add( //
-        createNavigationComponent( //
-            new SwitchToCardAction( //
-                "<<= Previous", null, //
-                null, null, //
-                contentPane, FAMILY_STATUS_PANE),
-            new SwitchToCardAction( //
-                "Next =>>", null, //
-                null, null, //
-                contentPane, CHILDHOOD_ENVIRONMENT_PANE)), //
-        BorderLayout.SOUTH);
-
-    return panel;
+    return createNavigatableContainer( //
+        "FAMILY TRAGEDY", TITLE1_FONT, //
+        "Choose one or roll.", SUBTITLE1_FONT, //
+        createFamilyTragedyContent(), //
+        prevButton, nextButton);
   }
 
-  private JComponent createFamilyTragedyComponent() {
+  private JComponent createFamilyTragedyContent() {
     JPanel panel = new JPanel();
 
     panel.add(familyTragedyComboBox);
@@ -1143,34 +1213,27 @@ public class NewCharacterDialog extends JDialog {
   }
 
   private Container createChildhoodEnvironmentContainer() {
-    JPanel panel = new JPanel(new BorderLayout());
+    JButton prevButton = new JButton( //
+        new SwitchToCardAction( //
+            "<<= Previous", null, //
+            null, null, //
+            contentPane, FAMILY_STATUS_PANE));
 
-    panel.add( //
-        createTitleComponent( //
-            "CHILDHOOD ENVIRONMENT", TITLE1_FONT, //
-            "Your Childhood was (choose or roll one):", SUBTITLE1_FONT), //
-        BorderLayout.NORTH);
+    JButton nextButton = new JButton( //
+        new SwitchToCardAction( //
+            "Next =>>", null, //
+            null, null, //
+            contentPane, SIBLINGS_PANE));
 
-    panel.add(createChildhoodEnvironmentComponent(), BorderLayout.CENTER);
-
-    panel.add( //
-        createNavigationComponent( //
-            new SwitchToCardAction( //
-                "<<= Previous", null, //
-                null, null, //
-                contentPane, FAMILY_STATUS_PANE), //
-            new SwitchToCardAction( //
-                "Next =>>", null, //
-                null, null, //
-                contentPane, SIBLINGS_PANE)), //
-        BorderLayout.SOUTH);
-
-    return panel;
+    return createNavigatableContainer( //
+        "CHILDHOOD ENVIRONMENT", TITLE1_FONT, //
+        "Your Childhood was (choose or roll one):", SUBTITLE1_FONT, //
+        createChildhoodEnvironmentContent(), //
+        prevButton, nextButton);
   }
 
-  private JComponent createChildhoodEnvironmentComponent() {
+  private JComponent createChildhoodEnvironmentContent() {
     JPanel panel = new JPanel();
-
 
     panel.add(childhoodEnvironmentComboBox);
 
@@ -1182,41 +1245,35 @@ public class NewCharacterDialog extends JDialog {
   }
 
   private Container createSiblingsContainer() {
-    JPanel panel = new JPanel(new BorderLayout());
-
     ButtonGroup group = new ButtonGroup();
     for (JRadioButton rb : siblingCountRadioButtons) {
       group.add(rb);
     }
 
-    panel.add( //
-        createTitleComponent( //
-            "SIBLINGS", TITLE1_FONT, //
-            "You may have up to 7 brothers/sisters.", SUBTITLE1_FONT), //
-        BorderLayout.NORTH);
+    JButton prevButton = new JButton("<<= Previous");
+    prevButton.addActionListener(evt -> switchCardTo(CHILDHOOD_ENVIRONMENT_PANE));
 
-    panel.add(createSiblingsComponent(), BorderLayout.CENTER);
+    JButton nextButton = new JButton("Next =>>");
+    nextButton.addActionListener(evt -> {
+      if (!hasValidSiblingNames()) {
+        JOptionPane.showMessageDialog( //
+            this, //
+            "Make sure that all siblings have a name.", //
+            "Invalid Sibling Present!", //
+            JOptionPane.ERROR_MESSAGE);
+      } else {
+        switchCardTo(MOTIVATION_PANE);
+      }
+    });
 
-    panel.add( //
-        createNavigationComponent( //
-            "<<= Previous", evt -> switchCardTo(CHILDHOOD_ENVIRONMENT_PANE), //
-            "Next =>>", evt -> {
-              if (!hasValidSiblingNames()) {
-                JOptionPane.showMessageDialog( //
-                    this, //
-                    "Make sure that all siblings have a name.", //
-                    "Invalid Sibling Present!", //
-                    JOptionPane.ERROR_MESSAGE);
-              } else {
-                switchCardTo(ROLE_PANE);
-              }
-            }), //
-        BorderLayout.SOUTH);
-
-    return panel;
+    return createNavigatableContainer( //
+        "SIBLINGS", TITLE1_FONT, //
+        "You may have up to 7 brothers/sisters.", SUBTITLE1_FONT, //
+        createSiblingsContent(), //
+        prevButton, nextButton);
   }
 
-  private JComponent createSiblingsComponent() {
+  private JComponent createSiblingsContent() {
     JPanel panel = new JPanel(new BorderLayout());
 
     panel.add(createSiblingRadioButtonContainer(), BorderLayout.NORTH);
@@ -1278,30 +1335,190 @@ public class NewCharacterDialog extends JDialog {
     return true;
   }
 
-  private Container createRoleContainer() {
-    JPanel panel = new JPanel(new BorderLayout());
+  private Container createMotivationContainer() {
+    JButton prevButton = new JButton("<<= Previous");
+    prevButton.addActionListener(evt -> switchCardTo(SIBLINGS_PANE));
 
-    panel.add( //
-        createTitleComponent( //
-            "ROLES", TITLE1_FONT, //
-            "The core of CYBERPUNK Role-playing", SUBTITLE1_FONT),
-        BorderLayout.NORTH);
+    JButton nextButton = new JButton("Next =>>");
+    nextButton.addActionListener(evt -> switchCardTo(ROLE_PANE));
 
-    panel.add(createRoleComponent(), BorderLayout.CENTER);
+    return createNavigatableContainer( //
+        "MOTIVATIONS", TITLE1_FONT, //
+        "What makes you tick? Will you back up your friends or go for the main chance? What's"
+            + " important to you?",
+        SUBTITLE1_FONT, //
+        createMotivationsContent(), //
+        prevButton, nextButton);
+  }
 
-    panel.add( //
-        createNavigationComponent( //
-            "<<= Previous", evt -> switchCardTo(SIBLINGS_PANE), //
-            "Done!", evt -> {
-              updatePlayer();
-              dispose();
-            }), //
-        BorderLayout.SOUTH);
+  private JComponent createMotivationsContent() {
+    JPanel panel = new JPanel(new GridLayout(0, 1));
+    int paddingWidth = 6;
+
+    // TODO (Coul Greer): Beautify this component. Also, add an empty border with a matte border
+    // inside to seperate title from content.
+    JComponent c = createPersonalityTraitComponent();
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c);
+
+    c = createValuedPersonComponent();
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c);
+
+    c = createValuedConceptComponent();
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c);
+
+    c = createSocietyFeelingsComponent();
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth));
+    panel.add(c);
+
+    c = createValuedPosessionComponent();
+    c.setBorder(BorderFactory.createEmptyBorder( //
+        paddingWidth, //
+        paddingWidth, //
+        paddingWidth * 2, //
+        paddingWidth));
+    panel.add(c);
+
+    return new JScrollPane(panel);
+  }
+
+  private JComponent createPersonalityTraitComponent() {
+    JPanel panel = new JPanel(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.gridy = 0;
+
+    gbc.gridx = 0;
+    gbc.weightx = 1.0;
+    panel.add(createLabeledComponent("Personality Traits", personalityComboBox), gbc);
+
+    gbc.gridx = 1;
+    gbc.weightx = 0.0;
+    gbc.anchor = GridBagConstraints.SOUTH;
+    JButton button = new JButton("Roll");
+    button.addActionListener(evt -> selectRandomItemFrom(personalityComboBox));
+    panel.add(button, gbc);
 
     return panel;
   }
 
-  private JComponent createRoleComponent() {
+  private JComponent createValuedPersonComponent() {
+    JPanel panel = new JPanel(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.gridy = 0;
+
+    gbc.gridx = 0;
+    gbc.weightx = 1.0;
+    panel.add(createLabeledComponent("Person You Value Most", valuedPersonComboBox), gbc);
+
+    gbc.gridx = 1;
+    gbc.weightx = 0.0;
+    gbc.anchor = GridBagConstraints.SOUTH;
+    JButton button = new JButton("Roll");
+    button.addActionListener(evt -> selectRandomItemFrom(valuedPersonComboBox));
+    panel.add(button, gbc);
+
+    return panel;
+  }
+
+  private JComponent createValuedConceptComponent() {
+    JPanel panel = new JPanel(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.gridy = 0;
+
+    gbc.gridx = 0;
+    gbc.weightx = 1.0;
+    panel.add(createLabeledComponent("What Do You Value Most?", valuedConceptComboBox), gbc);
+
+    gbc.gridx = 1;
+    gbc.weightx = 0.0;
+    gbc.anchor = GridBagConstraints.SOUTH;
+    JButton button = new JButton("Roll");
+    button.addActionListener(evt -> selectRandomItemFrom(valuedConceptComboBox));
+    panel.add(button, gbc);
+
+    return panel;
+  }
+
+  private JComponent createSocietyFeelingsComponent() {
+    JPanel panel = new JPanel(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.gridy = 0;
+
+    gbc.gridx = 0;
+    gbc.weightx = 1.0;
+    panel.add(createLabeledComponent("How Do You Feel About People?", feelingsTowardOthersComboBox),
+        gbc);
+
+    gbc.gridx = 1;
+    gbc.weightx = 0.0;
+    gbc.anchor = GridBagConstraints.SOUTH;
+    JButton button = new JButton("Roll");
+    button.addActionListener(evt -> selectRandomItemFrom(feelingsTowardOthersComboBox));
+    panel.add(button, gbc);
+
+    return panel;
+  }
+
+  private JComponent createValuedPosessionComponent() {
+    JPanel panel = new JPanel(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.gridy = 0;
+
+    gbc.gridx = 0;
+    gbc.weightx = 1.0;
+    panel.add(createLabeledComponent("Your Most Valued Posession", valuedPosessionComboBox), gbc);
+
+    gbc.gridx = 1;
+    gbc.weightx = 0.0;
+    gbc.anchor = GridBagConstraints.SOUTH;
+    JButton button = new JButton("Roll");
+    button.addActionListener(evt -> selectRandomItemFrom(valuedPosessionComboBox));
+    panel.add(button, gbc);
+
+    return panel;
+  }
+
+  private Container createRoleContainer() {
+    JButton prevButton = new JButton("<<= Previous");
+    prevButton.addActionListener(evt -> switchCardTo(MOTIVATION_PANE));
+
+    JButton doneButton = new JButton("Done!");
+    doneButton.addActionListener(evt -> {
+      updatePlayer();
+      dispose();
+    });
+
+    return createNavigatableContainer( //
+        "ROLES", TITLE1_FONT, //
+        "The core of CYBERPUNK Role-playing", SUBTITLE1_FONT, //
+        createRoleContent(), //
+        prevButton, doneButton);
+  }
+
+  private JComponent createRoleContent() {
     JPanel panel = new JPanel(new BorderLayout());
 
     panel.add(createRoleSelectorComponent(), BorderLayout.NORTH);
@@ -1365,12 +1582,23 @@ public class NewCharacterDialog extends JDialog {
   }
 
   private void updatePlayer() {
+    setPlayerAlias();
+    setPlayerAge();
+    addPlayerSiblings();
+    setPlayerRole();
+  }
+
+  private void setPlayerAlias() {
     String str = aliasTextField.getText();
     player.setAlias(new Name(str));
+  }
 
-    str = ageTextField.getText();
+  private void setPlayerAge() {
+    String str = ageTextField.getText();
     player.setAge(new Age(Integer.parseInt(str)));
+  }
 
+  private void addPlayerSiblings() {
     for (int i = 0; i < siblingCount; i++) {
       final Integer key = new Integer(i);
       JTextField nameTextField = siblingNameTextFieldsByInteger.get(key);
@@ -1384,7 +1612,9 @@ public class NewCharacterDialog extends JDialog {
           (RelativeAge) ageComboBox.getSelectedItem(), //
           (String) relationshipComboBox.getSelectedItem()));
     }
+  }
 
+  private void setPlayerRole() {
     Role r = (Role) roleComboBox.getSelectedItem();
     List<JComboBox<String>> comboBoxes = comboBoxesByRole.get(r);
     String[] skillNames = new String[Role.OPTION_COUNT];
